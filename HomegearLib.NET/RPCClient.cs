@@ -38,19 +38,6 @@ namespace HomegearLib
         }
     }
 
-    internal class HomegearRPCClientRPCException : HomegearRPCClientException
-    {
-        public HomegearRPCClientRPCException() : base()
-        {
-
-        }
-
-        public HomegearRPCClientRPCException(String message) : base(message)
-        {
-
-        }
-    }
-
     internal class RPCClient
     {
         private String _hostname = "homegear";
