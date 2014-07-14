@@ -3,15 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace HomegearLib
 {
-    public class Homegear
+    public class Homegear : IDisposable
     {
-        public void Test()
+        public delegate void ConnectErrorEventHandler(Homegear sender, string message);
+
+        #region "Events"
+        public event ConnectErrorEventHandler OnConnectError;
+        #endregion
+
+        RPC _rpc = null;
+        volatile bool _stopConnectThread = false;
+        Thread _connectThread = null;
+
+        public Homegear(RPC rpc)
         {
-            RPCClient client = new RPCClient("homegear", 2003, true, true, "temp", "!55Weltzeit");
-            client.CallMethod("getDeviceInfo", new List<RPCVariable> { new RPCVariable(143) });
+            if (rpc == null) throw new NullReferenceException("RPC object is null.");
+            _rpc = rpc;
+            _rpc.Disconnected += _rpc_Disconnected;
+            _stopConnectThread = false;
+            _connectThread = new Thread(Connect);
+            _connectThread.Start();
+            while (!_connectThread.IsAlive) ;
+        }
+
+        ~Homegear()
+        {
+            _stopConnectThread = true;
+            if (_connectThread.IsAlive) _connectThread.Join();
+        }
+
+        public void Dispose()
+        {
+            _stopConnectThread = true;
+            if (_connectThread.IsAlive) _connectThread.Join();
+        }
+
+        void Connect()
+        {
+            while (!_stopConnectThread)
+            {
+                try
+                {
+                    if (!_rpc.IsConnected) _rpc.Connect();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (OnConnectError != null) OnConnectError(this, ex.Message);
+                    Thread.Sleep(10000);
+                }
+            }
+        }
+
+        void _rpc_Disconnected(RPC sender)
+        {
+            _stopConnectThread = true;
+            if (_connectThread.IsAlive) _connectThread.Join();
+            _stopConnectThread = false;
+            _connectThread = new Thread(Connect);
+            _connectThread.Start();
+            while (!_connectThread.IsAlive) ;
         }
     }
 }

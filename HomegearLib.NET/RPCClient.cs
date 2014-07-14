@@ -40,6 +40,15 @@ namespace HomegearLib
 
     internal class RPCClient
     {
+        public delegate void ConnectedEventHandler(RPCClient sender);
+        public delegate void DisconnectedEventHandler(RPCClient sender);
+
+        #region "Events"
+        public event ConnectedEventHandler Connected;
+        public event DisconnectedEventHandler Disconnected;
+        #endregion
+
+        const int _maxTries = 3;
         private String _hostname = "homegear";
         private int _port = 2001;
         private bool _ssl = false;
@@ -50,6 +59,8 @@ namespace HomegearLib
         private SslStream _sslStream = null;
         private Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
+
+        public bool IsConnected { get { return _client != null && _client.Connected; } }
 
         public RPCClient(String hostname, int port, bool ssl = false, bool verifyCertificate = true, string username = "", string password = "")
         {
@@ -94,104 +105,116 @@ namespace HomegearLib
                     throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
                 }
             }
+            if(Connected != null) Connected(this);
         }
 
         public void Disconnect()
         {
-            if(_client != null) _client.Close();
-            _client = null;
-            _sslStream = null;
+            if (_client != null)
+            {
+                _client.Close();
+                _client = null;
+                _sslStream = null;
+                if (Disconnected != null) Disconnected(this);
+            }
         }
 
         public RPCVariable CallMethod(String name, List<RPCVariable> parameters)
         {
-            for(int i = 0; i < 3; i++)
+            RPCVariable result = null;
+            for (int j = 0; j < _maxTries; j++)
             {
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        if (_client == null || !_client.Connected) Connect();
+                        if (_ssl && _sslStream == null) Connect();
+                        break;
+                    }
+                    catch (HomegearRPCClientSSLException ex)
+                    {
+                        throw ex;
+                    }
+                    catch (HomegearRPCClientException ex)
+                    {
+                        if (i == 2) throw ex;
+                    }
+                }
+                Encoding.RPCHeader header = null;
+                if (_ssl && _username.Length > 0)
+                {
+                    header = new Encoding.RPCHeader();
+                    header.Authorization = "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(_username + ":" + _password));
+                }
+                List<byte> requestPacket = _rpcEncoder.EncodeRequest(name, parameters, header);
                 try
                 {
-                    if(_client == null || !_client.Connected || _sslStream == null) Connect();
-                    break;
-                }
-                catch(HomegearRPCClientSSLException ex)
-                {
-                    throw ex;
-                }
-                catch(HomegearRPCClientException ex)
-                {
-                    if(i == 2) throw ex;
-                }
-            }
-            RPCVariable result = new RPCVariable();
-            Encoding.RPCHeader header = null;
-            if(_ssl && _username.Length > 0)
-            {
-                header = new Encoding.RPCHeader();
-                header.Authorization = "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(_username + ":" + _password));
-            }
-            List<byte> requestPacket = _rpcEncoder.EncodeRequest(name, parameters, header);
-            try
-            {
-                if (_ssl)
-                {
-                    _sslStream.Write(requestPacket.ToArray());
-                    _sslStream.Flush();
-                }
-                else
-                {
-                    _client.Client.Send(requestPacket.ToArray());
-                }
-            }
-            catch (System.IO.IOException ex)
-            {
-                Disconnect();
-                throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
-            }
-            catch (SocketException ex)
-            {
-                Disconnect();
-                throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
-            }
-            try
-            {
-                byte[] packet = null;
-                int bytesReceived = 0;
-                byte[] buffer = new byte[1024];
-                uint dataSize = 0;
-                uint packetLength = 0;
-                do
-                {
-                    if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
-                    else bytesReceived = _client.Client.Receive(buffer);
-                    if (dataSize == 0)
+                    if (_ssl)
                     {
-                        if ((buffer[3] & 1) == 0 && buffer[3] != 0xFF) throw new HomegearRPCClientException("RPC client received binary request as response from server " + _hostname + " on port " + _port.ToString() + ".");
-                        if (bytesReceived < 8) throw new HomegearRPCClientException("RPC client received binary response smaller than 8 bytes from server " + _hostname + " on port " + _port.ToString() + ".");
-                        dataSize = (uint)((buffer[4] << 24) + (buffer[5] << 16) + (buffer[6] << 8) + buffer[7]);
-                        if (dataSize == 0) throw new HomegearRPCClientException("RPC client received empty response from server " + _hostname + " on port " + _port.ToString() + ".");
-                        if (dataSize > 104857600) throw new HomegearRPCClientException("RPC client received response larger than 100 MiB from server " + _hostname + " on port " + _port.ToString() + ".");
-                        packetLength = (uint)bytesReceived - 8;
-                        packet = new byte[dataSize + 8];
-                        Array.Copy(buffer, packet, bytesReceived);
-                        if (packetLength == dataSize) break;
+                        _sslStream.Write(requestPacket.ToArray());
+                        _sslStream.Flush();
                     }
                     else
                     {
-                        if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from server " + _hostname + " on port " + _port.ToString() + ".");
-                        Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
-                        packetLength += (uint)bytesReceived;
+                        _client.Client.Send(requestPacket.ToArray());
                     }
-                } while (bytesReceived != 0);
-                result = _rpcDecoder.DecodeResponse(packet);
-            }
-            catch (System.IO.IOException ex)
-            {
-                Disconnect();
-                throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
-            }
-            catch (SocketException ex)
-            {
-                Disconnect();
-                throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                }
+                catch (System.IO.IOException ex)
+                {
+                    Disconnect();
+                    if (j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                    continue;
+                }
+                catch (SocketException ex)
+                {
+                    Disconnect();
+                    if (j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                    continue;
+                }
+                try
+                {
+                    byte[] packet = null;
+                    int bytesReceived = 0;
+                    byte[] buffer = new byte[1024];
+                    uint dataSize = 0;
+                    uint packetLength = 0;
+                    do
+                    {
+                        if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
+                        else bytesReceived = _client.Client.Receive(buffer);
+                        if (dataSize == 0)
+                        {
+                            if ((buffer[3] & 1) == 0) throw new HomegearRPCClientException("RPC client received binary request as response from server " + _hostname + " on port " + _port.ToString() + ".");
+                            if (bytesReceived < 8) throw new HomegearRPCClientException("RPC client received binary response smaller than 8 bytes from server " + _hostname + " on port " + _port.ToString() + ".");
+                            dataSize = (uint)((buffer[4] << 24) + (buffer[5] << 16) + (buffer[6] << 8) + buffer[7]);
+                            if (dataSize == 0) throw new HomegearRPCClientException("RPC client received empty response from server " + _hostname + " on port " + _port.ToString() + ".");
+                            if (dataSize > 104857600) throw new HomegearRPCClientException("RPC client received response larger than 100 MiB from server " + _hostname + " on port " + _port.ToString() + ".");
+                            packetLength = (uint)bytesReceived - 8;
+                            packet = new byte[dataSize + 8];
+                            Array.Copy(buffer, packet, bytesReceived);
+                        }
+                        else
+                        {
+                            if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from server " + _hostname + " on port " + _port.ToString() + ".");
+                            Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
+                            packetLength += (uint)bytesReceived;
+                        }
+                        if (packetLength == dataSize) break;
+                    } while (bytesReceived != 0);
+                    result = _rpcDecoder.DecodeResponse(packet);
+                    break;
+                }
+                catch (System.IO.IOException ex)
+                {
+                    Disconnect();
+                    if (j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                }
+                catch (SocketException ex)
+                {
+                    Disconnect();
+                    if(j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                }
             }
             return result;
         }

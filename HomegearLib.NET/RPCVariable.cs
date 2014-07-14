@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomegearLib
 {
-    internal enum RPCVariableType
+    public enum RPCVariableType
     { 
         rpcVoid = 0,
         rpcInteger = 1,
@@ -20,7 +20,7 @@ namespace HomegearLib
         rpcVariant = 0x1111
     }
 
-    internal class RPCVariable
+    public class RPCVariable
     {
         public bool ErrorStruct
         {

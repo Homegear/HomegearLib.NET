@@ -48,6 +48,7 @@
     <Compile Include="Homegear.cs" />
     <Compile Include="HomegearException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPC.cs" />
     <Compile Include="RPCClient.cs" />
     <Compile Include="RPCServer.cs" />
     <Compile Include="RPCVariable.cs" />

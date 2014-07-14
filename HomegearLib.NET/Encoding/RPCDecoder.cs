@@ -41,7 +41,7 @@ namespace HomegearLib.Encoding
 	        return response;
         }
 
-        private RPCHeader DecodeHeader(byte[] packet)
+        public RPCHeader DecodeHeader(byte[] packet)
         {
             RPCHeader header = new RPCHeader();
             if (packet.Length < 12 || (packet[3] & 0x40) == 0) return header;

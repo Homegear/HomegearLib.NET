@@ -23,6 +23,11 @@ namespace HomegearLib.Encoding
 
         public void EncodeString(List<byte> encodedData, string value)
         {
+            if(value == null)
+            {
+                EncodeInteger(encodedData, 0);
+                return;
+            }
             EncodeInteger(encodedData, value.Length);
             if (value.Length == 0) return;
             encodedData.InsertRange(encodedData.Count(), System.Text.ASCIIEncoding.ASCII.GetBytes(value));
