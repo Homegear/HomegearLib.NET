@@ -36,7 +36,6 @@ namespace HomegearLibTest
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             _homegear.Dispose();
-            _rpc.Dispose();
         }
     }
 }

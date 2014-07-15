@@ -18,6 +18,7 @@ namespace HomegearLib
         public event DisconnectedEventHandler Disconnected;
         #endregion
 
+        volatile bool _disposing = false;
         public bool IsConnected { get { return _client != null && _client.IsConnected; } }
 
         RPCClient _client;
@@ -71,6 +72,7 @@ namespace HomegearLib
 
         public void Dispose()
         {
+            _disposing = true;
             _client.Disconnect();
             _server.Stop();
         }
@@ -88,6 +90,7 @@ namespace HomegearLib
 
         public void Connect()
         {
+            if (_disposing) throw new ObjectDisposedException("RPC");
             _server.Start();
             _client.Connect();
             if (Connected != null) Connected(this);
@@ -105,12 +108,14 @@ namespace HomegearLib
 
         public bool clientServerInitialized(string interfaceID)
         {
+            if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable result = _client.CallMethod("clientServerInitialized", new List<RPCVariable> { new RPCVariable(interfaceID) });
             return result.BooleanValue;
         }
 
         public void init(string interfaceID)
         {
+            if (_disposing) throw new ObjectDisposedException("RPC");
             string prefix;
             if (_server.SSL) prefix = "binarys://";
             else prefix = "binary://";

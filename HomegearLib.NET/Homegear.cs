@@ -16,6 +16,7 @@ namespace HomegearLib
         #endregion
 
         RPC _rpc = null;
+        volatile bool _disposing = false;
         volatile bool _stopConnectThread = false;
         Thread _connectThread = null;
 
@@ -38,12 +39,15 @@ namespace HomegearLib
 
         public void Dispose()
         {
+            _disposing = true;
             _stopConnectThread = true;
             if (_connectThread.IsAlive) _connectThread.Join();
+            _rpc.Disconnect();
         }
 
         void Connect()
         {
+            if (_disposing) return;
             while (!_stopConnectThread)
             {
                 try
@@ -61,6 +65,7 @@ namespace HomegearLib
 
         void _rpc_Disconnected(RPC sender)
         {
+            if (_disposing) return;
             _stopConnectThread = true;
             if (_connectThread.IsAlive) _connectThread.Join();
             _stopConnectThread = false;
