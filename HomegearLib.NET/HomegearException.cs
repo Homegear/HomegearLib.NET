@@ -18,4 +18,17 @@ namespace HomegearLib
 
         }
     }
+
+    public class HomegearReadOnlyException : Exception
+    {
+        public HomegearReadOnlyException() : base()
+        {
+
+        }
+
+        public HomegearReadOnlyException(String message) : base(message)
+        {
+
+        }
+    }
 }

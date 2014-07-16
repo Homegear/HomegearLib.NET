@@ -10,8 +10,10 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.Threading;
+using System.Security;
+using System.Runtime.InteropServices;
 
-namespace HomegearLib
+namespace HomegearLib.RPC
 {
     internal class HomegearRPCServerException : HomegearException
     {
@@ -67,26 +69,38 @@ namespace HomegearLib
         private bool _ssl = false;
         public bool SSL { get { return _ssl; } }
 
-        private string _username = "";
-        private string _password = "";
+        private SecureString _authString = null;
         private Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
 
-        public RPCServer(string myHostname, string listenIP, int port, string certificatePath = "", bool ssl = false, string username = "", string password = "")
+        public RPCServer(string myHostname, string listenIP, int port, SSLServerInfo sslInfo)
         {
-            if (ssl)
+            _ssl = sslInfo != null;
+            if (_ssl)
             {
-                if (File.Exists(certificatePath)) _serverCertificate = new X509Certificate2(certificatePath, "weltzeit");
+                if (File.Exists(sslInfo.CertificatePath)) _serverCertificate = new X509Certificate2(sslInfo.CertificatePath, sslInfo.CertificatePassword);
                 else throw new HomegearRPCServerSSLException("Certificate file does not exist.");
             }
             _hostname = myHostname;
             _ipAddress = IPAddress.Parse(listenIP);
             _port = port;
-            _ssl = ssl;
+            if (sslInfo.Username.Length > 0) _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Password)))));
         }
 
         ~RPCServer()
         {
+        }
+
+        unsafe SecureString GetSecureString(string value)
+        {
+            char[] chars = value.ToCharArray();
+
+            SecureString secureString;
+            fixed (char* pChars = chars)
+            {
+                secureString = new SecureString(pChars, chars.Length);
+            }
+            return secureString;
         }
 
         public void Start()
@@ -190,12 +204,19 @@ namespace HomegearLib
                         packetLength = (uint)bytesReceived - 8;
                         packet = new byte[dataSize + 8];
                         Array.Copy(buffer, packet, bytesReceived);
-                        if(_username.Length > 0)
+                        if(_authString != null && _authString.Length > 0)
                         {
                             Encoding.RPCHeader header = _rpcDecoder.DecodeHeader(packet);
-                            if (header.Authorization.Length == 0)
+                            if (header.Authorization != Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString)))
                             {
                                 packet = null;
+                                List<byte> responsePacket = _rpcEncoder.EncodeResponse(RPCVariable.CreateError(-32603, "Unauthorized"));
+                                if (_ssl)
+                                {
+                                    _sslStream.Write(responsePacket.ToArray());
+                                    _sslStream.Flush();
+                                }
+                                else _client.Client.Send(responsePacket.ToArray());
                                 continue;
                             }
                         }

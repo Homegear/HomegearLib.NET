@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -15,12 +16,12 @@ namespace HomegearLib
         public event ConnectErrorEventHandler OnConnectError;
         #endregion
 
-        RPC _rpc = null;
+        RPCController _rpc = null;
         volatile bool _disposing = false;
         volatile bool _stopConnectThread = false;
         Thread _connectThread = null;
 
-        public Homegear(RPC rpc)
+        public Homegear(RPCController rpc)
         {
             if (rpc == null) throw new NullReferenceException("RPC object is null.");
             _rpc = rpc;
@@ -63,7 +64,7 @@ namespace HomegearLib
             }
         }
 
-        void _rpc_Disconnected(RPC sender)
+        void _rpc_Disconnected(RPCController sender)
         {
             if (_disposing) return;
             _stopConnectThread = true;

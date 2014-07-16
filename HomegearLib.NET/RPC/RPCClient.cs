@@ -9,8 +9,10 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections;
+using System.Security;
+using System.Runtime.InteropServices;
 
-namespace HomegearLib
+namespace HomegearLib.RPC
 {
     internal class HomegearRPCClientException : HomegearException
     {
@@ -52,36 +54,49 @@ namespace HomegearLib
         private String _hostname = "homegear";
         private int _port = 2001;
         private bool _ssl = false;
-        private bool _verifyCertificate = true;
-        private string _username;
-        private string _password;
+        private SSLClientInfo _sslInfo;
         private TcpClient _client = null;
         private SslStream _sslStream = null;
         private Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
+        private SecureString _authString = null;
 
         public bool IsConnected { get { return _client != null && _client.Connected; } }
 
-        public RPCClient(String hostname, int port, bool ssl = false, bool verifyCertificate = true, string username = "", string password = "")
+        public RPCClient(String hostname, int port, SSLClientInfo sslInfo = null)
         {
             _hostname = hostname;
             _port = port;
-            _ssl = ssl;
-            _verifyCertificate = verifyCertificate;
-            _username = username;
-            _password = password;
+            _ssl = sslInfo != null;
+            _sslInfo = sslInfo;
+            if(_sslInfo != null)
+            {
+                _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Password)))));
+            }
+        }
+
+        unsafe SecureString GetSecureString(string value)
+        {
+            char[] chars = value.ToCharArray();
+
+            SecureString secureString;
+            fixed (char* pChars = chars)
+            {
+                secureString = new SecureString(pChars, chars.Length);
+            }
+            return secureString;
         }
 
         public bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None) return true;
-            else if (!_verifyCertificate && (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors || sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)) return true;
+            else if (!_sslInfo.VerifyCertificate && (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors || sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)) return true;
             return false;
         }
 
         public void Connect()
         {
-            Disconnect();
+            if (_client != null) _client.Close();
             try
             {
                 _client = new TcpClient(_hostname, _port);
@@ -142,10 +157,10 @@ namespace HomegearLib
                     }
                 }
                 Encoding.RPCHeader header = null;
-                if (_ssl && _username.Length > 0)
+                if (_ssl && _authString != null && _authString.Length > 0)
                 {
                     header = new Encoding.RPCHeader();
-                    header.Authorization = "Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(_username + ":" + _password));
+                    header.Authorization = Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString));
                 }
                 List<byte> requestPacket = _rpcEncoder.EncodeRequest(name, parameters, header);
                 try
@@ -216,6 +231,8 @@ namespace HomegearLib
                     if(j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
                 }
             }
+            if (result == null) result = RPCVariable.CreateError(-32500, "Response was empty.");
+            if (result.ErrorStruct && result.StructValue["faultCode"].IntegerValue == -32603) _client.Close();
             return result;
         }
     }
