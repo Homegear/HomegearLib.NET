@@ -7,7 +7,7 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
-    public class Families : IDictionary<Int32, Family>
+    public class Families : IDictionary<Int32, Family>, IDisposable
     {
         RPCController _rpc = null;
         Dictionary<Int32, Family> _families = null;
@@ -16,6 +16,15 @@ namespace HomegearLib
         {
             _rpc = rpc;
             _families = families;
+        }
+
+        public void Dispose()
+        {
+            _rpc = null;
+            foreach(KeyValuePair<Int32, Family> family in _families)
+            {
+                family.Value.Dispose();
+            }
         }
 
         public void Add(Int32 key, Family value)

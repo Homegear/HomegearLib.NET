@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomegearLib
 {
-    public class Family
+    public class Family : IDisposable
     {
         private Int32 _id = -1;
         public Int32 ID { get { return _id; } set { _id = value; } }
@@ -22,6 +22,11 @@ namespace HomegearLib
         {
             _id = id;
             _name = name;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

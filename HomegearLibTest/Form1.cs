@@ -14,6 +14,7 @@ namespace HomegearLibTest
 {
     public partial class Form1 : Form
     {
+        delegate void SetTextCallback(string text);
         private RPCController _rpc = null;
         private Homegear _homegear = null;
 
@@ -29,11 +30,38 @@ namespace HomegearLibTest
             _rpc = new RPCController("homegear", 2003, "buero", "0.0.0.0", 9876, sslClientInfo, sslServerInfo);
             _homegear = new Homegear(_rpc);
             _homegear.OnConnectError += _homegear_OnConnectError;
+            _homegear.OnDeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
+            _homegear.OnReloaded += _homegear_OnReloaded;
         }
 
-        void _homegear_OnConnectError(Homegear sender, string message)
+        void _homegear_OnReloaded(Homegear sender)
         {
-            MessageBox.Show(message);
+            WriteLog("Reload complete. Received " + sender.Devices.Count + " devices.");
+        }
+
+        void WriteLog(String text)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(WriteLog);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                txtLog.Text += text + "\r\n";
+                txtLog.SelectionStart = txtLog.Text.Length;
+                txtLog.ScrollToCaret();
+            }
+        }
+
+        void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable)
+        {
+            WriteLog("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + variable.ToString());
+        }
+
+        void _homegear_OnConnectError(Homegear sender, string message, string stackTrace)
+        {
+            MessageBox.Show(message + "\r\n" + stackTrace);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

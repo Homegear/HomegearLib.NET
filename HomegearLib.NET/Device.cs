@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 
 namespace HomegearLib
 {
-    public class Device
+    public class Device : IDisposable
     {
         private Family _family = null;
-        public Family Family { get { return _family; } set { _family = value; } }
+        public Family Family { get { return _family; } internal set { _family = value; } }
 
         private Int32 _id = -1;
-        public Int32 ID { get { return _id; } set { _id = value; } }
+        public Int32 ID { get { return _id; } internal set { _id = value; } }
 
         private Int32 _address = -1;
-        public Int32 Address { get { return _address; } set { _address = value; } }
+        public Int32 Address { get { return _address; } internal set { _address = value; } }
 
         private String _typeString = "";
-        public String TypeString { get { return _typeString; } set { _typeString = value; } }
+        public String TypeString { get { return _typeString; } internal set { _typeString = value; } }
 
         private Channels _channels;
         public Channels Channels { get { return _channels; } internal set { _channels = value; } }
+
+        public void Dispose()
+        {
+            _family = null;
+            _channels.Dispose();
+        }
     }
 }

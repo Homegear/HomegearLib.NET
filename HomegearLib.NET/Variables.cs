@@ -7,7 +7,7 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
-    public class Variables : IDictionary<String, Variable>
+    public class Variables : IDictionary<String, Variable>, IDisposable
     {
         RPCController _rpc = null;
         Dictionary<String, Variable> _variables = null;
@@ -103,6 +103,15 @@ namespace HomegearLib
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _variables.GetEnumerator();
+        }
+
+        public void Dispose()
+        {
+            _rpc = null;
+            foreach(KeyValuePair<String, Variable> variable in _variables)
+            {
+                variable.Value.Dispose();
+            }
         }
     }
 }

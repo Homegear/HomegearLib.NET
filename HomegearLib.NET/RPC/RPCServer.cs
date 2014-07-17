@@ -43,7 +43,7 @@ namespace HomegearLib.RPC
 
     internal class RPCServer
     {
-        public delegate void RPCEventEventHandler(RPCServer sender, uint peerID, int channel, string parameterName, RPCVariable value);
+        public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value);
 
         #region "Events"
         public event RPCEventEventHandler OnRPCEvent;
@@ -262,7 +262,7 @@ namespace HomegearLib.RPC
                     if (method.StructValue["methodName"].StringValue != "event") continue;
                     List<RPCVariable> eventParams = method.StructValue["params"].ArrayValue;
                     if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString || eventParams[1].Type != RPCVariableType.rpcInteger || eventParams[2].Type != RPCVariableType.rpcInteger || eventParams[3].Type != RPCVariableType.rpcString) continue;
-                    if(OnRPCEvent != null) OnRPCEvent(this, (uint)eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
+                    if(OnRPCEvent != null) OnRPCEvent(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
                 }
             }
             List<byte> responsePacket = _rpcEncoder.EncodeResponse(response);

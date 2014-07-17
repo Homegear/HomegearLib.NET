@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Channel.cs" />
     <Compile Include="Channels.cs" />
+    <Compile Include="ConfigParameter.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Devices.cs" />
     <Compile Include="Families.cs" />
