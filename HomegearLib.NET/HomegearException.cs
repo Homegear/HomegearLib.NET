@@ -19,14 +19,79 @@ namespace HomegearLib
         }
     }
 
-    public class HomegearReadOnlyException : Exception
+    public class HomegearObjectReadOnlyException : Exception
     {
-        public HomegearReadOnlyException() : base()
+        public HomegearObjectReadOnlyException() : base()
         {
 
         }
 
-        public HomegearReadOnlyException(String message) : base(message)
+        public HomegearObjectReadOnlyException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearVariableException : Exception
+    {
+        public HomegearVariableException() : base()
+        {
+
+        }
+
+        public HomegearVariableException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearVariableTypeException : HomegearVariableException
+    {
+        public HomegearVariableTypeException() : base()
+        {
+
+        }
+
+        public HomegearVariableTypeException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearVariableReadOnlyException : HomegearVariableException
+    {
+        public HomegearVariableReadOnlyException() : base()
+        {
+
+        }
+
+        public HomegearVariableReadOnlyException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearVariableWriteOnlyException : HomegearVariableException
+    {
+        public HomegearVariableWriteOnlyException() : base()
+        {
+
+        }
+
+        public HomegearVariableWriteOnlyException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearVariableValueOutOfBoundsException : HomegearVariableException
+    {
+        public HomegearVariableValueOutOfBoundsException() : base()
+        {
+
+        }
+
+        public HomegearVariableValueOutOfBoundsException(String message) : base(message)
         {
 
         }

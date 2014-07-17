@@ -121,12 +121,59 @@ namespace HomegearLib.RPC
             _floatValue = value;
         }
 
+        public RPCVariable(Variable variable)
+        {
+            switch (variable.Type)
+            {
+                case VariableType.tBoolean:
+                    _booleanValue = variable.BooleanValue;
+                    _type = RPCVariableType.rpcBoolean;
+                    break;
+                case VariableType.tInteger:
+                    _integerValue = variable.IntegerValue;
+                    _type = RPCVariableType.rpcInteger;
+                    break;
+                case VariableType.tDouble:
+                    _floatValue = variable.DoubleValue;
+                    _type = RPCVariableType.rpcFloat;
+                    break;
+                case VariableType.tString:
+                    _stringValue = variable.StringValue;
+                    _type = RPCVariableType.rpcString;
+                    break;
+                case VariableType.tEnum:
+                    _integerValue = variable.IntegerValue;
+                    _type = RPCVariableType.rpcInteger;
+                    break;
+            }
+        }
+
         public static RPCVariable CreateError(int faultCode, string faultString)
         {
             RPCVariable errorStruct = new RPCVariable(RPCVariableType.rpcStruct);
             errorStruct.StructValue.Add("faultCode", new RPCVariable(faultCode));
             errorStruct.StructValue.Add("faultString", new RPCVariable(faultString));
             return errorStruct;
+        }
+
+        public static RPCVariable CreateFromTypeString(String type)
+        {
+            switch(type)
+            {
+                case "BOOL":
+                    return new RPCVariable(RPCVariableType.rpcBoolean);
+                case "STRING":
+                    return new RPCVariable(RPCVariableType.rpcString);
+                case "ACTION":
+                    return new RPCVariable(RPCVariableType.rpcBoolean);
+                case "INTEGER":
+                    return new RPCVariable(RPCVariableType.rpcInteger);
+                case "ENUM":
+                    return new RPCVariable(RPCVariableType.rpcInteger);
+                case "FLOAT":
+                    return new RPCVariable(RPCVariableType.rpcFloat);
+            }
+            return new RPCVariable(RPCVariableType.rpcVoid);
         }
     }
 }

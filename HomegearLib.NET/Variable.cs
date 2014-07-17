@@ -11,13 +11,15 @@ namespace HomegearLib
     { 
         tBoolean,
         tInteger,
-        tFloat,
+        tDouble,
         tString,
         tEnum
     }
 
     public class Variable : IDisposable
     {
+        private RPCController _rpc = null;
+
         private VariableType _type = VariableType.tInteger;
         public VariableType Type { get { return _type; } }
 
@@ -42,37 +44,108 @@ namespace HomegearLib
         private Double _maxDouble = 0;
         public Double MaxDouble { get { return _maxDouble; } internal set { _maxDouble = value; } }
 
-        private Boolean _writeable = false;
+        private Boolean _readable = true;
+        public Boolean Readable { get { return _readable; } internal set { _readable = value; } }
+
+        private Boolean _writeable = true;
         public Boolean Writeable { get { return _writeable; } internal set { _writeable = value; } }
 
-        private Boolean _boolValue = false;
-        public Boolean BoolValue { get { return _boolValue; } set { _boolValue = value; } }
+        private Boolean _booleanValue = false;
+        public Boolean BooleanValue 
+        {
+            get
+            {
+                return _booleanValue;
+            } 
+            set 
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
+                if (_type != VariableType.tBoolean) throw new HomegearVariableTypeException("Variable is not of type boolean.");
+                _booleanValue = value;
+                _rpc.SetValue(this);
+            } 
+        }
 
         private Int32 _integerValue = 0;
-        public Int32 IntegerValue { get { return _integerValue; } set { _integerValue = value; } }
+        public Int32 IntegerValue 
+        { 
+            get
+            {
+                return _integerValue;
+            } 
+            set 
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
+                if (_type != VariableType.tInteger || _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable is not of type integer or enum.");
+                _integerValue = value;
+                if (_integerValue > _maxInteger || _integerValue < _minInteger) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                _rpc.SetValue(this);
+            } 
+        }
 
         private Double _doubleValue = 0;
-        public Double DoubleValue { get { return _doubleValue; } set { _doubleValue = value; } }
+        public Double DoubleValue 
+        { 
+            get
+            {
+                return _doubleValue;
+            } 
+            set 
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
+                if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Variable is not of type double.");
+                _doubleValue = value;
+                if (_doubleValue > _maxDouble || _doubleValue < _minDouble) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                _rpc.SetValue(this);
+            } 
+        }
 
         private String _stringValue = "";
-        public String StringValue { get { return _stringValue; } set { _stringValue = value; } }
+        public String StringValue 
+        { 
+            get
+            {
+                return _stringValue;
+            } 
+            set 
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
+                if (_type != VariableType.tString) throw new HomegearVariableTypeException("Variable is not of type string.");
+                _stringValue = value;
+                _rpc.SetValue(this);
+            } 
+        }
 
         private String[] _valueList = new String[0];
         public String[] ValueList { get { return _valueList; } internal set {_valueList = value; } }
 
-        public Variable(Int32 peerID, Int32 channel, String name)
+        public Variable(Int32 peerID, Int32 channel, String name) : this(null, peerID, channel, name)
         {
+        }
+
+        public Variable(RPCController rpc, Int32 peerID, Int32 channel, String name)
+        {
+            _rpc = rpc;
             _peerID = peerID;
             _channel = channel;
             _name = name;
         }
 
-        internal Variable(Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(peerID, channel, name)
+        internal Variable(Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerID, channel, name, rpcVariable)
+        {
+            
+        }
+
+        internal Variable(RPCController rpc, Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerID, channel, name)
         {
             switch(rpcVariable.Type)
             {
                 case RPCVariableType.rpcBoolean:
-                    _boolValue = rpcVariable.BooleanValue;
+                    _booleanValue = rpcVariable.BooleanValue;
                     _type = VariableType.tBoolean;
                     break;
                 case RPCVariableType.rpcInteger:
@@ -81,7 +154,7 @@ namespace HomegearLib
                     break;
                 case RPCVariableType.rpcFloat:
                     _doubleValue = rpcVariable.FloatValue;
-                    _type = VariableType.tFloat;
+                    _type = VariableType.tDouble;
                     break;
                 case RPCVariableType.rpcString:
                     _stringValue = rpcVariable.StringValue;
@@ -92,7 +165,7 @@ namespace HomegearLib
 
         public void Dispose()
         {
-
+            _rpc = null;
         }
 
         internal void SetMin(RPCVariable min)
@@ -112,16 +185,16 @@ namespace HomegearLib
             switch (variable.Type)
             {
                 case VariableType.tBoolean:
-                    _boolValue = variable.BoolValue;
+                    _booleanValue = variable.BooleanValue;
                     _type = VariableType.tBoolean;
                     break;
                 case VariableType.tInteger:
                     _integerValue = variable.IntegerValue;
                     if (_type != VariableType.tEnum) _type = VariableType.tInteger;
                     break;
-                case VariableType.tFloat:
+                case VariableType.tDouble:
                     _doubleValue = variable.DoubleValue;
-                    _type = VariableType.tFloat;
+                    _type = VariableType.tDouble;
                     break;
                 case VariableType.tString:
                     _stringValue = variable.StringValue;
@@ -149,10 +222,10 @@ namespace HomegearLib
             switch (_type)
             {
                 case VariableType.tBoolean:
-                    return _boolValue.ToString();
+                    return _booleanValue.ToString();
                 case VariableType.tInteger:
                     return _integerValue.ToString();
-                case VariableType.tFloat:
+                case VariableType.tDouble:
                     return _doubleValue.ToString();
                 case VariableType.tString:
                     return _stringValue;

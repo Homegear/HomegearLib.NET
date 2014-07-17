@@ -68,5 +68,11 @@ namespace HomegearLibTest
         {
             _homegear.Dispose();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _homegear.Devices[151].Channels[1].Variables["SUBMIT"].StringValue = "1,200,108000,33,0,17,0,49,0";
+            _homegear.Devices[151].Channels[2].Variables["SUBMIT"].StringValue = "1,1,108000,2,1";
+        }
     }
 }

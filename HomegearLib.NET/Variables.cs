@@ -20,7 +20,7 @@ namespace HomegearLib
 
         public void Add(String key, Variable value)
         {
-            throw new HomegearReadOnlyException("Variables is readonly.");
+            throw new HomegearObjectReadOnlyException("Variables is readonly.");
         }
 
         public bool ContainsKey(String key)
@@ -35,7 +35,7 @@ namespace HomegearLib
 
         public bool Remove(String key)
         {
-            throw new HomegearReadOnlyException("Variables is readonly.");
+            throw new HomegearObjectReadOnlyException("Variables is readonly.");
         }
 
         public bool TryGetValue(String key, out Variable value)
@@ -56,18 +56,18 @@ namespace HomegearLib
             }
             set
             {
-                throw new HomegearReadOnlyException("Variables is readonly.");
+                throw new HomegearObjectReadOnlyException("Variables is readonly.");
             }
         }
 
         public void Add(KeyValuePair<String, Variable> item)
         {
-            throw new HomegearReadOnlyException("Variables is readonly.");
+            throw new HomegearObjectReadOnlyException("Variables is readonly.");
         }
 
         public void Clear()
         {
-            throw new HomegearReadOnlyException("Variables is readonly.");
+            throw new HomegearObjectReadOnlyException("Variables is readonly.");
         }
 
         public bool Contains(KeyValuePair<String, Variable> item)
@@ -92,7 +92,7 @@ namespace HomegearLib
 
         public bool Remove(KeyValuePair<String, Variable> item)
         {
-            throw new HomegearReadOnlyException("Variables is readonly.");
+            throw new HomegearObjectReadOnlyException("Variables is readonly.");
         }
 
         public IEnumerator<KeyValuePair<String, Variable>> GetEnumerator()

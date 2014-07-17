@@ -29,7 +29,7 @@ namespace HomegearLib
 
         public void Add(Int32 key, Family value)
         {
-            throw new HomegearReadOnlyException("Families is readonly.");
+            throw new HomegearObjectReadOnlyException("Families is readonly.");
         }
 
         public bool ContainsKey(Int32 key)
@@ -44,7 +44,7 @@ namespace HomegearLib
 
         public bool Remove(Int32 key)
         {
-            throw new HomegearReadOnlyException("Families is readonly.");
+            throw new HomegearObjectReadOnlyException("Families is readonly.");
         }
 
         public bool TryGetValue(Int32 key, out Family value)
@@ -65,18 +65,18 @@ namespace HomegearLib
             }
             set
             {
-                throw new HomegearReadOnlyException("Families is readonly.");
+                throw new HomegearObjectReadOnlyException("Families is readonly.");
             }
         }
 
         public void Add(KeyValuePair<Int32, Family> item)
         {
-            throw new HomegearReadOnlyException("Families is readonly.");
+            throw new HomegearObjectReadOnlyException("Families is readonly.");
         }
 
         public void Clear()
         {
-            throw new HomegearReadOnlyException("Families is readonly.");
+            throw new HomegearObjectReadOnlyException("Families is readonly.");
         }
 
         public bool Contains(KeyValuePair<Int32, Family> item)
@@ -101,7 +101,7 @@ namespace HomegearLib
 
         public bool Remove(KeyValuePair<Int32, Family> item)
         {
-            throw new HomegearReadOnlyException("Families is readonly.");
+            throw new HomegearObjectReadOnlyException("Families is readonly.");
         }
 
         public IEnumerator<KeyValuePair<Int32, Family>> GetEnumerator()
