@@ -48,6 +48,7 @@ namespace HomegearLib
 
         void _rpc_OnRPCEvent(RPCController sender, Variable value)
         {
+            if (_disposing) return;
             if(value.PeerID == 0) return; //System variable
             if (!Devices.ContainsKey(value.PeerID)) return;
             Device device = Devices[value.PeerID];
@@ -61,6 +62,7 @@ namespace HomegearLib
 
         void _rpc_InitCompleted(RPCController sender)
         {
+            if (_disposing) return;
             _families.Dispose();
             _families = new Families(_rpc, _rpc.Families);
             _devices.Dispose();

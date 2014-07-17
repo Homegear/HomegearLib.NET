@@ -130,24 +130,31 @@ namespace HomegearLib.RPC
         {
             while(!_stopServer)
             {
+                System.Diagnostics.Debug.WriteLine("Position 1");
                 _clientConnected.Reset();
                 _listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTCPClientCallback), _listener);
+                System.Diagnostics.Debug.WriteLine("Position 2");
                 while(!_stopServer)
                 {
+                    System.Diagnostics.Debug.WriteLine("Position 3");
                     if (_clientConnected.WaitOne(1000)) break;
+                    System.Diagnostics.Debug.WriteLine("Position 4");
                 }
                 if(_stopServer) return;
                 if(_client == null) continue;
                 _sslStream = null;
                 if(_ssl)
                 {
+                    System.Diagnostics.Debug.WriteLine("Position 5");
                     _sslStream = new SslStream(_client.GetStream(), true);
+                    System.Diagnostics.Debug.WriteLine("Position 6");
                     try
                     {
                         _sslStream.AuthenticateAsServer(_serverCertificate, false, SslProtocols.Tls, true);
+                        System.Diagnostics.Debug.WriteLine("Position 7");
                     }
-                    catch (AuthenticationException) { continue; }
-                    catch (IOException) { continue; }
+                    catch (AuthenticationException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
+                    catch (IOException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
                     _sslStream.ReadTimeout = 5000;
                     _sslStream.WriteTimeout = 5000;
                 }
@@ -156,7 +163,7 @@ namespace HomegearLib.RPC
                     _client.Client.ReceiveTimeout = 5000;
                     _client.Client.SendTimeout = 5000;
                 }
-
+                System.Diagnostics.Debug.WriteLine("Position 8");
                 ReadClient();
 
                 if (_ssl) _sslStream.Close();
@@ -177,12 +184,14 @@ namespace HomegearLib.RPC
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Position 9");
                     if (_client == null || !_client.Connected) break;
-
+                    System.Diagnostics.Debug.WriteLine("Position 10");
                     if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
                     else bytesReceived =_client.Client.Receive(buffer);
+                    System.Diagnostics.Debug.WriteLine("Position 11");
                     if (bytesReceived == 0) continue;
-
+                    System.Diagnostics.Debug.WriteLine("Position 12");
                     if (buffer[0] == 'B' && buffer[1] == 'i' && buffer[2] == 'n')
                     {
                         if ((buffer[3] & 1) == 1) continue; //Response received
@@ -206,15 +215,20 @@ namespace HomegearLib.RPC
                         Array.Copy(buffer, packet, bytesReceived);
                         if(_authString != null && _authString.Length > 0)
                         {
+                            System.Diagnostics.Debug.WriteLine("Position 13");
                             Encoding.RPCHeader header = _rpcDecoder.DecodeHeader(packet);
+                            System.Diagnostics.Debug.WriteLine("Position 14");
                             if (header.Authorization != Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString)))
                             {
+                                System.Diagnostics.Debug.WriteLine("Position 15");
                                 packet = null;
                                 List<byte> responsePacket = _rpcEncoder.EncodeResponse(RPCVariable.CreateError(-32603, "Unauthorized"));
                                 if (_ssl)
                                 {
+                                    System.Diagnostics.Debug.WriteLine("Position 16");
                                     _sslStream.Write(responsePacket.ToArray());
                                     _sslStream.Flush();
+                                    System.Diagnostics.Debug.WriteLine("Position 17");
                                 }
                                 else _client.Client.Send(responsePacket.ToArray());
                                 continue;
@@ -223,22 +237,33 @@ namespace HomegearLib.RPC
                     }
                     else if(packet != null)
                     {
+                        System.Diagnostics.Debug.WriteLine("Position 17");
                         if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from Homegear.");
                         Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
                         packetLength += (uint)bytesReceived;
                     }
                     if (packetLength == dataSize)
                     {
+                        System.Diagnostics.Debug.WriteLine("Position 19");
                         ProcessPacket(packet);
+                        System.Diagnostics.Debug.WriteLine("Position 20");
                         packet = null;
                     }
                 }
                 catch (SocketException ex)
                 {
                     if (ex.SocketErrorCode == SocketError.TimedOut) continue;
-                    else break;
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        break;
+                    }
                 }
-                catch (IOException) { break; }
+                catch (IOException ex)
+                { 
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    break;
+                }
             }
         }
 
