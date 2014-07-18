@@ -17,6 +17,9 @@ namespace HomegearLib
         private Int32 _address = -1;
         public Int32 Address { get { return _address; } internal set { _address = value; } }
 
+        private String _serialNumber = "";
+        public String SerialNumber { get { return _serialNumber; } internal set { _serialNumber = value; } }
+
         private String _typeString = "";
         public String TypeString { get { return _typeString; } internal set { _typeString = value; } }
 
@@ -26,7 +29,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _family = null;
-            _channels.Dispose();
+            if(_channels != null) _channels.Dispose();
         }
     }
 }

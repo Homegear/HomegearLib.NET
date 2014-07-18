@@ -119,6 +119,11 @@ namespace HomegearLib.RPC
                     _client.Close();
                     throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
                 }
+                catch(System.IO.IOException ex)
+                {
+                    _client.Close();
+                    throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                }
             }
             if(Connected != null) Connected(this);
         }
@@ -223,12 +228,17 @@ namespace HomegearLib.RPC
                 catch (System.IO.IOException ex)
                 {
                     Disconnect();
-                    if (j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                    if (j == _maxTries - 1) throw new HomegearRPCClientException("IOException thrown calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
                 }
                 catch (SocketException ex)
                 {
                     Disconnect();
-                    if(j == _maxTries - 1) throw new HomegearRPCClientException("Error calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                    if(j == _maxTries - 1) throw new HomegearRPCClientException("SocketException thrown on calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
+                }
+                catch(Exception ex)
+                {
+                    Disconnect();
+                    if (j == _maxTries - 1) throw new HomegearRPCClientException("Exception thrown on calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
                 }
             }
             if (result == null) result = RPCVariable.CreateError(-32500, "Response was empty.");
