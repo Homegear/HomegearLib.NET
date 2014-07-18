@@ -44,6 +44,11 @@ namespace HomegearLibTest
                 return;
             }
             lblVariableTimer.Text = "";
+            SetVariable();
+        }
+
+        void SetVariable()
+        {
             if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
             Int32 integerValue = 0;
             switch (_selectedVariable.Type)
@@ -262,11 +267,40 @@ namespace HomegearLibTest
                 txtVariableType.Text = _selectedVariable.Type.ToString();
                 chkVariableReadable.Checked = _selectedVariable.Readable;
                 chkVariableWriteable.Checked = _selectedVariable.Writeable;
+                txtUnit.Text = _selectedVariable.Unit;
                 txtVariableMin.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MinDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MinInteger.ToString() : "");
                 txtVariableMax.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MaxDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MaxInteger.ToString() : "");
+                txtVariableDefault.Text = _selectedVariable.DefaultToString();
                 txtVariableValue.Text = _selectedVariable.ToString();
+                if (_selectedVariable is ConfigParameter) bnPutParamset.Visible = true; else bnPutParamset.Visible = false;
                 lblVariableTimer.Text = "";
-                if (_selectedVariable.Writeable && e.Node.Parent.Text == "Variables") txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
+                txtUIFlags.Text = "";
+                if ((_selectedVariable.UIFlags & VariableUIFlags.fVisible) == VariableUIFlags.fVisible) txtUIFlags.Text += "Visible\r\n";
+                if ((_selectedVariable.UIFlags & VariableUIFlags.fInternal) == VariableUIFlags.fInternal) txtUIFlags.Text += "Internal\r\n";
+                if ((_selectedVariable.UIFlags & VariableUIFlags.fTransform) == VariableUIFlags.fTransform) txtUIFlags.Text += "Transform\r\n";
+                if ((_selectedVariable.UIFlags & VariableUIFlags.fService) == VariableUIFlags.fService) txtUIFlags.Text += "Service\r\n";
+                if ((_selectedVariable.UIFlags & VariableUIFlags.fSticky) == VariableUIFlags.fSticky) txtUIFlags.Text += "Sticky\r\n";
+                txtValueList.Text = "";
+                for (Int32 i = 0; i < _selectedVariable.ValueList.Length; i++)
+                {
+                    txtValueList.Text += i.ToString() + " " + _selectedVariable.ValueList[i] + "\r\n";
+                }
+                txtSpecialValues.Text = "";
+                if(_selectedVariable.Type == VariableType.tDouble)
+                {
+                    foreach(KeyValuePair<Double, String> specialValue in _selectedVariable.SpecialDoubleValues)
+                    {
+                        txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                    }
+                }
+                else
+                {
+                    foreach (KeyValuePair<Int32, String> specialValue in _selectedVariable.SpecialIntegerValues)
+                    {
+                        txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                    }
+                }
+                if (_selectedVariable.Writeable) txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
                 pnDevice.Visible = false;
                 pnVariable.Visible = true;
             }
@@ -275,27 +309,61 @@ namespace HomegearLibTest
 
         private void txtVariableValue_TextChanged(object sender, EventArgs e)
         {
-            if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
-            _variableValueChangedTimer.Stop();
-            _variableTimerIndex = 5;
-            lblVariableTimer.Text = "Sending in 5 seconds...";
-            _variableValueChangedTimer.Start();
+            try
+            {
+                if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
+                if (_selectedVariable is ConfigParameter)
+                {
+                    SetVariable();
+                }
+                else
+                {
+                    _variableValueChangedTimer.Stop();
+                    _variableTimerIndex = 5;
+                    lblVariableTimer.Text = "Sending in 5 seconds...";
+                    _variableValueChangedTimer.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
         }
 
         private void tvDevices_AfterExpand(object sender, TreeViewEventArgs e)
         {
-            if (e.Node == null) return;
-            if(e.Node.Level == 2 && e.Node.Text =="Config")
+            try
             {
-                e.Node.Nodes.Clear();
-                Channel channel = (Channel)e.Node.Tag;
-                foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                if (e.Node == null) return;
+                if(e.Node.Level == 2 && e.Node.Text =="Config")
                 {
-                    TreeNode parameterNode = new TreeNode(parameter.Key);
-                    parameterNode.Tag = parameter.Value;
-                    e.Node.Nodes.Add(parameterNode);
+                    e.Node.Nodes.Clear();
+                    Channel channel = (Channel)e.Node.Tag;
+                    foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                    {
+                        TreeNode parameterNode = new TreeNode(parameter.Key);
+                        parameterNode.Tag = parameter.Value;
+                        e.Node.Nodes.Add(parameterNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
                 }
-                if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void bnPutParamset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_selectedVariable == null || _selectedDevice == null || !_selectedVariable.Writeable || !_selectedDevice.Channels.ContainsKey(_selectedVariable.Channel)) return;
+                _selectedDevice.Channels[_selectedVariable.Channel].Config.Put();
+            }
+            catch(Exception ex)
+            {
+                WriteLog(ex.Message);
             }
         }
     }

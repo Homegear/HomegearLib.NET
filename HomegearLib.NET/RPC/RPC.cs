@@ -183,6 +183,7 @@ namespace HomegearLib.RPC
                             variable.Readable = readable;
                             if (variableInfo.ContainsKey("MIN")) variable.SetMax(variableInfo["MIN"]);
                             if (variableInfo.ContainsKey("MAX")) variable.SetMax(variableInfo["MAX"]);
+                            if (variableInfo.ContainsKey("SPECIAL")) variable.SetSpecialValues(variableInfo["SPECIAL"]);
                             if (variableInfo.ContainsKey("VALUE_LIST")) variable.SetValueList(variableInfo["VALUE_LIST"]);
                             variables.Add(variable.Name, variable);
                         }
@@ -265,6 +266,21 @@ namespace HomegearLib.RPC
                 families.Add(familyStruct.StructValue["ID"].IntegerValue, new Family(familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue));
             }
             return families;
+        }
+
+        public void PutParamset(Int32 peerID, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> parameters)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            if (parameters.Count == 0) return;
+            String typeString = "MASTER";
+            if (type == RPCParameterSetType.rpcValues) typeString = "VALUES";
+            RPCVariable rpcParameters = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (KeyValuePair<String, ConfigParameter> parameter in parameters)
+            {
+                rpcParameters.StructValue.Add(parameter.Key, new RPCVariable(parameter.Value));
+            }
+            RPCVariable response = _client.CallMethod("putParamset", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(channel), new RPCVariable(typeString), rpcParameters });
+            if (response.ErrorStruct) ThrowError("putParamset", response);
         }
 
         public void SetValue(Variable variable)

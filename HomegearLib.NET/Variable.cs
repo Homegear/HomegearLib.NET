@@ -18,6 +18,7 @@ namespace HomegearLib
 
     public enum VariableUIFlags
     {
+        fNone = 0,
         fVisible = 1,
         fInternal = 2,
         fTransform = 4,
@@ -68,7 +69,7 @@ namespace HomegearLib
         protected Double _maxDouble = 0;
         public Double MaxDouble { get { return _maxDouble; } internal set { _maxDouble = value; } }
 
-        protected VariableUIFlags _uiFlags = VariableUIFlags.fVisible;
+        protected VariableUIFlags _uiFlags = VariableUIFlags.fNone;
         public VariableUIFlags UIFlags { get { return _uiFlags; } internal set { _uiFlags = value; } }
 
         protected Boolean _readable = true;
@@ -77,14 +78,14 @@ namespace HomegearLib
         protected Boolean _writeable = true;
         public Boolean Writeable { get { return _writeable; } internal set { _writeable = value; } }
 
-        protected ReadOnlyDictionary<Int32, String> _specialIntegerValues = null;
+        protected ReadOnlyDictionary<Int32, String> _specialIntegerValues = new ReadOnlyDictionary<int,string>();
         public ReadOnlyDictionary<Int32, String> SpecialIntegerValues { get { return _specialIntegerValues; } }
 
-        protected ReadOnlyDictionary<Double, String> _specialDoubleValues = null;
+        protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double,string>();
         public ReadOnlyDictionary<Double, String> SpecialDoubleValues { get { return _specialDoubleValues; } }
 
         protected Boolean _booleanValue = false;
-        public Boolean BooleanValue 
+        public virtual Boolean BooleanValue 
         {
             get
             {
@@ -101,7 +102,7 @@ namespace HomegearLib
         }
 
         protected Int32 _integerValue = 0;
-        public Int32 IntegerValue 
+        public virtual Int32 IntegerValue 
         { 
             get
             {
@@ -112,14 +113,14 @@ namespace HomegearLib
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
                 if (_type != VariableType.tInteger || _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable is not of type integer or enum.");
+                if ((_integerValue > _maxInteger || _integerValue < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _integerValue = value;
-                if (_integerValue > _maxInteger || _integerValue < _minInteger) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _rpc.SetValue(this);
             } 
         }
 
         protected Double _doubleValue = 0;
-        public Double DoubleValue 
+        public virtual Double DoubleValue 
         { 
             get
             {
@@ -130,14 +131,14 @@ namespace HomegearLib
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
                 if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Variable is not of type double.");
+                if ((_doubleValue > _maxDouble || _doubleValue < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _doubleValue = value;
-                if (_doubleValue > _maxDouble || _doubleValue < _minDouble) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _rpc.SetValue(this);
             } 
         }
 
         protected String _stringValue = "";
-        public String StringValue 
+        public virtual String StringValue 
         { 
             get
             {
@@ -269,13 +270,31 @@ namespace HomegearLib
             Dictionary<Double, String> specialDoubleValues = new Dictionary<double,string>();
             foreach (RPCVariable specialValue in specialValues.ArrayValue)
             {
-                if (!specialValues.StructValue.ContainsKey("ID") || !specialValues.StructValue.ContainsKey("VALUE")) continue;
-                RPCVariable value = specialValues.StructValue["VALUE"];
-                if (value.Type == RPCVariableType.rpcInteger) specialIntegerValues.Add(value.IntegerValue, specialValues.StructValue["ID"].StringValue);
-                else if (value.Type == RPCVariableType.rpcFloat) specialDoubleValues.Add(value.FloatValue, specialValues.StructValue["ID"].StringValue);
+                if (!specialValue.StructValue.ContainsKey("ID") || !specialValue.StructValue.ContainsKey("VALUE")) continue;
+                RPCVariable value = specialValue.StructValue["VALUE"];
+                if (value.Type == RPCVariableType.rpcInteger) specialIntegerValues.Add(value.IntegerValue, specialValue.StructValue["ID"].StringValue);
+                else if (value.Type == RPCVariableType.rpcFloat) specialDoubleValues.Add(value.FloatValue, specialValue.StructValue["ID"].StringValue);
             }
             if (specialIntegerValues.Count > 0) _specialIntegerValues = new ReadOnlyDictionary<int, string>(specialIntegerValues);
             if (specialDoubleValues.Count > 0) _specialDoubleValues = new ReadOnlyDictionary<double, string>(specialDoubleValues);
+        }
+
+        public String DefaultToString()
+        {
+            switch (_type)
+            {
+                case VariableType.tBoolean:
+                    return _defaultBoolean.ToString();
+                case VariableType.tInteger:
+                    return _defaultInteger.ToString();
+                case VariableType.tDouble:
+                    return _defaultDouble.ToString();
+                case VariableType.tString:
+                    return _defaultString;
+                case VariableType.tEnum:
+                    return _defaultInteger.ToString();
+            }
+            return "";
         }
 
         public override String ToString()

@@ -14,7 +14,7 @@ namespace HomegearLib
         private Int32 _peerID = 0;
         public Int32 PeerID { get { return _peerID; } }
 
-        private Int32 _index;
+        private Int32 _index = 0;
         public Int32 Index { get { return _index; } }
 
         private Variables _variables;
@@ -27,7 +27,7 @@ namespace HomegearLib
             {
                 if (_config == null || _config.Count == 0)
                 {
-                    _config = new DeviceConfig(_rpc, _rpc.GetParamsetDescription(_peerID, Index, RPCParameterSetType.rpcMaster));
+                    _config = new DeviceConfig(_rpc, _peerID, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerID, Index, RPCParameterSetType.rpcMaster));
                     _rpc.GetParamset(_peerID, Index, RPCParameterSetType.rpcMaster, _config);
                 }
                 return _config;
