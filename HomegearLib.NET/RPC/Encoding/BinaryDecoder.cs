@@ -46,7 +46,14 @@ namespace HomegearLib.RPC.Encoding
             if (position + 8 > encodedData.Length) return 0;
             double mantissa = (double)DecodeInteger(encodedData, ref position);
             double exponent = (double)DecodeInteger(encodedData, ref position);
-            return Math.Round((mantissa / (double)0x40000000), 9) * Math.Pow(2, exponent); ;
+            double result = (mantissa / (double)0x40000000) * Math.Pow(2, exponent);
+            if (result != 0)
+            {
+                Int32 digits = (Int32)Math.Floor(Math.Log10(Math.Abs(result)) + 1);
+                double factor = Math.Pow(10, 9 - digits);
+                result = Math.Floor(result * factor + 0.5) / factor;
+            }
+            return result;
         }
     }
 }

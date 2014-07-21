@@ -14,10 +14,6 @@ namespace HomegearLib
         private String _name = "";
         public String Name { get { return _name; } set { _name = value; } }
 
-        public Family()
-        {
-        }
-
         public Family(Int32 id, String name)
         {
             _id = id;

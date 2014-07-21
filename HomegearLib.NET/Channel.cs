@@ -7,9 +7,17 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
+    public enum ChannelDirection
+    {
+        None = 0,
+        Sender = 1,
+        Receiver = 2
+    }
+
     public class Channel : IDisposable
     {
         private RPCController _rpc = null;
+        bool _descriptionRequested = false;
 
         private Int32 _peerID = 0;
         public Int32 PeerID { get { return _peerID; } }
@@ -20,15 +28,15 @@ namespace HomegearLib
         private Variables _variables;
         public Variables Variables { get { return _variables; } internal set { _variables = value; } }
 
-        private DeviceConfig _config;
+        private DeviceConfig _config = null;
         public DeviceConfig Config
         { 
             get
             {
                 if (_config == null || _config.Count == 0)
                 {
-                    _config = new DeviceConfig(_rpc, _peerID, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerID, Index, RPCParameterSetType.rpcMaster));
-                    _rpc.GetParamset(_peerID, Index, RPCParameterSetType.rpcMaster, _config);
+                    _config = new DeviceConfig(_rpc, _peerID, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerID, _index, RPCParameterSetType.rpcMaster));
+                    _config.Reload();
                 }
                 return _config;
             } 
@@ -36,6 +44,173 @@ namespace HomegearLib
             {
                 _config = value;
             }
+        }
+
+        private Links _links = null;
+        public Links Links
+        {
+            get
+            {
+                if(_links == null || _links.Count == 0)
+                {
+                    List<Link> allLinks = _rpc.GetLinks(_peerID, _index);
+                    Dictionary<Int32, Dictionary<Int32, Link>> links = new Dictionary<Int32, Dictionary<Int32, Link>>();
+                    foreach(Link link in allLinks)
+                    {
+                        if (!links.ContainsKey(link.RemotePeerID)) links.Add(link.RemotePeerID, new Dictionary<Int32, Link>());
+                        if (links[link.RemotePeerID].ContainsKey(link.RemoteChannel)) continue;
+                        links[link.RemotePeerID].Add(link.RemoteChannel, link);
+                    }
+                    Dictionary<Int32, ReadOnlyDictionary<Int32, Link>> links2 = new Dictionary<Int32, ReadOnlyDictionary<Int32, Link>>();
+                    foreach(KeyValuePair<Int32, Dictionary<Int32, Link>> pair in links)
+                    {
+                        links2.Add(pair.Key, new ReadOnlyDictionary<Int32, Link>(pair.Value));
+                    }
+                    _links = new Links(links2);
+                }
+                return _links;
+            }
+            internal set
+            {
+                _links = value;
+            }
+        }
+
+        private String _typeString = "";
+        public String TypeString
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _typeString;
+            }
+            internal set { _typeString = value; }
+        }
+
+        private bool _aesActive = false;
+        public bool AESActive
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _aesActive;
+            }
+            internal set { _aesActive = value; }
+        }
+
+        private ChannelDirection _direction = ChannelDirection.None;
+        public ChannelDirection Direction
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _direction;
+            }
+            internal set { _direction = value; }
+        }
+
+        private String[] _linkSourceRoles = new String[0];
+        public String[] LinkSourceRoles
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                //Return a copy
+                return _linkSourceRoles.ToArray();
+            }
+            internal set { _linkSourceRoles = value; }
+        }
+
+        private String[] _linkTargetRoles = new String[0];
+        public String[] LinkTargetRoles
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                //Return a copy
+                return _linkTargetRoles.ToArray();
+            }
+            internal set { _linkTargetRoles = value; }
+        }
+
+        private Int32 _groupedWith = -1;
+        public Int32 GroupedWith
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _groupedWith;
+            }
+            internal set { _groupedWith = value; }
+        }
+
+        private String _team = "";
+        public String Team
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _team;
+            }
+            internal set { _team = value; }
+        }
+
+        private String _teamTag = "";
+        public String TeamTag
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _teamTag;
+            }
+            internal set { _teamTag = value; }
+        }
+
+        private String[] _teamMembers = new String[0];
+        public String[] TeamMembers
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _teamMembers.ToArray();
+            }
+            internal set { _teamMembers = value; }
         }
 
         public Channel(RPCController rpc, Int32 peerID, Int32 index)

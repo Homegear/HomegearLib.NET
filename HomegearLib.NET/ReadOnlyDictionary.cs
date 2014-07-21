@@ -9,7 +9,7 @@ namespace HomegearLib
 {
     public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        protected readonly IDictionary<TKey, TValue> _dictionary;
+        protected IDictionary<TKey, TValue> _dictionary;
 
         public ReadOnlyDictionary()
         {
@@ -21,8 +21,12 @@ namespace HomegearLib
             _dictionary = dictionary;
         }
 
-        #region IDictionary<TKey,TValue> Members
+        internal void Reset(IDictionary<TKey, TValue> dictionary)
+        {
+            _dictionary = dictionary;
+        }
 
+        #region IDictionary<TKey,TValue> Members
         void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
         {
             throw ReadOnlyException();

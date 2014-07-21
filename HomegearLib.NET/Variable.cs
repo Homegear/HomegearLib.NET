@@ -204,27 +204,33 @@ namespace HomegearLib
             else if (max.Type == RPCVariableType.rpcFloat) _maxDouble = max.FloatValue;
         }
 
-        internal void SetValue(RPCVariable rpcVariable)
+        internal bool SetValue(RPCVariable rpcVariable)
         {
+            bool changed = false;
             switch (rpcVariable.Type)
             {
                 case RPCVariableType.rpcBoolean:
+                    if (_booleanValue != rpcVariable.BooleanValue) changed = true;
                     _booleanValue = rpcVariable.BooleanValue;
                     _type = VariableType.tBoolean;
                     break;
                 case RPCVariableType.rpcInteger:
+                    if (_integerValue != rpcVariable.IntegerValue) changed = true;
                     _integerValue = rpcVariable.IntegerValue;
                     if (_type != VariableType.tEnum) _type = VariableType.tInteger;
                     break;
                 case RPCVariableType.rpcFloat:
+                    if (_doubleValue != rpcVariable.FloatValue) changed = true;
                     _doubleValue = rpcVariable.FloatValue;
                     _type = VariableType.tDouble;
                     break;
                 case RPCVariableType.rpcString:
+                    if (_stringValue != rpcVariable.StringValue) changed = true;
                     _stringValue = rpcVariable.StringValue;
                     _type = VariableType.tString;
                     break;
             }
+            return changed;
         }
 
         internal void SetValue(Variable variable)
@@ -313,6 +319,25 @@ namespace HomegearLib
                     return _integerValue.ToString();
             }
             return "";
+        }
+
+        public bool Compare(Variable variable)
+        {
+            if (_type != variable.Type) return false;
+            switch (_type)
+            {
+                case VariableType.tBoolean:
+                    return _booleanValue == variable.BooleanValue;
+                case VariableType.tInteger:
+                    return _integerValue == variable.IntegerValue;
+                case VariableType.tDouble:
+                    return _doubleValue == variable.DoubleValue;
+                case VariableType.tString:
+                    return _stringValue == variable.StringValue;
+                case VariableType.tEnum:
+                    return _integerValue == variable.IntegerValue;
+            }
+            return true;
         }
     }
 }

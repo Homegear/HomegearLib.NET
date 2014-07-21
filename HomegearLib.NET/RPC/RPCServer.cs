@@ -44,9 +44,15 @@ namespace HomegearLib.RPC
     internal class RPCServer
     {
         public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value);
+        public delegate void NewDevicesEventHandler(RPCServer sender);
+        public delegate void DevicesDeletedEventHandler(RPCServer sender);
+        public delegate void UpdateDeviceEventHandler(RPCServer sender, Int32 peerID, Int32 channel, Int32 flags);
 
         #region "Events"
-        public event RPCEventEventHandler OnRPCEvent;
+        public event RPCEventEventHandler RPCEvent;
+        public event NewDevicesEventHandler NewDevices;
+        public event DevicesDeletedEventHandler DevicesDeleted;
+        public event UpdateDeviceEventHandler UpdateDevice;
         #endregion
 
         private Thread _listenThread = null;
@@ -65,6 +71,9 @@ namespace HomegearLib.RPC
 
         private bool _ssl = false;
         public bool SSL { get { return _ssl; } }
+
+        Dictionary<Int32, Device> _knownDevices = null;
+        public Dictionary<Int32, Device> KnownDevices { get { return _knownDevices; } set { _knownDevices = value; } }
 
         private SecureString _authString = null;
         private Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
@@ -254,6 +263,10 @@ namespace HomegearLib.RPC
                 response = new RPCVariable(RPCVariableType.rpcArray);
                 response.ArrayValue.Add(new RPCVariable("system.multicall"));
                 response.ArrayValue.Add(new RPCVariable("event"));
+                response.ArrayValue.Add(new RPCVariable("listDevices"));
+                response.ArrayValue.Add(new RPCVariable("newDevices"));
+                response.ArrayValue.Add(new RPCVariable("updateDevice"));
+                response.ArrayValue.Add(new RPCVariable("deleteDevices"));
             }
             else if(methodName == "system.multicall" && parameters.Count() > 0)
             {
@@ -263,16 +276,50 @@ namespace HomegearLib.RPC
                     if (method.StructValue["methodName"].StringValue != "event") continue;
                     List<RPCVariable> eventParams = method.StructValue["params"].ArrayValue;
                     if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString || eventParams[1].Type != RPCVariableType.rpcInteger || eventParams[2].Type != RPCVariableType.rpcInteger || eventParams[3].Type != RPCVariableType.rpcString) continue;
-                    if(OnRPCEvent != null) OnRPCEvent(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
+                    if(RPCEvent != null) RPCEvent(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
                 }
             }
-            List<byte> responsePacket = _rpcEncoder.EncodeResponse(response);
-            if (_ssl)
+            else if(methodName == "listDevices")
             {
-                _sslStream.Write(responsePacket.ToArray());
-                _sslStream.Flush();
+                response = new RPCVariable(RPCVariableType.rpcArray);
+                if (_knownDevices != null)
+                {
+                    foreach (Int32 peerID in _knownDevices.Keys)
+                    {
+                        RPCVariable device = new RPCVariable(RPCVariableType.rpcStruct);
+                        device.StructValue.Add("ID", new RPCVariable(peerID));
+                        response.ArrayValue.Add(device);
+                    }
+                }
             }
-            else _client.Client.Send(responsePacket.ToArray());
+            else if(methodName == "newDevices")
+            {
+                if (NewDevices != null) NewDevices(this);
+            }
+            else if(methodName == "deleteDevices")
+            {
+                if (DevicesDeleted != null) DevicesDeleted(this);
+            }
+            else if(methodName == "updateDevice")
+            {
+                if (parameters.Count == 4 && parameters[0].Type == RPCVariableType.rpcString && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcInteger && parameters[3].Type == RPCVariableType.rpcInteger)
+                {
+                    if (UpdateDevice != null) UpdateDevice(this, parameters[1].IntegerValue, parameters[2].IntegerValue, parameters[3].IntegerValue);
+                }
+            }
+            byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();
+            Int32 bytesSent = 1024;
+            Int32 bytesToSend = 0;
+            for (int i = 0; i < responsePacket.Length; i += bytesSent)
+            {
+                bytesToSend = (i + 1024 >= responsePacket.Length) ? responsePacket.Length - i : 1024;
+                if (_ssl)
+                {
+                    _sslStream.Write(responsePacket, i, bytesToSend);
+                    _sslStream.Flush();
+                }
+                else bytesSent = _client.Client.Send(responsePacket, i, bytesToSend, SocketFlags.None);
+            }
         }
 
         private void AcceptTCPClientCallback(IAsyncResult ar)

@@ -19,6 +19,7 @@ namespace HomegearLibTest
         RPCController _rpc = null;
         Homegear _homegear = null;
         Device _selectedDevice = null;
+        Link _selectedLink = null;
         Variable _selectedVariable = null;
         bool _nodeLoading = false;
         Int32 _variableTimerIndex = 5;
@@ -128,6 +129,12 @@ namespace HomegearLibTest
                         configNode.Tag = channel.Value;
                         configNode.Nodes.Add("<loading...>");
                         channelNode.Nodes.Add(configNode);
+
+                        TreeNode linksNode = new TreeNode("Links");
+                        linksNode.Tag = channel.Value;
+                        linksNode.Nodes.Add("<loading...>");
+                        channelNode.Nodes.Add(linksNode);
+
                         deviceNode.Nodes.Add(channelNode);
                     }
                     tvDevices.Nodes.Add(deviceNode);
@@ -144,7 +151,7 @@ namespace HomegearLibTest
             }
             else
             {
-                if (txtLog.Text.Length > 10000) txtLog.Text = txtLog.Text.Substring(0, 5000);
+                if (txtLog.Text.Length > 50000) txtLog.Text = txtLog.Text.Substring(0, 40000);
                 txtLog.Text = txtLog.Text.Insert(0, text + "\r\n");
             }
         }
@@ -171,6 +178,29 @@ namespace HomegearLibTest
             {
                 SetVariableValue(variable.ToString());
             }
+        }
+
+        void _homegear_OnDeviceConfigParameterUpdated(Homegear sender, Device device, Channel channel, ConfigParameter parameter)
+        {
+            WriteLog("Config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
+            if (_selectedVariable == parameter)
+            {
+                SetVariableValue(parameter.ToString());
+            }
+        }
+
+        void _homegear_OnDeviceLinkConfigParameterUpdated(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter)
+        {
+            WriteLog("Link config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Remote Peer: " + link.RemotePeerID.ToString() + ", Remote Channel: " + link.RemoteChannel.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
+            if (_selectedVariable == parameter)
+            {
+                SetVariableValue(parameter.ToString());
+            }
+        }
+
+        private void _homegear_OnDeviceLinksUpdated(Homegear sender, Device device, Channel channel)
+        {
+            WriteLog("Device links were updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString());
         }
 
         void _homegear_OnConnectError(Homegear sender, string message, string stackTrace)
@@ -219,9 +249,19 @@ namespace HomegearLibTest
             _rpc.Connected += _rpc_Connected;
             _rpc.Disconnected += _rpc_Disconnected;
             _homegear = new Homegear(_rpc);
-            _homegear.OnConnectError += _homegear_OnConnectError;
-            _homegear.OnDeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
-            _homegear.OnReloaded += _homegear_OnReloaded;
+            _homegear.ConnectError += _homegear_OnConnectError;
+            _homegear.DeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
+            _homegear.DeviceConfigParameterUpdated += _homegear_OnDeviceConfigParameterUpdated;
+            _homegear.DeviceLinkConfigParameterUpdated += _homegear_OnDeviceLinkConfigParameterUpdated;
+            _homegear.DeviceLinksUpdated += _homegear_OnDeviceLinksUpdated;
+            _homegear.ReloadRequired += _homegear_OnReloadRequired;
+            _homegear.Reloaded += _homegear_OnReloaded;
+        }
+
+        void _homegear_OnReloadRequired(Homegear sender)
+        {
+            WriteLog("Received reload required event. Reloading.");
+            _homegear.Reload();
         }
 
         void _rpc_Disconnected(RPCController sender)
@@ -238,21 +278,73 @@ namespace HomegearLibTest
         {
             _variableValueChangedTimer.Stop();
             _selectedDevice = null;
+            _selectedLink = null;
             _selectedVariable = null;
             if (e.Node == null) return;
             _nodeLoading = true;
-            if(e.Node.Level <= 2)
+            if(e.Node.Level == 0)
             {
                 if (e.Node.Level == 0) _selectedDevice = (Device)e.Node.Tag;
-                if (e.Node.Level == 1) _selectedDevice = (Device)e.Node.Parent.Tag;
-                if (e.Node.Level == 2) _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
                 txtSerialNumber.Text = _selectedDevice.SerialNumber;
                 txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                 txtTypeString.Text = _selectedDevice.TypeString;
+                txtFamily.Text = _selectedDevice.Family.Name;
+                txtDeviceName.Text = _selectedDevice.Name;
+                txtInterface.Text = _selectedDevice.Interface.ID;
+                txtPhysicalAddress.Text = "0x" + _selectedDevice.Address.ToString("X2");
+                txtFirmware.Text = _selectedDevice.Firmware;
+                txtAvailableFirmware.Text = _selectedDevice.AvailableFirmware;
+                txtRXModes.Text = "";
+                if ((_selectedDevice.RXMode & DeviceRXMode.Always) == DeviceRXMode.Always) txtRXModes.Text += "Always\r\n";
+                if ((_selectedDevice.RXMode & DeviceRXMode.Burst) == DeviceRXMode.Burst) txtRXModes.Text += "Burst\r\n";
+                if ((_selectedDevice.RXMode & DeviceRXMode.Config) == DeviceRXMode.Config) txtRXModes.Text += "Config\r\n";
+                if ((_selectedDevice.RXMode & DeviceRXMode.LazyConfig) == DeviceRXMode.LazyConfig) txtRXModes.Text += "LazyConfig\r\n";
+                if ((_selectedDevice.RXMode & DeviceRXMode.WakeUp) == DeviceRXMode.WakeUp) txtRXModes.Text += "WakeUp\r\n";
                 pnVariable.Visible = false;
+                pnChannel.Visible = false;
                 pnDevice.Visible = true;
             }
-            else if(e.Node.Level == 3)
+            else if(e.Node.Level <= 2)
+            {
+                Channel channel = null;
+                if (e.Node.Level == 1)
+                {
+                    _selectedDevice = (Device)e.Node.Parent.Tag;
+                    channel = (Channel)e.Node.Tag;
+                }
+                if (e.Node.Level == 2)
+                {
+                    _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
+                    channel = (Channel)e.Node.Parent.Tag;
+                }
+                txtChannelPeerID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
+                txtChannelIndex.Text = channel.Index.ToString();
+                txtChannelTypeString.Text = channel.TypeString;
+                txtChannelAESActive.Text = channel.AESActive.ToString();
+                txtChannelDirection.Text = channel.Direction.ToString();
+                txtChannelLinkSourceRoles.Text = "";
+                foreach(String role in channel.LinkSourceRoles)
+                {
+                    txtChannelLinkSourceRoles.Text += role + "\r\n";
+                }
+                txtChannelLinkTargetRoles.Text = "";
+                foreach (String role in channel.LinkTargetRoles)
+                {
+                    txtChannelLinkTargetRoles.Text += role + "\r\n";
+                }
+                txtChannelTeam.Text = channel.Team;
+                txtChannelTeamTag.Text = channel.TeamTag;
+                txtChannelTeamMembers.Text = "";
+                foreach(String teamMember in channel.TeamMembers)
+                {
+                    txtChannelTeamMembers.Text += teamMember + "\r\n";
+                }
+                txtChannelGroupedWith.Text = channel.GroupedWith.ToString();
+                pnDevice.Visible = false;
+                pnVariable.Visible = false;
+                pnChannel.Visible = true;
+            }
+            else if (e.Node.Level == 3 || e.Node.Level == 6)
             {
                 if(e.Node.Tag == null)
                 {
@@ -260,7 +352,12 @@ namespace HomegearLibTest
                     return;
                 }
                 _selectedVariable = (Variable)e.Node.Tag;
-                _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Tag;
+                if(e.Node.Level == 3) _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Tag;
+                else
+                {
+                    _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Parent.Parent.Parent.Tag;
+                    _selectedLink = (Link)e.Node.Parent.Tag;
+                }
                 txtDeviceID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                 txtDeviceChannel.Text = _selectedVariable.Channel.ToString();
                 txtVariableName.Text = _selectedVariable.Name;
@@ -302,6 +399,7 @@ namespace HomegearLibTest
                 }
                 if (_selectedVariable.Writeable) txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
                 pnDevice.Visible = false;
+                pnChannel.Visible = false;
                 pnVariable.Visible = true;
             }
             _nodeLoading = false;
@@ -335,17 +433,61 @@ namespace HomegearLibTest
             try
             {
                 if (e.Node == null) return;
-                if(e.Node.Level == 2 && e.Node.Text =="Config")
+                if(e.Node.Level == 2)
                 {
-                    e.Node.Nodes.Clear();
-                    Channel channel = (Channel)e.Node.Tag;
-                    foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                    if (e.Node.Text == "Config")
                     {
-                        TreeNode parameterNode = new TreeNode(parameter.Key);
-                        parameterNode.Tag = parameter.Value;
-                        e.Node.Nodes.Add(parameterNode);
+                        e.Node.Nodes.Clear();
+                        Channel channel = (Channel)e.Node.Tag;
+                        foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                        {
+                            TreeNode parameterNode = new TreeNode(parameter.Key);
+                            parameterNode.Tag = parameter.Value;
+                            e.Node.Nodes.Add(parameterNode);
+                        }
+                        if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
                     }
-                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                    else if (e.Node.Text == "Links")
+                    {
+                        e.Node.Nodes.Clear();
+                        Channel channel = (Channel)e.Node.Tag;
+                        foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in channel.Links)
+                        {
+                            TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString());
+                            remotePeerNode.Tag = remotePeer.Value;
+
+                            foreach (KeyValuePair<Int32, Link> linkPair in remotePeer.Value)
+                            {
+                                TreeNode remoteChannelNode = new TreeNode("Channel " + linkPair.Key.ToString());
+                                remoteChannelNode.Tag = linkPair.Value;
+
+                                TreeNode linkConfigNode = new TreeNode("Config");
+                                linkConfigNode.Tag = linkPair.Value;
+                                linkConfigNode.Nodes.Add("<loading...>");
+                                remoteChannelNode.Nodes.Add(linkConfigNode);
+
+                                remotePeerNode.Nodes.Add(remoteChannelNode);
+                            }
+
+                            e.Node.Nodes.Add(remotePeerNode);
+                        }
+                        if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                    }
+                }
+                else if(e.Node.Level == 5)
+                {
+                    if (e.Node.Text == "Config")
+                    {
+                        e.Node.Nodes.Clear();
+                        Link link = (Link)e.Node.Tag;
+                        foreach (KeyValuePair<String, ConfigParameter> parameter in link.Config)
+                        {
+                            TreeNode parameterNode = new TreeNode(parameter.Key);
+                            parameterNode.Tag = parameter.Value;
+                            e.Node.Nodes.Add(parameterNode);
+                        }
+                        if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                    }
                 }
             }
             catch (Exception ex)
@@ -359,7 +501,8 @@ namespace HomegearLibTest
             try
             {
                 if (_selectedVariable == null || _selectedDevice == null || !_selectedVariable.Writeable || !_selectedDevice.Channels.ContainsKey(_selectedVariable.Channel)) return;
-                _selectedDevice.Channels[_selectedVariable.Channel].Config.Put();
+                if (_selectedLink != null) _selectedLink.Config.Put();
+                else _selectedDevice.Channels[_selectedVariable.Channel].Config.Put();
             }
             catch(Exception ex)
             {
