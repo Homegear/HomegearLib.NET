@@ -45,13 +45,34 @@ namespace HomegearLib.RPC
         public bool IsConnected { get { return _client != null && _client.IsConnected; } }
 
         Dictionary<Int32, Family> _families = null;
-        public Dictionary<Int32, Family> Families { get { return _families; } }
+        public Dictionary<Int32, Family> Families
+        {
+            get
+            {
+                if (_families == null || _families.Count == 0) _families = ListFamilies();
+                return _families;
+            }
+        }
 
         Dictionary<Int32, Device> _devices = null;
-        public Dictionary<Int32, Device> Devices { get { return _devices; } }
+        public Dictionary<Int32, Device> Devices
+        {
+            get
+            {
+                if (_devices == null || _devices.Count == 0) _devices = GetAllValues();
+                return _devices;
+            }
+        }
 
         Dictionary<String, Interface> _interfaces = null;
-        public Dictionary<String, Interface> Interfaces { get { return _interfaces; } }
+        public Dictionary<String, Interface> Interfaces
+        {
+            get
+            {
+                if (_interfaces == null || _interfaces.Count == 0) _interfaces = ListInterfaces();
+                return _interfaces;
+            }
+        }
 
         SSLClientInfo _sslClientInfo;
         RPCClient _client;
@@ -126,6 +147,13 @@ namespace HomegearLib.RPC
             _server.Stop();
         }
 
+        public void Clear()
+        {
+            _families = null;
+            _devices = null;
+            _interfaces = null;
+        }
+
         void _client_Disconnected(RPCClient sender)
         {
             if (Disconnected != null) Disconnected(this);
@@ -134,9 +162,7 @@ namespace HomegearLib.RPC
         void _client_Connected(RPCClient sender)
         {
             if (Connected != null) Connected(this);
-            if(_families == null || _families.Count == 0) _families = ListFamilies();
-            _devices = GetAllValues();
-            _server.KnownDevices = _devices;
+            _server.KnownDevices = Devices;
             Init("HomegearLib." + _callbackHostname + ":" + _server.ListenPort);
             if (InitCompleted != null) InitCompleted(this);
         }
@@ -175,15 +201,15 @@ namespace HomegearLib.RPC
         public Dictionary<Int32, Device> GetAllValues()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            if (_families == null || _families.Count == 0) _families = ListFamilies();
             Dictionary<Int32, Device> devices = new Dictionary<Int32, Device>();
             RPCVariable response = _client.CallMethod("getAllValues", new List<RPCVariable> { new RPCVariable(true) });
             if (response.ErrorStruct) ThrowError("getAllValues", response);
+            Dictionary<Int32, Family> families = Families;
             foreach (RPCVariable deviceStruct in response.ArrayValue)
             {
                 if (!deviceStruct.StructValue.ContainsKey("ID") || !deviceStruct.StructValue.ContainsKey("FAMILY")) continue;
-                if (!_families.ContainsKey(deviceStruct.StructValue["FAMILY"].IntegerValue)) continue;
-                Device device = new Device(this, _families[deviceStruct.StructValue["FAMILY"].IntegerValue], deviceStruct.StructValue["ID"].IntegerValue);
+                if (!families.ContainsKey(deviceStruct.StructValue["FAMILY"].IntegerValue)) continue;
+                Device device = new Device(this, families[deviceStruct.StructValue["FAMILY"].IntegerValue], deviceStruct.StructValue["ID"].IntegerValue);
                 if (deviceStruct.StructValue.ContainsKey("ADDRESS")) device.SerialNumber = deviceStruct.StructValue["ADDRESS"].StringValue;
                 if (deviceStruct.StructValue.ContainsKey("TYPE")) device.TypeString = deviceStruct.StructValue["TYPE"].StringValue;
                 if(deviceStruct.StructValue.ContainsKey("CHANNELS"))
@@ -280,13 +306,12 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getDeviceInfo", new List<RPCVariable> { new RPCVariable(device.ID) });
             if (response.ErrorStruct) ThrowError("getDeviceInfo", response);
-            if (response.StructValue.ContainsKey("NAME")) device.Name = response.StructValue["NAME"].StringValue;
+            if (response.StructValue.ContainsKey("NAME")) device.SetNameNoRPC(response.StructValue["NAME"].StringValue);
             if (response.StructValue.ContainsKey("INTERFACE"))
             {
-                if (_interfaces == null || _interfaces.Count == 0) _interfaces = ListInterfaces();
-                if(_interfaces.ContainsKey(response.StructValue["INTERFACE"].StringValue))
+                if(Interfaces.ContainsKey(response.StructValue["INTERFACE"].StringValue))
                 {
-                    device.Interface = _interfaces[response.StructValue["INTERFACE"].StringValue];
+                    device.SetInterfaceNoRPC(Interfaces[response.StructValue["INTERFACE"].StringValue]);
                 }
             }
         }
@@ -430,16 +455,16 @@ namespace HomegearLib.RPC
         public Dictionary<String, Interface> ListInterfaces()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            if (_families == null || _families.Count == 0) _families = ListFamilies();
             Dictionary<String, Interface> interfaces = new Dictionary<String, Interface>();
             RPCVariable response = _client.CallMethod("listInterfaces", null);
             if (response.ErrorStruct) ThrowError("listInterfaces", response);
+            Dictionary<Int32, Family> families = Families;
             foreach (RPCVariable interfaceStruct in response.ArrayValue)
             {
                 if (!interfaceStruct.StructValue.ContainsKey("ID") || !interfaceStruct.StructValue.ContainsKey("TYPE") || !interfaceStruct.StructValue.ContainsKey("FAMILYID")) continue;
                 Int32 familyID = interfaceStruct.StructValue["FAMILYID"].IntegerValue;
-                if (!_families.ContainsKey(familyID)) continue;
-                Interface physicalInterface = new Interface(_families[familyID], interfaceStruct.StructValue["ID"].StringValue, interfaceStruct.StructValue["TYPE"].StringValue);
+                if (!families.ContainsKey(familyID)) continue;
+                Interface physicalInterface = new Interface(families[familyID], interfaceStruct.StructValue["ID"].StringValue, interfaceStruct.StructValue["TYPE"].StringValue);
                 if (interfaceStruct.StructValue.ContainsKey("CONNECTED")) physicalInterface.Connected = interfaceStruct.StructValue["CONNECTED"].BooleanValue;
                 if (interfaceStruct.StructValue.ContainsKey("DEFAULT")) physicalInterface.Default = interfaceStruct.StructValue["DEFAULT"].BooleanValue;
                 if (interfaceStruct.StructValue.ContainsKey("PHYSICALADDRESS")) physicalInterface.PhysicalAddress = interfaceStruct.StructValue["PHYSICALADDRESS"].IntegerValue;
@@ -483,10 +508,25 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("putParamset", response);
         }
 
+        public void SetName(Int32 peerID, String name)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setName", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(name) });
+            if (response.ErrorStruct) ThrowError("setName", response);
+        }
+
+        public void SetInterface(Int32 peerID, Interface physicalInterface)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
+            if (response.ErrorStruct) ThrowError("setInterface", response);
+        }
+
         public void SetValue(Variable variable)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setValue", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(variable) });
+            if (response.ErrorStruct) ThrowError("setValue", response);
         }
         #endregion
     }

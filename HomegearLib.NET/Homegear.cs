@@ -43,6 +43,20 @@ namespace HomegearLib
         Devices _devices = null;
         public Devices Devices { get { return _devices; } }
 
+        Interfaces _interfaces = null;
+        public Interfaces Interfaces
+        {
+            get
+            {
+                if (_interfaces == null || _interfaces.Count == 0) _interfaces = new Interfaces(_rpc, _rpc.Interfaces);
+                bool interfacesAdded = false;
+                bool interfacesRemoved = false;
+                _interfaces.Update(out interfacesRemoved, out interfacesAdded);
+                if ((interfacesAdded || interfacesRemoved) && ReloadRequired != null) ReloadRequired(this);
+                return _interfaces;
+            }
+        }
+
         public Homegear(RPCController rpc)
         {
             if (rpc == null) throw new NullReferenceException("RPC object is null.");
@@ -125,7 +139,7 @@ namespace HomegearLib
             {
                 bool devicesDeleted = false;
                 bool newDevices = false;
-                List<Variable> updatedVariables = Devices.UpdateVariables(_rpc.Devices, out devicesDeleted, out newDevices);
+                List<Variable> updatedVariables = Devices.UpdateVariables(_rpc.GetAllValues(), out devicesDeleted, out newDevices);
                 foreach(Variable variable in updatedVariables)
                 {
                     if(!Devices.ContainsKey(variable.PeerID)) continue;
@@ -155,10 +169,13 @@ namespace HomegearLib
         public void Reload()
         {
             if (_disposing) return;
-            _families.Dispose();
+            _rpc.Clear();
+            if(_families != null) _families.Dispose();
             _families = new Families(_rpc, _rpc.Families);
-            _devices.Dispose();
+            if(_devices != null) _devices.Dispose();
             _devices = new Devices(_rpc, _rpc.Devices);
+            if(_interfaces != null) _interfaces.Dispose();
+            _interfaces = null;
             if (Reloaded != null) Reloaded(this);
         }
 

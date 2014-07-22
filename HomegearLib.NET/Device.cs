@@ -65,7 +65,20 @@ namespace HomegearLib
                 }
                 return _name;
             }
-            internal set { _name = value; }
+            set
+            {
+                _name = value;
+                _rpc.SetName(_id, _name);
+            }
+        }
+
+        /// <summary>
+        /// Sets the name without calling any RPC functions
+        /// </summary>
+        /// <param name="name">The name of the device</param>
+        internal void SetNameNoRPC(String name)
+        {
+            _name = name;
         }
 
         private Interface _interface;
@@ -80,7 +93,20 @@ namespace HomegearLib
                 }
                 return _interface;
             }
-            internal set { _interface = value; }
+            set
+            {
+                _interface = value;
+                _rpc.SetInterface(_id, _interface);
+            }
+        }
+
+        /// <summary>
+        /// Sets the physical interface without calling any RPC functions
+        /// </summary>
+        /// <param name="physicalInterface">The interface object</param>
+        internal void SetInterfaceNoRPC(Interface physicalInterface)
+        {
+            _interface = physicalInterface;
         }
 
         private DeviceRXMode _rxMode = DeviceRXMode.None;

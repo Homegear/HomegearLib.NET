@@ -50,6 +50,7 @@
     <Compile Include="Families.cs" />
     <Compile Include="Family.cs" />
     <Compile Include="Interface.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Links.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />

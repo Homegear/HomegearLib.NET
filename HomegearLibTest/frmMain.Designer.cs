@@ -32,6 +32,36 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnInterface = new System.Windows.Forms.Panel();
+            this.txtInterfaceType = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.txtInterfaceFamily = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.txtInterfaceAddress = new System.Windows.Forms.TextBox();
+            this.label51 = new System.Windows.Forms.Label();
+            this.txtInterfaceID = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.pnDevice = new System.Windows.Forms.Panel();
+            this.txtInterface = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.txtDeviceName = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.txtRXModes = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.txtAvailableFirmware = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtFirmware = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtFamily = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtPhysicalAddress = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtTypeString = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtID = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtSerialNumber = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.pnVariable = new System.Windows.Forms.Panel();
             this.bnPutParamset = new System.Windows.Forms.Button();
             this.txtUnit = new System.Windows.Forms.TextBox();
@@ -61,13 +91,29 @@
             this.label15 = new System.Windows.Forms.Label();
             this.txtVariableName = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.pnDevice = new System.Windows.Forms.Panel();
-            this.txtTypeString = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txtID = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtSerialNumber = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.pnChannel = new System.Windows.Forms.Panel();
+            this.txtChannelGroupedWith = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.txtChannelTeamMembers = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.txtChannelTeamTag = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.txtChannelTeam = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.txtChannelLinkTargetRoles = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txtChannelLinkSourceRoles = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtChannelDirection = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.txtChannelAESActive = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.txtChannelTypeString = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.txtChannelIndex = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.txtChannelPeerID = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtHomegearHostname = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -94,43 +140,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtHomegearUsername = new System.Windows.Forms.TextBox();
             this.bnConnect = new System.Windows.Forms.Button();
-            this.txtFamily = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.pnChannel = new System.Windows.Forms.Panel();
-            this.txtChannelTypeString = new System.Windows.Forms.TextBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.txtChannelIndex = new System.Windows.Forms.TextBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.txtChannelPeerID = new System.Windows.Forms.TextBox();
-            this.label43 = new System.Windows.Forms.Label();
-            this.txtPhysicalAddress = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.txtAvailableFirmware = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.txtFirmware = new System.Windows.Forms.TextBox();
-            this.txtRXModes = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.txtChannelAESActive = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.txtChannelDirection = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.txtChannelLinkSourceRoles = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.txtChannelLinkTargetRoles = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.txtChannelTeam = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.txtChannelTeamTag = new System.Windows.Forms.TextBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.txtChannelTeamMembers = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
-            this.txtChannelGroupedWith = new System.Windows.Forms.TextBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.txtDeviceName = new System.Windows.Forms.TextBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.txtInterface = new System.Windows.Forms.TextBox();
-            this.label44 = new System.Windows.Forms.Label();
+            this.txtInterfaceConnected = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txtInterfaceDefault = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.txtInterfaceSent = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.txtInterfaceReceived = new System.Windows.Forms.TextBox();
+            this.label48 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -139,10 +156,11 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.pnVariable.SuspendLayout();
+            this.pnInterface.SuspendLayout();
             this.pnDevice.SuspendLayout();
-            this.gbSSL.SuspendLayout();
+            this.pnVariable.SuspendLayout();
             this.pnChannel.SuspendLayout();
+            this.gbSSL.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -190,6 +208,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
+            this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
             this.splitContainer2.Size = new System.Drawing.Size(846, 362);
             this.splitContainer2.SplitterDistance = 280;
             this.splitContainer2.TabIndex = 0;
@@ -203,6 +222,300 @@
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
+            // 
+            // pnInterface
+            // 
+            this.pnInterface.Controls.Add(this.txtInterfaceReceived);
+            this.pnInterface.Controls.Add(this.label48);
+            this.pnInterface.Controls.Add(this.txtInterfaceSent);
+            this.pnInterface.Controls.Add(this.label47);
+            this.pnInterface.Controls.Add(this.txtInterfaceDefault);
+            this.pnInterface.Controls.Add(this.label45);
+            this.pnInterface.Controls.Add(this.txtInterfaceConnected);
+            this.pnInterface.Controls.Add(this.label54);
+            this.pnInterface.Controls.Add(this.txtInterfaceType);
+            this.pnInterface.Controls.Add(this.label46);
+            this.pnInterface.Controls.Add(this.txtInterfaceFamily);
+            this.pnInterface.Controls.Add(this.label50);
+            this.pnInterface.Controls.Add(this.txtInterfaceAddress);
+            this.pnInterface.Controls.Add(this.label51);
+            this.pnInterface.Controls.Add(this.txtInterfaceID);
+            this.pnInterface.Controls.Add(this.label53);
+            this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnInterface.Location = new System.Drawing.Point(0, 0);
+            this.pnInterface.Name = "pnInterface";
+            this.pnInterface.Size = new System.Drawing.Size(562, 362);
+            this.pnInterface.TabIndex = 31;
+            this.pnInterface.Visible = false;
+            // 
+            // txtInterfaceType
+            // 
+            this.txtInterfaceType.Location = new System.Drawing.Point(97, 81);
+            this.txtInterfaceType.Name = "txtInterfaceType";
+            this.txtInterfaceType.ReadOnly = true;
+            this.txtInterfaceType.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceType.TabIndex = 28;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(3, 84);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(34, 13);
+            this.label46.TabIndex = 27;
+            this.label46.Text = "Type:";
+            // 
+            // txtInterfaceFamily
+            // 
+            this.txtInterfaceFamily.Location = new System.Drawing.Point(97, 55);
+            this.txtInterfaceFamily.Name = "txtInterfaceFamily";
+            this.txtInterfaceFamily.ReadOnly = true;
+            this.txtInterfaceFamily.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceFamily.TabIndex = 9;
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(3, 58);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(39, 13);
+            this.label50.TabIndex = 8;
+            this.label50.Text = "Family:";
+            // 
+            // txtInterfaceAddress
+            // 
+            this.txtInterfaceAddress.Location = new System.Drawing.Point(97, 107);
+            this.txtInterfaceAddress.Name = "txtInterfaceAddress";
+            this.txtInterfaceAddress.ReadOnly = true;
+            this.txtInterfaceAddress.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceAddress.TabIndex = 7;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(3, 110);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(90, 13);
+            this.label51.TabIndex = 6;
+            this.label51.Text = "Physical Address:";
+            // 
+            // txtInterfaceID
+            // 
+            this.txtInterfaceID.Location = new System.Drawing.Point(97, 3);
+            this.txtInterfaceID.Name = "txtInterfaceID";
+            this.txtInterfaceID.ReadOnly = true;
+            this.txtInterfaceID.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceID.TabIndex = 3;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(3, 6);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(21, 13);
+            this.label53.TabIndex = 2;
+            this.label53.Text = "ID:";
+            // 
+            // pnDevice
+            // 
+            this.pnDevice.Controls.Add(this.txtInterface);
+            this.pnDevice.Controls.Add(this.label44);
+            this.pnDevice.Controls.Add(this.txtDeviceName);
+            this.pnDevice.Controls.Add(this.label41);
+            this.pnDevice.Controls.Add(this.txtRXModes);
+            this.pnDevice.Controls.Add(this.label31);
+            this.pnDevice.Controls.Add(this.txtAvailableFirmware);
+            this.pnDevice.Controls.Add(this.label30);
+            this.pnDevice.Controls.Add(this.txtFirmware);
+            this.pnDevice.Controls.Add(this.label29);
+            this.pnDevice.Controls.Add(this.txtFamily);
+            this.pnDevice.Controls.Add(this.label28);
+            this.pnDevice.Controls.Add(this.txtPhysicalAddress);
+            this.pnDevice.Controls.Add(this.label27);
+            this.pnDevice.Controls.Add(this.txtTypeString);
+            this.pnDevice.Controls.Add(this.label21);
+            this.pnDevice.Controls.Add(this.txtID);
+            this.pnDevice.Controls.Add(this.label14);
+            this.pnDevice.Controls.Add(this.txtSerialNumber);
+            this.pnDevice.Controls.Add(this.label12);
+            this.pnDevice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnDevice.Location = new System.Drawing.Point(0, 0);
+            this.pnDevice.Name = "pnDevice";
+            this.pnDevice.Size = new System.Drawing.Size(562, 362);
+            this.pnDevice.TabIndex = 1;
+            this.pnDevice.Visible = false;
+            // 
+            // txtInterface
+            // 
+            this.txtInterface.Location = new System.Drawing.Point(97, 107);
+            this.txtInterface.Name = "txtInterface";
+            this.txtInterface.Size = new System.Drawing.Size(258, 20);
+            this.txtInterface.TabIndex = 30;
+            this.txtInterface.TextChanged += new System.EventHandler(this.txtInterface_TextChanged);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(3, 110);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(52, 13);
+            this.label44.TabIndex = 29;
+            this.label44.Text = "Interface:";
+            // 
+            // txtDeviceName
+            // 
+            this.txtDeviceName.BackColor = System.Drawing.SystemColors.Window;
+            this.txtDeviceName.Location = new System.Drawing.Point(97, 55);
+            this.txtDeviceName.Name = "txtDeviceName";
+            this.txtDeviceName.Size = new System.Drawing.Size(258, 20);
+            this.txtDeviceName.TabIndex = 28;
+            this.txtDeviceName.TextChanged += new System.EventHandler(this.txtDeviceName_TextChanged);
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(3, 58);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(38, 13);
+            this.label41.TabIndex = 27;
+            this.label41.Text = "Name:";
+            // 
+            // txtRXModes
+            // 
+            this.txtRXModes.Location = new System.Drawing.Point(97, 185);
+            this.txtRXModes.Multiline = true;
+            this.txtRXModes.Name = "txtRXModes";
+            this.txtRXModes.ReadOnly = true;
+            this.txtRXModes.Size = new System.Drawing.Size(78, 57);
+            this.txtRXModes.TabIndex = 26;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(3, 185);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(60, 13);
+            this.label31.TabIndex = 25;
+            this.label31.Text = "RX Modes:";
+            // 
+            // txtAvailableFirmware
+            // 
+            this.txtAvailableFirmware.Location = new System.Drawing.Point(276, 159);
+            this.txtAvailableFirmware.Name = "txtAvailableFirmware";
+            this.txtAvailableFirmware.ReadOnly = true;
+            this.txtAvailableFirmware.Size = new System.Drawing.Size(79, 20);
+            this.txtAvailableFirmware.TabIndex = 13;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(182, 162);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(81, 13);
+            this.label30.TabIndex = 12;
+            this.label30.Text = "Avail. Firmware:";
+            // 
+            // txtFirmware
+            // 
+            this.txtFirmware.Location = new System.Drawing.Point(97, 159);
+            this.txtFirmware.Name = "txtFirmware";
+            this.txtFirmware.ReadOnly = true;
+            this.txtFirmware.Size = new System.Drawing.Size(79, 20);
+            this.txtFirmware.TabIndex = 11;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(3, 162);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(52, 13);
+            this.label29.TabIndex = 10;
+            this.label29.Text = "Firmware:";
+            // 
+            // txtFamily
+            // 
+            this.txtFamily.Location = new System.Drawing.Point(97, 29);
+            this.txtFamily.Name = "txtFamily";
+            this.txtFamily.ReadOnly = true;
+            this.txtFamily.Size = new System.Drawing.Size(258, 20);
+            this.txtFamily.TabIndex = 9;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(3, 32);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(39, 13);
+            this.label28.TabIndex = 8;
+            this.label28.Text = "Family:";
+            // 
+            // txtPhysicalAddress
+            // 
+            this.txtPhysicalAddress.Location = new System.Drawing.Point(97, 133);
+            this.txtPhysicalAddress.Name = "txtPhysicalAddress";
+            this.txtPhysicalAddress.ReadOnly = true;
+            this.txtPhysicalAddress.Size = new System.Drawing.Size(258, 20);
+            this.txtPhysicalAddress.TabIndex = 7;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(3, 136);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(90, 13);
+            this.label27.TabIndex = 6;
+            this.label27.Text = "Physical Address:";
+            // 
+            // txtTypeString
+            // 
+            this.txtTypeString.Location = new System.Drawing.Point(97, 81);
+            this.txtTypeString.Name = "txtTypeString";
+            this.txtTypeString.ReadOnly = true;
+            this.txtTypeString.Size = new System.Drawing.Size(258, 20);
+            this.txtTypeString.TabIndex = 5;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(3, 84);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(64, 13);
+            this.label21.TabIndex = 4;
+            this.label21.Text = "Type String:";
+            // 
+            // txtID
+            // 
+            this.txtID.Location = new System.Drawing.Point(97, 3);
+            this.txtID.Name = "txtID";
+            this.txtID.ReadOnly = true;
+            this.txtID.Size = new System.Drawing.Size(79, 20);
+            this.txtID.TabIndex = 3;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(3, 6);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(21, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "ID:";
+            // 
+            // txtSerialNumber
+            // 
+            this.txtSerialNumber.Location = new System.Drawing.Point(276, 3);
+            this.txtSerialNumber.Name = "txtSerialNumber";
+            this.txtSerialNumber.ReadOnly = true;
+            this.txtSerialNumber.Size = new System.Drawing.Size(79, 20);
+            this.txtSerialNumber.TabIndex = 1;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(182, 6);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Serial Number:";
             // 
             // pnVariable
             // 
@@ -495,85 +808,224 @@
             this.label13.TabIndex = 0;
             this.label13.Text = "Name:";
             // 
-            // pnDevice
+            // pnChannel
             // 
-            this.pnDevice.Controls.Add(this.txtInterface);
-            this.pnDevice.Controls.Add(this.label44);
-            this.pnDevice.Controls.Add(this.txtDeviceName);
-            this.pnDevice.Controls.Add(this.label41);
-            this.pnDevice.Controls.Add(this.txtRXModes);
-            this.pnDevice.Controls.Add(this.label31);
-            this.pnDevice.Controls.Add(this.txtAvailableFirmware);
-            this.pnDevice.Controls.Add(this.label30);
-            this.pnDevice.Controls.Add(this.txtFirmware);
-            this.pnDevice.Controls.Add(this.label29);
-            this.pnDevice.Controls.Add(this.txtFamily);
-            this.pnDevice.Controls.Add(this.label28);
-            this.pnDevice.Controls.Add(this.txtPhysicalAddress);
-            this.pnDevice.Controls.Add(this.label27);
-            this.pnDevice.Controls.Add(this.txtTypeString);
-            this.pnDevice.Controls.Add(this.label21);
-            this.pnDevice.Controls.Add(this.txtID);
-            this.pnDevice.Controls.Add(this.label14);
-            this.pnDevice.Controls.Add(this.txtSerialNumber);
-            this.pnDevice.Controls.Add(this.label12);
-            this.pnDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnDevice.Location = new System.Drawing.Point(0, 0);
-            this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(562, 362);
-            this.pnDevice.TabIndex = 1;
-            this.pnDevice.Visible = false;
+            this.pnChannel.Controls.Add(this.txtChannelGroupedWith);
+            this.pnChannel.Controls.Add(this.label40);
+            this.pnChannel.Controls.Add(this.txtChannelTeamMembers);
+            this.pnChannel.Controls.Add(this.label38);
+            this.pnChannel.Controls.Add(this.txtChannelTeamTag);
+            this.pnChannel.Controls.Add(this.label37);
+            this.pnChannel.Controls.Add(this.txtChannelTeam);
+            this.pnChannel.Controls.Add(this.label36);
+            this.pnChannel.Controls.Add(this.txtChannelLinkTargetRoles);
+            this.pnChannel.Controls.Add(this.label35);
+            this.pnChannel.Controls.Add(this.txtChannelLinkSourceRoles);
+            this.pnChannel.Controls.Add(this.label34);
+            this.pnChannel.Controls.Add(this.txtChannelDirection);
+            this.pnChannel.Controls.Add(this.label33);
+            this.pnChannel.Controls.Add(this.txtChannelAESActive);
+            this.pnChannel.Controls.Add(this.label32);
+            this.pnChannel.Controls.Add(this.txtChannelTypeString);
+            this.pnChannel.Controls.Add(this.label39);
+            this.pnChannel.Controls.Add(this.txtChannelIndex);
+            this.pnChannel.Controls.Add(this.label42);
+            this.pnChannel.Controls.Add(this.txtChannelPeerID);
+            this.pnChannel.Controls.Add(this.label43);
+            this.pnChannel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnChannel.Location = new System.Drawing.Point(0, 0);
+            this.pnChannel.Name = "pnChannel";
+            this.pnChannel.Size = new System.Drawing.Size(562, 362);
+            this.pnChannel.TabIndex = 2;
+            this.pnChannel.Visible = false;
             // 
-            // txtTypeString
+            // txtChannelGroupedWith
             // 
-            this.txtTypeString.Location = new System.Drawing.Point(97, 81);
-            this.txtTypeString.Name = "txtTypeString";
-            this.txtTypeString.ReadOnly = true;
-            this.txtTypeString.Size = new System.Drawing.Size(258, 20);
-            this.txtTypeString.TabIndex = 5;
+            this.txtChannelGroupedWith.Location = new System.Drawing.Point(67, 322);
+            this.txtChannelGroupedWith.Name = "txtChannelGroupedWith";
+            this.txtChannelGroupedWith.ReadOnly = true;
+            this.txtChannelGroupedWith.Size = new System.Drawing.Size(219, 20);
+            this.txtChannelGroupedWith.TabIndex = 38;
             // 
-            // label21
+            // label40
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(3, 84);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(64, 13);
-            this.label21.TabIndex = 4;
-            this.label21.Text = "Type String:";
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(3, 325);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(65, 13);
+            this.label40.TabIndex = 37;
+            this.label40.Text = "Grouped w.:";
             // 
-            // txtID
+            // txtChannelTeamMembers
             // 
-            this.txtID.Location = new System.Drawing.Point(97, 3);
-            this.txtID.Name = "txtID";
-            this.txtID.ReadOnly = true;
-            this.txtID.Size = new System.Drawing.Size(79, 20);
-            this.txtID.TabIndex = 3;
+            this.txtChannelTeamMembers.Location = new System.Drawing.Point(67, 259);
+            this.txtChannelTeamMembers.Multiline = true;
+            this.txtChannelTeamMembers.Name = "txtChannelTeamMembers";
+            this.txtChannelTeamMembers.ReadOnly = true;
+            this.txtChannelTeamMembers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChannelTeamMembers.Size = new System.Drawing.Size(219, 57);
+            this.txtChannelTeamMembers.TabIndex = 36;
             // 
-            // label14
+            // label38
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 6);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(21, 13);
-            this.label14.TabIndex = 2;
-            this.label14.Text = "ID:";
+            this.label38.Location = new System.Drawing.Point(3, 259);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(64, 42);
+            this.label38.TabIndex = 35;
+            this.label38.Text = "Team Members:";
             // 
-            // txtSerialNumber
+            // txtChannelTeamTag
             // 
-            this.txtSerialNumber.Location = new System.Drawing.Point(276, 3);
-            this.txtSerialNumber.Name = "txtSerialNumber";
-            this.txtSerialNumber.ReadOnly = true;
-            this.txtSerialNumber.Size = new System.Drawing.Size(79, 20);
-            this.txtSerialNumber.TabIndex = 1;
+            this.txtChannelTeamTag.Location = new System.Drawing.Point(67, 233);
+            this.txtChannelTeamTag.Name = "txtChannelTeamTag";
+            this.txtChannelTeamTag.ReadOnly = true;
+            this.txtChannelTeamTag.Size = new System.Drawing.Size(219, 20);
+            this.txtChannelTeamTag.TabIndex = 34;
             // 
-            // label12
+            // label37
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(182, 6);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(76, 13);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Serial Number:";
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(3, 236);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(59, 13);
+            this.label37.TabIndex = 33;
+            this.label37.Text = "Team Tag:";
+            // 
+            // txtChannelTeam
+            // 
+            this.txtChannelTeam.Location = new System.Drawing.Point(67, 207);
+            this.txtChannelTeam.Name = "txtChannelTeam";
+            this.txtChannelTeam.ReadOnly = true;
+            this.txtChannelTeam.Size = new System.Drawing.Size(219, 20);
+            this.txtChannelTeam.TabIndex = 32;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(3, 210);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(37, 13);
+            this.label36.TabIndex = 31;
+            this.label36.Text = "Team:";
+            // 
+            // txtChannelLinkTargetRoles
+            // 
+            this.txtChannelLinkTargetRoles.Location = new System.Drawing.Point(67, 144);
+            this.txtChannelLinkTargetRoles.Multiline = true;
+            this.txtChannelLinkTargetRoles.Name = "txtChannelLinkTargetRoles";
+            this.txtChannelLinkTargetRoles.ReadOnly = true;
+            this.txtChannelLinkTargetRoles.Size = new System.Drawing.Size(219, 57);
+            this.txtChannelLinkTargetRoles.TabIndex = 30;
+            // 
+            // label35
+            // 
+            this.label35.Location = new System.Drawing.Point(3, 144);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(64, 42);
+            this.label35.TabIndex = 29;
+            this.label35.Text = "Link Target Roles:";
+            // 
+            // txtChannelLinkSourceRoles
+            // 
+            this.txtChannelLinkSourceRoles.Location = new System.Drawing.Point(67, 81);
+            this.txtChannelLinkSourceRoles.Multiline = true;
+            this.txtChannelLinkSourceRoles.Name = "txtChannelLinkSourceRoles";
+            this.txtChannelLinkSourceRoles.ReadOnly = true;
+            this.txtChannelLinkSourceRoles.Size = new System.Drawing.Size(219, 57);
+            this.txtChannelLinkSourceRoles.TabIndex = 28;
+            // 
+            // label34
+            // 
+            this.label34.Location = new System.Drawing.Point(3, 81);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(64, 42);
+            this.label34.TabIndex = 27;
+            this.label34.Text = "Link Source Roles:";
+            // 
+            // txtChannelDirection
+            // 
+            this.txtChannelDirection.Location = new System.Drawing.Point(207, 55);
+            this.txtChannelDirection.Name = "txtChannelDirection";
+            this.txtChannelDirection.ReadOnly = true;
+            this.txtChannelDirection.Size = new System.Drawing.Size(79, 20);
+            this.txtChannelDirection.TabIndex = 19;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(152, 58);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(52, 13);
+            this.label33.TabIndex = 18;
+            this.label33.Text = "Direction:";
+            // 
+            // txtChannelAESActive
+            // 
+            this.txtChannelAESActive.Location = new System.Drawing.Point(67, 55);
+            this.txtChannelAESActive.Name = "txtChannelAESActive";
+            this.txtChannelAESActive.ReadOnly = true;
+            this.txtChannelAESActive.Size = new System.Drawing.Size(79, 20);
+            this.txtChannelAESActive.TabIndex = 17;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 58);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(64, 13);
+            this.label32.TabIndex = 16;
+            this.label32.Text = "AES Active:";
+            // 
+            // txtChannelTypeString
+            // 
+            this.txtChannelTypeString.Location = new System.Drawing.Point(67, 29);
+            this.txtChannelTypeString.Name = "txtChannelTypeString";
+            this.txtChannelTypeString.ReadOnly = true;
+            this.txtChannelTypeString.Size = new System.Drawing.Size(219, 20);
+            this.txtChannelTypeString.TabIndex = 15;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(3, 32);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(64, 13);
+            this.label39.TabIndex = 14;
+            this.label39.Text = "Type String:";
+            // 
+            // txtChannelIndex
+            // 
+            this.txtChannelIndex.Location = new System.Drawing.Point(207, 3);
+            this.txtChannelIndex.Name = "txtChannelIndex";
+            this.txtChannelIndex.ReadOnly = true;
+            this.txtChannelIndex.Size = new System.Drawing.Size(79, 20);
+            this.txtChannelIndex.TabIndex = 9;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(152, 6);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(36, 13);
+            this.label42.TabIndex = 8;
+            this.label42.Text = "Index:";
+            // 
+            // txtChannelPeerID
+            // 
+            this.txtChannelPeerID.Location = new System.Drawing.Point(67, 3);
+            this.txtChannelPeerID.Name = "txtChannelPeerID";
+            this.txtChannelPeerID.ReadOnly = true;
+            this.txtChannelPeerID.Size = new System.Drawing.Size(79, 20);
+            this.txtChannelPeerID.TabIndex = 7;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(3, 6);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(58, 13);
+            this.label43.TabIndex = 6;
+            this.label43.Text = "Device ID:";
             // 
             // label1
             // 
@@ -837,344 +1289,73 @@
             this.bnConnect.UseVisualStyleBackColor = true;
             this.bnConnect.Click += new System.EventHandler(this.bnConnect_Click);
             // 
-            // txtFamily
-            // 
-            this.txtFamily.Location = new System.Drawing.Point(97, 29);
-            this.txtFamily.Name = "txtFamily";
-            this.txtFamily.ReadOnly = true;
-            this.txtFamily.Size = new System.Drawing.Size(258, 20);
-            this.txtFamily.TabIndex = 9;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(3, 32);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(39, 13);
-            this.label28.TabIndex = 8;
-            this.label28.Text = "Family:";
-            // 
-            // pnChannel
-            // 
-            this.pnChannel.Controls.Add(this.txtChannelGroupedWith);
-            this.pnChannel.Controls.Add(this.label40);
-            this.pnChannel.Controls.Add(this.txtChannelTeamMembers);
-            this.pnChannel.Controls.Add(this.label38);
-            this.pnChannel.Controls.Add(this.txtChannelTeamTag);
-            this.pnChannel.Controls.Add(this.label37);
-            this.pnChannel.Controls.Add(this.txtChannelTeam);
-            this.pnChannel.Controls.Add(this.label36);
-            this.pnChannel.Controls.Add(this.txtChannelLinkTargetRoles);
-            this.pnChannel.Controls.Add(this.label35);
-            this.pnChannel.Controls.Add(this.txtChannelLinkSourceRoles);
-            this.pnChannel.Controls.Add(this.label34);
-            this.pnChannel.Controls.Add(this.txtChannelDirection);
-            this.pnChannel.Controls.Add(this.label33);
-            this.pnChannel.Controls.Add(this.txtChannelAESActive);
-            this.pnChannel.Controls.Add(this.label32);
-            this.pnChannel.Controls.Add(this.txtChannelTypeString);
-            this.pnChannel.Controls.Add(this.label39);
-            this.pnChannel.Controls.Add(this.txtChannelIndex);
-            this.pnChannel.Controls.Add(this.label42);
-            this.pnChannel.Controls.Add(this.txtChannelPeerID);
-            this.pnChannel.Controls.Add(this.label43);
-            this.pnChannel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnChannel.Location = new System.Drawing.Point(0, 0);
-            this.pnChannel.Name = "pnChannel";
-            this.pnChannel.Size = new System.Drawing.Size(562, 362);
-            this.pnChannel.TabIndex = 2;
-            this.pnChannel.Visible = false;
-            // 
-            // txtChannelTypeString
-            // 
-            this.txtChannelTypeString.Location = new System.Drawing.Point(67, 29);
-            this.txtChannelTypeString.Name = "txtChannelTypeString";
-            this.txtChannelTypeString.ReadOnly = true;
-            this.txtChannelTypeString.Size = new System.Drawing.Size(219, 20);
-            this.txtChannelTypeString.TabIndex = 15;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(3, 32);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(64, 13);
-            this.label39.TabIndex = 14;
-            this.label39.Text = "Type String:";
-            // 
-            // txtChannelIndex
-            // 
-            this.txtChannelIndex.Location = new System.Drawing.Point(207, 3);
-            this.txtChannelIndex.Name = "txtChannelIndex";
-            this.txtChannelIndex.ReadOnly = true;
-            this.txtChannelIndex.Size = new System.Drawing.Size(79, 20);
-            this.txtChannelIndex.TabIndex = 9;
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(152, 6);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(36, 13);
-            this.label42.TabIndex = 8;
-            this.label42.Text = "Index:";
-            // 
-            // txtChannelPeerID
-            // 
-            this.txtChannelPeerID.Location = new System.Drawing.Point(67, 3);
-            this.txtChannelPeerID.Name = "txtChannelPeerID";
-            this.txtChannelPeerID.ReadOnly = true;
-            this.txtChannelPeerID.Size = new System.Drawing.Size(79, 20);
-            this.txtChannelPeerID.TabIndex = 7;
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(3, 6);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(58, 13);
-            this.label43.TabIndex = 6;
-            this.label43.Text = "Device ID:";
-            // 
-            // txtPhysicalAddress
-            // 
-            this.txtPhysicalAddress.Location = new System.Drawing.Point(97, 133);
-            this.txtPhysicalAddress.Name = "txtPhysicalAddress";
-            this.txtPhysicalAddress.ReadOnly = true;
-            this.txtPhysicalAddress.Size = new System.Drawing.Size(258, 20);
-            this.txtPhysicalAddress.TabIndex = 7;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 136);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(90, 13);
-            this.label27.TabIndex = 6;
-            this.label27.Text = "Physical Address:";
-            // 
-            // txtAvailableFirmware
-            // 
-            this.txtAvailableFirmware.Location = new System.Drawing.Point(276, 159);
-            this.txtAvailableFirmware.Name = "txtAvailableFirmware";
-            this.txtAvailableFirmware.ReadOnly = true;
-            this.txtAvailableFirmware.Size = new System.Drawing.Size(79, 20);
-            this.txtAvailableFirmware.TabIndex = 13;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(182, 162);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(81, 13);
-            this.label30.TabIndex = 12;
-            this.label30.Text = "Avail. Firmware:";
-            // 
-            // txtFirmware
-            // 
-            this.txtFirmware.Location = new System.Drawing.Point(97, 159);
-            this.txtFirmware.Name = "txtFirmware";
-            this.txtFirmware.ReadOnly = true;
-            this.txtFirmware.Size = new System.Drawing.Size(79, 20);
-            this.txtFirmware.TabIndex = 11;
-            // 
-            // txtRXModes
-            // 
-            this.txtRXModes.Location = new System.Drawing.Point(97, 185);
-            this.txtRXModes.Multiline = true;
-            this.txtRXModes.Name = "txtRXModes";
-            this.txtRXModes.ReadOnly = true;
-            this.txtRXModes.Size = new System.Drawing.Size(78, 57);
-            this.txtRXModes.TabIndex = 26;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 185);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(60, 13);
-            this.label31.TabIndex = 25;
-            this.label31.Text = "RX Modes:";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(3, 162);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(52, 13);
-            this.label29.TabIndex = 10;
-            this.label29.Text = "Firmware:";
-            // 
-            // txtChannelAESActive
-            // 
-            this.txtChannelAESActive.Location = new System.Drawing.Point(67, 55);
-            this.txtChannelAESActive.Name = "txtChannelAESActive";
-            this.txtChannelAESActive.ReadOnly = true;
-            this.txtChannelAESActive.Size = new System.Drawing.Size(79, 20);
-            this.txtChannelAESActive.TabIndex = 17;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 58);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(64, 13);
-            this.label32.TabIndex = 16;
-            this.label32.Text = "AES Active:";
-            // 
-            // txtChannelDirection
-            // 
-            this.txtChannelDirection.Location = new System.Drawing.Point(207, 55);
-            this.txtChannelDirection.Name = "txtChannelDirection";
-            this.txtChannelDirection.ReadOnly = true;
-            this.txtChannelDirection.Size = new System.Drawing.Size(79, 20);
-            this.txtChannelDirection.TabIndex = 19;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(152, 58);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(52, 13);
-            this.label33.TabIndex = 18;
-            this.label33.Text = "Direction:";
-            // 
-            // txtChannelLinkSourceRoles
-            // 
-            this.txtChannelLinkSourceRoles.Location = new System.Drawing.Point(67, 81);
-            this.txtChannelLinkSourceRoles.Multiline = true;
-            this.txtChannelLinkSourceRoles.Name = "txtChannelLinkSourceRoles";
-            this.txtChannelLinkSourceRoles.ReadOnly = true;
-            this.txtChannelLinkSourceRoles.Size = new System.Drawing.Size(219, 57);
-            this.txtChannelLinkSourceRoles.TabIndex = 28;
-            // 
-            // label34
-            // 
-            this.label34.Location = new System.Drawing.Point(3, 81);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(64, 42);
-            this.label34.TabIndex = 27;
-            this.label34.Text = "Link Source Roles:";
-            // 
-            // txtChannelLinkTargetRoles
-            // 
-            this.txtChannelLinkTargetRoles.Location = new System.Drawing.Point(67, 144);
-            this.txtChannelLinkTargetRoles.Multiline = true;
-            this.txtChannelLinkTargetRoles.Name = "txtChannelLinkTargetRoles";
-            this.txtChannelLinkTargetRoles.ReadOnly = true;
-            this.txtChannelLinkTargetRoles.Size = new System.Drawing.Size(219, 57);
-            this.txtChannelLinkTargetRoles.TabIndex = 30;
-            // 
-            // label35
-            // 
-            this.label35.Location = new System.Drawing.Point(3, 144);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(64, 42);
-            this.label35.TabIndex = 29;
-            this.label35.Text = "Link Target Roles:";
-            // 
-            // txtChannelTeam
-            // 
-            this.txtChannelTeam.Location = new System.Drawing.Point(67, 207);
-            this.txtChannelTeam.Name = "txtChannelTeam";
-            this.txtChannelTeam.ReadOnly = true;
-            this.txtChannelTeam.Size = new System.Drawing.Size(219, 20);
-            this.txtChannelTeam.TabIndex = 32;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(3, 210);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(37, 13);
-            this.label36.TabIndex = 31;
-            this.label36.Text = "Team:";
-            // 
-            // txtChannelTeamTag
-            // 
-            this.txtChannelTeamTag.Location = new System.Drawing.Point(67, 233);
-            this.txtChannelTeamTag.Name = "txtChannelTeamTag";
-            this.txtChannelTeamTag.ReadOnly = true;
-            this.txtChannelTeamTag.Size = new System.Drawing.Size(219, 20);
-            this.txtChannelTeamTag.TabIndex = 34;
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 236);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(59, 13);
-            this.label37.TabIndex = 33;
-            this.label37.Text = "Team Tag:";
-            // 
-            // txtChannelTeamMembers
-            // 
-            this.txtChannelTeamMembers.Location = new System.Drawing.Point(67, 259);
-            this.txtChannelTeamMembers.Multiline = true;
-            this.txtChannelTeamMembers.Name = "txtChannelTeamMembers";
-            this.txtChannelTeamMembers.ReadOnly = true;
-            this.txtChannelTeamMembers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChannelTeamMembers.Size = new System.Drawing.Size(219, 57);
-            this.txtChannelTeamMembers.TabIndex = 36;
-            // 
-            // label38
-            // 
-            this.label38.Location = new System.Drawing.Point(3, 259);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(64, 42);
-            this.label38.TabIndex = 35;
-            this.label38.Text = "Team Members:";
-            // 
-            // txtChannelGroupedWith
-            // 
-            this.txtChannelGroupedWith.Location = new System.Drawing.Point(67, 322);
-            this.txtChannelGroupedWith.Name = "txtChannelGroupedWith";
-            this.txtChannelGroupedWith.ReadOnly = true;
-            this.txtChannelGroupedWith.Size = new System.Drawing.Size(219, 20);
-            this.txtChannelGroupedWith.TabIndex = 38;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(3, 325);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(65, 13);
-            this.label40.TabIndex = 37;
-            this.label40.Text = "Grouped w.:";
-            // 
-            // txtDeviceName
-            // 
-            this.txtDeviceName.Location = new System.Drawing.Point(97, 55);
-            this.txtDeviceName.Name = "txtDeviceName";
-            this.txtDeviceName.ReadOnly = true;
-            this.txtDeviceName.Size = new System.Drawing.Size(258, 20);
-            this.txtDeviceName.TabIndex = 28;
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(3, 58);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(38, 13);
-            this.label41.TabIndex = 27;
-            this.label41.Text = "Name:";
-            // 
-            // txtInterface
-            // 
-            this.txtInterface.Location = new System.Drawing.Point(97, 107);
-            this.txtInterface.Name = "txtInterface";
-            this.txtInterface.ReadOnly = true;
-            this.txtInterface.Size = new System.Drawing.Size(258, 20);
-            this.txtInterface.TabIndex = 30;
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(3, 110);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(52, 13);
-            this.label44.TabIndex = 29;
-            this.label44.Text = "Interface:";
+            // txtInterfaceConnected
+            // 
+            this.txtInterfaceConnected.Location = new System.Drawing.Point(97, 29);
+            this.txtInterfaceConnected.Name = "txtInterfaceConnected";
+            this.txtInterfaceConnected.ReadOnly = true;
+            this.txtInterfaceConnected.Size = new System.Drawing.Size(79, 20);
+            this.txtInterfaceConnected.TabIndex = 32;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(3, 32);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(62, 13);
+            this.label54.TabIndex = 31;
+            this.label54.Text = "Connected:";
+            // 
+            // txtInterfaceDefault
+            // 
+            this.txtInterfaceDefault.Location = new System.Drawing.Point(276, 29);
+            this.txtInterfaceDefault.Name = "txtInterfaceDefault";
+            this.txtInterfaceDefault.ReadOnly = true;
+            this.txtInterfaceDefault.Size = new System.Drawing.Size(79, 20);
+            this.txtInterfaceDefault.TabIndex = 34;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(182, 32);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(44, 13);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "Default:";
+            // 
+            // txtInterfaceSent
+            // 
+            this.txtInterfaceSent.Location = new System.Drawing.Point(97, 133);
+            this.txtInterfaceSent.Name = "txtInterfaceSent";
+            this.txtInterfaceSent.ReadOnly = true;
+            this.txtInterfaceSent.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceSent.TabIndex = 36;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(3, 136);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(55, 13);
+            this.label47.TabIndex = 35;
+            this.label47.Text = "Last Sent:";
+            // 
+            // txtInterfaceReceived
+            // 
+            this.txtInterfaceReceived.Location = new System.Drawing.Point(97, 159);
+            this.txtInterfaceReceived.Name = "txtInterfaceReceived";
+            this.txtInterfaceReceived.ReadOnly = true;
+            this.txtInterfaceReceived.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceReceived.TabIndex = 38;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(3, 162);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(79, 13);
+            this.label48.TabIndex = 37;
+            this.label48.Text = "Last Received:";
             // 
             // frmMain
             // 
@@ -1208,14 +1389,16 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.pnVariable.ResumeLayout(false);
-            this.pnVariable.PerformLayout();
+            this.pnInterface.ResumeLayout(false);
+            this.pnInterface.PerformLayout();
             this.pnDevice.ResumeLayout(false);
             this.pnDevice.PerformLayout();
-            this.gbSSL.ResumeLayout(false);
-            this.gbSSL.PerformLayout();
+            this.pnVariable.ResumeLayout(false);
+            this.pnVariable.PerformLayout();
             this.pnChannel.ResumeLayout(false);
             this.pnChannel.PerformLayout();
+            this.gbSSL.ResumeLayout(false);
+            this.gbSSL.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1254,8 +1437,6 @@
         private System.Windows.Forms.TextBox txtCertificatePassword;
         private System.Windows.Forms.CheckBox chkVerifyCertificate;
         private System.Windows.Forms.Panel pnDevice;
-        private System.Windows.Forms.TextBox txtSerialNumber;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel pnVariable;
         private System.Windows.Forms.TextBox txtID;
         private System.Windows.Forms.Label label14;
@@ -1326,6 +1507,25 @@
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.TextBox txtDeviceName;
         private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Panel pnInterface;
+        private System.Windows.Forms.TextBox txtInterfaceType;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox txtInterfaceFamily;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.TextBox txtInterfaceAddress;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.TextBox txtInterfaceID;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.TextBox txtSerialNumber;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtInterfaceConnected;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.TextBox txtInterfaceDefault;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.TextBox txtInterfaceReceived;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox txtInterfaceSent;
+        private System.Windows.Forms.Label label47;
     }
 }
 
