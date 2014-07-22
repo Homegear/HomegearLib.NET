@@ -15,9 +15,11 @@ namespace HomegearLibTest
     public partial class frmMain : Form
     {
         delegate void NoParameterCallback();
+        delegate void BooleanParameterCallback(Boolean value);
         delegate void SetTextCallback(string text);
         RPCController _rpc = null;
         Homegear _homegear = null;
+        Device _rightClickedDevice = null;
         Device _selectedDevice = null;
         Link _selectedLink = null;
         Variable _selectedVariable = null;
@@ -103,6 +105,20 @@ namespace HomegearLibTest
         {
             WriteLog("Reload complete. Received " + sender.Devices.Count + " devices.");
             UpdateDevices();
+            EnableSplitContainer(true);
+        }
+
+        void EnableSplitContainer(Boolean value)
+        {
+            if (splitContainer1.InvokeRequired)
+            {
+                BooleanParameterCallback d = new BooleanParameterCallback(EnableSplitContainer);
+                this.Invoke(d, new object[] { value });
+            }
+            else
+            {
+                splitContainer1.Enabled = value;
+            }
         }
 
         void UpdateDevices()
@@ -120,10 +136,12 @@ namespace HomegearLibTest
                 tvDevices.Nodes.Add(interfacesNode);
 
                 TreeNode devicesNode = new TreeNode("Devices");
+                devicesNode.ContextMenuStrip = cmDevices;
                 foreach(KeyValuePair<Int32, Device> device in _homegear.Devices)
                 {
                     TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()));
                     deviceNode.Tag = device.Value;
+                    deviceNode.ContextMenuStrip = cmDevice;
                     foreach(KeyValuePair<Int32, Channel> channel in device.Value.Channels)
                     {
                         TreeNode channelNode = new TreeNode("Channel " + channel.Key);
@@ -276,6 +294,7 @@ namespace HomegearLibTest
         void _homegear_OnReloadRequired(Homegear sender)
         {
             WriteLog("Received reload required event. Reloading.");
+            EnableSplitContainer(false);
             _homegear.Reload();
         }
 
@@ -320,7 +339,7 @@ namespace HomegearLibTest
                 txtSerialNumber.Text = _selectedDevice.SerialNumber;
                 txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                 txtTypeString.Text = _selectedDevice.TypeString;
-                txtFamily.Text = _selectedDevice.Family.Name;
+                if(_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
                 txtDeviceName.Text = _selectedDevice.Name;
                 txtInterface.BackColor = System.Drawing.SystemColors.Window;
                 txtInterface.Text = _selectedDevice.Interface.ID;
@@ -480,6 +499,17 @@ namespace HomegearLibTest
             }
         }
 
+        private void tvDevices_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if(e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if(e.Node.FullPath.StartsWith("Devices") && e.Node.Level == 1)
+                {
+                    _rightClickedDevice = (Device)e.Node.Tag;
+                }
+            }
+        }
+
         private void tvDevices_AfterExpand(object sender, TreeViewEventArgs e)
         {
             try
@@ -582,6 +612,7 @@ namespace HomegearLibTest
             }
         }
 
+        #region Devices
         private void txtDeviceName_TextChanged(object sender, EventArgs e)
         {
             if (_selectedDevice == null || _nodeLoading) return;
@@ -600,5 +631,61 @@ namespace HomegearLibTest
             txtInterface.BackColor = Color.PaleGreen;
             _selectedDevice.Interface = interfaces[txtInterface.Text];
         }
+
+        private void tsAddDevice_Click(object sender, EventArgs e)
+        {
+            frmAddDevice dialog = new frmAddDevice();
+            if(dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if(dialog.SerialNumber.Length == 0) return;
+                if(_homegear.Devices.Add(dialog.SerialNumber))
+                {
+                    MessageBox.Show(this, "Device added successfully.", "Device added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(this, "No device was found.", "Device not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+        
+        private void tsEnablePairingMode_Click(object sender, EventArgs e)
+        {
+            Int32 timeLeftInPairingMode = _homegear.TimeLeftInPairingMode();
+            if (timeLeftInPairingMode == 0) _homegear.EnablePairingMode(true);
+            else MessageBox.Show(this, "Pairing mode is still enabled for another " + timeLeftInPairingMode.ToString() + " seconds.", "Already in pairing mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tsDisablePairingMode_Click(object sender, EventArgs e)
+        {
+            _homegear.EnablePairingMode(false);
+        }
+
+        private void tsSearchDevices_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, _homegear.SearchDevices().ToString() + " new devices found.", "Device Search Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tsUnpair_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedDevice == null) return;
+            _rightClickedDevice.Unpair();
+            MessageBox.Show(this, "Unpairing device with ID " + _rightClickedDevice.ID.ToString(), "Unpairing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tsReset_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedDevice == null) return;
+            _rightClickedDevice.Reset();
+            MessageBox.Show(this, "Resetting device with ID " + _rightClickedDevice.ID.ToString(), "Resetting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tsRemove_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedDevice == null) return;
+            _rightClickedDevice.Remove();
+            MessageBox.Show(this, "Removing device with ID " + _rightClickedDevice.ID.ToString(), "Removing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        #endregion
     }
 }

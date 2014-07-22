@@ -181,5 +181,20 @@ namespace HomegearLib
             _family = null;
             if(_channels != null) _channels.Dispose();
         }
+
+        public void Unpair()
+        {
+            _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Defer);
+        }
+
+        public void Reset()
+        {
+            _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Reset | RPCDeleteDeviceFlags.Defer);
+        }
+
+        public void Remove()
+        {
+            _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Force);
+        }
     }
 }

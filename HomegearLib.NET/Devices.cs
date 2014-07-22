@@ -70,5 +70,10 @@ namespace HomegearLib
             }
             return changedVariables;
         }
+
+        public bool Add(String serialNumber)
+        {
+            return _rpc.AddDevice(serialNumber);
+        }
     }
 }

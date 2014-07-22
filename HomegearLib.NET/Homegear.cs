@@ -154,7 +154,17 @@ namespace HomegearLib
         ~Homegear()
         {
             _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
+            if (_connectThread.IsAlive)
+            {
+                if(!_connectThread.Join(20000))
+                {
+                    try
+                    {
+                        _connectThread.Abort();
+                    }
+                    catch (Exception) { }
+                }
+            }
         }
 
         public void Dispose()
@@ -212,6 +222,26 @@ namespace HomegearLib
             _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
+        }
+
+        public void EnablePairingMode(bool value)
+        {
+            _rpc.SetInstallMode(value);
+        }
+
+        public void EnablePairingMode(bool value, Int32 duration)
+        {
+            _rpc.SetInstallMode(value, duration);
+        }
+
+        public Int32 TimeLeftInPairingMode()
+        {
+            return _rpc.GetInstallMode();
+        }
+
+        public Int32 SearchDevices()
+        {
+            return _rpc.SearchDevices();
         }
     }
 }

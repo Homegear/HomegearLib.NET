@@ -19,6 +19,14 @@ namespace HomegearLib.RPC
         rpcLinks = 1
     }
 
+    public enum RPCDeleteDeviceFlags
+    {
+        None = 0,
+        Reset = 1,
+        Force = 2,
+        Defer = 4
+    }
+
     public class RPCController : IDisposable
     {
         public delegate void RPCEventEventHandler(RPCController sender, Variable value);
@@ -190,12 +198,31 @@ namespace HomegearLib.RPC
         }
 
         #region "RPC methods"
+        public bool AddDevice(String serialNumber)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("addDevice", new List<RPCVariable> { new RPCVariable(serialNumber) });
+            if (response.ErrorStruct)
+            {
+                if (response.StructValue["faultCode"].IntegerValue == -1) return false;
+                ThrowError("addDevice", response);
+            }
+            return true;
+        }
+
         public bool ClientServerInitialized(string interfaceID)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("clientServerInitialized", new List<RPCVariable> { new RPCVariable(interfaceID) });
             if (response.ErrorStruct) ThrowError("clientServerInitialized", response);
             return response.BooleanValue;
+        }
+
+        public void DeleteDevice(Int32 peerID, RPCDeleteDeviceFlags flags)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("deleteDevice", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable((Int32)flags) });
+            if (response.ErrorStruct) ThrowError("deleteDevice", response);
         }
 
         public Dictionary<Int32, Device> GetAllValues()
@@ -314,6 +341,22 @@ namespace HomegearLib.RPC
                     device.SetInterfaceNoRPC(Interfaces[response.StructValue["INTERFACE"].StringValue]);
                 }
             }
+        }
+
+        public Int32 GetInstallMode()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getInstallMode", new List<RPCVariable>());
+            if (response.ErrorStruct) ThrowError("getInstallMode", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 GetInstallMode(Int32 familyID)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getInstallMode", new List<RPCVariable> { new RPCVariable(familyID) });
+            if (response.ErrorStruct) ThrowError("getInstallMode", response);
+            return response.IntegerValue;
         }
 
         public List<Link> GetLinks()
@@ -506,6 +549,46 @@ namespace HomegearLib.RPC
                 response = _client.CallMethod("putParamset", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(channel), new RPCVariable(typeString), rpcParameters });
             }
             if (response.ErrorStruct) ThrowError("putParamset", response);
+        }
+
+        public Int32 SearchDevices()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("searchDevices", new List<RPCVariable>());
+            if (response.ErrorStruct) ThrowError("searchDevices", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 SearchDevices(Int32 familyID)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("searchDevices", new List<RPCVariable> { new RPCVariable(familyID) });
+            if (response.ErrorStruct) ThrowError("searchDevices", response);
+            return response.IntegerValue;
+        }
+
+        public void SetInstallMode(bool value)
+        {
+            SetInstallMode(value, 60);
+        }
+
+        public void SetInstallMode(bool value, Int32 duration)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(value), new RPCVariable(duration) });
+            if (response.ErrorStruct) ThrowError("setInstallMode", response);
+        }
+
+        public void SetInstallMode(Int32 familyID, bool value)
+        {
+            SetInstallMode(familyID, value, 60);
+        }
+
+        public void SetInstallMode(Int32 familyID, bool value, Int32 duration)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(familyID), new RPCVariable(value), new RPCVariable(duration) });
+            if (response.ErrorStruct) ThrowError("setInstallMode", response);
         }
 
         public void SetName(Int32 peerID, String name)

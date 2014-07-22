@@ -28,19 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
-            this.pnInterface = new System.Windows.Forms.Panel();
-            this.txtInterfaceType = new System.Windows.Forms.TextBox();
-            this.label46 = new System.Windows.Forms.Label();
-            this.txtInterfaceFamily = new System.Windows.Forms.TextBox();
-            this.label50 = new System.Windows.Forms.Label();
-            this.txtInterfaceAddress = new System.Windows.Forms.TextBox();
-            this.label51 = new System.Windows.Forms.Label();
-            this.txtInterfaceID = new System.Windows.Forms.TextBox();
-            this.label53 = new System.Windows.Forms.Label();
             this.pnDevice = new System.Windows.Forms.Panel();
             this.txtInterface = new System.Windows.Forms.TextBox();
             this.label44 = new System.Windows.Forms.Label();
@@ -114,6 +106,23 @@
             this.label42 = new System.Windows.Forms.Label();
             this.txtChannelPeerID = new System.Windows.Forms.TextBox();
             this.label43 = new System.Windows.Forms.Label();
+            this.pnInterface = new System.Windows.Forms.Panel();
+            this.txtInterfaceReceived = new System.Windows.Forms.TextBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.txtInterfaceSent = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.txtInterfaceDefault = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.txtInterfaceConnected = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txtInterfaceType = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.txtInterfaceFamily = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.txtInterfaceAddress = new System.Windows.Forms.TextBox();
+            this.label51 = new System.Windows.Forms.Label();
+            this.txtInterfaceID = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtHomegearHostname = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -140,14 +149,15 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtHomegearUsername = new System.Windows.Forms.TextBox();
             this.bnConnect = new System.Windows.Forms.Button();
-            this.txtInterfaceConnected = new System.Windows.Forms.TextBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.txtInterfaceDefault = new System.Windows.Forms.TextBox();
-            this.label45 = new System.Windows.Forms.Label();
-            this.txtInterfaceSent = new System.Windows.Forms.TextBox();
-            this.label47 = new System.Windows.Forms.Label();
-            this.txtInterfaceReceived = new System.Windows.Forms.TextBox();
-            this.label48 = new System.Windows.Forms.Label();
+            this.cmDevices = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsEnablePairingMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsDisablePairingMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSearchDevices = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsAddDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmDevice = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsUnpair = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsReset = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsRemove = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -156,11 +166,13 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.pnInterface.SuspendLayout();
             this.pnDevice.SuspendLayout();
             this.pnVariable.SuspendLayout();
             this.pnChannel.SuspendLayout();
+            this.pnInterface.SuspendLayout();
             this.gbSSL.SuspendLayout();
+            this.cmDevices.SuspendLayout();
+            this.cmDevice.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -222,99 +234,7 @@
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
-            // 
-            // pnInterface
-            // 
-            this.pnInterface.Controls.Add(this.txtInterfaceReceived);
-            this.pnInterface.Controls.Add(this.label48);
-            this.pnInterface.Controls.Add(this.txtInterfaceSent);
-            this.pnInterface.Controls.Add(this.label47);
-            this.pnInterface.Controls.Add(this.txtInterfaceDefault);
-            this.pnInterface.Controls.Add(this.label45);
-            this.pnInterface.Controls.Add(this.txtInterfaceConnected);
-            this.pnInterface.Controls.Add(this.label54);
-            this.pnInterface.Controls.Add(this.txtInterfaceType);
-            this.pnInterface.Controls.Add(this.label46);
-            this.pnInterface.Controls.Add(this.txtInterfaceFamily);
-            this.pnInterface.Controls.Add(this.label50);
-            this.pnInterface.Controls.Add(this.txtInterfaceAddress);
-            this.pnInterface.Controls.Add(this.label51);
-            this.pnInterface.Controls.Add(this.txtInterfaceID);
-            this.pnInterface.Controls.Add(this.label53);
-            this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnInterface.Location = new System.Drawing.Point(0, 0);
-            this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(562, 362);
-            this.pnInterface.TabIndex = 31;
-            this.pnInterface.Visible = false;
-            // 
-            // txtInterfaceType
-            // 
-            this.txtInterfaceType.Location = new System.Drawing.Point(97, 81);
-            this.txtInterfaceType.Name = "txtInterfaceType";
-            this.txtInterfaceType.ReadOnly = true;
-            this.txtInterfaceType.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceType.TabIndex = 28;
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(3, 84);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(34, 13);
-            this.label46.TabIndex = 27;
-            this.label46.Text = "Type:";
-            // 
-            // txtInterfaceFamily
-            // 
-            this.txtInterfaceFamily.Location = new System.Drawing.Point(97, 55);
-            this.txtInterfaceFamily.Name = "txtInterfaceFamily";
-            this.txtInterfaceFamily.ReadOnly = true;
-            this.txtInterfaceFamily.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceFamily.TabIndex = 9;
-            // 
-            // label50
-            // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(3, 58);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(39, 13);
-            this.label50.TabIndex = 8;
-            this.label50.Text = "Family:";
-            // 
-            // txtInterfaceAddress
-            // 
-            this.txtInterfaceAddress.Location = new System.Drawing.Point(97, 107);
-            this.txtInterfaceAddress.Name = "txtInterfaceAddress";
-            this.txtInterfaceAddress.ReadOnly = true;
-            this.txtInterfaceAddress.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceAddress.TabIndex = 7;
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(3, 110);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(90, 13);
-            this.label51.TabIndex = 6;
-            this.label51.Text = "Physical Address:";
-            // 
-            // txtInterfaceID
-            // 
-            this.txtInterfaceID.Location = new System.Drawing.Point(97, 3);
-            this.txtInterfaceID.Name = "txtInterfaceID";
-            this.txtInterfaceID.ReadOnly = true;
-            this.txtInterfaceID.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceID.TabIndex = 3;
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(3, 6);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(21, 13);
-            this.label53.TabIndex = 2;
-            this.label53.Text = "ID:";
+            this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
             // 
             // pnDevice
             // 
@@ -1027,6 +947,167 @@
             this.label43.TabIndex = 6;
             this.label43.Text = "Device ID:";
             // 
+            // pnInterface
+            // 
+            this.pnInterface.Controls.Add(this.txtInterfaceReceived);
+            this.pnInterface.Controls.Add(this.label48);
+            this.pnInterface.Controls.Add(this.txtInterfaceSent);
+            this.pnInterface.Controls.Add(this.label47);
+            this.pnInterface.Controls.Add(this.txtInterfaceDefault);
+            this.pnInterface.Controls.Add(this.label45);
+            this.pnInterface.Controls.Add(this.txtInterfaceConnected);
+            this.pnInterface.Controls.Add(this.label54);
+            this.pnInterface.Controls.Add(this.txtInterfaceType);
+            this.pnInterface.Controls.Add(this.label46);
+            this.pnInterface.Controls.Add(this.txtInterfaceFamily);
+            this.pnInterface.Controls.Add(this.label50);
+            this.pnInterface.Controls.Add(this.txtInterfaceAddress);
+            this.pnInterface.Controls.Add(this.label51);
+            this.pnInterface.Controls.Add(this.txtInterfaceID);
+            this.pnInterface.Controls.Add(this.label53);
+            this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnInterface.Location = new System.Drawing.Point(0, 0);
+            this.pnInterface.Name = "pnInterface";
+            this.pnInterface.Size = new System.Drawing.Size(562, 362);
+            this.pnInterface.TabIndex = 31;
+            this.pnInterface.Visible = false;
+            // 
+            // txtInterfaceReceived
+            // 
+            this.txtInterfaceReceived.Location = new System.Drawing.Point(97, 159);
+            this.txtInterfaceReceived.Name = "txtInterfaceReceived";
+            this.txtInterfaceReceived.ReadOnly = true;
+            this.txtInterfaceReceived.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceReceived.TabIndex = 38;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(3, 162);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(79, 13);
+            this.label48.TabIndex = 37;
+            this.label48.Text = "Last Received:";
+            // 
+            // txtInterfaceSent
+            // 
+            this.txtInterfaceSent.Location = new System.Drawing.Point(97, 133);
+            this.txtInterfaceSent.Name = "txtInterfaceSent";
+            this.txtInterfaceSent.ReadOnly = true;
+            this.txtInterfaceSent.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceSent.TabIndex = 36;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(3, 136);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(55, 13);
+            this.label47.TabIndex = 35;
+            this.label47.Text = "Last Sent:";
+            // 
+            // txtInterfaceDefault
+            // 
+            this.txtInterfaceDefault.Location = new System.Drawing.Point(276, 29);
+            this.txtInterfaceDefault.Name = "txtInterfaceDefault";
+            this.txtInterfaceDefault.ReadOnly = true;
+            this.txtInterfaceDefault.Size = new System.Drawing.Size(79, 20);
+            this.txtInterfaceDefault.TabIndex = 34;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(182, 32);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(44, 13);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "Default:";
+            // 
+            // txtInterfaceConnected
+            // 
+            this.txtInterfaceConnected.Location = new System.Drawing.Point(97, 29);
+            this.txtInterfaceConnected.Name = "txtInterfaceConnected";
+            this.txtInterfaceConnected.ReadOnly = true;
+            this.txtInterfaceConnected.Size = new System.Drawing.Size(79, 20);
+            this.txtInterfaceConnected.TabIndex = 32;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(3, 32);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(62, 13);
+            this.label54.TabIndex = 31;
+            this.label54.Text = "Connected:";
+            // 
+            // txtInterfaceType
+            // 
+            this.txtInterfaceType.Location = new System.Drawing.Point(97, 81);
+            this.txtInterfaceType.Name = "txtInterfaceType";
+            this.txtInterfaceType.ReadOnly = true;
+            this.txtInterfaceType.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceType.TabIndex = 28;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(3, 84);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(34, 13);
+            this.label46.TabIndex = 27;
+            this.label46.Text = "Type:";
+            // 
+            // txtInterfaceFamily
+            // 
+            this.txtInterfaceFamily.Location = new System.Drawing.Point(97, 55);
+            this.txtInterfaceFamily.Name = "txtInterfaceFamily";
+            this.txtInterfaceFamily.ReadOnly = true;
+            this.txtInterfaceFamily.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceFamily.TabIndex = 9;
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(3, 58);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(39, 13);
+            this.label50.TabIndex = 8;
+            this.label50.Text = "Family:";
+            // 
+            // txtInterfaceAddress
+            // 
+            this.txtInterfaceAddress.Location = new System.Drawing.Point(97, 107);
+            this.txtInterfaceAddress.Name = "txtInterfaceAddress";
+            this.txtInterfaceAddress.ReadOnly = true;
+            this.txtInterfaceAddress.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceAddress.TabIndex = 7;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(3, 110);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(90, 13);
+            this.label51.TabIndex = 6;
+            this.label51.Text = "Physical Address:";
+            // 
+            // txtInterfaceID
+            // 
+            this.txtInterfaceID.Location = new System.Drawing.Point(97, 3);
+            this.txtInterfaceID.Name = "txtInterfaceID";
+            this.txtInterfaceID.ReadOnly = true;
+            this.txtInterfaceID.Size = new System.Drawing.Size(258, 20);
+            this.txtInterfaceID.TabIndex = 3;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(3, 6);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(21, 13);
+            this.label53.TabIndex = 2;
+            this.label53.Text = "ID:";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -1289,73 +1370,73 @@
             this.bnConnect.UseVisualStyleBackColor = true;
             this.bnConnect.Click += new System.EventHandler(this.bnConnect_Click);
             // 
-            // txtInterfaceConnected
+            // cmDevices
             // 
-            this.txtInterfaceConnected.Location = new System.Drawing.Point(97, 29);
-            this.txtInterfaceConnected.Name = "txtInterfaceConnected";
-            this.txtInterfaceConnected.ReadOnly = true;
-            this.txtInterfaceConnected.Size = new System.Drawing.Size(79, 20);
-            this.txtInterfaceConnected.TabIndex = 32;
+            this.cmDevices.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsEnablePairingMode,
+            this.tsDisablePairingMode,
+            this.tsSearchDevices,
+            this.tsAddDevice});
+            this.cmDevices.Name = "cmDevices";
+            this.cmDevices.Size = new System.Drawing.Size(229, 92);
             // 
-            // label54
+            // tsEnablePairingMode
             // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(3, 32);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(62, 13);
-            this.label54.TabIndex = 31;
-            this.label54.Text = "Connected:";
+            this.tsEnablePairingMode.Name = "tsEnablePairingMode";
+            this.tsEnablePairingMode.Size = new System.Drawing.Size(228, 22);
+            this.tsEnablePairingMode.Text = "Enable Pairing Mode";
+            this.tsEnablePairingMode.Click += new System.EventHandler(this.tsEnablePairingMode_Click);
             // 
-            // txtInterfaceDefault
+            // tsDisablePairingMode
             // 
-            this.txtInterfaceDefault.Location = new System.Drawing.Point(276, 29);
-            this.txtInterfaceDefault.Name = "txtInterfaceDefault";
-            this.txtInterfaceDefault.ReadOnly = true;
-            this.txtInterfaceDefault.Size = new System.Drawing.Size(79, 20);
-            this.txtInterfaceDefault.TabIndex = 34;
+            this.tsDisablePairingMode.Name = "tsDisablePairingMode";
+            this.tsDisablePairingMode.Size = new System.Drawing.Size(228, 22);
+            this.tsDisablePairingMode.Text = "Disable Pairing Mode";
+            this.tsDisablePairingMode.Click += new System.EventHandler(this.tsDisablePairingMode_Click);
             // 
-            // label45
+            // tsSearchDevices
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(182, 32);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(44, 13);
-            this.label45.TabIndex = 33;
-            this.label45.Text = "Default:";
+            this.tsSearchDevices.Name = "tsSearchDevices";
+            this.tsSearchDevices.Size = new System.Drawing.Size(228, 22);
+            this.tsSearchDevices.Text = "Search Devices";
+            this.tsSearchDevices.Click += new System.EventHandler(this.tsSearchDevices_Click);
             // 
-            // txtInterfaceSent
+            // tsAddDevice
             // 
-            this.txtInterfaceSent.Location = new System.Drawing.Point(97, 133);
-            this.txtInterfaceSent.Name = "txtInterfaceSent";
-            this.txtInterfaceSent.ReadOnly = true;
-            this.txtInterfaceSent.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceSent.TabIndex = 36;
+            this.tsAddDevice.Name = "tsAddDevice";
+            this.tsAddDevice.Size = new System.Drawing.Size(228, 22);
+            this.tsAddDevice.Text = "Add Device By Serial Number";
+            this.tsAddDevice.Click += new System.EventHandler(this.tsAddDevice_Click);
             // 
-            // label47
+            // cmDevice
             // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(3, 136);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(55, 13);
-            this.label47.TabIndex = 35;
-            this.label47.Text = "Last Sent:";
+            this.cmDevice.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsUnpair,
+            this.tsReset,
+            this.tsRemove});
+            this.cmDevice.Name = "cmDevice";
+            this.cmDevice.Size = new System.Drawing.Size(118, 70);
             // 
-            // txtInterfaceReceived
+            // tsUnpair
             // 
-            this.txtInterfaceReceived.Location = new System.Drawing.Point(97, 159);
-            this.txtInterfaceReceived.Name = "txtInterfaceReceived";
-            this.txtInterfaceReceived.ReadOnly = true;
-            this.txtInterfaceReceived.Size = new System.Drawing.Size(258, 20);
-            this.txtInterfaceReceived.TabIndex = 38;
+            this.tsUnpair.Name = "tsUnpair";
+            this.tsUnpair.Size = new System.Drawing.Size(152, 22);
+            this.tsUnpair.Text = "Unpair";
+            this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
             // 
-            // label48
+            // tsReset
             // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(3, 162);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(79, 13);
-            this.label48.TabIndex = 37;
-            this.label48.Text = "Last Received:";
+            this.tsReset.Name = "tsReset";
+            this.tsReset.Size = new System.Drawing.Size(152, 22);
+            this.tsReset.Text = "Reset";
+            this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
+            // 
+            // tsRemove
+            // 
+            this.tsRemove.Name = "tsRemove";
+            this.tsRemove.Size = new System.Drawing.Size(152, 22);
+            this.tsRemove.Text = "Remove";
+            this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
             // 
             // frmMain
             // 
@@ -1389,16 +1470,18 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.pnInterface.ResumeLayout(false);
-            this.pnInterface.PerformLayout();
             this.pnDevice.ResumeLayout(false);
             this.pnDevice.PerformLayout();
             this.pnVariable.ResumeLayout(false);
             this.pnVariable.PerformLayout();
             this.pnChannel.ResumeLayout(false);
             this.pnChannel.PerformLayout();
+            this.pnInterface.ResumeLayout(false);
+            this.pnInterface.PerformLayout();
             this.gbSSL.ResumeLayout(false);
             this.gbSSL.PerformLayout();
+            this.cmDevices.ResumeLayout(false);
+            this.cmDevice.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1526,6 +1609,15 @@
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.TextBox txtInterfaceSent;
         private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.ContextMenuStrip cmDevices;
+        private System.Windows.Forms.ToolStripMenuItem tsEnablePairingMode;
+        private System.Windows.Forms.ToolStripMenuItem tsDisablePairingMode;
+        private System.Windows.Forms.ToolStripMenuItem tsSearchDevices;
+        private System.Windows.Forms.ToolStripMenuItem tsAddDevice;
+        private System.Windows.Forms.ContextMenuStrip cmDevice;
+        private System.Windows.Forms.ToolStripMenuItem tsUnpair;
+        private System.Windows.Forms.ToolStripMenuItem tsReset;
+        private System.Windows.Forms.ToolStripMenuItem tsRemove;
     }
 }
 

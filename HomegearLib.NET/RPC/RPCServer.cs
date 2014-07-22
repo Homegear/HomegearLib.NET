@@ -123,7 +123,17 @@ namespace HomegearLib.RPC
         public void Stop()
         {
             _stopServer = true;
-            if (_listenThread != null && _listenThread.IsAlive) _listenThread.Join();
+            if (_listenThread != null && _listenThread.IsAlive)
+            {
+                if (!_listenThread.Join(10000))
+                {
+                    try
+                    {
+                        _listenThread.Abort();
+                    }
+                    catch (Exception) { }
+                }
+            }
             _listenThread = null;
             if (_client != null) _client.Close();
             _client = null;
