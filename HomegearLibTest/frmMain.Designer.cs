@@ -33,6 +33,12 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnSystemVariable = new System.Windows.Forms.Panel();
+            this.lblSystemVariableTimer = new System.Windows.Forms.Label();
+            this.txtSystemVariableValue = new System.Windows.Forms.TextBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.txtSystemVariableName = new System.Windows.Forms.TextBox();
+            this.label61 = new System.Windows.Forms.Label();
             this.pnDevice = new System.Windows.Forms.Panel();
             this.txtInterface = new System.Windows.Forms.TextBox();
             this.label44 = new System.Windows.Forms.Label();
@@ -158,6 +164,12 @@
             this.tsUnpair = new System.Windows.Forms.ToolStripMenuItem();
             this.tsReset = new System.Windows.Forms.ToolStripMenuItem();
             this.tsRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmSystemVariable = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsDeleteSystemVariable = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmSystemVariables = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsAddSystemVariable = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtSystemVariableType = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -166,6 +178,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnSystemVariable.SuspendLayout();
             this.pnDevice.SuspendLayout();
             this.pnVariable.SuspendLayout();
             this.pnChannel.SuspendLayout();
@@ -173,6 +186,8 @@
             this.gbSSL.SuspendLayout();
             this.cmDevices.SuspendLayout();
             this.cmDevice.SuspendLayout();
+            this.cmSystemVariable.SuspendLayout();
+            this.cmSystemVariables.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -217,6 +232,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
@@ -235,6 +251,66 @@
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnSystemVariable
+            // 
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableType);
+            this.pnSystemVariable.Controls.Add(this.label49);
+            this.pnSystemVariable.Controls.Add(this.lblSystemVariableTimer);
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableValue);
+            this.pnSystemVariable.Controls.Add(this.label52);
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableName);
+            this.pnSystemVariable.Controls.Add(this.label61);
+            this.pnSystemVariable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
+            this.pnSystemVariable.Name = "pnSystemVariable";
+            this.pnSystemVariable.Size = new System.Drawing.Size(562, 362);
+            this.pnSystemVariable.TabIndex = 31;
+            this.pnSystemVariable.Visible = false;
+            // 
+            // lblSystemVariableTimer
+            // 
+            this.lblSystemVariableTimer.AutoSize = true;
+            this.lblSystemVariableTimer.Location = new System.Drawing.Point(361, 58);
+            this.lblSystemVariableTimer.Name = "lblSystemVariableTimer";
+            this.lblSystemVariableTimer.Size = new System.Drawing.Size(118, 13);
+            this.lblSystemVariableTimer.TabIndex = 29;
+            this.lblSystemVariableTimer.Text = "Sending in 5 seconds...";
+            // 
+            // txtSystemVariableValue
+            // 
+            this.txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSystemVariableValue.Location = new System.Drawing.Point(97, 55);
+            this.txtSystemVariableValue.Name = "txtSystemVariableValue";
+            this.txtSystemVariableValue.Size = new System.Drawing.Size(258, 20);
+            this.txtSystemVariableValue.TabIndex = 28;
+            this.txtSystemVariableValue.TextChanged += new System.EventHandler(this.txtSystemVariableValue_TextChanged);
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(3, 58);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(37, 13);
+            this.label52.TabIndex = 27;
+            this.label52.Text = "Value:";
+            // 
+            // txtSystemVariableName
+            // 
+            this.txtSystemVariableName.Location = new System.Drawing.Point(97, 3);
+            this.txtSystemVariableName.Name = "txtSystemVariableName";
+            this.txtSystemVariableName.ReadOnly = true;
+            this.txtSystemVariableName.Size = new System.Drawing.Size(258, 20);
+            this.txtSystemVariableName.TabIndex = 3;
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(3, 6);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(38, 13);
+            this.label61.TabIndex = 2;
+            this.label61.Text = "Name:";
             // 
             // pnDevice
             // 
@@ -1420,23 +1496,68 @@
             // tsUnpair
             // 
             this.tsUnpair.Name = "tsUnpair";
-            this.tsUnpair.Size = new System.Drawing.Size(152, 22);
+            this.tsUnpair.Size = new System.Drawing.Size(117, 22);
             this.tsUnpair.Text = "Unpair";
             this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
             // 
             // tsReset
             // 
             this.tsReset.Name = "tsReset";
-            this.tsReset.Size = new System.Drawing.Size(152, 22);
+            this.tsReset.Size = new System.Drawing.Size(117, 22);
             this.tsReset.Text = "Reset";
             this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
             // 
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(152, 22);
+            this.tsRemove.Size = new System.Drawing.Size(117, 22);
             this.tsRemove.Text = "Remove";
             this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
+            // 
+            // cmSystemVariable
+            // 
+            this.cmSystemVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsDeleteSystemVariable});
+            this.cmSystemVariable.Name = "cmDevice";
+            this.cmSystemVariable.Size = new System.Drawing.Size(118, 26);
+            // 
+            // tsDeleteSystemVariable
+            // 
+            this.tsDeleteSystemVariable.Name = "tsDeleteSystemVariable";
+            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(117, 22);
+            this.tsDeleteSystemVariable.Text = "Remove";
+            this.tsDeleteSystemVariable.Click += new System.EventHandler(this.tsDeleteSystemVariable_Click);
+            // 
+            // cmSystemVariables
+            // 
+            this.cmSystemVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsAddSystemVariable});
+            this.cmSystemVariables.Name = "cmDevice";
+            this.cmSystemVariables.Size = new System.Drawing.Size(97, 26);
+            // 
+            // tsAddSystemVariable
+            // 
+            this.tsAddSystemVariable.Name = "tsAddSystemVariable";
+            this.tsAddSystemVariable.Size = new System.Drawing.Size(96, 22);
+            this.tsAddSystemVariable.Text = "Add";
+            this.tsAddSystemVariable.Click += new System.EventHandler(this.tsAddSystemVariable_Click);
+            // 
+            // txtSystemVariableType
+            // 
+            this.txtSystemVariableType.Location = new System.Drawing.Point(97, 29);
+            this.txtSystemVariableType.Name = "txtSystemVariableType";
+            this.txtSystemVariableType.ReadOnly = true;
+            this.txtSystemVariableType.Size = new System.Drawing.Size(258, 20);
+            this.txtSystemVariableType.TabIndex = 31;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(3, 32);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(34, 13);
+            this.label49.TabIndex = 30;
+            this.label49.Text = "Type:";
             // 
             // frmMain
             // 
@@ -1470,6 +1591,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnSystemVariable.ResumeLayout(false);
+            this.pnSystemVariable.PerformLayout();
             this.pnDevice.ResumeLayout(false);
             this.pnDevice.PerformLayout();
             this.pnVariable.ResumeLayout(false);
@@ -1482,6 +1605,8 @@
             this.gbSSL.PerformLayout();
             this.cmDevices.ResumeLayout(false);
             this.cmDevice.ResumeLayout(false);
+            this.cmSystemVariable.ResumeLayout(false);
+            this.cmSystemVariables.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1618,6 +1743,18 @@
         private System.Windows.Forms.ToolStripMenuItem tsUnpair;
         private System.Windows.Forms.ToolStripMenuItem tsReset;
         private System.Windows.Forms.ToolStripMenuItem tsRemove;
+        private System.Windows.Forms.Panel pnSystemVariable;
+        private System.Windows.Forms.TextBox txtSystemVariableValue;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.TextBox txtSystemVariableName;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label lblSystemVariableTimer;
+        private System.Windows.Forms.ContextMenuStrip cmSystemVariable;
+        private System.Windows.Forms.ToolStripMenuItem tsDeleteSystemVariable;
+        private System.Windows.Forms.ContextMenuStrip cmSystemVariables;
+        private System.Windows.Forms.ToolStripMenuItem tsAddSystemVariable;
+        private System.Windows.Forms.TextBox txtSystemVariableType;
+        private System.Windows.Forms.Label label49;
     }
 }
 

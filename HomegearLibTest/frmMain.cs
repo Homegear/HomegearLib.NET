@@ -23,6 +23,7 @@ namespace HomegearLibTest
         Device _selectedDevice = null;
         Link _selectedLink = null;
         Variable _selectedVariable = null;
+        SystemVariable _selectedSystemVariable = null;
         bool _nodeLoading = false;
         Int32 _variableTimerIndex = 5;
         Timer _variableValueChangedTimer = new Timer();
@@ -34,6 +35,7 @@ namespace HomegearLibTest
             _variableValueChangedTimer.Interval = 1000;
             _variableValueChangedTimer.Tick += _variableValueChangedTimer_Tick;
             lblVariableTimer.Text = "";
+            lblSystemVariableTimer.Text = "";
         }
 
         void _variableValueChangedTimer_Tick(object sender, EventArgs e)
@@ -42,12 +44,15 @@ namespace HomegearLibTest
             if(_variableTimerIndex > 1)
             {
                 _variableTimerIndex--;
-                lblVariableTimer.Text = "Sending in " + _variableTimerIndex.ToString() + " seconds...";
+                if(_selectedVariable != null) lblVariableTimer.Text = "Sending in " + _variableTimerIndex.ToString() + " seconds...";
+                else lblSystemVariableTimer.Text = "Sending in " + _variableTimerIndex.ToString() + " seconds...";
                 _variableValueChangedTimer.Start();
                 return;
             }
             lblVariableTimer.Text = "";
-            SetVariable();
+            lblSystemVariableTimer.Text = "";
+            if (_selectedVariable != null) SetVariable();
+            else SetSystemVariable();
         }
 
         void SetVariable()
@@ -101,6 +106,52 @@ namespace HomegearLibTest
             }
         }
 
+        void SetSystemVariable()
+        {
+            if (_selectedSystemVariable == null || _nodeLoading) return;
+            switch (_selectedSystemVariable.Type)
+            {
+                case RPCVariableType.rpcString:
+                    _selectedSystemVariable.StringValue = txtVariableValue.Text;
+                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtVariableValue.Text);
+                    break;
+                case RPCVariableType.rpcBase64:
+                    _selectedSystemVariable.StringValue = txtVariableValue.Text;
+                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtVariableValue.Text);
+                    break;
+                case RPCVariableType.rpcInteger:
+                    Int32 integerValue = 0;
+                    if (Int32.TryParse(txtSystemVariableValue.Text, out integerValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.IntegerValue = integerValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + integerValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcBoolean:
+                    Boolean booleanValue = false;
+                    if (Boolean.TryParse(txtSystemVariableValue.Text, out booleanValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.BooleanValue = booleanValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + booleanValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcFloat:
+                    Double floatValue = 0;
+                    if (Double.TryParse(txtSystemVariableValue.Text, out floatValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.FloatValue = floatValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + floatValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+            }
+        }
+
         void _homegear_OnReloaded(Homegear sender)
         {
             WriteLog("Reload complete. Received " + sender.Devices.Count + " devices.");
@@ -121,6 +172,22 @@ namespace HomegearLibTest
             }
         }
 
+        void UpdateSystemVariables()
+        {
+            if (tvDevices.InvokeRequired)
+            {
+                NoParameterCallback d = new NoParameterCallback(UpdateSystemVariables);
+                this.Invoke(d);
+            }
+            else
+            {
+                TreeNode variables = tvDevices.Nodes[0];
+                variables.Collapse();
+                variables.Nodes.Clear();
+                variables.Nodes.Add("<loading...>");
+            }
+        }
+
         void UpdateDevices()
         {
             if(tvDevices.InvokeRequired)
@@ -131,6 +198,11 @@ namespace HomegearLibTest
             else
             {
                 tvDevices.Nodes.Clear();
+                TreeNode systemVariablesNode = new TreeNode("System Variables");
+                systemVariablesNode.Nodes.Add("<loading...>");
+                systemVariablesNode.ContextMenuStrip = cmSystemVariables;
+                tvDevices.Nodes.Add(systemVariablesNode);
+
                 TreeNode interfacesNode = new TreeNode("Interfaces");
                 interfacesNode.Nodes.Add("<loading...>");
                 tvDevices.Nodes.Add(interfacesNode);
@@ -204,6 +276,31 @@ namespace HomegearLibTest
             }
         }
 
+        void SetSystemVariableValue(String text)
+        {
+            if (txtSystemVariableValue.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetSystemVariableValue);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                _nodeLoading = true;
+                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                txtSystemVariableValue.Text = text;
+                _nodeLoading = false;
+            }
+        }
+
+        void _homegear_OnSystemVariableUpdated(Homegear sender, SystemVariable variable)
+        {
+            WriteLog("System variable updated: Value: " + variable.ToString());
+            if (_selectedSystemVariable == variable)
+            {
+                SetSystemVariableValue(variable.ToString());
+            }
+        }
+
         void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable)
         {
             WriteLog("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + variable.ToString());
@@ -265,6 +362,7 @@ namespace HomegearLibTest
             txtHomegearPort.ReadOnly = true;
             txtListenIP.ReadOnly = true;
             txtListenPort.ReadOnly = true;
+            txtCallbackHostname.ReadOnly = true;
             chkSSL.Enabled = false;
 
             SSLClientInfo sslClientInfo = null;
@@ -283,6 +381,7 @@ namespace HomegearLibTest
             _rpc.Disconnected += _rpc_Disconnected;
             _homegear = new Homegear(_rpc);
             _homegear.ConnectError += _homegear_OnConnectError;
+            _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
             _homegear.DeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
             _homegear.DeviceConfigParameterUpdated += _homegear_OnDeviceConfigParameterUpdated;
             _homegear.DeviceLinkConfigParameterUpdated += _homegear_OnDeviceLinkConfigParameterUpdated;
@@ -291,11 +390,22 @@ namespace HomegearLibTest
             _homegear.Reloaded += _homegear_OnReloaded;
         }
 
-        void _homegear_OnReloadRequired(Homegear sender)
+        void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
         {
-            WriteLog("Received reload required event. Reloading.");
-            EnableSplitContainer(false);
-            _homegear.Reload();
+            if (reloadType == ReloadType.Full)
+            {
+                WriteLog("Received reload required event. Reloading.");
+                EnableSplitContainer(false);
+                _homegear.Reload();
+            }
+            else if(reloadType == ReloadType.SystemVariables)
+            {
+                WriteLog("Reloading system variables.");
+                EnableSplitContainer(false);
+                _homegear.SystemVariables.Reload();
+                UpdateSystemVariables();
+                EnableSplitContainer(true);
+            }
         }
 
         void _rpc_Disconnected(RPCController sender)
@@ -311,11 +421,16 @@ namespace HomegearLibTest
         private void tvDevices_AfterSelect(object sender, TreeViewEventArgs e)
         {
             _variableValueChangedTimer.Stop();
+            _selectedDevice = null;
+            _selectedLink = null;
+            _selectedVariable = null;
+            _selectedSystemVariable = null;
             if (e.Node == null) return;
             _nodeLoading = true;
             if (e.Node.FullPath.StartsWith("Devices"))
             {
                 pnInterface.Visible = false;
+                pnSystemVariable.Visible = false;
                 DeviceSelected(e);
             }
             else if (e.Node.FullPath.StartsWith("Interfaces"))
@@ -323,16 +438,22 @@ namespace HomegearLibTest
                 pnDevice.Visible = false;
                 pnVariable.Visible = false;
                 pnChannel.Visible = false;
+                pnSystemVariable.Visible = false;
                 InterfaceSelected(e);
+            }
+            else if(e.Node.FullPath.StartsWith("System Variables"))
+            {
+                pnDevice.Visible = false;
+                pnVariable.Visible = false;
+                pnChannel.Visible = false;
+                pnInterface.Visible = false;
+                SystemVariableSelected(e);
             }
             _nodeLoading = false;
         }
 
         private void DeviceSelected(TreeViewEventArgs e)
         {
-            _selectedDevice = null;
-            _selectedLink = null;
-            _selectedVariable = null;
             if (e.Node.Level == 1)
             {
                 if (e.Node.Level == 1) _selectedDevice = (Device)e.Node.Tag;
@@ -398,7 +519,7 @@ namespace HomegearLibTest
             }
             else if (e.Node.Level == 4 || e.Node.Level == 7)
             {
-                if (e.Node.Tag == null)
+                if (e.Node.Tag == null || !(e.Node.Tag is Variable))
                 {
                     _nodeLoading = false;
                     return;
@@ -476,26 +597,17 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtVariableValue_TextChanged(object sender, EventArgs e)
+        private void SystemVariableSelected(TreeViewEventArgs e)
         {
-            try
+            if (e.Node.Level == 1)
             {
-                if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
-                if (_selectedVariable is ConfigParameter)
-                {
-                    SetVariable();
-                }
-                else
-                {
-                    _variableValueChangedTimer.Stop();
-                    _variableTimerIndex = 5;
-                    lblVariableTimer.Text = "Sending in 5 seconds...";
-                    _variableValueChangedTimer.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLog(ex.Message);
+                _selectedSystemVariable = (SystemVariable)e.Node.Tag;
+                txtSystemVariableName.Text = _selectedSystemVariable.Name;
+                txtSystemVariableType.Text = _selectedSystemVariable.Type.ToString();
+                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                txtSystemVariableValue.Text = _selectedSystemVariable.ToString();
+                lblSystemVariableTimer.Text = "";
+                pnSystemVariable.Visible = true;
             }
         }
 
@@ -517,6 +629,7 @@ namespace HomegearLibTest
                 if (e.Node == null) return;
                 if (e.Node.FullPath.StartsWith("Devices")) AfterExpandDevice(e);
                 else if (e.Node.FullPath.StartsWith("Interfaces")) AfterExpandInterface(e);
+                else if (e.Node.FullPath.StartsWith("System Variables")) AfterExpandSystemVariables(e);
             }
             catch (Exception ex)
             {
@@ -598,6 +711,102 @@ namespace HomegearLibTest
             }
         }
 
+        private void AfterExpandSystemVariables(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (KeyValuePair<String, SystemVariable> variablePair in _homegear.SystemVariables)
+                {
+                    TreeNode variableNode = new TreeNode(variablePair.Key);
+                    variableNode.Tag = variablePair.Value;
+                    variableNode.ContextMenuStrip = cmSystemVariable;
+                    e.Node.Nodes.Add(variableNode);
+                }
+            }
+        }
+
+        private void txtSystemVariableValue_TextChanged(object sender, EventArgs e)
+        {
+            if (_selectedSystemVariable == null || _nodeLoading) return;
+            _variableValueChangedTimer.Stop();
+            _variableTimerIndex = 5;
+            lblSystemVariableTimer.Text = "Sending in 5 seconds...";
+            _variableValueChangedTimer.Start();
+        }
+
+        private void tsAddSystemVariable_Click(object sender, EventArgs e)
+        {
+            frmAddSystemVariable dialog = new frmAddSystemVariable();
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0) return;
+                SystemVariable variable = null;
+                switch(dialog.VariableType)
+                {
+                    case "Boolean":
+                        Boolean booleanValue = false;
+                        if(Boolean.TryParse(dialog.VariableValue, out booleanValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, booleanValue);
+                        }
+                        break;
+                    case "Integer":
+                        Int32 integerValue = 0;
+                        if (Int32.TryParse(dialog.VariableValue, out integerValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, integerValue);
+                        }
+                        break;
+                    case "Double":
+                        Double doubleValue = 0;
+                        if (Double.TryParse(dialog.VariableValue, out doubleValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, doubleValue);
+                        }
+                        break;
+                    case "String":
+                        variable = new SystemVariable(dialog.VariableName, dialog.VariableValue);
+                        break;
+                    case "Base64":
+                        variable = new SystemVariable(dialog.VariableName, RPCVariableType.rpcBase64);
+                        variable.StringValue = dialog.VariableValue;
+                        break;
+                }
+                if (variable != null) _homegear.SystemVariables.Add(variable);
+            }
+        }
+
+        private void tsDeleteSystemVariable_Click(object sender, EventArgs e)
+        {
+            if (_selectedSystemVariable == null) return;
+            _selectedSystemVariable.Remove();
+        }
+
+        #region Devices
+        private void txtVariableValue_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
+                if (_selectedVariable is ConfigParameter)
+                {
+                    SetVariable();
+                }
+                else
+                {
+                    _variableValueChangedTimer.Stop();
+                    _variableTimerIndex = 5;
+                    lblVariableTimer.Text = "Sending in 5 seconds...";
+                    _variableValueChangedTimer.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
         private void bnPutParamset_Click(object sender, EventArgs e)
         {
             try
@@ -606,13 +815,12 @@ namespace HomegearLibTest
                 if (_selectedLink != null) _selectedLink.Config.Put();
                 else _selectedDevice.Channels[_selectedVariable.Channel].Config.Put();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 WriteLog(ex.Message);
             }
         }
 
-        #region Devices
         private void txtDeviceName_TextChanged(object sender, EventArgs e)
         {
             if (_selectedDevice == null || _nodeLoading) return;

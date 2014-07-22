@@ -48,14 +48,14 @@
             this.txtSerialNumber.Location = new System.Drawing.Point(94, 6);
             this.txtSerialNumber.Name = "txtSerialNumber";
             this.txtSerialNumber.Size = new System.Drawing.Size(88, 20);
-            this.txtSerialNumber.TabIndex = 1;
+            this.txtSerialNumber.TabIndex = 0;
             // 
             // bnOK
             // 
             this.bnOK.Location = new System.Drawing.Point(56, 37);
             this.bnOK.Name = "bnOK";
             this.bnOK.Size = new System.Drawing.Size(68, 27);
-            this.bnOK.TabIndex = 2;
+            this.bnOK.TabIndex = 1;
             this.bnOK.Text = "OK";
             this.bnOK.UseVisualStyleBackColor = true;
             this.bnOK.Click += new System.EventHandler(this.bnOK_Click);
@@ -66,7 +66,7 @@
             this.bnCancel.Location = new System.Drawing.Point(130, 37);
             this.bnCancel.Name = "bnCancel";
             this.bnCancel.Size = new System.Drawing.Size(68, 27);
-            this.bnCancel.TabIndex = 3;
+            this.bnCancel.TabIndex = 2;
             this.bnCancel.Text = "Cancel";
             this.bnCancel.UseVisualStyleBackColor = true;
             this.bnCancel.Click += new System.EventHandler(this.bnCancel_Click);

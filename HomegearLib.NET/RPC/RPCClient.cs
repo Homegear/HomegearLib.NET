@@ -41,7 +41,7 @@ namespace HomegearLib.RPC
         }
     }
 
-    internal class RPCClient
+    internal class RPCClient : IDisposable
     {
         public delegate void ConnectedEventHandler(RPCClient sender);
         public delegate void DisconnectedEventHandler(RPCClient sender);
@@ -51,6 +51,7 @@ namespace HomegearLib.RPC
         public event DisconnectedEventHandler Disconnected;
         #endregion
 
+        bool _disposing = false;
         Mutex _sendMutex = new Mutex();
         const int _maxTries = 3;
         private String _hostname = "homegear";
@@ -259,6 +260,11 @@ namespace HomegearLib.RPC
             }
             _sendMutex.ReleaseMutex();
             return result;
+        }
+
+        public void Dispose()
+        {
+            _disposing = true;
         }
     }
 }

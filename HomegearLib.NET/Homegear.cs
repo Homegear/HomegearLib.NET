@@ -8,21 +8,29 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
+    public enum ReloadType
+    {
+        Full = 1,
+        SystemVariables = 2
+    }
+
     public class Homegear : IDisposable
     {
         public delegate void ConnectErrorEventHandler(Homegear sender, String message, String stackTrace);
         public delegate void ConnectedEventHandler(Homegear sender);
         public delegate void DisconnectedEventHandler(Homegear sender);
         public delegate void DataReloadEventHandler(Homegear sender);
+        public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
         public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
         public delegate void DeviceLinkConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter);
         public delegate void DeviceLinksUpdatedEventHandler(Homegear sender, Device device, Channel channel);
-        public delegate void ReloadRequiredEventHandler(Homegear sender);
+        public delegate void ReloadRequiredEventHandler(Homegear sender, ReloadType reloadType);
 
         #region "Events"
         public event ConnectErrorEventHandler ConnectError;
         public event DataReloadEventHandler Reloaded;
+        public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
         public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
         public event DeviceConfigParameterUpdatedEventHandler DeviceConfigParameterUpdated;
         public event DeviceLinkConfigParameterUpdatedEventHandler DeviceLinkConfigParameterUpdated;
@@ -43,6 +51,9 @@ namespace HomegearLib
         Devices _devices = null;
         public Devices Devices { get { return _devices; } }
 
+        SystemVariables _systemVariables = null;
+        public SystemVariables SystemVariables { get { return _systemVariables; } }
+
         Interfaces _interfaces = null;
         public Interfaces Interfaces
         {
@@ -52,7 +63,7 @@ namespace HomegearLib
                 bool interfacesAdded = false;
                 bool interfacesRemoved = false;
                 _interfaces.Update(out interfacesRemoved, out interfacesAdded);
-                if ((interfacesAdded || interfacesRemoved) && ReloadRequired != null) ReloadRequired(this);
+                if ((interfacesAdded || interfacesRemoved) && ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
                 return _interfaces;
             }
         }
@@ -63,10 +74,12 @@ namespace HomegearLib
             _rpc = rpc;
             _families = new Families(_rpc, new Dictionary<Int32, Family>());
             _devices = new Devices(_rpc, new Dictionary<Int32, Device>());
+            _systemVariables = new SystemVariables(_rpc, new Dictionary<String, SystemVariable>());
             _rpc.Connected += _rpc_Connected;
             _rpc.Disconnected += _rpc_Disconnected;
             _rpc.InitCompleted += _rpc_InitCompleted;
-            _rpc.RPCEvent += _rpc_OnRPCEvent;
+            _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
+            _rpc.SystemVariableUpdated += _rpc_OnSystemVariableUpdated;
             _rpc.NewDevices += _rpc_OnNewDevices;
             _rpc.DevicesDeleted += _rpc_OnDevicesDeleted;
             _rpc.UpdateDevice += _rpc_OnUpdateDevice;
@@ -78,7 +91,7 @@ namespace HomegearLib
 
         private void _rpc_OnNewDevices(RPCController sender)
         {
-            if (ReloadRequired != null) ReloadRequired(this);
+            if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
         }
 
         void _rpc_OnUpdateDevice(RPCController sender, int peerID, int channelIndex, RPCUpdateDeviceFlags flags)
@@ -115,10 +128,10 @@ namespace HomegearLib
 
         void _rpc_OnDevicesDeleted(RPCController sender)
         {
-            if (ReloadRequired != null) ReloadRequired(this);
+            if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
         }
 
-        void _rpc_OnRPCEvent(RPCController sender, Variable value)
+        void _rpc_OnDeviceVariableUpdated(RPCController sender, Variable value)
         {
             if (_disposing) return;
             if(value.PeerID == 0) return; //System variable
@@ -130,6 +143,19 @@ namespace HomegearLib
             Variable variable = deviceChannel.Variables[value.Name];
             variable.SetValue(value);
             if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, deviceChannel, variable);
+        }
+
+        void _rpc_OnSystemVariableUpdated(RPCController sender, SystemVariable value)
+        {
+            if (_disposing) return;
+            if (!SystemVariables.ContainsKey(value.Name))
+            {
+                ReloadRequired(this, ReloadType.SystemVariables);
+                return;
+            }
+            SystemVariable variable = SystemVariables[value.Name];
+            variable.SetValue(value);
+            if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
         }
 
         void _rpc_InitCompleted(RPCController sender)
@@ -147,7 +173,7 @@ namespace HomegearLib
                     if(!device.Channels.ContainsKey(variable.Channel)) continue;
                     if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, device.Channels[variable.Channel], variable);
                 }
-                if ((devicesDeleted || newDevices) && ReloadRequired != null) ReloadRequired(this);
+                if ((devicesDeleted || newDevices) && ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
             }
         }
 
@@ -171,8 +197,26 @@ namespace HomegearLib
         {
             if (_disposing) return;
             _disposing = true;
+            _rpc.Connected -= _rpc_Connected;
+            _rpc.Disconnected -= _rpc_Disconnected;
+            _rpc.InitCompleted -= _rpc_InitCompleted;
+            _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
+            _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
+            _rpc.NewDevices -= _rpc_OnNewDevices;
+            _rpc.DevicesDeleted -= _rpc_OnDevicesDeleted;
+            _rpc.UpdateDevice -= _rpc_OnUpdateDevice;
             _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
+            if (_connectThread.IsAlive)
+            {
+                if(!_connectThread.Join(20000))
+                {
+                    try
+                    {
+                        _connectThread.Abort();
+                    }
+                    catch (Exception) { }
+                }
+            }
             _rpc.Disconnect();
         }
 
@@ -186,6 +230,8 @@ namespace HomegearLib
             _devices = new Devices(_rpc, _rpc.Devices);
             if(_interfaces != null) _interfaces.Dispose();
             _interfaces = null;
+            if (_systemVariables != null) _systemVariables.Dispose();
+            _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
             if (Reloaded != null) Reloaded(this);
         }
 

@@ -27,50 +27,50 @@ namespace HomegearLib.RPC
             get { return _structValue.Count() > 0 && _structValue.ContainsKey("faultCode"); }
         }
 
-        private RPCVariableType _type = RPCVariableType.rpcVoid;
-        public RPCVariableType Type
+        protected RPCVariableType _type = RPCVariableType.rpcVoid;
+        public virtual RPCVariableType Type
         {
             get { return _type; }
             set { _type = value; }
         }
 
-        private string _stringValue;
-        public string StringValue
+        protected string _stringValue;
+        public virtual string StringValue
         {
             get { return _stringValue; }
             set { _stringValue = value; }
         }
 
-        private int _integerValue;
-        public int IntegerValue
+        protected int _integerValue;
+        public virtual int IntegerValue
         {
             get { return _integerValue; }
             set { _integerValue = value; }
         }
 
-        private bool _booleanValue;
-        public bool BooleanValue
+        protected bool _booleanValue;
+        public virtual bool BooleanValue
         {
             get { return _booleanValue; }
             set { _booleanValue = value; }
         }
 
-        private double _floatValue;
-        public double FloatValue
+        protected double _floatValue;
+        public virtual double FloatValue
         {
             get { return _floatValue; }
             set { _floatValue = value; }
         }
 
-        private List<RPCVariable> _arrayValue = new List<RPCVariable>();
-        public List<RPCVariable> ArrayValue
+        protected List<RPCVariable> _arrayValue = new List<RPCVariable>();
+        public virtual List<RPCVariable> ArrayValue
         {
             get { return _arrayValue; }
             set { _arrayValue = value; }
         }
 
-        private Dictionary<String, RPCVariable> _structValue = new Dictionary<string,RPCVariable>();
-        public Dictionary<String, RPCVariable> StructValue
+        protected Dictionary<String, RPCVariable> _structValue = new Dictionary<string, RPCVariable>();
+        public virtual Dictionary<String, RPCVariable> StructValue
         {
             get { return _structValue; }
             set { _structValue = value; }
@@ -174,6 +174,32 @@ namespace HomegearLib.RPC
                     return new RPCVariable(RPCVariableType.rpcFloat);
             }
             return new RPCVariable(RPCVariableType.rpcVoid);
+        }
+
+        public override String ToString()
+        {
+            switch (_type)
+            {
+                case RPCVariableType.rpcVoid:
+                    return "Void";
+                case RPCVariableType.rpcBoolean:
+                    return _booleanValue.ToString();
+                case RPCVariableType.rpcInteger:
+                    return _integerValue.ToString();
+                case RPCVariableType.rpcString:
+                    return _stringValue;
+                case RPCVariableType.rpcFloat:
+                    return _floatValue.ToString();
+                case RPCVariableType.rpcArray:
+                    return "Array";
+                case RPCVariableType.rpcStruct:
+                    return "Struct";
+                case RPCVariableType.rpcDate:
+                    return "Date";
+                case RPCVariableType.rpcBase64:
+                    return _stringValue;
+            }
+            return "";
         }
     }
 }

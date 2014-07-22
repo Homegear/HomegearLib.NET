@@ -29,7 +29,8 @@ namespace HomegearLib.RPC
 
     public class RPCController : IDisposable
     {
-        public delegate void RPCEventEventHandler(RPCController sender, Variable value);
+        public delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
+        public delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
         public delegate void NewDevicesEventHandler(RPCController sender);
         public delegate void DevicesDeletedEventHandler(RPCController sender);
         public delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerID, Int32 channel, RPCUpdateDeviceFlags flags);
@@ -38,7 +39,8 @@ namespace HomegearLib.RPC
         public delegate void InitCompletedEventHandler(RPCController sender);
 
         #region "Events"
-        public event RPCEventEventHandler RPCEvent;
+        public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
+        public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
         public event UpdateDeviceEventHandler UpdateDevice;
@@ -79,6 +81,20 @@ namespace HomegearLib.RPC
             {
                 if (_interfaces == null || _interfaces.Count == 0) _interfaces = ListInterfaces();
                 return _interfaces;
+            }
+        }
+
+        Dictionary<String, SystemVariable> _systemVariables = null;
+        public Dictionary<String, SystemVariable> SystemVariables
+        {
+            get
+            {
+                if (_systemVariables == null || _systemVariables.Count == 0) _systemVariables = GetAllSystemVariables();
+                return _systemVariables;
+            }
+            internal set
+            {
+                _systemVariables = value;
             }
         }
 
@@ -145,14 +161,27 @@ namespace HomegearLib.RPC
 
         void _server_OnRPCEvent(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value)
         {
-            if (RPCEvent != null) RPCEvent(this, new Variable(peerID, channel, parameterName, value));
+            if (peerID == 0)
+            {
+                if (SystemVariableUpdated != null) SystemVariableUpdated(this, new SystemVariable(null, parameterName, value));
+            }
+            else
+            {
+                if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, new Variable(peerID, channel, parameterName, value));
+            }
         }
 
         public void Dispose()
         {
-            _disposing = true;
-            _client.Disconnect();
-            _server.Stop();
+            try
+            {
+                _disposing = true;
+                _client.Disconnect();
+                _server.Stop();
+            }
+            catch(Exception)
+            {
+            }
         }
 
         public void Clear()
@@ -160,6 +189,7 @@ namespace HomegearLib.RPC
             _families = null;
             _devices = null;
             _interfaces = null;
+            _systemVariables = null;
         }
 
         void _client_Disconnected(RPCClient sender)
@@ -223,6 +253,27 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("deleteDevice", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable((Int32)flags) });
             if (response.ErrorStruct) ThrowError("deleteDevice", response);
+        }
+
+        public void DeleteSystemVariable(SystemVariable variable)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("deleteSystemVariable", new List<RPCVariable> { new RPCVariable(variable.Name) });
+            if (response.ErrorStruct) ThrowError("deleteSystemVariable", response);
+        }
+
+        public Dictionary<String, SystemVariable> GetAllSystemVariables()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            Dictionary<String, SystemVariable> systemVariables = new Dictionary<String, SystemVariable>();
+            RPCVariable response = _client.CallMethod("getAllSystemVariables", new List<RPCVariable>());
+            if (response.ErrorStruct) ThrowError("getAllSystemVariables", response);
+            foreach(KeyValuePair<String, RPCVariable> element in response.StructValue)
+            {
+                SystemVariable variable = new SystemVariable(this, element.Key, element.Value);
+                systemVariables.Add(element.Key, variable);
+            }
+            return systemVariables;
         }
 
         public Dictionary<Int32, Device> GetAllValues()
@@ -471,6 +522,14 @@ namespace HomegearLib.RPC
             return parameters;
         }
 
+        public SystemVariable GetSystemVariable(String name)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getSystemVariable", new List<RPCVariable> { new RPCVariable(name) });
+            if (response.ErrorStruct) ThrowError("getSystemVariable", response);
+            return new SystemVariable(this, name, response);
+        }
+
         public void Init(string interfaceID)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -603,6 +662,13 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
             if (response.ErrorStruct) ThrowError("setInterface", response);
+        }
+
+        public void SetSystemVariable(SystemVariable variable)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setSystemVariable", new List<RPCVariable> { new RPCVariable(variable.Name), variable });
+            if (response.ErrorStruct) ThrowError("setSystemVariable", response);
         }
 
         public void SetValue(Variable variable)
