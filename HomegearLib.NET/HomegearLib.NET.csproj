@@ -53,6 +53,8 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Links.cs" />
+    <Compile Include="MetadataVariable.cs" />
+    <Compile Include="MetadataVariables.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="RPC\Encoding\BinaryDecoder.cs" />
     <Compile Include="RPC\Encoding\BinaryEncoder.cs" />

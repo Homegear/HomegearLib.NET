@@ -31,6 +31,9 @@ namespace HomegearLib.RPC
     {
         public delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
         public delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
+        public delegate void SystemVariableDeletedEventHandler(RPCController sender);
+        public delegate void MetadataUpdatedEventHandler(RPCController sender, Int32 peerID, MetadataVariable value);
+        public delegate void MetadataDeletedEventHandler(RPCController sender, Int32 peerID);
         public delegate void NewDevicesEventHandler(RPCController sender);
         public delegate void DevicesDeletedEventHandler(RPCController sender);
         public delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerID, Int32 channel, RPCUpdateDeviceFlags flags);
@@ -41,6 +44,9 @@ namespace HomegearLib.RPC
         #region "Events"
         public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
         public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
+        public event SystemVariableDeletedEventHandler SystemVariableDeleted;
+        public event MetadataUpdatedEventHandler MetadataUpdated;
+        public event MetadataDeletedEventHandler MetadataDeleted;
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
         public event UpdateDeviceEventHandler UpdateDevice;
@@ -163,12 +169,27 @@ namespace HomegearLib.RPC
         {
             if (peerID == 0)
             {
-                if (SystemVariableUpdated != null) SystemVariableUpdated(this, new SystemVariable(null, parameterName, value));
+                if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 0)
+                {
+                    if (SystemVariableDeleted != null) SystemVariableDeleted(this);
+                }
+                else
+                {
+                    if (SystemVariableUpdated != null) SystemVariableUpdated(this, new SystemVariable(null, parameterName, value));
+                }
             }
-            else
+            else if(channel == -1)
             {
-                if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, new Variable(peerID, channel, parameterName, value));
+                if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 1)
+                {
+                    if (MetadataDeleted != null) MetadataDeleted(this, peerID);
+                }
+                else
+                {
+                    if (MetadataUpdated != null) MetadataUpdated(this, peerID, new MetadataVariable(null, peerID, parameterName, value));
+                }
             }
+            else if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, new Variable(peerID, channel, parameterName, value));
         }
 
         public void Dispose()
@@ -216,7 +237,11 @@ namespace HomegearLib.RPC
         public void Disconnect()
         {
             _keepAliveTimer.Stop();
-            Init("");
+            try
+            {
+                Init("");
+            }
+            catch (Exception) { }
             _client.Disconnect();
             _server.Stop();
         }
@@ -255,11 +280,43 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("deleteDevice", response);
         }
 
+        public void DeleteMetadata(Int32 peerID)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("deleteMetadata", new List<RPCVariable> { new RPCVariable(peerID) });
+            if (response.ErrorStruct) ThrowError("deleteMetadata", response);
+        }
+
+        public void DeleteMetadata(MetadataVariable variable)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("deleteMetadata", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Name) });
+            if (response.ErrorStruct) ThrowError("deleteMetadata", response);
+        }
+
         public void DeleteSystemVariable(SystemVariable variable)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("deleteSystemVariable", new List<RPCVariable> { new RPCVariable(variable.Name) });
             if (response.ErrorStruct) ThrowError("deleteSystemVariable", response);
+        }
+
+        public Dictionary<String, MetadataVariable> GetAllMetadata(Int32 peerID)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            Dictionary<String, MetadataVariable> metadataVariables = new Dictionary<String, MetadataVariable>();
+            RPCVariable response = _client.CallMethod("getAllMetadata", new List<RPCVariable> { new RPCVariable(peerID) });
+            if (response.ErrorStruct)
+            {
+                if (response.StructValue["faultCode"].IntegerValue == -1) return metadataVariables;
+                else ThrowError("getAllMetadata", response);
+            }
+            foreach (KeyValuePair<String, RPCVariable> element in response.StructValue)
+            {
+                MetadataVariable variable = new MetadataVariable(this, peerID, element.Key, element.Value);
+                metadataVariables.Add(element.Key, variable);
+            }
+            return metadataVariables;
         }
 
         public Dictionary<String, SystemVariable> GetAllSystemVariables()
@@ -522,6 +579,14 @@ namespace HomegearLib.RPC
             return parameters;
         }
 
+        public MetadataVariable GetMetadata(Int32 peerID, String name)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getMetadata", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(name) });
+            if (response.ErrorStruct) ThrowError("getMetadata", response);
+            return new MetadataVariable(this, peerID, name, response);
+        }
+
         public SystemVariable GetSystemVariable(String name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -662,6 +727,13 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
             if (response.ErrorStruct) ThrowError("setInterface", response);
+        }
+
+        public void SetMetadata(MetadataVariable variable)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setMetadata", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Name), variable });
+            if (response.ErrorStruct) ThrowError("setMetadata", response);
         }
 
         public void SetSystemVariable(SystemVariable variable)

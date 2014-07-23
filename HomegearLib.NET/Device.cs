@@ -53,6 +53,19 @@ namespace HomegearLib
         private Channels _channels;
         public Channels Channels { get { return _channels; } internal set { _channels = value; } }
 
+        public bool MetadataRequested { get { return _metadata != null; } }
+
+        private MetadataVariables _metadata = null;
+        public MetadataVariables Metadata
+        {
+            get
+            {
+                if (_metadata == null || _metadata.Count == 0) _metadata = new MetadataVariables(_rpc, _id, _rpc.GetAllMetadata(_id));
+                return _metadata;
+            }
+            internal set { _metadata = value; }
+        }
+
         private String _name;
         public String Name
         {
@@ -180,6 +193,17 @@ namespace HomegearLib
         {
             _family = null;
             if(_channels != null) _channels.Dispose();
+        }
+
+        public void Reload()
+        {
+            _descriptionRequested = false;
+            _infoRequested = false;
+            _metadata = null;
+            foreach(KeyValuePair<Int32, Channel> channel in _channels)
+            {
+                channel.Value.Reload();
+            }
         }
 
         public void Unpair()

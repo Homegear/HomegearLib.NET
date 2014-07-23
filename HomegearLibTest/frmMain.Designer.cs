@@ -33,7 +33,17 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnMetadata = new System.Windows.Forms.Panel();
+            this.txtMetadataType = new System.Windows.Forms.TextBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.lblMetadataTimer = new System.Windows.Forms.Label();
+            this.txtMetadataValue = new System.Windows.Forms.TextBox();
+            this.label57 = new System.Windows.Forms.Label();
+            this.txtMetadataName = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
             this.pnSystemVariable = new System.Windows.Forms.Panel();
+            this.txtSystemVariableType = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
             this.lblSystemVariableTimer = new System.Windows.Forms.Label();
             this.txtSystemVariableValue = new System.Windows.Forms.TextBox();
             this.label52 = new System.Windows.Forms.Label();
@@ -168,8 +178,10 @@
             this.tsDeleteSystemVariable = new System.Windows.Forms.ToolStripMenuItem();
             this.cmSystemVariables = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsAddSystemVariable = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtSystemVariableType = new System.Windows.Forms.TextBox();
-            this.label49 = new System.Windows.Forms.Label();
+            this.cmMetadataVariables = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsAddMetadata = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmMetadataVariable = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsRemoveMetadata = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -178,6 +190,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnMetadata.SuspendLayout();
             this.pnSystemVariable.SuspendLayout();
             this.pnDevice.SuspendLayout();
             this.pnVariable.SuspendLayout();
@@ -188,6 +201,8 @@
             this.cmDevice.SuspendLayout();
             this.cmSystemVariable.SuspendLayout();
             this.cmSystemVariables.SuspendLayout();
+            this.cmMetadataVariables.SuspendLayout();
+            this.cmMetadataVariable.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -232,6 +247,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
             this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
@@ -252,6 +268,83 @@
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
             // 
+            // pnMetadata
+            // 
+            this.pnMetadata.Controls.Add(this.txtMetadataType);
+            this.pnMetadata.Controls.Add(this.label55);
+            this.pnMetadata.Controls.Add(this.lblMetadataTimer);
+            this.pnMetadata.Controls.Add(this.txtMetadataValue);
+            this.pnMetadata.Controls.Add(this.label57);
+            this.pnMetadata.Controls.Add(this.txtMetadataName);
+            this.pnMetadata.Controls.Add(this.label58);
+            this.pnMetadata.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnMetadata.Location = new System.Drawing.Point(0, 0);
+            this.pnMetadata.Name = "pnMetadata";
+            this.pnMetadata.Size = new System.Drawing.Size(562, 362);
+            this.pnMetadata.TabIndex = 32;
+            this.pnMetadata.Visible = false;
+            // 
+            // txtMetadataType
+            // 
+            this.txtMetadataType.Location = new System.Drawing.Point(97, 29);
+            this.txtMetadataType.Name = "txtMetadataType";
+            this.txtMetadataType.ReadOnly = true;
+            this.txtMetadataType.Size = new System.Drawing.Size(258, 20);
+            this.txtMetadataType.TabIndex = 31;
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(3, 32);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(34, 13);
+            this.label55.TabIndex = 30;
+            this.label55.Text = "Type:";
+            // 
+            // lblMetadataTimer
+            // 
+            this.lblMetadataTimer.AutoSize = true;
+            this.lblMetadataTimer.Location = new System.Drawing.Point(361, 58);
+            this.lblMetadataTimer.Name = "lblMetadataTimer";
+            this.lblMetadataTimer.Size = new System.Drawing.Size(118, 13);
+            this.lblMetadataTimer.TabIndex = 29;
+            this.lblMetadataTimer.Text = "Sending in 5 seconds...";
+            // 
+            // txtMetadataValue
+            // 
+            this.txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
+            this.txtMetadataValue.Location = new System.Drawing.Point(97, 55);
+            this.txtMetadataValue.Name = "txtMetadataValue";
+            this.txtMetadataValue.Size = new System.Drawing.Size(258, 20);
+            this.txtMetadataValue.TabIndex = 28;
+            this.txtMetadataValue.TextChanged += new System.EventHandler(this.txtMetadataValue_TextChanged);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(3, 58);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(37, 13);
+            this.label57.TabIndex = 27;
+            this.label57.Text = "Value:";
+            // 
+            // txtMetadataName
+            // 
+            this.txtMetadataName.Location = new System.Drawing.Point(97, 3);
+            this.txtMetadataName.Name = "txtMetadataName";
+            this.txtMetadataName.ReadOnly = true;
+            this.txtMetadataName.Size = new System.Drawing.Size(258, 20);
+            this.txtMetadataName.TabIndex = 3;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(3, 6);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(38, 13);
+            this.label58.TabIndex = 2;
+            this.label58.Text = "Name:";
+            // 
             // pnSystemVariable
             // 
             this.pnSystemVariable.Controls.Add(this.txtSystemVariableType);
@@ -267,6 +360,23 @@
             this.pnSystemVariable.Size = new System.Drawing.Size(562, 362);
             this.pnSystemVariable.TabIndex = 31;
             this.pnSystemVariable.Visible = false;
+            // 
+            // txtSystemVariableType
+            // 
+            this.txtSystemVariableType.Location = new System.Drawing.Point(97, 29);
+            this.txtSystemVariableType.Name = "txtSystemVariableType";
+            this.txtSystemVariableType.ReadOnly = true;
+            this.txtSystemVariableType.Size = new System.Drawing.Size(258, 20);
+            this.txtSystemVariableType.TabIndex = 31;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(3, 32);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(34, 13);
+            this.label49.TabIndex = 30;
+            this.label49.Text = "Type:";
             // 
             // lblSystemVariableTimer
             // 
@@ -1542,22 +1652,33 @@
             this.tsAddSystemVariable.Text = "Add";
             this.tsAddSystemVariable.Click += new System.EventHandler(this.tsAddSystemVariable_Click);
             // 
-            // txtSystemVariableType
+            // cmMetadataVariables
             // 
-            this.txtSystemVariableType.Location = new System.Drawing.Point(97, 29);
-            this.txtSystemVariableType.Name = "txtSystemVariableType";
-            this.txtSystemVariableType.ReadOnly = true;
-            this.txtSystemVariableType.Size = new System.Drawing.Size(258, 20);
-            this.txtSystemVariableType.TabIndex = 31;
+            this.cmMetadataVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsAddMetadata});
+            this.cmMetadataVariables.Name = "cmDevice";
+            this.cmMetadataVariables.Size = new System.Drawing.Size(97, 26);
             // 
-            // label49
+            // tsAddMetadata
             // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(3, 32);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(34, 13);
-            this.label49.TabIndex = 30;
-            this.label49.Text = "Type:";
+            this.tsAddMetadata.Name = "tsAddMetadata";
+            this.tsAddMetadata.Size = new System.Drawing.Size(152, 22);
+            this.tsAddMetadata.Text = "Add";
+            this.tsAddMetadata.Click += new System.EventHandler(this.tsAddMetadata_Click);
+            // 
+            // cmMetadataVariable
+            // 
+            this.cmMetadataVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsRemoveMetadata});
+            this.cmMetadataVariable.Name = "cmDevice";
+            this.cmMetadataVariable.Size = new System.Drawing.Size(153, 48);
+            // 
+            // tsRemoveMetadata
+            // 
+            this.tsRemoveMetadata.Name = "tsRemoveMetadata";
+            this.tsRemoveMetadata.Size = new System.Drawing.Size(152, 22);
+            this.tsRemoveMetadata.Text = "Remove";
+            this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
             // 
             // frmMain
             // 
@@ -1591,6 +1712,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnMetadata.ResumeLayout(false);
+            this.pnMetadata.PerformLayout();
             this.pnSystemVariable.ResumeLayout(false);
             this.pnSystemVariable.PerformLayout();
             this.pnDevice.ResumeLayout(false);
@@ -1607,6 +1730,8 @@
             this.cmDevice.ResumeLayout(false);
             this.cmSystemVariable.ResumeLayout(false);
             this.cmSystemVariables.ResumeLayout(false);
+            this.cmMetadataVariables.ResumeLayout(false);
+            this.cmMetadataVariable.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1755,6 +1880,18 @@
         private System.Windows.Forms.ToolStripMenuItem tsAddSystemVariable;
         private System.Windows.Forms.TextBox txtSystemVariableType;
         private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Panel pnMetadata;
+        private System.Windows.Forms.TextBox txtMetadataType;
+        private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.Label lblMetadataTimer;
+        private System.Windows.Forms.TextBox txtMetadataValue;
+        private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.TextBox txtMetadataName;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.ContextMenuStrip cmMetadataVariables;
+        private System.Windows.Forms.ToolStripMenuItem tsAddMetadata;
+        private System.Windows.Forms.ContextMenuStrip cmMetadataVariable;
+        private System.Windows.Forms.ToolStripMenuItem tsRemoveMetadata;
     }
 }
 

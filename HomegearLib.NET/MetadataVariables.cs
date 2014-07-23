@@ -7,49 +7,52 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
-    public class SystemVariables : ReadOnlyDictionary<String, SystemVariable>, IDisposable
+    public class MetadataVariables : ReadOnlyDictionary<String, MetadataVariable>, IDisposable
     {
         RPCController _rpc = null;
 
-        public SystemVariables(RPCController rpc, Dictionary<String, SystemVariable> systemVariables) : base(systemVariables)
+        private Int32 _peerID;
+        public Int32 PeerID { get { return _peerID; } }
+
+        public MetadataVariables(RPCController rpc, Int32 peerID, Dictionary<String, MetadataVariable> metadataVariables) : base(metadataVariables)
         {
             _rpc = rpc;
+            _peerID = peerID;
         }
 
-        public void Add(SystemVariable variable)
+        public void Add(MetadataVariable variable)
         {
-            _rpc.SetSystemVariable(variable);
+            _rpc.SetMetadata(variable);
         }
 
         public void Reload()
         {
-            _rpc.SystemVariables = _rpc.GetAllSystemVariables();
-            _dictionary = _rpc.SystemVariables;
+            _dictionary = _rpc.GetAllMetadata(_peerID);
         }
 
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<String, SystemVariable> systemVariable in _dictionary)
+            foreach (KeyValuePair<String, MetadataVariable> metadataVariable in _dictionary)
             {
-                systemVariable.Value.Dispose();
+                metadataVariable.Value.Dispose();
             }
         }
 
-        public List<SystemVariable> Update(out bool variablesDeleted, out bool variablesAdded)
+        public List<MetadataVariable> Update(out bool variablesDeleted, out bool variablesAdded)
         {
-            Dictionary<String, SystemVariable> variables = _rpc.GetAllSystemVariables();
+            Dictionary<String, MetadataVariable> variables = _rpc.GetAllMetadata(_peerID);
             variablesDeleted = false;
             variablesAdded = false;
-            List<SystemVariable> changedVariables = new List<SystemVariable>();
-            foreach (KeyValuePair<String, SystemVariable> variablePair in variables)
+            List<MetadataVariable> changedVariables = new List<MetadataVariable>();
+            foreach (KeyValuePair<String, MetadataVariable> variablePair in variables)
             {
                 if (!_dictionary.ContainsKey(variablePair.Key))
                 {
                     variablesAdded = true;
                     continue;
                 }
-                SystemVariable variable = _dictionary[variablePair.Key];
+                MetadataVariable variable = _dictionary[variablePair.Key];
                 if (variable.Type != variablePair.Value.Type)
                 {
                     variablesAdded = true;
@@ -58,7 +61,7 @@ namespace HomegearLib
                 }
                 if (variable.SetValue(variablePair.Value)) changedVariables.Add(variable);
             }
-            foreach (KeyValuePair<String, SystemVariable> variablePair in _dictionary)
+            foreach (KeyValuePair<String, MetadataVariable> variablePair in _dictionary)
             {
                 if (!variables.ContainsKey(variablePair.Key))
                 {

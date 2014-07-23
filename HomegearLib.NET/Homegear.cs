@@ -14,6 +14,14 @@ namespace HomegearLib
         SystemVariables = 2
     }
 
+    public enum DeviceReloadType
+    {
+        Full = 1,
+        Metadata = 2,
+        Channel = 4,
+        Links = 8
+    }
+
     public class Homegear : IDisposable
     {
         public delegate void ConnectErrorEventHandler(Homegear sender, String message, String stackTrace);
@@ -21,21 +29,23 @@ namespace HomegearLib
         public delegate void DisconnectedEventHandler(Homegear sender);
         public delegate void DataReloadEventHandler(Homegear sender);
         public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
+        public delegate void MetadataUpdatedEventHandler(Homegear sender, Device device, MetadataVariable variable);
         public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
         public delegate void DeviceLinkConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter);
-        public delegate void DeviceLinksUpdatedEventHandler(Homegear sender, Device device, Channel channel);
         public delegate void ReloadRequiredEventHandler(Homegear sender, ReloadType reloadType);
+        public delegate void DeviceReloadRequiredEventHandler(Homegear sender, Device device, Channel channel, DeviceReloadType reloadType);
 
         #region "Events"
         public event ConnectErrorEventHandler ConnectError;
         public event DataReloadEventHandler Reloaded;
         public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
+        public event MetadataUpdatedEventHandler MetadataUpdated;
         public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
         public event DeviceConfigParameterUpdatedEventHandler DeviceConfigParameterUpdated;
         public event DeviceLinkConfigParameterUpdatedEventHandler DeviceLinkConfigParameterUpdated;
-        public event DeviceLinksUpdatedEventHandler DeviceLinksUpdated;
         public event ReloadRequiredEventHandler ReloadRequired;
+        public event DeviceReloadRequiredEventHandler DeviceReloadRequired;
         public event ConnectedEventHandler Connected;
         public event DisconnectedEventHandler Disconnected;
         #endregion
@@ -80,6 +90,9 @@ namespace HomegearLib
             _rpc.InitCompleted += _rpc_InitCompleted;
             _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated += _rpc_OnSystemVariableUpdated;
+            _rpc.SystemVariableDeleted += _rpc_OnSystemVariableDeleted;
+            _rpc.MetadataUpdated += _rpc_OnMetadataUpdated;
+            _rpc.MetadataDeleted += _rpc_OnMetadataDeleted;
             _rpc.NewDevices += _rpc_OnNewDevices;
             _rpc.DevicesDeleted += _rpc_OnDevicesDeleted;
             _rpc.UpdateDevice += _rpc_OnUpdateDevice;
@@ -122,7 +135,7 @@ namespace HomegearLib
             else
             {
                 channel.Links = null;
-                if (DeviceLinksUpdated != null) DeviceLinksUpdated(this, device, channel);
+                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Links);
             }
         }
 
@@ -150,12 +163,49 @@ namespace HomegearLib
             if (_disposing) return;
             if (!SystemVariables.ContainsKey(value.Name))
             {
-                ReloadRequired(this, ReloadType.SystemVariables);
+                if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
                 return;
             }
             SystemVariable variable = SystemVariables[value.Name];
             variable.SetValue(value);
             if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
+        }
+
+        void _rpc_OnSystemVariableDeleted(RPCController sender)
+        {
+            if (_disposing) return;
+            if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
+        }
+
+        void _rpc_OnMetadataUpdated(RPCController sender, Int32 peerID, MetadataVariable value)
+        {
+            if (_disposing) return;
+            if(!Devices.ContainsKey(peerID))
+            {
+                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
+                return;
+            }
+            Device device = Devices[peerID];
+            if (!device.Metadata.ContainsKey(value.Name))
+            {
+                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, null, DeviceReloadType.Metadata);
+                return;
+            }
+            MetadataVariable variable = device.Metadata[value.Name];
+            variable.SetValue(value);
+            if (MetadataUpdated != null) MetadataUpdated(this, device, variable);
+        }
+
+        void _rpc_OnMetadataDeleted(RPCController sender, Int32 peerID)
+        {
+            if (_disposing) return;
+            if (!Devices.ContainsKey(peerID))
+            {
+                if(ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
+                return;
+            }
+            Device device = Devices[peerID];
+            if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, null, DeviceReloadType.Metadata);
         }
 
         void _rpc_InitCompleted(RPCController sender)
@@ -173,7 +223,32 @@ namespace HomegearLib
                     if(!device.Channels.ContainsKey(variable.Channel)) continue;
                     if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, device.Channels[variable.Channel], variable);
                 }
+                bool systemVariablesAdded = false;
+                bool systemVariablesDeleted = false;
+                List<SystemVariable> updatedSystemVariables = SystemVariables.Update(out systemVariablesDeleted, out systemVariablesAdded);
+                foreach(SystemVariable variable in updatedSystemVariables)
+                {
+                    if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
+                }
                 if ((devicesDeleted || newDevices) && ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
+                else
+                {
+                    if ((systemVariablesAdded || systemVariablesDeleted) && ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
+                    foreach (KeyValuePair<Int32, Device> devicePair in Devices)
+                    {
+                        if (devicePair.Value.MetadataRequested)
+                        {
+                            bool variablesAdded = false;
+                            bool variablesDeleted = false;
+                            List<MetadataVariable> updatedMetadata = devicePair.Value.Metadata.Update(out variablesDeleted, out variablesAdded);
+                            foreach (MetadataVariable variable in updatedMetadata)
+                            {
+                                if (MetadataUpdated != null) MetadataUpdated(this, devicePair.Value, variable);
+                            }
+                            if ((variablesAdded || variablesDeleted) && DeviceReloadRequired != null) DeviceReloadRequired(this, devicePair.Value, null, DeviceReloadType.Metadata);
+                        }
+                    }
+                }
             }
         }
 
@@ -202,6 +277,9 @@ namespace HomegearLib
             _rpc.InitCompleted -= _rpc_InitCompleted;
             _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
+            _rpc.SystemVariableDeleted -= _rpc_OnSystemVariableDeleted;
+            _rpc.MetadataUpdated -= _rpc_OnMetadataUpdated;
+            _rpc.MetadataDeleted -= _rpc_OnMetadataDeleted;
             _rpc.NewDevices -= _rpc_OnNewDevices;
             _rpc.DevicesDeleted -= _rpc_OnDevicesDeleted;
             _rpc.UpdateDevice -= _rpc_OnUpdateDevice;

@@ -7,9 +7,12 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
-    public class SystemVariable : RPCVariable, IDisposable
+    public class MetadataVariable : RPCVariable, IDisposable
     {
         RPCController _rpc = null;
+
+        private Int32 _peerID;
+        public Int32 PeerID { get { return _peerID; } }
 
         private String _name;
         public String Name { get { return _name; } }
@@ -25,7 +28,7 @@ namespace HomegearLib
             set
             {
                 _stringValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
@@ -35,7 +38,7 @@ namespace HomegearLib
             set
             {
                 _integerValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
@@ -45,7 +48,7 @@ namespace HomegearLib
             set
             {
                 _booleanValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
@@ -55,7 +58,7 @@ namespace HomegearLib
             set
             {
                 _floatValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
@@ -65,7 +68,7 @@ namespace HomegearLib
             set
             {
                 _arrayValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
@@ -75,68 +78,77 @@ namespace HomegearLib
             set
             {
                 _structValue = value;
-                if(_rpc != null) _rpc.SetSystemVariable(this);
+                if(_rpc != null) _rpc.SetMetadata(this);
             }
         }
 
-        public SystemVariable(String name, RPCVariable variable)
+        public MetadataVariable(Int32 peerID, String name, RPCVariable variable)
         {
+            _peerID = peerID;
             _name = name;
             Type = variable.Type;
             SetValue(variable);
         }
 
-        internal SystemVariable(RPCController rpc, String name, RPCVariable variable)
+        internal MetadataVariable(RPCController rpc, Int32 peerID, String name, RPCVariable variable)
         {
             _rpc = rpc;
+            _peerID = peerID;
             _name = name;
             Type = variable.Type;
             SetValue(variable);
         }
 
-        public SystemVariable(String name, RPCVariableType type)
+        public MetadataVariable(Int32 peerID, String name, RPCVariableType type)
         {
+            _peerID = peerID;
             _name = name;
             _type = type;
         }
 
-        public SystemVariable(String name, Int32 value)
+        public MetadataVariable(Int32 peerID, String name, Int32 value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcInteger;
             _integerValue = value;
         }
 
-        public SystemVariable(String name, UInt32 value)
+        public MetadataVariable(Int32 peerID, String name, UInt32 value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcInteger;
             _integerValue = (Int32)value;
         }
 
-        public SystemVariable(String name, Byte value)
+        public MetadataVariable(Int32 peerID, String name, Byte value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcInteger;
             _integerValue = (Int32)value;
         }
 
-        public SystemVariable(String name, String value)
+        public MetadataVariable(Int32 peerID, String name, String value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcString;
             _stringValue = value;
         }
 
-        public SystemVariable(String name, bool value)
+        public MetadataVariable(Int32 peerID, String name, bool value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcBoolean;
             _booleanValue = value;
         }
 
-        public SystemVariable(String name, double value)
+        public MetadataVariable(Int32 peerID, String name, double value)
         {
+            _peerID = peerID;
             _name = name;
             _type = RPCVariableType.rpcFloat;
             _floatValue = value;
@@ -144,7 +156,7 @@ namespace HomegearLib
 
         public void Remove()
         {
-            _rpc.DeleteSystemVariable(this);
+            _rpc.DeleteMetadata(this);
         }
 
         public void Dispose()

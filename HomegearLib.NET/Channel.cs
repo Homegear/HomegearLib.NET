@@ -53,20 +53,8 @@ namespace HomegearLib
             {
                 if(_links == null || _links.Count == 0)
                 {
-                    List<Link> allLinks = _rpc.GetLinks(_peerID, _index);
-                    Dictionary<Int32, Dictionary<Int32, Link>> links = new Dictionary<Int32, Dictionary<Int32, Link>>();
-                    foreach(Link link in allLinks)
-                    {
-                        if (!links.ContainsKey(link.RemotePeerID)) links.Add(link.RemotePeerID, new Dictionary<Int32, Link>());
-                        if (links[link.RemotePeerID].ContainsKey(link.RemoteChannel)) continue;
-                        links[link.RemotePeerID].Add(link.RemoteChannel, link);
-                    }
-                    Dictionary<Int32, ReadOnlyDictionary<Int32, Link>> links2 = new Dictionary<Int32, ReadOnlyDictionary<Int32, Link>>();
-                    foreach(KeyValuePair<Int32, Dictionary<Int32, Link>> pair in links)
-                    {
-                        links2.Add(pair.Key, new ReadOnlyDictionary<Int32, Link>(pair.Value));
-                    }
-                    _links = new Links(links2);
+                    _links = new Links(_rpc, _peerID, _index);
+                    _links.Reload();                    
                 }
                 return _links;
             }
@@ -222,9 +210,17 @@ namespace HomegearLib
 
         public void Dispose()
         {
-            if(_variables != null) _variables.Dispose();
-            if(_config != null) _config.Dispose();
+            if (_config != null) _config.Dispose();
+            if (_links != null) _links.Dispose();
             _rpc = null;
+        }
+
+        public void Reload()
+        {
+            _descriptionRequested = false;
+            _links = null;
+            _config = null;
+            _variables = null;
         }
     }
 }
