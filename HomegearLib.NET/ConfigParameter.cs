@@ -44,8 +44,8 @@ namespace HomegearLib
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tInteger || _type != VariableType.tEnum) throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
-                if ((_integerValue > _maxInteger || _integerValue < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
+                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _integerValue = value;
                 _dataPending = true;
             }
@@ -65,7 +65,7 @@ namespace HomegearLib
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
                 if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Config parameter is not of type double.");
-                if ((_doubleValue > _maxDouble || _doubleValue < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
                 _doubleValue = value;
                 _dataPending = true;
             }

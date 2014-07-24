@@ -587,6 +587,31 @@ namespace HomegearLib.RPC
             return new MetadataVariable(this, peerID, name, response);
         }
 
+        public List<ServiceMessage> GetServiceMessages()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            List<ServiceMessage> messages = new List<ServiceMessage>();
+            RPCVariable response = _client.CallMethod("getServiceMessages", new List<RPCVariable> { new RPCVariable(true) });
+            if (response.ErrorStruct) ThrowError("getServiceMessages", response);
+            foreach (RPCVariable element in response.ArrayValue)
+            {
+                if(element.Type != RPCVariableType.rpcArray || element.ArrayValue.Count != 4 || element.ArrayValue[0].Type != RPCVariableType.rpcInteger || element.ArrayValue[1].Type != RPCVariableType.rpcInteger || element.ArrayValue[2].Type != RPCVariableType.rpcString) continue;
+                ServiceMessage message = new ServiceMessage(element.ArrayValue[0].IntegerValue, element.ArrayValue[1].IntegerValue, element.ArrayValue[2].StringValue);
+                if(element.ArrayValue[3].Type == RPCVariableType.rpcBoolean) message.Value = element.ArrayValue[3].BooleanValue ? 1 : 0;
+                else message.Value = element.ArrayValue[3].IntegerValue;
+                messages.Add(message);
+            }
+            return messages;
+        }
+
+        public String GetVersion()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getVersion", new List<RPCVariable> ());
+            if (response.ErrorStruct) ThrowError("getVersion", response);
+            return response.StringValue;
+        }
+
         public SystemVariable GetSystemVariable(String name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -640,6 +665,22 @@ namespace HomegearLib.RPC
                 interfaces.Add(physicalInterface.ID, physicalInterface);
             }
             return interfaces;
+        }
+
+        public Int32 LogLevel()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("logLevel", new List<RPCVariable>());
+            if (response.ErrorStruct) ThrowError("logLevel", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 LogLevel(Int32 newLevel)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("logLevel", new List<RPCVariable> { new RPCVariable(newLevel) });
+            if (response.ErrorStruct) ThrowError("logLevel", response);
+            return response.IntegerValue;
         }
 
         public void PutParamset(Int32 peerID, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> parameters)

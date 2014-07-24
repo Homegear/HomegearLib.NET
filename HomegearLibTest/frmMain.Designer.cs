@@ -33,6 +33,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnHomegear = new System.Windows.Forms.Panel();
+            this.txtLogLevel = new System.Windows.Forms.TextBox();
+            this.label62 = new System.Windows.Forms.Label();
             this.pnMetadata = new System.Windows.Forms.Panel();
             this.txtMetadataType = new System.Windows.Forms.TextBox();
             this.label55 = new System.Windows.Forms.Label();
@@ -182,6 +185,10 @@
             this.tsAddMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMetadataVariable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveMetadata = new System.Windows.Forms.ToolStripMenuItem();
+            this.label56 = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.txtServiceMessages = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -190,6 +197,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnHomegear.SuspendLayout();
             this.pnMetadata.SuspendLayout();
             this.pnSystemVariable.SuspendLayout();
             this.pnDevice.SuspendLayout();
@@ -247,6 +255,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.pnHomegear);
             this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
             this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
@@ -267,6 +276,38 @@
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnHomegear
+            // 
+            this.pnHomegear.Controls.Add(this.txtServiceMessages);
+            this.pnHomegear.Controls.Add(this.label59);
+            this.pnHomegear.Controls.Add(this.txtVersion);
+            this.pnHomegear.Controls.Add(this.label56);
+            this.pnHomegear.Controls.Add(this.txtLogLevel);
+            this.pnHomegear.Controls.Add(this.label62);
+            this.pnHomegear.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnHomegear.Location = new System.Drawing.Point(0, 0);
+            this.pnHomegear.Name = "pnHomegear";
+            this.pnHomegear.Size = new System.Drawing.Size(562, 362);
+            this.pnHomegear.TabIndex = 33;
+            this.pnHomegear.Visible = false;
+            // 
+            // txtLogLevel
+            // 
+            this.txtLogLevel.Location = new System.Drawing.Point(66, 29);
+            this.txtLogLevel.Name = "txtLogLevel";
+            this.txtLogLevel.Size = new System.Drawing.Size(101, 20);
+            this.txtLogLevel.TabIndex = 3;
+            this.txtLogLevel.TextChanged += new System.EventHandler(this.txtLogLevel_TextChanged);
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(3, 32);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(57, 13);
+            this.label62.TabIndex = 2;
+            this.label62.Text = "Log Level:";
             // 
             // pnMetadata
             // 
@@ -1662,7 +1703,7 @@
             // tsAddMetadata
             // 
             this.tsAddMetadata.Name = "tsAddMetadata";
-            this.tsAddMetadata.Size = new System.Drawing.Size(152, 22);
+            this.tsAddMetadata.Size = new System.Drawing.Size(96, 22);
             this.tsAddMetadata.Text = "Add";
             this.tsAddMetadata.Click += new System.EventHandler(this.tsAddMetadata_Click);
             // 
@@ -1671,14 +1712,52 @@
             this.cmMetadataVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveMetadata});
             this.cmMetadataVariable.Name = "cmDevice";
-            this.cmMetadataVariable.Size = new System.Drawing.Size(153, 48);
+            this.cmMetadataVariable.Size = new System.Drawing.Size(118, 26);
             // 
             // tsRemoveMetadata
             // 
             this.tsRemoveMetadata.Name = "tsRemoveMetadata";
-            this.tsRemoveMetadata.Size = new System.Drawing.Size(152, 22);
+            this.tsRemoveMetadata.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveMetadata.Text = "Remove";
             this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(3, 6);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(45, 13);
+            this.label56.TabIndex = 4;
+            this.label56.Text = "Version:";
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.Location = new System.Drawing.Point(66, 3);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.ReadOnly = true;
+            this.txtVersion.Size = new System.Drawing.Size(101, 20);
+            this.txtVersion.TabIndex = 5;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(3, 58);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(97, 13);
+            this.label59.TabIndex = 6;
+            this.label59.Text = "Service Messages:";
+            // 
+            // txtServiceMessages
+            // 
+            this.txtServiceMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtServiceMessages.Location = new System.Drawing.Point(6, 74);
+            this.txtServiceMessages.Multiline = true;
+            this.txtServiceMessages.Name = "txtServiceMessages";
+            this.txtServiceMessages.ReadOnly = true;
+            this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtServiceMessages.Size = new System.Drawing.Size(457, 285);
+            this.txtServiceMessages.TabIndex = 7;
             // 
             // frmMain
             // 
@@ -1712,6 +1791,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnHomegear.ResumeLayout(false);
+            this.pnHomegear.PerformLayout();
             this.pnMetadata.ResumeLayout(false);
             this.pnMetadata.PerformLayout();
             this.pnSystemVariable.ResumeLayout(false);
@@ -1892,6 +1973,13 @@
         private System.Windows.Forms.ToolStripMenuItem tsAddMetadata;
         private System.Windows.Forms.ContextMenuStrip cmMetadataVariable;
         private System.Windows.Forms.ToolStripMenuItem tsRemoveMetadata;
+        private System.Windows.Forms.Panel pnHomegear;
+        private System.Windows.Forms.TextBox txtLogLevel;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.TextBox txtServiceMessages;
+        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.TextBox txtVersion;
+        private System.Windows.Forms.Label label56;
     }
 }
 

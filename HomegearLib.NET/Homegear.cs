@@ -78,6 +78,20 @@ namespace HomegearLib
             }
         }
 
+        String _version = "";
+        public String Version
+        {
+            get
+            {
+                if (_version.Length == 0) _version = _rpc.GetVersion();
+                return _version;
+            }
+        }
+
+        public Int32 LogLevel { get { return _rpc.LogLevel(); } set { _rpc.LogLevel(value); } }
+
+        public List<ServiceMessage> ServiceMessages { get { return _rpc.GetServiceMessages(); } }
+
         public Homegear(RPCController rpc)
         {
             if (rpc == null) throw new NullReferenceException("RPC object is null.");
@@ -163,6 +177,7 @@ namespace HomegearLib
             if (_disposing) return;
             if (!SystemVariables.ContainsKey(value.Name))
             {
+                System.Diagnostics.Debug.Write("Position 1");
                 if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
                 return;
             }
@@ -174,6 +189,7 @@ namespace HomegearLib
         void _rpc_OnSystemVariableDeleted(RPCController sender)
         {
             if (_disposing) return;
+            System.Diagnostics.Debug.Write("Position 2");
             if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
         }
 
@@ -199,11 +215,7 @@ namespace HomegearLib
         void _rpc_OnMetadataDeleted(RPCController sender, Int32 peerID)
         {
             if (_disposing) return;
-            if (!Devices.ContainsKey(peerID))
-            {
-                if(ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
-                return;
-            }
+            if (!Devices.ContainsKey(peerID)) return;
             Device device = Devices[peerID];
             if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, null, DeviceReloadType.Metadata);
         }
@@ -233,7 +245,11 @@ namespace HomegearLib
                 if ((devicesDeleted || newDevices) && ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
                 else
                 {
-                    if ((systemVariablesAdded || systemVariablesDeleted) && ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
+                    if ((systemVariablesAdded || systemVariablesDeleted) && ReloadRequired != null)
+                    {
+                        System.Diagnostics.Debug.Write("Position 3");
+                        ReloadRequired(this, ReloadType.SystemVariables);
+                    }
                     foreach (KeyValuePair<Int32, Device> devicePair in Devices)
                     {
                         if (devicePair.Value.MetadataRequested)

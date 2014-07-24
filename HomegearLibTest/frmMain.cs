@@ -589,14 +589,27 @@ namespace HomegearLibTest
             _selectedMetadata = null;
             if (e.Node == null) return;
             _nodeLoading = true;
-            if (e.Node.FullPath.StartsWith("Devices"))
+            if(e.Node.Level == 0)
             {
+                pnMetadata.Visible = false;
+                pnDevice.Visible = false;
+                pnVariable.Visible = false;
+                pnChannel.Visible = false;
+                pnSystemVariable.Visible = false;
+                pnInterface.Visible = false;
+                HomegearSelected(e);
+            }
+            else if (e.Node.FullPath.StartsWith("Devices"))
+            {
+                pnHomegear.Visible = false;
                 pnInterface.Visible = false;
                 pnSystemVariable.Visible = false;
+                pnMetadata.Visible = false;
                 DeviceSelected(e);
             }
             else if (e.Node.FullPath.StartsWith("Interfaces"))
             {
+                pnHomegear.Visible = false;
                 pnMetadata.Visible = false;
                 pnDevice.Visible = false;
                 pnVariable.Visible = false;
@@ -606,6 +619,7 @@ namespace HomegearLibTest
             }
             else if(e.Node.FullPath.StartsWith("System Variables"))
             {
+                pnHomegear.Visible = false;
                 pnMetadata.Visible = false;
                 pnDevice.Visible = false;
                 pnVariable.Visible = false;
@@ -614,6 +628,20 @@ namespace HomegearLibTest
                 SystemVariableSelected(e);
             }
             _nodeLoading = false;
+        }
+
+        private void HomegearSelected(TreeViewEventArgs e)
+        {
+            if (e.Node.Level > 0) return;
+            txtVersion.Text = _homegear.Version;
+            txtLogLevel.Text = _homegear.LogLevel.ToString();
+            List<ServiceMessage> serviceMessages = _homegear.ServiceMessages;
+            txtServiceMessages.Text = "";
+            foreach(ServiceMessage message in serviceMessages)
+            {
+                txtServiceMessages.Text += "Device ID: " + message.PeerID.ToString() + "\t" + "Channel: " + message.Channel.ToString() + "\t" + "Type: " + message.Type + "\t" + "Value: " + message.Value.ToString() + "\r\n";
+            }
+            pnHomegear.Visible = true;
         }
 
         private void DeviceSelected(TreeViewEventArgs e)
@@ -934,6 +962,16 @@ namespace HomegearLibTest
                     variableNode.ContextMenuStrip = cmSystemVariable;
                     e.Node.Nodes.Add(variableNode);
                 }
+            }
+        }
+
+        private void txtLogLevel_TextChanged(object sender, EventArgs e)
+        {
+            if (_nodeLoading) return;
+            Int32 integerValue = 0;
+            if(Int32.TryParse(txtLogLevel.Text, out integerValue))
+            {
+                _homegear.LogLevel = integerValue;
             }
         }
 
