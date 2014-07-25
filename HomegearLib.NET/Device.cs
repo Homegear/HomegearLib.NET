@@ -206,6 +206,11 @@ namespace HomegearLib
             }
         }
 
+        public void UpdateFirmware(bool manually)
+        {
+            _rpc.UpdateFirmware(this, manually);
+        }
+
         public void Unpair()
         {
             _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Defer);

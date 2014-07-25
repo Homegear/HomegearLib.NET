@@ -38,10 +38,44 @@ namespace HomegearLib
         public bool IsSender { get { return _isSender; } internal set { _isSender = value; } }
 
         protected String _name = "";
-        public String Name { get { return _name; } internal set { _name = value; } }
+        public String Name
+        {
+            get { return _name; }
+            set
+            { 
+                _name = value;
+                _rpc.SetLinkInfo(this);
+            }
+        }
+
+        /// <summary>
+        /// Sets the name of the link without calling any RPC functions
+        /// </summary>
+        /// <param name="name">The name of the link</param>
+        internal void SetNameNoRPC(String name)
+        {
+            _name = name;
+        }
 
         protected String _description = "";
-        public String Description { get { return _description; } internal set { _description = value; } }
+        public String Description
+        {
+            get { return _description; }
+            set
+            {
+                _description = value;
+                _rpc.SetLinkInfo(this);
+            }
+        }
+
+        /// <summary>
+        /// Sets the description of the link without calling any RPC functions
+        /// </summary>
+        /// <param name="name">The description of the link</param>
+        internal void SetDescriptionNoRPC(String description)
+        {
+            _description = description;
+        }
 
         private DeviceConfig _config = null;
         public DeviceConfig Config

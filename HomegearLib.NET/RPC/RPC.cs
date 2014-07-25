@@ -489,6 +489,17 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
+        public void GetLinkInfo(Link link)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = null;
+            if (link.IsSender) response = _client.CallMethod("getLinkInfo", new List<RPCVariable> { new RPCVariable(link.PeerID), new RPCVariable(link.Channel), new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel) });
+            else response = _client.CallMethod("getLinkInfo", new List<RPCVariable> { new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel), new RPCVariable(link.PeerID), new RPCVariable(link.Channel) });
+            if (response.ErrorStruct) ThrowError("getLinkInfo", response);
+            if (response.StructValue.ContainsKey("NAME")) link.SetNameNoRPC(response.StructValue["NAME"].StringValue);
+            if (response.StructValue.ContainsKey("DESCRIPTION")) link.SetNameNoRPC(response.StructValue["DESCRIPTION"].StringValue);
+        }
+
         public List<Link> GetLinks()
         {
             return GetLinks(0, -1, 0);
@@ -528,8 +539,8 @@ namespace HomegearLib.RPC
                     remoteChannel = rpcLink.StructValue["SENDER_CHANNEL"].IntegerValue;
                 }
                 Link link = new Link(this, peerID, channel, remotePeerID, remoteChannel, isSender);
-                if (rpcLink.StructValue.ContainsKey("NAME")) link.Name = rpcLink.StructValue["NAME"].StringValue;
-                if (rpcLink.StructValue.ContainsKey("DESCRIPTION")) link.Description = rpcLink.StructValue["DESCRIPTION"].StringValue;
+                if (rpcLink.StructValue.ContainsKey("NAME")) link.SetNameNoRPC(rpcLink.StructValue["NAME"].StringValue);
+                if (rpcLink.StructValue.ContainsKey("DESCRIPTION")) link.SetDescriptionNoRPC(rpcLink.StructValue["DESCRIPTION"].StringValue);
                 links.Add(link);
             }
             return links;
@@ -624,6 +635,34 @@ namespace HomegearLib.RPC
                 messages.Add(message);
             }
             return messages;
+        }
+
+        public UpdateStatus GetUpdateStatus()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getUpdateStatus", null);
+            if (response.ErrorStruct) ThrowError("getUpdateStatus", response);
+            Int32 currentDevice = -1;
+            Int32 currentDeviceProgress = -1;
+            Int32 deviceCount = -1;
+            Int32 currentUpdate = 0;
+            Dictionary<Int32, UpdateResult> results = new Dictionary<Int32, UpdateResult>();
+            if (response.StructValue.ContainsKey("CURRENT_DEVICE")) currentDevice = response.StructValue["CURRENT_DEVICE"].IntegerValue;
+            if (response.StructValue.ContainsKey("CURRENT_DEVICE_PROGRESS")) currentDeviceProgress = response.StructValue["CURRENT_DEVICE_PROGRESS"].IntegerValue;
+            if (response.StructValue.ContainsKey("DEVICE_COUNT")) deviceCount = response.StructValue["DEVICE_COUNT"].IntegerValue;
+            if (response.StructValue.ContainsKey("CURRENT_UPDATE")) currentUpdate = response.StructValue["CURRENT_UPDATE"].IntegerValue;
+            if (response.StructValue.ContainsKey("RESULTS"))
+            {
+                foreach(KeyValuePair<String, RPCVariable> devicePair in response.StructValue["RESULTS"].StructValue)
+                {
+                    Int32 peerID = 0;
+                    if (!Int32.TryParse(devicePair.Key, out peerID)) continue;
+                    if (!devicePair.Value.StructValue.ContainsKey("RESULT_CODE") || !devicePair.Value.StructValue.ContainsKey("RESULT_STRING")) continue;
+                    UpdateResult result = new UpdateResult((UpdateResultCode)devicePair.Value.StructValue["RESULT_CODE"].IntegerValue, devicePair.Value.StructValue["RESULT_STRING"].StringValue);
+                    results.Add(peerID, result);
+                }
+            }
+            return new UpdateStatus(currentDevice, currentDeviceProgress, deviceCount, currentUpdate, results);
         }
 
         public String GetVersion()
@@ -809,6 +848,15 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("setInterface", response);
         }
 
+        public void SetLinkInfo(Link link)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = null;
+            if (link.IsSender) response = _client.CallMethod("setLinkInfo", new List<RPCVariable> { new RPCVariable(link.PeerID), new RPCVariable(link.Channel), new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel), new RPCVariable(link.Name), new RPCVariable(link.Description) });
+            else response = _client.CallMethod("setLinkInfo", new List<RPCVariable> { new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel), new RPCVariable(link.PeerID), new RPCVariable(link.Channel), new RPCVariable(link.Name), new RPCVariable(link.Description) });
+            if (response.ErrorStruct) ThrowError("setLinkInfo", response);
+        }
+
         public void SetMetadata(MetadataVariable variable)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -828,6 +876,13 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setValue", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(variable) });
             if (response.ErrorStruct) ThrowError("setValue", response);
+        }
+
+        public void UpdateFirmware(Device device, bool manually)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("updateFirmware", new List<RPCVariable> { new RPCVariable(device.ID), new RPCVariable(manually) });
+            if (response.ErrorStruct) ThrowError("updateFirmware", response);
         }
         #endregion
     }

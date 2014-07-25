@@ -22,6 +22,62 @@ namespace HomegearLib
         Links = 8
     }
 
+    public enum UpdateResultCode
+    {
+        OK = 0,
+        UnknownError = 1,
+        NoVersionFileFound = 2,
+        NoFirmwareFound = 3,
+        CouldNotOpenFirmwareFile = 4,
+        WrongFileFormat = 5,
+        NoResponse = 6,
+        NoUpdateRequest = 7,
+        TooManyCommunicationErrors = 8,
+        PhysicalInterfaceError = 9
+    }
+
+    public class UpdateResult
+    {
+        UpdateResultCode _code = -1;
+        public UpdateResultCode Code { get { return _code; } }
+
+        String _description = "";
+        public String Description { get { return _description; } }
+
+        public UpdateResult(UpdateResultCode code, String description)
+        {
+            _code = code;
+            _description = description;
+        }
+    }
+
+    public class UpdateStatus
+    {
+        Int32 _currentDevice = -1;
+        public Int32 CurrentDevice { get { return _currentDevice; } }
+
+        Int32 _currentDeviceProgress = -1;
+        public Int32 CurrentDeviceProgress { get { return _currentDeviceProgress; } }
+
+        Int32 _deviceCount = -1;
+        public Int32 DeviceCount { get { return _deviceCount; } }
+
+        Int32 _currentUpdate = 0;
+        public Int32 CurrentUpdate { get { return _currentUpdate; } }
+
+        ReadOnlyDictionary<Int32, UpdateResult> _results = new ReadOnlyDictionary<Int32,UpdateResult>();
+        public ReadOnlyDictionary<Int32, UpdateResult> Results { get { return _results; } }
+
+        public UpdateStatus(Int32 currentDevice, Int32 currentDeviceProgress, Int32 deviceCount, Int32 currentUpdate, Dictionary<Int32, UpdateResult> results)
+        {
+            _currentDevice = currentDevice;
+            _currentDeviceProgress = currentDeviceProgress;
+            _deviceCount = deviceCount;
+            _currentUpdate = currentUpdate;
+            _results = new ReadOnlyDictionary<Int32, UpdateResult>(results);
+        }
+    }
+
     public class Homegear : IDisposable
     {
         public delegate void ConnectErrorEventHandler(Homegear sender, String message, String stackTrace);
@@ -399,6 +455,11 @@ namespace HomegearLib
         public Int32 TimeLeftInPairingMode()
         {
             return _rpc.GetInstallMode();
+        }
+
+        public UpdateStatus GetUpdateStatus()
+        {
+            return _rpc.GetUpdateStatus();
         }
 
         public Int32 SearchDevices()
