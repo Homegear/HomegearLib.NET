@@ -239,7 +239,7 @@ namespace HomegearLib.RPC
             _keepAliveTimer.Stop();
             try
             {
-                Init("");
+                if(IsConnected) Init("");
             }
             catch (Exception) { }
             _client.Disconnect();
@@ -263,6 +263,20 @@ namespace HomegearLib.RPC
                 ThrowError("addDevice", response);
             }
             return true;
+        }
+
+        public void AddLink(Int32 senderID, Int32 senderChannel, Int32 receiverID, Int32 receiverChannel)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("addLink", new List<RPCVariable> { new RPCVariable(senderID), new RPCVariable(senderChannel), new RPCVariable(receiverID), new RPCVariable(receiverChannel) });
+            if (response.ErrorStruct) ThrowError("addLink", response);
+        }
+
+        public void AddLink(Int32 senderID, Int32 senderChannel, Int32 receiverID, Int32 receiverChannel, String name, String description)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("addLink", new List<RPCVariable> { new RPCVariable(senderID), new RPCVariable(senderChannel), new RPCVariable(receiverID), new RPCVariable(receiverChannel), new RPCVariable(name), new RPCVariable(description) });
+            if (response.ErrorStruct) ThrowError("addLink", response);
         }
 
         public bool ClientServerInitialized(string interfaceID)
@@ -410,8 +424,16 @@ namespace HomegearLib.RPC
             if (response.StructValue.ContainsKey("TYPE")) channel.TypeString = response.StructValue["TYPE"].StringValue;
             if (response.StructValue.ContainsKey("AES_ACTIVE")) channel.AESActive = response.StructValue["AES_ACTIVE"].BooleanValue;
             if (response.StructValue.ContainsKey("DIRECTION")) channel.Direction = (ChannelDirection)response.StructValue["DIRECTION"].IntegerValue;
-            if (response.StructValue.ContainsKey("LINK_SOURCE_ROLES")) channel.LinkSourceRoles = response.StructValue["LINK_SOURCE_ROLES"].StringValue.Split(' ');
-            if (response.StructValue.ContainsKey("LINK_TARGET_ROLES")) channel.LinkTargetRoles = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
+            if (response.StructValue.ContainsKey("LINK_SOURCE_ROLES"))
+            {
+                String[] temp = response.StructValue["LINK_SOURCE_ROLES"].StringValue.Split(' ');
+                if(temp.Length > 0 && temp[0] != "") channel.LinkSourceRoles = temp;
+            }
+            if (response.StructValue.ContainsKey("LINK_TARGET_ROLES"))
+            {
+                String[] temp = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
+                if (temp.Length > 0 && temp[0] != "") channel.LinkTargetRoles = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
+            }
             if (response.StructValue.ContainsKey("GROUP") && response.StructValue["GROUP"].StringValue.Length > 0)
             {
                 String[] temp = response.StructValue["GROUP"].StringValue.Split(':');
@@ -716,6 +738,21 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("putParamset", response);
         }
 
+        public void RemoveLink(Link link)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = null;
+            if (link.IsSender)
+            {
+                response = _client.CallMethod("removeLink", new List<RPCVariable> { new RPCVariable(link.PeerID), new RPCVariable(link.Channel), new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel) });
+            }
+            else
+            {
+                response = _client.CallMethod("removeLink", new List<RPCVariable> { new RPCVariable(link.RemotePeerID), new RPCVariable(link.RemoteChannel), new RPCVariable(link.PeerID), new RPCVariable(link.Channel) });
+            }
+            if (response.ErrorStruct) ThrowError("removeLink", response);
+        }
+
         public Int32 SearchDevices()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -740,7 +777,9 @@ namespace HomegearLib.RPC
         public void SetInstallMode(bool value, Int32 duration)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            RPCVariable response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(value), new RPCVariable(duration) });
+            RPCVariable response = null;
+            if(value) response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(value), new RPCVariable(duration) });
+            else response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(value) });
             if (response.ErrorStruct) ThrowError("setInstallMode", response);
         }
 

@@ -75,5 +75,10 @@ namespace HomegearLib
         {
             _rpc = null;
         }
+
+        public void Remove()
+        {
+            _rpc.RemoveLink(this);
+        }
     }
 }

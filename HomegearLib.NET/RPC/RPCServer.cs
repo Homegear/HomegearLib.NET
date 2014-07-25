@@ -55,6 +55,7 @@ namespace HomegearLib.RPC
         public event UpdateDeviceEventHandler UpdateDevice;
         #endregion
 
+        volatile bool _starting = false;
         private Thread _listenThread = null;
         private volatile bool _stopServer = false;
         private volatile ManualResetEvent _clientConnected = new ManualResetEvent(false);
@@ -110,14 +111,25 @@ namespace HomegearLib.RPC
 
         public void Start()
         {
-            Stop();
-            _stopServer = false;
-            _listener = new TcpListener(_ipAddress, _port);
-            _listener.Start(100);
-            _listenThread = new Thread(Listen);
-            _listenThread.Start();
-            //Wait until the thread activates
-            while (!_listenThread.IsAlive) ;
+            if (_starting) return;
+            try
+            {
+                _starting = true;
+                Stop();
+                _stopServer = false;
+                _listener = new TcpListener(_ipAddress, _port);
+                _listener.Start(100);
+                _listenThread = new Thread(Listen);
+                _listenThread.Start();
+                //Wait until the thread activates
+                while (!_listenThread.IsAlive) ;
+            }
+            catch(Exception ex)
+            {
+                _starting = false;
+                throw ex;
+            }
+            _starting = false;
         }
 
         public void Stop()
@@ -195,54 +207,59 @@ namespace HomegearLib.RPC
                     if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
                     else bytesReceived =_client.Client.Receive(buffer);
                     if (bytesReceived == 0) continue;
-                    if (buffer[0] == 'B' && buffer[1] == 'i' && buffer[2] == 'n')
+                    UInt32 bufferPos = 0;
+                    while (bufferPos == 0 || bufferPos + dataSize + 8 < bytesReceived)
                     {
-                        if ((buffer[3] & 1) == 1) continue; //Response received
-                        if (bytesReceived < 8) continue;
-                        if((buffer[3] & 0x40) == 0x40)
+                        if (buffer[bufferPos] == 'B' && buffer[bufferPos + 1] == 'i' && buffer[bufferPos + 2] == 'n')
                         {
-                            headerSize = (uint)((buffer[4] << 24) + (buffer[5] << 16) + (buffer[6] << 8) + buffer[7]);
-                            if (bytesReceived < headerSize + 12) continue;
-                            dataSize = (uint)((buffer[8 + headerSize] << 24) + (buffer[9 + headerSize] << 16) + (buffer[10 + headerSize] << 8) + buffer[11 + headerSize]) + headerSize + 4;
-                        }
-                        else
-                        {
-                            headerSize = 0;
-                            dataSize = (uint)((buffer[4] << 24) + (buffer[5] << 16) + (buffer[6] << 8) + buffer[7]);
-                        }
-                        if (dataSize == 0) continue;
-                        if (dataSize > 104857600) continue;
-                        if (headerSize > 1024) continue;
-                        packetLength = (uint)bytesReceived - 8;
-                        packet = new byte[dataSize + 8];
-                        Array.Copy(buffer, packet, bytesReceived);
-                        if(_authString != null && _authString.Length > 0)
-                        {
-                            Encoding.RPCHeader header = _rpcDecoder.DecodeHeader(packet);
-                            if (header.Authorization != Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString)))
+                            if ((buffer[bufferPos + 3] & 1) == 1) continue; //Response received
+                            if (bytesReceived < 8) continue;
+                            if ((buffer[bufferPos + 3] & 0x40) == 0x40)
                             {
-                                packet = null;
-                                List<byte> responsePacket = _rpcEncoder.EncodeResponse(RPCVariable.CreateError(-32603, "Unauthorized"));
-                                if (_ssl)
+                                headerSize = (uint)((buffer[bufferPos + 4] << 24) + (buffer[bufferPos + 5] << 16) + (buffer[bufferPos + 6] << 8) + buffer[bufferPos + 7]);
+                                if (bytesReceived < bufferPos + headerSize + 12) continue;
+                                dataSize = (uint)((buffer[bufferPos + 8 + headerSize] << 24) + (buffer[bufferPos + 9 + headerSize] << 16) + (buffer[bufferPos + 10 + headerSize] << 8) + buffer[bufferPos + 11 + headerSize]) + headerSize + 4;
+                            }
+                            else
+                            {
+                                headerSize = 0;
+                                dataSize = (uint)((buffer[bufferPos + 4] << 24) + (buffer[bufferPos + 5] << 16) + (buffer[bufferPos + 6] << 8) + buffer[bufferPos + 7]);
+                            }
+                            if (dataSize == 0) continue;
+                            if (dataSize > 104857600) continue;
+                            if (headerSize > 1024) continue;
+                            packetLength = (uint)bytesReceived - 8;
+                            packet = new byte[dataSize + 8];
+                            Array.Copy(buffer, bufferPos, packet, 0, ((dataSize + 8) > bytesReceived) ? bytesReceived : (Int32)dataSize + 8);
+                            if (_authString != null && _authString.Length > 0)
+                            {
+                                Encoding.RPCHeader header = _rpcDecoder.DecodeHeader(packet);
+                                if (header.Authorization != Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString)))
                                 {
-                                    _sslStream.Write(responsePacket.ToArray());
-                                    _sslStream.Flush();
+                                    packet = null;
+                                    List<byte> responsePacket = _rpcEncoder.EncodeResponse(RPCVariable.CreateError(-32603, "Unauthorized"));
+                                    if (_ssl)
+                                    {
+                                        _sslStream.Write(responsePacket.ToArray());
+                                        _sslStream.Flush();
+                                    }
+                                    else _client.Client.Send(responsePacket.ToArray());
+                                    continue;
                                 }
-                                else _client.Client.Send(responsePacket.ToArray());
-                                continue;
                             }
                         }
-                    }
-                    else if(packet != null)
-                    {
-                        if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from Homegear.");
-                        Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
-                        packetLength += (uint)bytesReceived;
-                    }
-                    if (packetLength == dataSize)
-                    {
-                        ProcessPacket(packet);
-                        packet = null;
+                        else if (packet != null)
+                        {
+                            if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from Homegear.");
+                            Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
+                            packetLength += (uint)bytesReceived;
+                        }
+                        if (packetLength == dataSize)
+                        {
+                            ProcessPacket(packet);
+                            packet = null;
+                        }
+                        bufferPos = dataSize + 8;
                     }
                 }
                 catch (SocketException ex)

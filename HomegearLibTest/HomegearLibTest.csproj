@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmAddLink.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddLink.Designer.cs">
+      <DependentUpon>frmAddLink.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmAddSystemVariable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +70,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmAddLink.resx">
+      <DependentUpon>frmAddLink.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmAddSystemVariable.resx">
       <DependentUpon>frmAddSystemVariable.cs</DependentUpon>
     </EmbeddedResource>

@@ -50,6 +50,7 @@ namespace HomegearLib
         public event DisconnectedEventHandler Disconnected;
         #endregion
 
+        volatile bool _connecting = false;
         RPCController _rpc = null;
         volatile bool _disposing = false;
         volatile bool _stopConnectThread = false;
@@ -222,6 +223,7 @@ namespace HomegearLib
 
         void _rpc_InitCompleted(RPCController sender)
         {
+            if (_disposing) return;
             if (Devices.Count == 0) Reload();
             else
             {
@@ -331,20 +333,30 @@ namespace HomegearLib
 
         void Connect()
         {
-            if (_disposing) return;
-            while (!_stopConnectThread)
+            if (_disposing || _connecting) return;
+            _connecting = true;
+            try
             {
-                try
+                while (!_stopConnectThread && !_disposing)
                 {
-                    if (!_rpc.IsConnected) _rpc.Connect();
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    if (ConnectError != null) ConnectError(this, ex.Message, ex.StackTrace);
-                    Thread.Sleep(10000);
+                    try
+                    {
+                        if (!_rpc.IsConnected) _rpc.Connect();
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ConnectError != null) ConnectError(this, ex.Message, ex.StackTrace);
+                        Thread.Sleep(10000);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _connecting = false;
+                throw ex;
+            }
+            _connecting = false;
         }
 
         void _rpc_Connected(RPCController sender)
@@ -358,7 +370,17 @@ namespace HomegearLib
             if (_disposing) return;
             if(Disconnected != null) Disconnected(this);
             _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
+            if (_connectThread.IsAlive)
+            {
+                if (!_connectThread.Join(20000))
+                {
+                    try
+                    {
+                        _connectThread.Abort();
+                    }
+                    catch (Exception) { }
+                }
+            }
             _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();

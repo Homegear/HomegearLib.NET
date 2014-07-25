@@ -34,6 +34,10 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
             this.pnHomegear = new System.Windows.Forms.Panel();
+            this.txtServiceMessages = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.TextBox();
+            this.label56 = new System.Windows.Forms.Label();
             this.txtLogLevel = new System.Windows.Forms.TextBox();
             this.label62 = new System.Windows.Forms.Label();
             this.pnMetadata = new System.Windows.Forms.Panel();
@@ -185,10 +189,10 @@
             this.tsAddMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.cmMetadataVariable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveMetadata = new System.Windows.Forms.ToolStripMenuItem();
-            this.label56 = new System.Windows.Forms.Label();
-            this.txtVersion = new System.Windows.Forms.TextBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.txtServiceMessages = new System.Windows.Forms.TextBox();
+            this.cmLink = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsRemoveLink = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmLinks = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsAddLink = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -211,6 +215,8 @@
             this.cmSystemVariables.SuspendLayout();
             this.cmMetadataVariables.SuspendLayout();
             this.cmMetadataVariable.SuspendLayout();
+            this.cmLink.SuspendLayout();
+            this.cmLinks.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -291,6 +297,44 @@
             this.pnHomegear.Size = new System.Drawing.Size(562, 362);
             this.pnHomegear.TabIndex = 33;
             this.pnHomegear.Visible = false;
+            // 
+            // txtServiceMessages
+            // 
+            this.txtServiceMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtServiceMessages.Location = new System.Drawing.Point(6, 74);
+            this.txtServiceMessages.Multiline = true;
+            this.txtServiceMessages.Name = "txtServiceMessages";
+            this.txtServiceMessages.ReadOnly = true;
+            this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtServiceMessages.Size = new System.Drawing.Size(457, 285);
+            this.txtServiceMessages.TabIndex = 7;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(3, 58);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(97, 13);
+            this.label59.TabIndex = 6;
+            this.label59.Text = "Service Messages:";
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.Location = new System.Drawing.Point(66, 3);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.ReadOnly = true;
+            this.txtVersion.Size = new System.Drawing.Size(101, 20);
+            this.txtVersion.TabIndex = 5;
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(3, 6);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(45, 13);
+            this.label56.TabIndex = 4;
+            this.label56.Text = "Version:";
             // 
             // txtLogLevel
             // 
@@ -1721,43 +1765,33 @@
             this.tsRemoveMetadata.Text = "Remove";
             this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
             // 
-            // label56
+            // cmLink
             // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(3, 6);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(45, 13);
-            this.label56.TabIndex = 4;
-            this.label56.Text = "Version:";
+            this.cmLink.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsRemoveLink});
+            this.cmLink.Name = "cmDevice";
+            this.cmLink.Size = new System.Drawing.Size(118, 26);
             // 
-            // txtVersion
+            // tsRemoveLink
             // 
-            this.txtVersion.Location = new System.Drawing.Point(66, 3);
-            this.txtVersion.Name = "txtVersion";
-            this.txtVersion.ReadOnly = true;
-            this.txtVersion.Size = new System.Drawing.Size(101, 20);
-            this.txtVersion.TabIndex = 5;
+            this.tsRemoveLink.Name = "tsRemoveLink";
+            this.tsRemoveLink.Size = new System.Drawing.Size(152, 22);
+            this.tsRemoveLink.Text = "Remove";
+            this.tsRemoveLink.Click += new System.EventHandler(this.tsRemoveLink_Click);
             // 
-            // label59
+            // cmLinks
             // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(3, 58);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(97, 13);
-            this.label59.TabIndex = 6;
-            this.label59.Text = "Service Messages:";
+            this.cmLinks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsAddLink});
+            this.cmLinks.Name = "cmDevice";
+            this.cmLinks.Size = new System.Drawing.Size(153, 48);
             // 
-            // txtServiceMessages
+            // tsAddLink
             // 
-            this.txtServiceMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtServiceMessages.Location = new System.Drawing.Point(6, 74);
-            this.txtServiceMessages.Multiline = true;
-            this.txtServiceMessages.Name = "txtServiceMessages";
-            this.txtServiceMessages.ReadOnly = true;
-            this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtServiceMessages.Size = new System.Drawing.Size(457, 285);
-            this.txtServiceMessages.TabIndex = 7;
+            this.tsAddLink.Name = "tsAddLink";
+            this.tsAddLink.Size = new System.Drawing.Size(152, 22);
+            this.tsAddLink.Text = "Add";
+            this.tsAddLink.Click += new System.EventHandler(this.tsAddLink_Click);
             // 
             // frmMain
             // 
@@ -1813,6 +1847,8 @@
             this.cmSystemVariables.ResumeLayout(false);
             this.cmMetadataVariables.ResumeLayout(false);
             this.cmMetadataVariable.ResumeLayout(false);
+            this.cmLink.ResumeLayout(false);
+            this.cmLinks.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1980,6 +2016,10 @@
         private System.Windows.Forms.Label label59;
         private System.Windows.Forms.TextBox txtVersion;
         private System.Windows.Forms.Label label56;
+        private System.Windows.Forms.ContextMenuStrip cmLink;
+        private System.Windows.Forms.ToolStripMenuItem tsRemoveLink;
+        private System.Windows.Forms.ContextMenuStrip cmLinks;
+        private System.Windows.Forms.ToolStripMenuItem tsAddLink;
     }
 }
 

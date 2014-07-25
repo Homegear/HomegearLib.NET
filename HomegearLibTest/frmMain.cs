@@ -21,7 +21,9 @@ namespace HomegearLibTest
         RPCController _rpc = null;
         Homegear _homegear = null;
         Device _rightClickedDevice = null;
+        Channel _rightClickedChannel = null;
         MetadataVariable _rightClickedMetadata = null;
+        Link _rightClickedLink = null;
         Device _selectedDevice = null;
         Link _selectedLink = null;
         Variable _selectedVariable = null;
@@ -40,6 +42,10 @@ namespace HomegearLibTest
             lblVariableTimer.Text = "";
             lblSystemVariableTimer.Text = "";
             lblMetadataTimer.Text = "";
+            txtHomegearHostname.Text = "192.168.0.105";
+            txtHomegearPort.Text = "2001";
+            txtCallbackHostname.Text = "192.168.0.113";
+            chkSSL.Checked = false;
         }
 
         void _variableValueChangedTimer_Tick(object sender, EventArgs e)
@@ -62,153 +68,10 @@ namespace HomegearLibTest
             else SetMetadata();
         }
 
-        void SetVariable()
-        {
-            if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
-            Int32 integerValue = 0;
-            switch (_selectedVariable.Type)
-            {
-                case VariableType.tString:
-                    _selectedVariable.StringValue = txtVariableValue.Text;
-                    WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + txtVariableValue.Text);
-                    break;
-                case VariableType.tInteger:
-                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.IntegerValue = integerValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tEnum:
-                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.IntegerValue = integerValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tDouble:
-                    Double doubleValue = 0;
-                    if (Double.TryParse(txtVariableValue.Text, out doubleValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.DoubleValue = doubleValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + doubleValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tBoolean:
-                    Boolean booleanValue = false;
-                    if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.BooleanValue = booleanValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-            }
-        }
-
-        void SetSystemVariable()
-        {
-            if (_selectedSystemVariable == null || _nodeLoading) return;
-            switch (_selectedSystemVariable.Type)
-            {
-                case RPCVariableType.rpcString:
-                    _selectedSystemVariable.StringValue = txtSystemVariableValue.Text;
-                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtSystemVariableValue.Text);
-                    break;
-                case RPCVariableType.rpcBase64:
-                    _selectedSystemVariable.StringValue = txtSystemVariableValue.Text;
-                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtSystemVariableValue.Text);
-                    break;
-                case RPCVariableType.rpcInteger:
-                    Int32 integerValue = 0;
-                    if (Int32.TryParse(txtSystemVariableValue.Text, out integerValue))
-                    {
-                        txtSystemVariableValue.BackColor = Color.PaleGreen;
-                        _selectedSystemVariable.IntegerValue = integerValue;
-                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + integerValue.ToString());
-                    }
-                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case RPCVariableType.rpcBoolean:
-                    Boolean booleanValue = false;
-                    if (Boolean.TryParse(txtSystemVariableValue.Text, out booleanValue))
-                    {
-                        txtSystemVariableValue.BackColor = Color.PaleGreen;
-                        _selectedSystemVariable.BooleanValue = booleanValue;
-                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + booleanValue.ToString());
-                    }
-                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case RPCVariableType.rpcFloat:
-                    Double floatValue = 0;
-                    if (Double.TryParse(txtSystemVariableValue.Text, out floatValue))
-                    {
-                        txtSystemVariableValue.BackColor = Color.PaleGreen;
-                        _selectedSystemVariable.FloatValue = floatValue;
-                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + floatValue.ToString());
-                    }
-                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-            }
-        }
-
-        void SetMetadata()
-        {
-            if (_selectedDevice == null || _selectedMetadata == null || _nodeLoading) return;
-            switch (_selectedMetadata.Type)
-            {
-                case RPCVariableType.rpcString:
-                    _selectedMetadata.StringValue = txtMetadataValue.Text;
-                    WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + txtMetadataValue.Text);
-                    break;
-                case RPCVariableType.rpcBase64:
-                    _selectedMetadata.StringValue = txtMetadataValue.Text;
-                    WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + txtMetadataValue.Text);
-                    break;
-                case RPCVariableType.rpcInteger:
-                    Int32 integerValue = 0;
-                    if (Int32.TryParse(txtMetadataValue.Text, out integerValue))
-                    {
-                        txtMetadataValue.BackColor = Color.PaleGreen;
-                        _selectedMetadata.IntegerValue = integerValue;
-                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + integerValue.ToString());
-                    }
-                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case RPCVariableType.rpcBoolean:
-                    Boolean booleanValue = false;
-                    if (Boolean.TryParse(txtMetadataValue.Text, out booleanValue))
-                    {
-                        txtMetadataValue.BackColor = Color.PaleGreen;
-                        _selectedMetadata.BooleanValue = booleanValue;
-                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + booleanValue.ToString());
-                    }
-                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case RPCVariableType.rpcFloat:
-                    Double floatValue = 0;
-                    if (Double.TryParse(txtMetadataValue.Text, out floatValue))
-                    {
-                        txtMetadataValue.BackColor = Color.PaleGreen;
-                        _selectedMetadata.FloatValue = floatValue;
-                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + floatValue.ToString());
-                    }
-                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
-                    break;
-            }
-        }
-
         void _homegear_OnReloaded(Homegear sender)
         {
             WriteLog("Reload complete. Received " + sender.Devices.Count + " devices.");
-            UpdateDevices();
+            UpdateTreeView();
             EnableSplitContainer(true);
         }
 
@@ -225,71 +88,11 @@ namespace HomegearLibTest
             }
         }
 
-        void UpdateSystemVariables()
-        {
-            if (tvDevices.InvokeRequired)
-            {
-                NoParameterCallback d = new NoParameterCallback(UpdateSystemVariables);
-                this.Invoke(d);
-            }
-            else
-            {
-                foreach (TreeNode node in tvDevices.Nodes)
-                {
-                    if (node.Text == "System Variables")
-                    {
-                        node.Collapse();
-                        node.Nodes.Clear();
-                        node.Nodes.Add("<loading...>");
-                    }
-                }
-            }
-        }
-
-        void UpdateMetadata(Device device)
-        {
-            if (tvDevices.InvokeRequired)
-            {
-                DeviceParameterCallback d = new DeviceParameterCallback(UpdateMetadata);
-                this.Invoke(d, new object[] { device });
-            }
-            else
-            {
-                foreach(TreeNode node in tvDevices.Nodes)
-                {
-                    if(node.Text == "Devices")
-                    {
-                        foreach(TreeNode deviceNode in node.Nodes)
-                        {
-                            if (deviceNode.Tag is Device)
-                            {
-                                Device currentDevice = (Device)deviceNode.Tag;
-                                if (currentDevice.ID != device.ID) continue;
-                                foreach (TreeNode metadataNode in deviceNode.Nodes)
-                                {
-                                    if (metadataNode.Text == "Metadata")
-                                    {
-                                        metadataNode.Collapse();
-                                        metadataNode.Nodes.Clear();
-                                        metadataNode.Nodes.Add("<loading...>");
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-            }
-        }
-
-        void UpdateDevices()
+        void UpdateTreeView()
         {
             if(tvDevices.InvokeRequired)
             {
-                NoParameterCallback d = new NoParameterCallback(UpdateDevices);
+                NoParameterCallback d = new NoParameterCallback(UpdateTreeView);
                 this.Invoke(d);
             }
             else
@@ -338,6 +141,7 @@ namespace HomegearLibTest
 
                         TreeNode linksNode = new TreeNode("Links");
                         linksNode.Tag = channel.Value;
+                        linksNode.ContextMenuStrip = cmLinks;
                         linksNode.Nodes.Add("<loading...>");
                         channelNode.Nodes.Add(linksNode);
 
@@ -360,54 +164,6 @@ namespace HomegearLibTest
             {
                 if (txtLog.Text.Length > 50000) txtLog.Text = txtLog.Text.Substring(0, 40000);
                 txtLog.Text = txtLog.Text.Insert(0, text + "\r\n");
-            }
-        }
-
-        void SetVariableValue(String text)
-        {
-            if (txtVariableValue.InvokeRequired)
-            {
-                SetTextCallback d = new SetTextCallback(SetVariableValue);
-                this.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                _nodeLoading = true;
-                txtVariableValue.BackColor = System.Drawing.SystemColors.Window;
-                txtVariableValue.Text = text;
-                _nodeLoading = false;
-            }
-        }
-
-        void SetSystemVariableValue(String text)
-        {
-            if (txtSystemVariableValue.InvokeRequired)
-            {
-                SetTextCallback d = new SetTextCallback(SetSystemVariableValue);
-                this.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                _nodeLoading = true;
-                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
-                txtSystemVariableValue.Text = text;
-                _nodeLoading = false;
-            }
-        }
-
-        void SetMetadataValue(String text)
-        {
-            if (txtMetadataValue.InvokeRequired)
-            {
-                SetTextCallback d = new SetTextCallback(SetMetadataValue);
-                this.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                _nodeLoading = true;
-                txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
-                txtMetadataValue.Text = text;
-                _nodeLoading = false;
             }
         }
 
@@ -521,7 +277,7 @@ namespace HomegearLibTest
                 WriteLog("Reloading device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
                 device.Reload();
-                UpdateDevices();
+                UpdateTreeView();
                 EnableSplitContainer(true);
             }
             else if(reloadType == DeviceReloadType.Metadata)
@@ -537,7 +293,7 @@ namespace HomegearLibTest
                 WriteLog("Reloading channel " + channel.Index + " of device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
                 channel.Reload();
-                UpdateDevices();
+                UpdateTreeView();
                 EnableSplitContainer(true);
             }
             else if (reloadType == DeviceReloadType.Links)
@@ -546,7 +302,7 @@ namespace HomegearLibTest
                 WriteLog("Reloading links of channel " + channel.Index + " and device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
                 channel.Links.Reload();
-                UpdateDevices();
+                UpdateTreeView();
                 EnableSplitContainer(true);
             }
         }
@@ -642,6 +398,540 @@ namespace HomegearLibTest
                 txtServiceMessages.Text += "Device ID: " + message.PeerID.ToString() + "\t" + "Channel: " + message.Channel.ToString() + "\t" + "Type: " + message.Type + "\t" + "Value: " + message.Value.ToString() + "\r\n";
             }
             pnHomegear.Visible = true;
+        }
+
+        private void tvDevices_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            _rightClickedDevice = null;
+            _rightClickedMetadata = null;
+            _rightClickedLink = null;
+            _rightClickedChannel = null;
+            if(e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if(e.Node.FullPath.StartsWith("Devices"))
+                {
+                    if (e.Node.Level == 1) _rightClickedDevice = (Device)e.Node.Tag;
+                    else if (e.Node.Level == 2) _rightClickedDevice = (Device)e.Node.Parent.Tag;
+                    else if (e.Node.Level == 3)
+                    {
+                        _rightClickedDevice = (Device)e.Node.Parent.Parent.Tag;
+                        if (e.Node.Tag is MetadataVariable) _rightClickedMetadata = (MetadataVariable)e.Node.Tag;
+                        if (e.Node.Parent.Tag is Channel) _rightClickedChannel = (Channel)e.Node.Parent.Tag;
+                    }
+                    else if (e.Node.Level == 5 && e.Node.Tag is Link) _rightClickedLink = (Link)e.Node.Tag;
+                }
+            }
+        }
+
+        private void tvDevices_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                if (e.Node == null) return;
+                if (e.Node.FullPath.StartsWith("Devices")) AfterExpandDevice(e);
+                else if (e.Node.FullPath.StartsWith("Interfaces")) AfterExpandInterface(e);
+                else if (e.Node.FullPath.StartsWith("System Variables")) AfterExpandSystemVariables(e);
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void txtLogLevel_TextChanged(object sender, EventArgs e)
+        {
+            if (_nodeLoading) return;
+            Int32 integerValue = 0;
+            if(Int32.TryParse(txtLogLevel.Text, out integerValue))
+            {
+                _homegear.LogLevel = integerValue;
+            }
+        }
+
+        #region Interfaces
+        private void AfterExpandInterface(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (KeyValuePair<String, Interface> interfacePair in _homegear.Interfaces)
+                {
+                    TreeNode interfaceNode = new TreeNode(interfacePair.Key);
+                    interfaceNode.Tag = interfacePair.Value;
+                    e.Node.Nodes.Add(interfaceNode);
+                }
+            }
+        }
+
+        private void InterfaceSelected(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 1)
+            {
+                //Get interface from Homegear object to update times.
+                Interface physicalInterface = _homegear.Interfaces[((Interface)e.Node.Tag).ID];
+                txtInterfaceID.Text = physicalInterface.ID;
+                txtInterfaceConnected.Text = physicalInterface.Connected.ToString();
+                txtInterfaceDefault.Text = physicalInterface.Default.ToString();
+                txtInterfaceFamily.Text = physicalInterface.Family.Name.ToString();
+                txtInterfaceType.Text = physicalInterface.Type;
+                txtInterfaceAddress.Text = "0x" + physicalInterface.PhysicalAddress.ToString("X2");
+                System.DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                txtInterfaceSent.Text = epoch.AddSeconds(physicalInterface.LastPacketSent).ToLocalTime().ToLongTimeString();
+                txtInterfaceReceived.Text = epoch.AddSeconds(physicalInterface.LastPacketReceived).ToLocalTime().ToLongTimeString();
+                pnInterface.Visible = true;
+            }
+        }
+        #endregion
+
+        #region System Variables
+        void UpdateSystemVariables()
+        {
+            if (tvDevices.InvokeRequired)
+            {
+                NoParameterCallback d = new NoParameterCallback(UpdateSystemVariables);
+                this.Invoke(d);
+            }
+            else
+            {
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "System Variables")
+                    {
+                        node.Collapse();
+                        node.Nodes.Clear();
+                        node.Nodes.Add("<loading...>");
+                    }
+                }
+            }
+        }
+
+        private void AfterExpandSystemVariables(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (KeyValuePair<String, SystemVariable> variablePair in _homegear.SystemVariables)
+                {
+                    TreeNode variableNode = new TreeNode(variablePair.Key);
+                    variableNode.Tag = variablePair.Value;
+                    variableNode.ContextMenuStrip = cmSystemVariable;
+                    e.Node.Nodes.Add(variableNode);
+                }
+            }
+        }
+
+        private void SystemVariableSelected(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 1)
+            {
+                _selectedSystemVariable = (SystemVariable)e.Node.Tag;
+                txtSystemVariableName.Text = _selectedSystemVariable.Name;
+                txtSystemVariableType.Text = _selectedSystemVariable.Type.ToString();
+                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                txtSystemVariableValue.Text = _selectedSystemVariable.ToString();
+                lblSystemVariableTimer.Text = "";
+                pnSystemVariable.Visible = true;
+            }
+        }
+
+        private void txtSystemVariableValue_TextChanged(object sender, EventArgs e)
+        {
+            if (_selectedSystemVariable == null || _nodeLoading) return;
+            _variableValueChangedTimer.Stop();
+            _variableTimerIndex = 5;
+            lblSystemVariableTimer.Text = "Sending in 5 seconds...";
+            _variableValueChangedTimer.Start();
+        }
+
+        void SetSystemVariableValue(String text)
+        {
+            if (txtSystemVariableValue.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetSystemVariableValue);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                _nodeLoading = true;
+                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                txtSystemVariableValue.Text = text;
+                _nodeLoading = false;
+            }
+        }
+
+        void SetSystemVariable()
+        {
+            if (_selectedSystemVariable == null || _nodeLoading) return;
+            switch (_selectedSystemVariable.Type)
+            {
+                case RPCVariableType.rpcString:
+                    _selectedSystemVariable.StringValue = txtSystemVariableValue.Text;
+                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtSystemVariableValue.Text);
+                    break;
+                case RPCVariableType.rpcBase64:
+                    _selectedSystemVariable.StringValue = txtSystemVariableValue.Text;
+                    WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtSystemVariableValue.Text);
+                    break;
+                case RPCVariableType.rpcInteger:
+                    Int32 integerValue = 0;
+                    if (Int32.TryParse(txtSystemVariableValue.Text, out integerValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.IntegerValue = integerValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + integerValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcBoolean:
+                    Boolean booleanValue = false;
+                    if (Boolean.TryParse(txtSystemVariableValue.Text, out booleanValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.BooleanValue = booleanValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + booleanValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcFloat:
+                    Double floatValue = 0;
+                    if (Double.TryParse(txtSystemVariableValue.Text, out floatValue))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.FloatValue = floatValue;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + floatValue.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+            }
+        }
+
+        private void tsAddSystemVariable_Click(object sender, EventArgs e)
+        {
+            frmAddSystemVariable dialog = new frmAddSystemVariable();
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0) return;
+                SystemVariable variable = null;
+                switch(dialog.VariableType)
+                {
+                    case "Boolean":
+                        Boolean booleanValue = false;
+                        if(Boolean.TryParse(dialog.VariableValue, out booleanValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, booleanValue);
+                        }
+                        break;
+                    case "Integer":
+                        Int32 integerValue = 0;
+                        if (Int32.TryParse(dialog.VariableValue, out integerValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, integerValue);
+                        }
+                        break;
+                    case "Double":
+                        Double doubleValue = 0;
+                        if (Double.TryParse(dialog.VariableValue, out doubleValue))
+                        {
+                            variable = new SystemVariable(dialog.VariableName, doubleValue);
+                        }
+                        break;
+                    case "String":
+                        variable = new SystemVariable(dialog.VariableName, dialog.VariableValue);
+                        break;
+                    case "Base64":
+                        variable = new SystemVariable(dialog.VariableName, RPCVariableType.rpcBase64);
+                        variable.StringValue = dialog.VariableValue;
+                        break;
+                }
+                if (variable != null) _homegear.SystemVariables.Add(variable);
+            }
+        }
+
+        private void tsDeleteSystemVariable_Click(object sender, EventArgs e)
+        {
+            if (_selectedSystemVariable == null) return;
+            _selectedSystemVariable.Remove();
+        }
+        #endregion
+
+        #region Devices
+        #region Metadata
+        void UpdateMetadata(Device device)
+        {
+            if (tvDevices.InvokeRequired)
+            {
+                DeviceParameterCallback d = new DeviceParameterCallback(UpdateMetadata);
+                this.Invoke(d, new object[] { device });
+            }
+            else
+            {
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "Devices")
+                    {
+                        foreach (TreeNode deviceNode in node.Nodes)
+                        {
+                            if (deviceNode.Tag is Device)
+                            {
+                                Device currentDevice = (Device)deviceNode.Tag;
+                                if (currentDevice.ID != device.ID) continue;
+                                foreach (TreeNode metadataNode in deviceNode.Nodes)
+                                {
+                                    if (metadataNode.Text == "Metadata")
+                                    {
+                                        metadataNode.Collapse();
+                                        metadataNode.Nodes.Clear();
+                                        metadataNode.Nodes.Add("<loading...>");
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        private void MetadataSelected(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 3)
+            {
+                _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
+                _selectedMetadata = (MetadataVariable)e.Node.Tag;
+                txtMetadataName.Text = _selectedMetadata.Name;
+                txtMetadataType.Text = _selectedMetadata.Type.ToString();
+                txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
+                txtMetadataValue.Text = _selectedMetadata.ToString();
+                lblMetadataTimer.Text = "";
+                pnMetadata.Visible = true;
+            }
+        }
+
+        private void txtMetadataValue_TextChanged(object sender, EventArgs e)
+        {
+            if (_selectedMetadata == null || _nodeLoading) return;
+            _variableValueChangedTimer.Stop();
+            _variableTimerIndex = 5;
+            lblMetadataTimer.Text = "Sending in 5 seconds...";
+            _variableValueChangedTimer.Start();
+        }
+
+        void SetMetadataValue(String text)
+        {
+            if (txtMetadataValue.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetMetadataValue);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                _nodeLoading = true;
+                txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
+                txtMetadataValue.Text = text;
+                _nodeLoading = false;
+            }
+        }
+
+        void SetMetadata()
+        {
+            if (_selectedDevice == null || _selectedMetadata == null || _nodeLoading) return;
+            switch (_selectedMetadata.Type)
+            {
+                case RPCVariableType.rpcString:
+                    _selectedMetadata.StringValue = txtMetadataValue.Text;
+                    WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + txtMetadataValue.Text);
+                    break;
+                case RPCVariableType.rpcBase64:
+                    _selectedMetadata.StringValue = txtMetadataValue.Text;
+                    WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + txtMetadataValue.Text);
+                    break;
+                case RPCVariableType.rpcInteger:
+                    Int32 integerValue = 0;
+                    if (Int32.TryParse(txtMetadataValue.Text, out integerValue))
+                    {
+                        txtMetadataValue.BackColor = Color.PaleGreen;
+                        _selectedMetadata.IntegerValue = integerValue;
+                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + integerValue.ToString());
+                    }
+                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcBoolean:
+                    Boolean booleanValue = false;
+                    if (Boolean.TryParse(txtMetadataValue.Text, out booleanValue))
+                    {
+                        txtMetadataValue.BackColor = Color.PaleGreen;
+                        _selectedMetadata.BooleanValue = booleanValue;
+                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + booleanValue.ToString());
+                    }
+                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcFloat:
+                    Double floatValue = 0;
+                    if (Double.TryParse(txtMetadataValue.Text, out floatValue))
+                    {
+                        txtMetadataValue.BackColor = Color.PaleGreen;
+                        _selectedMetadata.FloatValue = floatValue;
+                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + floatValue.ToString());
+                    }
+                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
+                    break;
+            }
+        }
+
+        private void tsAddMetadata_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedDevice == null) return;
+            frmAddSystemVariable dialog = new frmAddSystemVariable();
+            dialog.Text = "Add Metadata (Device " + _rightClickedDevice.ID.ToString() + ")";
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0) return;
+                MetadataVariable variable = null;
+                switch (dialog.VariableType)
+                {
+                    case "Boolean":
+                        Boolean booleanValue = false;
+                        if (Boolean.TryParse(dialog.VariableValue, out booleanValue))
+                        {
+                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, booleanValue);
+                        }
+                        break;
+                    case "Integer":
+                        Int32 integerValue = 0;
+                        if (Int32.TryParse(dialog.VariableValue, out integerValue))
+                        {
+                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, integerValue);
+                        }
+                        break;
+                    case "Double":
+                        Double doubleValue = 0;
+                        if (Double.TryParse(dialog.VariableValue, out doubleValue))
+                        {
+                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, doubleValue);
+                        }
+                        break;
+                    case "String":
+                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, dialog.VariableValue);
+                        break;
+                    case "Base64":
+                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, RPCVariableType.rpcBase64);
+                        variable.StringValue = dialog.VariableValue;
+                        break;
+                }
+                if (variable != null) _rightClickedDevice.Metadata.Add(variable);
+            }
+        }
+
+        private void tsRemoveMetadata_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedMetadata == null) return;
+            _rightClickedMetadata.Remove();
+        }
+        #endregion
+
+        #region "Links"
+        private void tsAddLink_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedChannel == null || _rightClickedDevice == null) return;
+            frmAddLink dialog = new frmAddLink(_rightClickedChannel, _homegear);
+            dialog.Text = "Add Link (Device: " + _rightClickedDevice.ID.ToString() + ", Channel: " + _rightClickedChannel.Index.ToString() + ")";
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (dialog.LinkTo == null) return;
+                bool isSender = _rightClickedChannel.LinkSourceRoles.Length > 0;
+                _rightClickedChannel.Links.Add(dialog.LinkTo.PeerID, dialog.LinkTo.Index, isSender);
+                if(isSender && _rightClickedChannel.GroupedWith > -1)
+                {
+                    _rightClickedDevice.Channels[_rightClickedChannel.GroupedWith].Links.Add(dialog.LinkTo.PeerID, dialog.LinkTo.Index, isSender);
+                }
+            }
+        }
+
+        private void tsRemoveLink_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedLink == null) return;
+            _rightClickedLink.Remove();
+        }
+        #endregion
+
+        private void AfterExpandDevice(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 2)
+            {
+                if (e.Node.Text == "Metadata")
+                {
+                    Device device = (Device)e.Node.Parent.Tag;
+                    e.Node.Nodes.Clear();
+                    foreach (KeyValuePair<String, MetadataVariable> variable in device.Metadata)
+                    {
+                        TreeNode variableNode = new TreeNode(variable.Key);
+                        variableNode.Tag = variable.Value;
+                        variableNode.ContextMenuStrip = cmMetadataVariable;
+                        e.Node.Nodes.Add(variableNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                }
+            }
+            else if (e.Node.Level == 3)
+            {
+                if (e.Node.Text == "Config")
+                {
+                    e.Node.Nodes.Clear();
+                    Channel channel = (Channel)e.Node.Tag;
+                    foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                    {
+                        TreeNode parameterNode = new TreeNode(parameter.Key);
+                        parameterNode.Tag = parameter.Value;
+                        e.Node.Nodes.Add(parameterNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                }
+                else if (e.Node.Text == "Links")
+                {
+                    e.Node.Nodes.Clear();
+                    Channel channel = (Channel)e.Node.Tag;
+                    foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in channel.Links)
+                    {
+                        TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString());
+                        remotePeerNode.Tag = remotePeer.Value;
+
+                        foreach (KeyValuePair<Int32, Link> linkPair in remotePeer.Value)
+                        {
+                            TreeNode remoteChannelNode = new TreeNode("Channel " + linkPair.Key.ToString());
+                            remoteChannelNode.Tag = linkPair.Value;
+                            remoteChannelNode.ContextMenuStrip = cmLink;
+
+                            TreeNode linkConfigNode = new TreeNode("Config");
+                            linkConfigNode.Tag = linkPair.Value;
+                            linkConfigNode.Nodes.Add("<loading...>");
+                            remoteChannelNode.Nodes.Add(linkConfigNode);
+
+                            remotePeerNode.Nodes.Add(remoteChannelNode);
+                        }
+
+                        e.Node.Nodes.Add(remotePeerNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                }
+            }
+            else if (e.Node.Level == 6)
+            {
+                if (e.Node.Text == "Config")
+                {
+                    e.Node.Nodes.Clear();
+                    Link link = (Link)e.Node.Tag;
+                    foreach (KeyValuePair<String, ConfigParameter> parameter in link.Config)
+                    {
+                        TreeNode parameterNode = new TreeNode(parameter.Key);
+                        parameterNode.Tag = parameter.Value;
+                        e.Node.Nodes.Add(parameterNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                }
+            }
         }
 
         private void DeviceSelected(TreeViewEventArgs e)
@@ -778,324 +1068,6 @@ namespace HomegearLibTest
             }
         }
 
-        private void InterfaceSelected(TreeViewEventArgs e)
-        {
-            if (e.Node.Level == 1)
-            {
-                //Get interface from Homegear object to update times.
-                Interface physicalInterface = _homegear.Interfaces[((Interface)e.Node.Tag).ID];
-                txtInterfaceID.Text = physicalInterface.ID;
-                txtInterfaceConnected.Text = physicalInterface.Connected.ToString();
-                txtInterfaceDefault.Text = physicalInterface.Default.ToString();
-                txtInterfaceFamily.Text = physicalInterface.Family.Name.ToString();
-                txtInterfaceType.Text = physicalInterface.Type;
-                txtInterfaceAddress.Text = "0x" + physicalInterface.PhysicalAddress.ToString("X2");
-                System.DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                txtInterfaceSent.Text = epoch.AddSeconds(physicalInterface.LastPacketSent).ToLocalTime().ToLongTimeString();
-                txtInterfaceReceived.Text = epoch.AddSeconds(physicalInterface.LastPacketReceived).ToLocalTime().ToLongTimeString();
-                pnInterface.Visible = true;
-            }
-        }
-
-        private void SystemVariableSelected(TreeViewEventArgs e)
-        {
-            if (e.Node.Level == 1)
-            {
-                _selectedSystemVariable = (SystemVariable)e.Node.Tag;
-                txtSystemVariableName.Text = _selectedSystemVariable.Name;
-                txtSystemVariableType.Text = _selectedSystemVariable.Type.ToString();
-                txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
-                txtSystemVariableValue.Text = _selectedSystemVariable.ToString();
-                lblSystemVariableTimer.Text = "";
-                pnSystemVariable.Visible = true;
-            }
-        }
-
-        private void MetadataSelected(TreeViewEventArgs e)
-        {
-            if (e.Node.Level == 3)
-            {
-                _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
-                _selectedMetadata = (MetadataVariable)e.Node.Tag;
-                txtMetadataName.Text = _selectedMetadata.Name;
-                txtMetadataType.Text = _selectedMetadata.Type.ToString();
-                txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
-                txtMetadataValue.Text = _selectedMetadata.ToString();
-                lblMetadataTimer.Text = "";
-                pnMetadata.Visible = true;
-            }
-        }
-
-        private void tvDevices_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            _rightClickedDevice = null;
-            _rightClickedMetadata = null;
-            if(e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                if(e.Node.FullPath.StartsWith("Devices"))
-                {
-                    if (e.Node.Level == 1) _rightClickedDevice = (Device)e.Node.Tag;
-                    else if (e.Node.Level == 2) _rightClickedDevice = (Device)e.Node.Parent.Tag;
-                    else if (e.Node.Level == 3)
-                    {
-                        _rightClickedDevice = (Device)e.Node.Parent.Parent.Tag;
-                        if (e.Node.Tag is MetadataVariable) _rightClickedMetadata = (MetadataVariable)e.Node.Tag;
-                    }
-                }
-            }
-        }
-
-        private void tvDevices_AfterExpand(object sender, TreeViewEventArgs e)
-        {
-            try
-            {
-                if (e.Node == null) return;
-                if (e.Node.FullPath.StartsWith("Devices")) AfterExpandDevice(e);
-                else if (e.Node.FullPath.StartsWith("Interfaces")) AfterExpandInterface(e);
-                else if (e.Node.FullPath.StartsWith("System Variables")) AfterExpandSystemVariables(e);
-            }
-            catch (Exception ex)
-            {
-                WriteLog(ex.Message);
-            }
-        }
-
-        private void AfterExpandDevice(TreeViewEventArgs e)
-        {
-            if(e.Node.Level == 2)
-            {
-                if(e.Node.Text == "Metadata")
-                {
-                    Device device = (Device)e.Node.Parent.Tag;
-                    e.Node.Nodes.Clear();
-                    foreach(KeyValuePair<String, MetadataVariable> variable in device.Metadata)
-                    {
-                        TreeNode variableNode = new TreeNode(variable.Key);
-                        variableNode.Tag = variable.Value;
-                        variableNode.ContextMenuStrip = cmMetadataVariable;
-                        e.Node.Nodes.Add(variableNode);
-                    }
-                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
-                }
-            }
-            else if (e.Node.Level == 3)
-            {
-                if (e.Node.Text == "Config")
-                {
-                    e.Node.Nodes.Clear();
-                    Channel channel = (Channel)e.Node.Tag;
-                    foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
-                    {
-                        TreeNode parameterNode = new TreeNode(parameter.Key);
-                        parameterNode.Tag = parameter.Value;
-                        e.Node.Nodes.Add(parameterNode);
-                    }
-                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
-                }
-                else if (e.Node.Text == "Links")
-                {
-                    e.Node.Nodes.Clear();
-                    Channel channel = (Channel)e.Node.Tag;
-                    foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in channel.Links)
-                    {
-                        TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString());
-                        remotePeerNode.Tag = remotePeer.Value;
-
-                        foreach (KeyValuePair<Int32, Link> linkPair in remotePeer.Value)
-                        {
-                            TreeNode remoteChannelNode = new TreeNode("Channel " + linkPair.Key.ToString());
-                            remoteChannelNode.Tag = linkPair.Value;
-
-                            TreeNode linkConfigNode = new TreeNode("Config");
-                            linkConfigNode.Tag = linkPair.Value;
-                            linkConfigNode.Nodes.Add("<loading...>");
-                            remoteChannelNode.Nodes.Add(linkConfigNode);
-
-                            remotePeerNode.Nodes.Add(remoteChannelNode);
-                        }
-
-                        e.Node.Nodes.Add(remotePeerNode);
-                    }
-                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
-                }
-            }
-            else if (e.Node.Level == 6)
-            {
-                if (e.Node.Text == "Config")
-                {
-                    e.Node.Nodes.Clear();
-                    Link link = (Link)e.Node.Tag;
-                    foreach (KeyValuePair<String, ConfigParameter> parameter in link.Config)
-                    {
-                        TreeNode parameterNode = new TreeNode(parameter.Key);
-                        parameterNode.Tag = parameter.Value;
-                        e.Node.Nodes.Add(parameterNode);
-                    }
-                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
-                }
-            }
-        }
-
-        private void AfterExpandInterface(TreeViewEventArgs e)
-        {
-            if(e.Node.Level == 0)
-            {
-                e.Node.Nodes.Clear();
-                foreach(KeyValuePair<String, Interface> interfacePair in _homegear.Interfaces)
-                {
-                    TreeNode interfaceNode = new TreeNode(interfacePair.Key);
-                    interfaceNode.Tag = interfacePair.Value;
-                    e.Node.Nodes.Add(interfaceNode);
-                }
-            }
-        }
-
-        private void AfterExpandSystemVariables(TreeViewEventArgs e)
-        {
-            if (e.Node.Level == 0)
-            {
-                e.Node.Nodes.Clear();
-                foreach (KeyValuePair<String, SystemVariable> variablePair in _homegear.SystemVariables)
-                {
-                    TreeNode variableNode = new TreeNode(variablePair.Key);
-                    variableNode.Tag = variablePair.Value;
-                    variableNode.ContextMenuStrip = cmSystemVariable;
-                    e.Node.Nodes.Add(variableNode);
-                }
-            }
-        }
-
-        private void txtLogLevel_TextChanged(object sender, EventArgs e)
-        {
-            if (_nodeLoading) return;
-            Int32 integerValue = 0;
-            if(Int32.TryParse(txtLogLevel.Text, out integerValue))
-            {
-                _homegear.LogLevel = integerValue;
-            }
-        }
-
-        #region System Variables
-        private void txtSystemVariableValue_TextChanged(object sender, EventArgs e)
-        {
-            if (_selectedSystemVariable == null || _nodeLoading) return;
-            _variableValueChangedTimer.Stop();
-            _variableTimerIndex = 5;
-            lblSystemVariableTimer.Text = "Sending in 5 seconds...";
-            _variableValueChangedTimer.Start();
-        }
-
-        private void tsAddSystemVariable_Click(object sender, EventArgs e)
-        {
-            frmAddSystemVariable dialog = new frmAddSystemVariable();
-            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-            {
-                if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0) return;
-                SystemVariable variable = null;
-                switch(dialog.VariableType)
-                {
-                    case "Boolean":
-                        Boolean booleanValue = false;
-                        if(Boolean.TryParse(dialog.VariableValue, out booleanValue))
-                        {
-                            variable = new SystemVariable(dialog.VariableName, booleanValue);
-                        }
-                        break;
-                    case "Integer":
-                        Int32 integerValue = 0;
-                        if (Int32.TryParse(dialog.VariableValue, out integerValue))
-                        {
-                            variable = new SystemVariable(dialog.VariableName, integerValue);
-                        }
-                        break;
-                    case "Double":
-                        Double doubleValue = 0;
-                        if (Double.TryParse(dialog.VariableValue, out doubleValue))
-                        {
-                            variable = new SystemVariable(dialog.VariableName, doubleValue);
-                        }
-                        break;
-                    case "String":
-                        variable = new SystemVariable(dialog.VariableName, dialog.VariableValue);
-                        break;
-                    case "Base64":
-                        variable = new SystemVariable(dialog.VariableName, RPCVariableType.rpcBase64);
-                        variable.StringValue = dialog.VariableValue;
-                        break;
-                }
-                if (variable != null) _homegear.SystemVariables.Add(variable);
-            }
-        }
-
-        private void tsDeleteSystemVariable_Click(object sender, EventArgs e)
-        {
-            if (_selectedSystemVariable == null) return;
-            _selectedSystemVariable.Remove();
-        }
-        #endregion
-
-        #region Metadata
-        private void txtMetadataValue_TextChanged(object sender, EventArgs e)
-        {
-            if (_selectedMetadata == null || _nodeLoading) return;
-            _variableValueChangedTimer.Stop();
-            _variableTimerIndex = 5;
-            lblMetadataTimer.Text = "Sending in 5 seconds...";
-            _variableValueChangedTimer.Start();
-        }
-
-        private void tsAddMetadata_Click(object sender, EventArgs e)
-        {
-            if (_rightClickedDevice == null) return;
-            frmAddSystemVariable dialog = new frmAddSystemVariable();
-            dialog.Text = "Add Metadata (Device " + _rightClickedDevice.ID.ToString() + ")";
-            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-            {
-                if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0) return;
-                MetadataVariable variable = null;
-                switch (dialog.VariableType)
-                {
-                    case "Boolean":
-                        Boolean booleanValue = false;
-                        if (Boolean.TryParse(dialog.VariableValue, out booleanValue))
-                        {
-                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, booleanValue);
-                        }
-                        break;
-                    case "Integer":
-                        Int32 integerValue = 0;
-                        if (Int32.TryParse(dialog.VariableValue, out integerValue))
-                        {
-                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, integerValue);
-                        }
-                        break;
-                    case "Double":
-                        Double doubleValue = 0;
-                        if (Double.TryParse(dialog.VariableValue, out doubleValue))
-                        {
-                            variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, doubleValue);
-                        }
-                        break;
-                    case "String":
-                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, dialog.VariableValue);
-                        break;
-                    case "Base64":
-                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, RPCVariableType.rpcBase64);
-                        variable.StringValue = dialog.VariableValue;
-                        break;
-                }
-                if (variable != null) _rightClickedDevice.Metadata.Add(variable);
-            }
-        }
-
-        private void tsRemoveMetadata_Click(object sender, EventArgs e)
-        {
-            if (_rightClickedMetadata == null) return;
-            _rightClickedMetadata.Remove();
-        }
-        #endregion
-
-        #region Devices
         private void txtVariableValue_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1116,6 +1088,73 @@ namespace HomegearLibTest
             catch (Exception ex)
             {
                 WriteLog(ex.Message);
+            }
+        }
+
+        void SetVariableValue(String text)
+        {
+            if (txtVariableValue.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetVariableValue);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                _nodeLoading = true;
+                txtVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                txtVariableValue.Text = text;
+                _nodeLoading = false;
+            }
+        }
+
+        void SetVariable()
+        {
+            if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
+            Int32 integerValue = 0;
+            switch (_selectedVariable.Type)
+            {
+                case VariableType.tString:
+                    _selectedVariable.StringValue = txtVariableValue.Text;
+                    WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + txtVariableValue.Text);
+                    break;
+                case VariableType.tInteger:
+                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
+                    {
+                        txtVariableValue.BackColor = Color.PaleGreen;
+                        _selectedVariable.IntegerValue = integerValue;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
+                    }
+                    else txtVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case VariableType.tEnum:
+                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
+                    {
+                        txtVariableValue.BackColor = Color.PaleGreen;
+                        _selectedVariable.IntegerValue = integerValue;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
+                    }
+                    else txtVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case VariableType.tDouble:
+                    Double doubleValue = 0;
+                    if (Double.TryParse(txtVariableValue.Text, out doubleValue))
+                    {
+                        txtVariableValue.BackColor = Color.PaleGreen;
+                        _selectedVariable.DoubleValue = doubleValue;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + doubleValue.ToString());
+                    }
+                    else txtVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case VariableType.tBoolean:
+                    Boolean booleanValue = false;
+                    if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
+                    {
+                        txtVariableValue.BackColor = Color.PaleGreen;
+                        _selectedVariable.BooleanValue = booleanValue;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
+                    }
+                    else txtVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
             }
         }
 

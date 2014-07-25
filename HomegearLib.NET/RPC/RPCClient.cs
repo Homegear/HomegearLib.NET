@@ -53,6 +53,7 @@ namespace HomegearLib.RPC
 
         bool _disposing = false;
         Mutex _sendMutex = new Mutex();
+        volatile bool _connecting = false;
         const int _maxTries = 3;
         private String _hostname = "homegear";
         private int _port = 2001;
@@ -99,36 +100,50 @@ namespace HomegearLib.RPC
 
         public void Connect()
         {
-            if (_client != null) _client.Close();
+            if (_connecting) return;
             try
             {
-                _client = new TcpClient(_hostname, _port);
-                _client.ReceiveTimeout = 20000;
-            }
-            catch (SocketException ex)
-            {
-                throw new HomegearRPCClientException("Could not connect to server " + _hostname + " on port " + _port.ToString() + ": " + ex.Message);
-            }
-            
-            if(_ssl)
-            {
-                _sslStream = new SslStream(_client.GetStream(), false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+                _connecting = true;
+                if (_client != null) _client.Close();
                 try
                 {
-                    _sslStream.AuthenticateAsClient(_hostname);
+                    _client = new TcpClient(_hostname, _port);
+                    _client.ReceiveTimeout = 20000;
                 }
-                catch (AuthenticationException ex)
+                catch (SocketException ex)
                 {
-                    _client.Close();
-                    throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                    _connecting = false;
+                    throw new HomegearRPCClientException("Could not connect to server " + _hostname + " on port " + _port.ToString() + ": " + ex.Message);
                 }
-                catch(System.IO.IOException ex)
+
+                if (_ssl)
                 {
-                    _client.Close();
-                    throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                    _sslStream = new SslStream(_client.GetStream(), false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+                    try
+                    {
+                        _sslStream.AuthenticateAsClient(_hostname);
+                    }
+                    catch (AuthenticationException ex)
+                    {
+                        _client.Close();
+                        _connecting = false;
+                        throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                    }
+                    catch (System.IO.IOException ex)
+                    {
+                        _client.Close();
+                        _connecting = false;
+                        throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                    }
                 }
+                if (Connected != null) Connected(this);
+                _connecting = false;
             }
-            if(Connected != null) Connected(this);
+            catch(Exception ex)
+            {
+                _connecting = false;
+                throw ex;
+            }
         }
 
         public void Disconnect()
@@ -145,9 +160,9 @@ namespace HomegearLib.RPC
         public RPCVariable CallMethod(String name, List<RPCVariable> parameters)
         {
             RPCVariable result = null;
+            _sendMutex.WaitOne();
             try
             {
-                _sendMutex.WaitOne();
                 for (int j = 0; j < _maxTries; j++)
                 {
                     for (int i = 0; i < 3; i++)
@@ -166,6 +181,7 @@ namespace HomegearLib.RPC
                         {
                             if (i == 2) throw ex;
                         }
+                        Thread.Sleep(1000);
                     }
                     Encoding.RPCHeader header = null;
                     if (_ssl && _authString != null && _authString.Length > 0)
@@ -250,15 +266,17 @@ namespace HomegearLib.RPC
                         if (j == _maxTries - 1) throw new HomegearRPCClientException("Exception thrown on calling rpc method " + name + " on server " + _hostname + " and port " + _port.ToString() + ": " + ex.Message);
                     }
                 }
-                if (result == null) result = RPCVariable.CreateError(-32500, "Response was empty.");
                 if (result.ErrorStruct && result.StructValue["faultCode"].IntegerValue == -32603) _client.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _sendMutex.ReleaseMutex();
                 throw ex;
             }
-            _sendMutex.ReleaseMutex();
+            finally
+            {
+                _sendMutex.ReleaseMutex();
+            }
+            if (result == null) result = RPCVariable.CreateError(-32500, "Response was empty.");
             return result;
         }
 

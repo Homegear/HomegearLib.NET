@@ -46,5 +46,11 @@ namespace HomegearLib
             }
             _dictionary = links2;
         }
+
+        public void Add(Int32 remoteID, Int32 remoteChannel, bool isSender)
+        {
+            if (isSender) _rpc.AddLink(_peerID, _channel, remoteID, remoteChannel);
+            else _rpc.AddLink(remoteID, remoteChannel, _peerID, _channel);
+        }
     }
 }
