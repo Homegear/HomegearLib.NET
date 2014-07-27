@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HomegearLib;
 using HomegearLib.RPC;
+using System.Security.Authentication;
 
 namespace HomegearLibTest
 {
@@ -18,6 +19,7 @@ namespace HomegearLibTest
         delegate void DeviceParameterCallback(Device device);
         delegate void BooleanParameterCallback(Boolean value);
         delegate void SetTextCallback(string text);
+        bool _closing = false;
         RPCController _rpc = null;
         Homegear _homegear = null;
         Device _rightClickedDevice = null;
@@ -42,10 +44,9 @@ namespace HomegearLibTest
             lblVariableTimer.Text = "";
             lblSystemVariableTimer.Text = "";
             lblMetadataTimer.Text = "";
-            txtHomegearHostname.Text = "192.168.0.105";
-            txtHomegearPort.Text = "2001";
-            txtCallbackHostname.Text = "192.168.0.113";
-            chkSSL.Checked = false;
+
+            //txtHomegearHostname.Text = "homegearpi";
+            //txtCertificatePath.Text = "homegearpi.pfx";
         }
 
         void _variableValueChangedTimer_Tick(object sender, EventArgs e)
@@ -219,6 +220,7 @@ namespace HomegearLibTest
 
         private void frmHaupt_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _closing = true;
             if(_homegear != null) _homegear.Dispose();
         }
 
@@ -256,8 +258,11 @@ namespace HomegearLibTest
             Int32.TryParse(txtHomegearPort.Text, out homegearPort);
             Int32.TryParse(txtListenPort.Text, out listenPort);
             _rpc = new RPCController(txtHomegearHostname.Text, homegearPort, txtCallbackHostname.Text, txtListenIP.Text, listenPort, sslClientInfo, sslServerInfo);
-            _rpc.Connected += _rpc_Connected;
-            _rpc.Disconnected += _rpc_Disconnected;
+            _rpc.ClientConnected += _rpc_ClientConnected;
+            _rpc.ClientDisconnected += _rpc_ClientDisconnected;
+            _rpc.ServerConnected += _rpc_ServerConnected;
+            _rpc.ServerDisconnected += _rpc_ServerDisconnected;
+
             _homegear = new Homegear(_rpc);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
@@ -325,14 +330,26 @@ namespace HomegearLibTest
             }
         }
 
-        void _rpc_Disconnected(RPCController sender)
+        void _rpc_ClientDisconnected(RPCClient sender)
         {
             WriteLog("Disconnected from Homegear.");
         }
 
-        void _rpc_Connected(RPCController sender)
+        void _rpc_ClientConnected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
-            WriteLog("Connected to Homegear.");
+            if (_rpc.Client.SSL) WriteLog("Connected to Homegear. Cipher Algorithm: " + cipherAlgorithm.ToString() + ", Cipher Strength: " + cipherStrength.ToString());
+            else WriteLog("Connected to Homegear.");
+        }
+
+        void _rpc_ServerDisconnected(RPCServer sender)
+        {
+            WriteLog("Incoming connection from Homegear closed.");
+        }
+
+        void _rpc_ServerConnected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        {
+            if (cipherAlgorithm != CipherAlgorithmType.Null) WriteLog("Incoming connection from Homegear. Cipher Algorithm: " + cipherAlgorithm.ToString() + ", Cipher Strength: " + cipherStrength.ToString());
+            else WriteLog("Incoming connection from Homegear.");
         }
 
         private void tvDevices_AfterSelect(object sender, TreeViewEventArgs e)
@@ -388,6 +405,7 @@ namespace HomegearLibTest
 
         private void HomegearSelected(TreeViewEventArgs e)
         {
+            if (_closing) return;
             if (e.Node.Level > 0) return;
             txtVersion.Text = _homegear.Version;
             txtLogLevel.Text = _homegear.LogLevel.ToString();
@@ -465,6 +483,7 @@ namespace HomegearLibTest
 
         private void InterfaceSelected(TreeViewEventArgs e)
         {
+            if (_closing) return;
             if (e.Node.Level == 1)
             {
                 //Get interface from Homegear object to update times.
@@ -522,6 +541,7 @@ namespace HomegearLibTest
 
         private void SystemVariableSelected(TreeViewEventArgs e)
         {
+            if (_closing) return;
             if (e.Node.Level == 1)
             {
                 _selectedSystemVariable = (SystemVariable)e.Node.Tag;
@@ -697,6 +717,7 @@ namespace HomegearLibTest
 
         private void MetadataSelected(TreeViewEventArgs e)
         {
+            if (_closing) return;
             if (e.Node.Level == 3)
             {
                 _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
@@ -936,6 +957,7 @@ namespace HomegearLibTest
 
         private void DeviceSelected(TreeViewEventArgs e)
         {
+            if (_closing) return;
             if (e.Node.Level == 1)
             {
                 if (e.Node.Level == 1) _selectedDevice = (Device)e.Node.Tag;

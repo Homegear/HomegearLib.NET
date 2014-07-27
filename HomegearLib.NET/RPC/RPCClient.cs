@@ -15,7 +15,7 @@ using System.Threading;
 
 namespace HomegearLib.RPC
 {
-    internal class HomegearRPCClientException : HomegearException
+    public class HomegearRPCClientException : HomegearException
     {
         public HomegearRPCClientException() : base()
         {
@@ -28,7 +28,7 @@ namespace HomegearLib.RPC
         }
     }
 
-    internal class HomegearRPCClientSSLException : HomegearRPCClientException
+    public class HomegearRPCClientSSLException : HomegearRPCClientException
     {
         public HomegearRPCClientSSLException() : base()
         {
@@ -41,9 +41,9 @@ namespace HomegearLib.RPC
         }
     }
 
-    internal class RPCClient : IDisposable
+    public class RPCClient : IDisposable
     {
-        public delegate void ConnectedEventHandler(RPCClient sender);
+        public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
         public delegate void DisconnectedEventHandler(RPCClient sender);
 
         #region "Events"
@@ -57,7 +57,10 @@ namespace HomegearLib.RPC
         const int _maxTries = 3;
         private String _hostname = "homegear";
         private int _port = 2001;
+
         private bool _ssl = false;
+        public bool SSL { get { return _ssl; } }
+        
         private SSLClientInfo _sslInfo;
         private TcpClient _client = null;
         private SslStream _sslStream = null;
@@ -66,6 +69,9 @@ namespace HomegearLib.RPC
         private SecureString _authString = null;
 
         public bool IsConnected { get { return _client != null && _client.Connected; } }
+
+        public CipherAlgorithmType CipherAlgorithm { get { if(_sslStream != null) return _sslStream.CipherAlgorithm; else return CipherAlgorithmType.Null; } }
+        public Int32 CipherStrength { get { if (_sslStream != null) return _sslStream.CipherStrength; else return -1; } }
 
         public RPCClient(String hostname, int port, SSLClientInfo sslInfo = null)
         {
@@ -135,8 +141,9 @@ namespace HomegearLib.RPC
                         _connecting = false;
                         throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
                     }
+                    if (Connected != null) Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
                 }
-                if (Connected != null) Connected(this);
+                else if (Connected != null) Connected(this);
                 _connecting = false;
             }
             catch(Exception ex)
@@ -150,6 +157,7 @@ namespace HomegearLib.RPC
         {
             if (_client != null)
             {
+                _sslStream.Close();
                 _client.Close();
                 _client = null;
                 _sslStream = null;

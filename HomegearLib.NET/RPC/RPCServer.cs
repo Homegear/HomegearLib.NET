@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 
 namespace HomegearLib.RPC
 {
-    internal class HomegearRPCServerException : HomegearException
+    public class HomegearRPCServerException : HomegearException
     {
         public HomegearRPCServerException() : base()
         {
@@ -28,7 +28,7 @@ namespace HomegearLib.RPC
         }
     }
 
-    internal class HomegearRPCServerSSLException : HomegearRPCServerException
+    public class HomegearRPCServerSSLException : HomegearRPCServerException
     {
         public HomegearRPCServerSSLException() : base()
         {
@@ -41,14 +41,18 @@ namespace HomegearLib.RPC
         }
     }
 
-    internal class RPCServer
+    public class RPCServer
     {
+        public delegate void ConnectedEventHandler(RPCServer server, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
+        public delegate void DisconnectedEventHandler(RPCServer server);
         public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value);
         public delegate void NewDevicesEventHandler(RPCServer sender);
         public delegate void DevicesDeletedEventHandler(RPCServer sender);
         public delegate void UpdateDeviceEventHandler(RPCServer sender, Int32 peerID, Int32 channel, Int32 flags);
 
         #region "Events"
+        public event ConnectedEventHandler Connected;
+        public event DisconnectedEventHandler Disconnected;
         public event RPCEventEventHandler RPCEvent;
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
@@ -177,17 +181,19 @@ namespace HomegearLib.RPC
                     catch (IOException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
                     _sslStream.ReadTimeout = 5000;
                     _sslStream.WriteTimeout = 5000;
+                    Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
                 }
                 else
                 {
                     _client.Client.ReceiveTimeout = 5000;
                     _client.Client.SendTimeout = 5000;
+                    Connected(this);
                 }
                 ReadClient();
 
-                if (_ssl) _sslStream.Close();
                 _client.Close();
                 _client = null;
+                Disconnected(this);
             }
         }
 
@@ -262,6 +268,10 @@ namespace HomegearLib.RPC
                         bufferPos = dataSize + 8;
                     }
                 }
+                catch(TimeoutException)
+                {
+                    continue;
+                }
                 catch (SocketException ex)
                 {
                     if (ex.SocketErrorCode == SocketError.TimedOut) continue;
@@ -272,9 +282,13 @@ namespace HomegearLib.RPC
                     }
                 }
                 catch (IOException ex)
-                { 
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                    break;
+                {
+                    if (ex.HResult == -2146232800) continue;
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        break;
+                    }
                 }
             }
         }

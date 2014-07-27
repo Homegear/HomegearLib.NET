@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using HomegearLib.RPC;
+using System.Security.Authentication;
 
 namespace HomegearLib
 {
@@ -38,7 +39,7 @@ namespace HomegearLib
 
     public class UpdateResult
     {
-        UpdateResultCode _code = -1;
+        UpdateResultCode _code = UpdateResultCode.OK;
         public UpdateResultCode Code { get { return _code; } }
 
         String _description = "";
@@ -156,8 +157,8 @@ namespace HomegearLib
             _families = new Families(_rpc, new Dictionary<Int32, Family>());
             _devices = new Devices(_rpc, new Dictionary<Int32, Device>());
             _systemVariables = new SystemVariables(_rpc, new Dictionary<String, SystemVariable>());
-            _rpc.Connected += _rpc_Connected;
-            _rpc.Disconnected += _rpc_Disconnected;
+            _rpc.ClientConnected += _rpc_ClientConnected;
+            _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.InitCompleted += _rpc_InitCompleted;
             _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated += _rpc_OnSystemVariableUpdated;
@@ -346,8 +347,8 @@ namespace HomegearLib
         {
             if (_disposing) return;
             _disposing = true;
-            _rpc.Connected -= _rpc_Connected;
-            _rpc.Disconnected -= _rpc_Disconnected;
+            _rpc.ClientConnected -= _rpc_ClientConnected;
+            _rpc.ClientDisconnected -= _rpc_ClientDisconnected;
             _rpc.InitCompleted -= _rpc_InitCompleted;
             _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
@@ -415,13 +416,13 @@ namespace HomegearLib
             _connecting = false;
         }
 
-        void _rpc_Connected(RPCController sender)
+        void _rpc_ClientConnected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
             if (_disposing) return;
             if(Connected != null) Connected(this);
         }
 
-        void _rpc_Disconnected(RPCController sender)
+        void _rpc_ClientDisconnected(RPCClient sender)
         {
             if (_disposing) return;
             if(Disconnected != null) Disconnected(this);
@@ -441,6 +442,8 @@ namespace HomegearLib
             _connectThread = new Thread(Connect);
             _connectThread.Start();
         }
+
+
 
         public void EnablePairingMode(bool value)
         {

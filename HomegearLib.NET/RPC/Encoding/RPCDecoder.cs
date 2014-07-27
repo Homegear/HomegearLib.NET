@@ -15,6 +15,7 @@ namespace HomegearLib.RPC.Encoding
 		    uint position = 4;
 		    uint headerSize = 0;
             List<RPCVariable> parameters = new List<RPCVariable>();
+            if (packet == null) return parameters;
             if(packet.Length < 4) return parameters;
 		    if((packet[3] & 0x40) != 0) headerSize = (uint)_decoder.DecodeInteger(packet, ref position) + 4;
 		    position = 8 + headerSize;

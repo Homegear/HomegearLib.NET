@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,8 +38,10 @@ namespace HomegearLib.RPC
         public delegate void NewDevicesEventHandler(RPCController sender);
         public delegate void DevicesDeletedEventHandler(RPCController sender);
         public delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerID, Int32 channel, RPCUpdateDeviceFlags flags);
-        public delegate void ConnectedEventHandler(RPCController sender);
-        public delegate void DisconnectedEventHandler(RPCController sender);
+        public delegate void ClientConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
+        public delegate void ClientDisconnectedEventHandler(RPCClient sender);
+        public delegate void ServerConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
+        public delegate void ServerDisconnectedEventHandler(RPCServer sender);
         public delegate void InitCompletedEventHandler(RPCController sender);
 
         #region "Events"
@@ -50,8 +53,10 @@ namespace HomegearLib.RPC
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
         public event UpdateDeviceEventHandler UpdateDevice;
-        public event ConnectedEventHandler Connected;
-        public event DisconnectedEventHandler Disconnected;
+        public event ClientConnectedEventHandler ClientConnected;
+        public event ClientDisconnectedEventHandler ClientDisconnected;
+        public event ServerConnectedEventHandler ServerConnected;
+        public event ServerDisconnectedEventHandler ServerDisconnected;
         public event InitCompletedEventHandler InitCompleted;
         #endregion
 
@@ -105,8 +110,13 @@ namespace HomegearLib.RPC
         }
 
         SSLClientInfo _sslClientInfo;
-        RPCClient _client;
-        RPCServer _server;
+        
+        RPCClient _client = null;
+        public RPCClient Client { get { return _client; } }
+
+        RPCServer _server = null;
+        public RPCServer Server { get { return _server; } }
+
         System.Timers.Timer _keepAliveTimer;
 
         /// <summary>
@@ -127,6 +137,8 @@ namespace HomegearLib.RPC
             _client.Connected += _client_Connected;
             _client.Disconnected += _client_Disconnected;
             _server = new RPCServer(callbackListenIP, callbackListenPort, sslServerInfo);
+            _server.Connected += _server_Connected;
+            _server.Disconnected += _server_Disconnected;
             _server.RPCEvent += _server_OnRPCEvent;
             _server.NewDevices += _server_OnNewDevices;
             _server.DevicesDeleted += _server_OnDevicesDeleted;
@@ -215,15 +227,25 @@ namespace HomegearLib.RPC
 
         void _client_Disconnected(RPCClient sender)
         {
-            if (Disconnected != null) Disconnected(this);
+            if (ClientDisconnected != null) ClientDisconnected(sender);
         }
 
-        void _client_Connected(RPCClient sender)
+        void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
-            if (Connected != null) Connected(this);
+            if (ClientConnected != null) ClientConnected(sender, cipherAlgorithm, cipherStrength);
             _server.KnownDevices = Devices;
             Init("HomegearLib." + _callbackHostname + ":" + _server.ListenPort);
             if (InitCompleted != null) InitCompleted(this);
+        }
+
+        void _server_Disconnected(RPCServer sender)
+        {
+            if (ServerDisconnected != null) ServerDisconnected(sender);
+        }
+
+        void _server_Connected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        {
+            if (ServerConnected != null) ServerConnected(sender, cipherAlgorithm, cipherStrength);
         }
 
         public void Connect()
