@@ -149,7 +149,8 @@ namespace HomegearLib
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
                 if (_type != VariableType.tString) throw new HomegearVariableTypeException("Variable is not of type string.");
-                _stringValue = value;
+                if (_stringValue == null) _stringValue = "";
+                else _stringValue = value;
                 _rpc.SetValue(this);
             } 
         }
@@ -189,7 +190,10 @@ namespace HomegearLib
             if (value.Type == RPCVariableType.rpcBoolean) _defaultBoolean = value.BooleanValue;
             else if (value.Type == RPCVariableType.rpcInteger) _defaultInteger = value.IntegerValue;
             else if (value.Type == RPCVariableType.rpcFloat) _defaultDouble = value.FloatValue;
-            else if (value.Type == RPCVariableType.rpcString) _defaultString = value.StringValue;
+            else if (value.Type == RPCVariableType.rpcString)
+            {
+                if(value.StringValue != null) _defaultString = value.StringValue;
+            }
         }
 
         internal void SetMin(RPCVariable min)
@@ -225,6 +229,7 @@ namespace HomegearLib
                     _type = VariableType.tDouble;
                     break;
                 case RPCVariableType.rpcString:
+                    if (rpcVariable.StringValue == null) rpcVariable.StringValue = "";
                     if (_stringValue != rpcVariable.StringValue) changed = true;
                     _stringValue = rpcVariable.StringValue;
                     _type = VariableType.tString;
@@ -250,7 +255,8 @@ namespace HomegearLib
                     _type = VariableType.tDouble;
                     break;
                 case VariableType.tString:
-                    _stringValue = variable.StringValue;
+                    if (variable.StringValue == null) _stringValue = "";
+                    else _stringValue = variable.StringValue;
                     _type = VariableType.tString;
                     break;
                 case VariableType.tEnum:

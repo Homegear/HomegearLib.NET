@@ -20,7 +20,8 @@ namespace HomegearLib
         Full = 1,
         Metadata = 2,
         Channel = 4,
-        Links = 8
+        Links = 8,
+        Team = 16
     }
 
     public enum UpdateResultCode
@@ -204,9 +205,12 @@ namespace HomegearLib
                     }
                 }
             }
+            else if(flags == RPCUpdateDeviceFlags.rpcTeam)
+            {
+                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Team);
+            }
             else
             {
-                channel.Links = null;
                 if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Links);
             }
         }
@@ -463,6 +467,26 @@ namespace HomegearLib
         public UpdateStatus GetUpdateStatus()
         {
             return _rpc.GetUpdateStatus();
+        }
+
+        public Int32 RunScript(String filename)
+        {
+            return _rpc.RunScript(filename);
+        }
+
+        public Int32 RunScript(String filename, Boolean wait)
+        {
+            return _rpc.RunScript(filename, wait);
+        }
+
+        public Int32 RunScript(String filename, String arguments)
+        {
+            return _rpc.RunScript(filename, arguments);
+        }
+
+        public Int32 RunScript(String filename, String arguments, Boolean wait)
+        {
+            return _rpc.RunScript(filename, arguments, wait);
         }
 
         public Int32 SearchDevices()

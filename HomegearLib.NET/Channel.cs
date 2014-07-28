@@ -26,7 +26,11 @@ namespace HomegearLib
         public Int32 Index { get { return _index; } }
 
         private Variables _variables;
-        public Variables Variables { get { return _variables; } internal set { _variables = value; } }
+        public Variables Variables
+        {
+            get { return _variables; }
+            internal set { _variables = value; }
+        }
 
         private DeviceConfig _config = null;
         public DeviceConfig Config
@@ -156,8 +160,8 @@ namespace HomegearLib
             internal set { _groupedWith = value; }
         }
 
-        private String _team = "";
-        public String Team
+        private String _teamSerialNumber = "";
+        public String TeamSerialNumber
         {
             get
             {
@@ -166,9 +170,49 @@ namespace HomegearLib
                     _rpc.GetDeviceDescription(this);
                     _descriptionRequested = true;
                 }
-                return _team;
+                return _teamSerialNumber;
             }
-            internal set { _team = value; }
+            internal set { _teamSerialNumber = value; }
+        }
+
+        private Int32 _teamID = 0;
+        public Int32 TeamID
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _teamID;
+            }
+            internal set { _teamID = value; }
+        }
+
+        private Int32 _teamChannel = 0;
+        public Int32 TeamChannel
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _teamChannel;
+            }
+            internal set { _teamChannel = value; }
+        }
+
+        public void ResetTeam()
+        {
+            _rpc.SetTeam(this.PeerID, this.Index);
+        }
+
+        public void SetTeam(Int32 teamID, Int32 teamChannel)
+        {
+            _rpc.SetTeam(this.PeerID, this.Index, teamID, teamChannel);
         }
 
         private String _teamTag = "";
@@ -220,7 +264,7 @@ namespace HomegearLib
             _descriptionRequested = false;
             _links = null;
             _config = null;
-            _variables = null;
+            //Don't set variables to null!!! They are not reloaded on "get"!
         }
     }
 }

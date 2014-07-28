@@ -26,7 +26,8 @@ namespace HomegearLibTest
             {
                 MessageBox.Show(this, "Channel does not support links.", "Add Link", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = System.Windows.Forms.DialogResult.Abort;
-                Close();
+                bnOK.Enabled = false;
+                tvLinkTo.Enabled = false;
                 return;
             }
 

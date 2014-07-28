@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmSetTeam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSetTeam.Designer.cs">
+      <DependentUpon>frmSetTeam.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmAddLink.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmSetTeam.resx">
+      <DependentUpon>frmSetTeam.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmAddLink.resx">
       <DependentUpon>frmAddLink.cs</DependentUpon>
     </EmbeddedResource>

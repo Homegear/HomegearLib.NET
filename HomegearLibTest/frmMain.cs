@@ -27,6 +27,7 @@ namespace HomegearLibTest
         MetadataVariable _rightClickedMetadata = null;
         Link _rightClickedLink = null;
         Device _selectedDevice = null;
+        Channel _selectedChannel = null;
         Link _selectedLink = null;
         Variable _selectedVariable = null;
         SystemVariable _selectedSystemVariable = null;
@@ -34,6 +35,7 @@ namespace HomegearLibTest
         bool _nodeLoading = false;
         Int32 _variableTimerIndex = 5;
         Timer _variableValueChangedTimer = new Timer();
+        System.Threading.Mutex _treeViewMutex = new System.Threading.Mutex();
 
         public frmMain()
         {
@@ -91,66 +93,82 @@ namespace HomegearLibTest
 
         void UpdateTreeView()
         {
-            if(tvDevices.InvokeRequired)
+            try
             {
-                NoParameterCallback d = new NoParameterCallback(UpdateTreeView);
-                this.Invoke(d);
-            }
-            else
-            {
-                tvDevices.Nodes.Clear();
-                TreeNode systemVariablesNode = new TreeNode("System Variables");
-                systemVariablesNode.Nodes.Add("<loading...>");
-                systemVariablesNode.ContextMenuStrip = cmSystemVariables;
-                tvDevices.Nodes.Add(systemVariablesNode);
-
-                TreeNode interfacesNode = new TreeNode("Interfaces");
-                interfacesNode.Nodes.Add("<loading...>");
-                tvDevices.Nodes.Add(interfacesNode);
-
-                TreeNode devicesNode = new TreeNode("Devices");
-                devicesNode.ContextMenuStrip = cmDevices;
-                foreach(KeyValuePair<Int32, Device> device in _homegear.Devices)
+                if (tvDevices.InvokeRequired)
                 {
-                    TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()));
-                    deviceNode.Tag = device.Value;
-                    deviceNode.ContextMenuStrip = cmDevice;
-
-                    TreeNode metadataNode = new TreeNode("Metadata");
-                    metadataNode.Nodes.Add("<loading...>");
-                    metadataNode.ContextMenuStrip = cmMetadataVariables;
-                    deviceNode.Nodes.Add(metadataNode);
-
-                    foreach(KeyValuePair<Int32, Channel> channel in device.Value.Channels)
-                    {
-                        TreeNode channelNode = new TreeNode("Channel " + channel.Key);
-                        channelNode.Tag = channel.Value;
-                        
-                        TreeNode valuesNode = new TreeNode("Variables");
-                        foreach(KeyValuePair<String, Variable> variable in channel.Value.Variables)
-                        {
-                            TreeNode variableNode = new TreeNode(variable.Key);
-                            variableNode.Tag = variable.Value;
-                            valuesNode.Nodes.Add(variableNode);
-                        }
-                        channelNode.Nodes.Add(valuesNode);
-
-                        TreeNode configNode = new TreeNode("Config");
-                        configNode.Tag = channel.Value;
-                        configNode.Nodes.Add("<loading...>");
-                        channelNode.Nodes.Add(configNode);
-
-                        TreeNode linksNode = new TreeNode("Links");
-                        linksNode.Tag = channel.Value;
-                        linksNode.ContextMenuStrip = cmLinks;
-                        linksNode.Nodes.Add("<loading...>");
-                        channelNode.Nodes.Add(linksNode);
-
-                        deviceNode.Nodes.Add(channelNode);
-                    }
-                    devicesNode.Nodes.Add(deviceNode);
+                    NoParameterCallback d = new NoParameterCallback(UpdateTreeView);
+                    this.Invoke(d);
                 }
-                tvDevices.Nodes.Add(devicesNode);
+                else
+                {
+                    _treeViewMutex.WaitOne();
+                    tvDevices.Nodes.Clear();
+                    TreeNode systemVariablesNode = new TreeNode("System Variables");
+                    systemVariablesNode.Nodes.Add("<loading...>");
+                    systemVariablesNode.ContextMenuStrip = cmSystemVariables;
+                    tvDevices.Nodes.Add(systemVariablesNode);
+
+                    TreeNode interfacesNode = new TreeNode("Interfaces");
+                    interfacesNode.Nodes.Add("<loading...>");
+                    tvDevices.Nodes.Add(interfacesNode);
+
+                    TreeNode devicesNode = new TreeNode("Devices");
+                    devicesNode.ContextMenuStrip = cmDevices;
+                    foreach (KeyValuePair<Int32, Device> device in _homegear.Devices)
+                    {
+                        TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()));
+                        deviceNode.Tag = device.Value;
+                        deviceNode.ContextMenuStrip = cmDevice;
+
+                        TreeNode metadataNode = new TreeNode("Metadata");
+                        metadataNode.Nodes.Add("<loading...>");
+                        metadataNode.ContextMenuStrip = cmMetadataVariables;
+                        deviceNode.Nodes.Add(metadataNode);
+
+                        try
+                        {
+                            foreach (KeyValuePair<Int32, Channel> channel in device.Value.Channels)
+                            {
+                                TreeNode channelNode = new TreeNode("Channel " + channel.Key);
+                                channelNode.Tag = channel.Value;
+
+                                TreeNode valuesNode = new TreeNode("Variables");
+                                foreach (KeyValuePair<String, Variable> variable in channel.Value.Variables)
+                                {
+                                    TreeNode variableNode = new TreeNode(variable.Key);
+                                    variableNode.Tag = variable.Value;
+                                    valuesNode.Nodes.Add(variableNode);
+                                }
+                                channelNode.Nodes.Add(valuesNode);
+
+                                TreeNode configNode = new TreeNode("Config");
+                                configNode.Tag = channel.Value;
+                                configNode.Nodes.Add("<loading...>");
+                                channelNode.Nodes.Add(configNode);
+
+                                TreeNode linksNode = new TreeNode("Links");
+                                linksNode.Tag = channel.Value;
+                                linksNode.ContextMenuStrip = cmLinks;
+                                linksNode.Nodes.Add("<loading...>");
+                                channelNode.Nodes.Add(linksNode);
+
+                                deviceNode.Nodes.Add(channelNode);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            WriteLog(ex.Message + "\r\n" + ex.StackTrace);
+                        }
+                        devicesNode.Nodes.Add(deviceNode);
+                    }
+                    tvDevices.Nodes.Add(devicesNode);
+                    _treeViewMutex.ReleaseMutex();
+                }
+            }
+            catch(Exception ex)
+            {
+                WriteLog(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -310,6 +328,15 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
+            else if(reloadType == DeviceReloadType.Team)
+            {
+                WriteLog("Device team was updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString());
+                WriteLog("Reloading channel " + channel.Index + " of device " + device.ID.ToString() + ".");
+                EnableSplitContainer(false);
+                channel.Reload();
+                UpdateTreeView();
+                EnableSplitContainer(true);
+            }
         }
 
         void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
@@ -356,6 +383,7 @@ namespace HomegearLibTest
         {
             _variableValueChangedTimer.Stop();
             _selectedDevice = null;
+            _selectedChannel = null;
             _selectedLink = null;
             _selectedVariable = null;
             _selectedSystemVariable = null;
@@ -494,9 +522,8 @@ namespace HomegearLibTest
                 txtInterfaceFamily.Text = physicalInterface.Family.Name.ToString();
                 txtInterfaceType.Text = physicalInterface.Type;
                 txtInterfaceAddress.Text = "0x" + physicalInterface.PhysicalAddress.ToString("X2");
-                System.DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                txtInterfaceSent.Text = epoch.AddSeconds(physicalInterface.LastPacketSent).ToLocalTime().ToLongTimeString();
-                txtInterfaceReceived.Text = epoch.AddSeconds(physicalInterface.LastPacketReceived).ToLocalTime().ToLongTimeString();
+                txtInterfaceSent.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketSent).ToLongTimeString();
+                txtInterfaceReceived.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketReceived).ToLongTimeString();
                 pnInterface.Visible = true;
             }
         }
@@ -901,8 +928,8 @@ namespace HomegearLibTest
                 if (e.Node.Text == "Config")
                 {
                     e.Node.Nodes.Clear();
-                    Channel channel = (Channel)e.Node.Tag;
-                    foreach (KeyValuePair<String, ConfigParameter> parameter in channel.Config)
+                    _selectedChannel = (Channel)e.Node.Tag;
+                    foreach (KeyValuePair<String, ConfigParameter> parameter in _selectedChannel.Config)
                     {
                         TreeNode parameterNode = new TreeNode(parameter.Key);
                         parameterNode.Tag = parameter.Value;
@@ -913,8 +940,8 @@ namespace HomegearLibTest
                 else if (e.Node.Text == "Links")
                 {
                     e.Node.Nodes.Clear();
-                    Channel channel = (Channel)e.Node.Tag;
-                    foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in channel.Links)
+                    _selectedChannel = (Channel)e.Node.Tag;
+                    foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in _selectedChannel.Links)
                     {
                         TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString());
                         remotePeerNode.Tag = remotePeer.Value;
@@ -984,18 +1011,17 @@ namespace HomegearLibTest
             else if (e.Node.Level == 3 && e.Node.Tag is MetadataVariable) MetadataSelected(e);
             else if (e.Node.Level > 1 && e.Node.Level <= 3)
             {
-                Channel channel = null;
                 if (e.Node.Level == 2 && e.Node.Tag is Channel)
                 {
                     _selectedDevice = (Device)e.Node.Parent.Tag;
-                    channel = (Channel)e.Node.Tag;
+                    _selectedChannel = (Channel)e.Node.Tag;
                 }
                 if (e.Node.Level == 3 && e.Node.Parent.Tag is Channel)
                 {
                     _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
-                    channel = (Channel)e.Node.Parent.Tag;
+                    _selectedChannel = (Channel)e.Node.Parent.Tag;
                 }
-                if (channel == null)
+                if (_selectedChannel == null)
                 {
                     pnChannel.Visible = false;
                     pnDevice.Visible = false;
@@ -1003,28 +1029,30 @@ namespace HomegearLibTest
                     return;
                 }
                 txtChannelPeerID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
-                txtChannelIndex.Text = channel.Index.ToString();
-                txtChannelTypeString.Text = channel.TypeString;
-                txtChannelAESActive.Text = channel.AESActive.ToString();
-                txtChannelDirection.Text = channel.Direction.ToString();
+                txtChannelIndex.Text = _selectedChannel.Index.ToString();
+                txtChannelTypeString.Text = _selectedChannel.TypeString;
+                txtChannelAESActive.Text = _selectedChannel.AESActive.ToString();
+                txtChannelDirection.Text = _selectedChannel.Direction.ToString();
                 txtChannelLinkSourceRoles.Text = "";
-                foreach (String role in channel.LinkSourceRoles)
+                foreach (String role in _selectedChannel.LinkSourceRoles)
                 {
                     txtChannelLinkSourceRoles.Text += role + "\r\n";
                 }
                 txtChannelLinkTargetRoles.Text = "";
-                foreach (String role in channel.LinkTargetRoles)
+                foreach (String role in _selectedChannel.LinkTargetRoles)
                 {
                     txtChannelLinkTargetRoles.Text += role + "\r\n";
                 }
-                txtChannelTeam.Text = channel.Team;
-                txtChannelTeamTag.Text = channel.TeamTag;
+                txtChannelTeam.Text = _selectedChannel.TeamSerialNumber;
+                txtChannelTeamID.Text = "0x" + _selectedChannel.TeamID.ToString("X2");
+                txtChannelTeamChannel.Text = _selectedChannel.TeamChannel.ToString();
+                txtChannelTeamTag.Text = _selectedChannel.TeamTag;
                 txtChannelTeamMembers.Text = "";
-                foreach (String teamMember in channel.TeamMembers)
+                foreach (String teamMember in _selectedChannel.TeamMembers)
                 {
                     txtChannelTeamMembers.Text += teamMember + "\r\n";
                 }
-                txtChannelGroupedWith.Text = channel.GroupedWith.ToString();
+                txtChannelGroupedWith.Text = _selectedChannel.GroupedWith.ToString();
                 pnDevice.Visible = false;
                 pnVariable.Visible = false;
                 pnChannel.Visible = true;
@@ -1211,6 +1239,17 @@ namespace HomegearLibTest
             }
             txtInterface.BackColor = Color.PaleGreen;
             _selectedDevice.Interface = interfaces[txtInterface.Text];
+        }
+
+        private void bnSetTeam_Click(object sender, EventArgs e)
+        {
+            if (_selectedChannel == null) return;
+            frmSetTeam dialog = new frmSetTeam(_selectedChannel, _homegear);
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if(dialog.RemoveFromTeam) _selectedChannel.ResetTeam();
+                else if(dialog.TeamWith != null) _selectedChannel.SetTeam(dialog.TeamWith.PeerID, dialog.TeamWith.Index);
+            }
         }
 
         private void tsAddDevice_Click(object sender, EventArgs e)

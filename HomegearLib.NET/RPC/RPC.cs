@@ -17,7 +17,8 @@ namespace HomegearLib.RPC
     public enum RPCUpdateDeviceFlags
     {
         rpcConfig = 0,
-        rpcLinks = 1
+        rpcLinks = 1,
+        rpcTeam = 2
     }
 
     public enum RPCDeleteDeviceFlags
@@ -466,8 +467,10 @@ namespace HomegearLib.RPC
                     channel.GroupedWith = groupChannel;
                 }
             }
-            if (response.StructValue.ContainsKey("TEAM")) channel.Team = response.StructValue["TEAM"].StringValue;
-            if (response.StructValue.ContainsKey("TEAM_TAG")) channel.Team = response.StructValue["TEAM_TAG"].StringValue;
+            if (response.StructValue.ContainsKey("TEAM")) channel.TeamSerialNumber = response.StructValue["TEAM"].StringValue;
+            if (response.StructValue.ContainsKey("TEAM_ID")) channel.TeamID = response.StructValue["TEAM_ID"].IntegerValue;
+            if (response.StructValue.ContainsKey("TEAM_CHANNEL")) channel.TeamChannel = response.StructValue["TEAM_CHANNEL"].IntegerValue;
+            if (response.StructValue.ContainsKey("TEAM_TAG")) channel.TeamTag = response.StructValue["TEAM_TAG"].StringValue;
             if (response.StructValue.ContainsKey("TEAM_CHANNELS"))
             {
                 List<RPCVariable> teamMemberArray = response.StructValue["TEAM_CHANNELS"].ArrayValue;
@@ -713,6 +716,19 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("init", response);
         }
 
+        public Dictionary<String, Event> ListEvents()
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            Dictionary<String, Event> events = new Dictionary<String, Event>();
+            RPCVariable response = _client.CallMethod("listEvents", null);
+            if (response.ErrorStruct) ThrowError("listEvents", response);
+            foreach (RPCVariable eventStruct in response.ArrayValue)
+            {
+
+            }
+            return events;
+        }
+
         public Dictionary<Int32, Family> ListFamilies()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -814,6 +830,38 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("removeLink", response);
         }
 
+        public Int32 RunScript(String filename)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename) });
+            if (response.ErrorStruct) ThrowError("runScript", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 RunScript(String filename, Boolean wait)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(wait) });
+            if (response.ErrorStruct) ThrowError("runScript", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 RunScript(String filename, String arguments)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(arguments) });
+            if (response.ErrorStruct) ThrowError("runScript", response);
+            return response.IntegerValue;
+        }
+
+        public Int32 RunScript(String filename, String arguments, Boolean wait)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(arguments), new RPCVariable(wait) });
+            if (response.ErrorStruct) ThrowError("runScript", response);
+            return response.IntegerValue;
+        }
+
         public Int32 SearchDevices()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -891,6 +939,18 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setSystemVariable", new List<RPCVariable> { new RPCVariable(variable.Name), variable });
             if (response.ErrorStruct) ThrowError("setSystemVariable", response);
+        }
+
+        public void SetTeam(Int32 peerID, Int32 peerChannel)
+        {
+            SetTeam(peerID, peerChannel, 0, -1);
+        }
+
+        public void SetTeam(Int32 peerID, Int32 peerChannel, Int32 teamID, Int32 teamChannel)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setTeam", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(peerChannel), new RPCVariable(teamID), new RPCVariable(teamChannel) });
+            if (response.ErrorStruct) ThrowError("setTeam", response);
         }
 
         public void SetValue(Variable variable)

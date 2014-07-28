@@ -34,11 +34,11 @@ namespace HomegearLib.RPC
             set { _type = value; }
         }
 
-        protected string _stringValue;
+        protected string _stringValue = "";
         public virtual string StringValue
         {
             get { return _stringValue; }
-            set { _stringValue = value; }
+            set { _stringValue = (value == null) ? "" : value; }
         }
 
         protected int _integerValue;
@@ -106,6 +106,7 @@ namespace HomegearLib.RPC
         public RPCVariable(String value)
         {
             _type = RPCVariableType.rpcString;
+            if (value == null) return;
             _stringValue = value;
         }
 
@@ -138,7 +139,7 @@ namespace HomegearLib.RPC
                     _type = RPCVariableType.rpcFloat;
                     break;
                 case VariableType.tString:
-                    _stringValue = variable.StringValue;
+                    _stringValue = (variable.StringValue == null) ? "" : variable.StringValue;
                     _type = RPCVariableType.rpcString;
                     break;
                 case VariableType.tEnum:
@@ -266,10 +267,10 @@ namespace HomegearLib.RPC
                     _integerValue = value.IntegerValue;
                     break;
                 case RPCVariableType.rpcString:
-                    _stringValue = value.StringValue;
+                    _stringValue = (value.StringValue == null) ? "" : value.StringValue;
                     break;
                 case RPCVariableType.rpcBase64:
-                    _stringValue = value.StringValue;
+                    _stringValue = (value.StringValue == null) ? "" : value.StringValue;
                     break;
                 case RPCVariableType.rpcFloat:
                     _floatValue = value.FloatValue;

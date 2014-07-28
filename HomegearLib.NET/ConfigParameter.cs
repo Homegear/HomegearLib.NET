@@ -85,7 +85,8 @@ namespace HomegearLib
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
                 if (_type != VariableType.tString) throw new HomegearVariableTypeException("Config parameter is not of type string.");
-                _stringValue = value;
+                if (value == null) _stringValue = "";
+                else _stringValue = value;
                 _dataPending = true;
             }
         }

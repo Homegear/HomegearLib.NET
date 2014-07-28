@@ -260,7 +260,7 @@ namespace HomegearLib.RPC
                             Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
                             packetLength += (uint)bytesReceived;
                         }
-                        if (packetLength == dataSize)
+                        if (packet != null && packetLength == dataSize)
                         {
                             ProcessPacket(packet);
                             packet = null;
@@ -295,10 +295,11 @@ namespace HomegearLib.RPC
 
         private void ProcessPacket(byte[] packet)
         {
+            if (packet == null) return;
             string methodName = "";
             List<RPCVariable> parameters = _rpcDecoder.DecodeRequest(packet, ref methodName);
             RPCVariable response = new RPCVariable(RPCVariableType.rpcVoid);
-            if (methodName == "") response = RPCVariable.CreateError(-1, "Packet is not well formed.");
+            if (methodName == "") response = RPCVariable.CreateError(-1, "Packet is not well formed: " + BitConverter.ToString(packet));
             else if(methodName == "system.listMethods")
             {
                 response = new RPCVariable(RPCVariableType.rpcArray);
