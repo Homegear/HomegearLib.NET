@@ -716,15 +716,59 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("init", response);
         }
 
-        public Dictionary<String, Event> ListEvents()
+        public Dictionary<String, Event> ListEvents(EventType type)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             Dictionary<String, Event> events = new Dictionary<String, Event>();
-            RPCVariable response = _client.CallMethod("listEvents", null);
+            RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable((Int32)type) });
             if (response.ErrorStruct) ThrowError("listEvents", response);
             foreach (RPCVariable eventStruct in response.ArrayValue)
             {
-
+                if (!eventStruct.StructValue.ContainsKey("ID")) continue;
+                if(type == EventType.Timed)
+                {
+                    TimedEvent element = new TimedEvent(this, eventStruct.StructValue["ID"].StringValue);
+                    if (eventStruct.StructValue.ContainsKey("ENABLED")) element.Enabled = eventStruct.StructValue["ENABLED"].BooleanValue;
+                    if (eventStruct.StructValue.ContainsKey("EVENTTIME")) element.EventTime = HomegearHelpers.UnixTimeStampToDateTime(eventStruct.StructValue["EVENTTIME"].IntegerValue);
+                    if (eventStruct.StructValue.ContainsKey("RECUREVERY")) element.RecurEvery = eventStruct.StructValue["RECUREVERY"].IntegerValue;
+                    if (eventStruct.StructValue.ContainsKey("ENDTIME")) element.EndTime = HomegearHelpers.UnixTimeStampToDateTime(eventStruct.StructValue["ENDTIME"].IntegerValue);
+                    if (eventStruct.StructValue.ContainsKey("EVENTMETHOD")) element.EventMethod = eventStruct.StructValue["EVENTMETHOD"].StringValue;
+                    if (eventStruct.StructValue.ContainsKey("EVENTMETHODPARAMS")) element.SetEventMethodParams(eventStruct.StructValue["EVENTMETHODPARAMS"].ArrayValue);
+                    events.Add(element.ID, element);
+                }
+                else
+                {
+                    TriggeredEvent element = new TriggeredEvent(this, eventStruct.StructValue["ID"].StringValue);
+                    if (eventStruct.StructValue.ContainsKey("ENABLED")) element.Enabled = eventStruct.StructValue["ENABLED"].BooleanValue;
+                    if (eventStruct.StructValue.ContainsKey("PEERID")) element.PeerID = eventStruct.StructValue["PEERID"].IntegerValue;
+                    if (eventStruct.StructValue.ContainsKey("PEERCHANNEL")) element.PeerChannel = eventStruct.StructValue["PEERCHANNEL"].IntegerValue;
+                    if (eventStruct.StructValue.ContainsKey("VARIABLE")) element.VariableName = eventStruct.StructValue["VARIABLE"].StringValue;
+                    if (eventStruct.StructValue.ContainsKey("TRIGGER")) element.Trigger = (EventTrigger)eventStruct.StructValue["TRIGGER"].IntegerValue;
+                    if (eventStruct.StructValue.ContainsKey("TRIGGERVALUE")) element.TriggerValue = eventStruct.StructValue["TRIGGERVALUE"];
+                    if (eventStruct.StructValue.ContainsKey("EVENTMETHOD")) element.EventMethod = eventStruct.StructValue["EVENTMETHOD"].StringValue;
+                    if (eventStruct.StructValue.ContainsKey("EVENTMETHODPARAMS")) element.SetEventMethodParams(eventStruct.StructValue["EVENTMETHODPARAMS"].ArrayValue);
+                    if (eventStruct.StructValue.ContainsKey("RESETAFTER"))
+                    {
+                        if(eventStruct.StructValue["RESETAFTER"].Type == RPCVariableType.rpcInteger) element.ResetAfterStatic = eventStruct.StructValue["RESETAFTER"].IntegerValue;
+                        else
+                        {
+                            Dictionary<String, RPCVariable> resetStruct = eventStruct.StructValue["RESETAFTER"].StructValue;
+                            element.ResetAfterDynamic = new DynamicResetTime();
+                            if (resetStruct.ContainsKey("INITIALTIME")) element.ResetAfterDynamic.InitialTime = resetStruct["INITIALTIME"].IntegerValue;
+                            if (resetStruct.ContainsKey("RESETAFTER")) element.ResetAfterDynamic.ResetAfter = resetStruct["RESETAFTER"].IntegerValue;
+                            if (resetStruct.ContainsKey("OPERATION")) element.ResetAfterDynamic.Operation = (DynamicResetTimeOperation)resetStruct["OPERATION"].IntegerValue;
+                            if (resetStruct.ContainsKey("FACTOR")) element.ResetAfterDynamic.Factor = resetStruct["FACTOR"].FloatValue;
+                            if (resetStruct.ContainsKey("LIMIT")) element.ResetAfterDynamic.Limit = resetStruct["LIMIT"].IntegerValue;
+                            if (resetStruct.ContainsKey("CURRENTTIME")) element.ResetAfterDynamic.CurrentTime = resetStruct["CURRENTTIME"].IntegerValue;
+                        }
+                    }
+                    if (eventStruct.StructValue.ContainsKey("RESETMETHOD")) element.ResetMethod = eventStruct.StructValue["RESETMETHOD"].StringValue;
+                    if (eventStruct.StructValue.ContainsKey("RESETMETHODPARAMS")) element.SetResetMethodParams(eventStruct.StructValue["RESETMETHODPARAMS"].ArrayValue);
+                    if (eventStruct.StructValue.ContainsKey("LASTVALUE")) element.LastValue = eventStruct.StructValue["LASTVALUE"];
+                    if (eventStruct.StructValue.ContainsKey("LASTRAISED")) element.LastRaised = HomegearHelpers.UnixTimeStampToDateTime(eventStruct.StructValue["LASTRAISED"].IntegerValue);
+                    if (eventStruct.StructValue.ContainsKey("LASTRESET")) element.LastReset = HomegearHelpers.UnixTimeStampToDateTime(eventStruct.StructValue["LASTRESET"].IntegerValue);
+                    events.Add(element.ID, element);
+                }
             }
             return events;
         }

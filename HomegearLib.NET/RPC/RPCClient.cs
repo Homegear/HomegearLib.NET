@@ -157,7 +157,6 @@ namespace HomegearLib.RPC
         {
             if (_client != null)
             {
-                _sslStream.Close();
                 _client.Close();
                 _client = null;
                 _sslStream = null;

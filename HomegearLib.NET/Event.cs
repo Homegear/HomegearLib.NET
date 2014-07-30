@@ -7,6 +7,12 @@ using HomegearLib.RPC;
 
 namespace HomegearLib
 {
+    public enum EventType
+    {
+        Triggered = 0,
+        Timed = 1
+    }
+
     public class Event : IDisposable
     {
         RPCController _rpc = null;

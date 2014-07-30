@@ -49,8 +49,8 @@ namespace HomegearLib
         private Int32 _limit = 300;
         public Int32 Limit { get { return _limit; } internal set { _limit = value; } }
 
-        private DateTime _currentTime;
-        public DateTime CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
+        private Int32 _currentTime;
+        public Int32 CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
 
         internal DynamicResetTime() { }
 
@@ -67,7 +67,7 @@ namespace HomegearLib
     public class TriggeredEvent : Event
     {
         protected Int32 _peerID;
-        public Int32 PeerID { get { return _peerID; } }
+        public Int32 PeerID { get { return _peerID; } internal set { _peerID = value; } }
 
         protected Int32 _peerChannel;
         public Int32 PeerChannel { get { return _peerChannel; } internal set { _peerChannel = value; } }
