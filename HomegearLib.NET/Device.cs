@@ -66,6 +66,17 @@ namespace HomegearLib
             internal set { _metadata = value; }
         }
 
+        private Events _events = null;
+        public Events Events
+        {
+            get
+            {
+                if (_events == null || _events.Count == 0) _events = new Events(_rpc, _rpc.ListEvents(_id), _id);
+                return _events;
+            }
+            internal set { _events = value; }
+        }
+
         private String _name;
         public String Name
         {

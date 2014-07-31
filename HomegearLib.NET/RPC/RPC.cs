@@ -361,8 +361,8 @@ namespace HomegearLib.RPC
                 else eventDescription.StructValue.Add("RESETAFTER", new RPCVariable(triggeredEvent.ResetAfterStatic));
                 if (triggeredEvent.ResetMethod.Length > 0)
                 {
-                    eventDescription.StructValue.Add("RESETMETHOD", new RPCVariable(triggeredEvent.ID));
-                    eventDescription.StructValue.Add("RESETMETHODPARAMS", new RPCVariable(triggeredEvent.ID));
+                    eventDescription.StructValue.Add("RESETMETHOD", new RPCVariable(triggeredEvent.ResetMethod));
+                    eventDescription.StructValue.Add("RESETMETHODPARAMS", new RPCVariable(triggeredEvent.ResetMethodParams));
                 }
             }
             RPCVariable response = _client.CallMethod("addEvent", new List<RPCVariable> { eventDescription });
@@ -872,6 +872,39 @@ namespace HomegearLib.RPC
             {
                 Event element = ParseEvent(eventStruct);
                 if (element != null) events.Add(element.ID, element);   
+            }
+            return events;
+        }
+
+        public Dictionary<String, Event> ListEvents(Int32 id)
+        {
+            return ListEvents(id, -1);
+        }
+
+        public Dictionary<String, Event> ListEvents(Int32 id, Int32 channel)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            Dictionary<String, Event> events = new Dictionary<String, Event>();
+            RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(channel) });
+            if (response.ErrorStruct) ThrowError("listEvents", response);
+            foreach (RPCVariable eventStruct in response.ArrayValue)
+            {
+                Event element = ParseEvent(eventStruct);
+                if (element != null) events.Add(element.ID, element);
+            }
+            return events;
+        }
+
+        public Dictionary<String, Event> ListEvents(Int32 id, Int32 channel, String variableName)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            Dictionary<String, Event> events = new Dictionary<String, Event>();
+            RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(channel), new RPCVariable(variableName) });
+            if (response.ErrorStruct) ThrowError("listEvents", response);
+            foreach (RPCVariable eventStruct in response.ArrayValue)
+            {
+                Event element = ParseEvent(eventStruct);
+                if (element != null) events.Add(element.ID, element);
             }
             return events;
         }

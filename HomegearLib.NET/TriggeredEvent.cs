@@ -78,10 +78,10 @@ namespace HomegearLib
         protected EventTrigger _trigger;
         public EventTrigger Trigger { get { return _trigger; } internal set { _trigger = value; } }
 
-        protected RPCVariable _triggerValue;
+        protected RPCVariable _triggerValue = null;
         public RPCVariable TriggerValue { get { return _triggerValue; } internal set { _triggerValue = value; } }
 
-        protected Int32 _resetAfterStatic;
+        protected Int32 _resetAfterStatic = 0;
         public Int32 ResetAfterStatic { get { return _resetAfterStatic; } internal set { _resetAfterStatic = value; } }
 
         protected DynamicResetTime _resetAfterDynamic = null;
@@ -108,7 +108,16 @@ namespace HomegearLib
 
         }
 
-        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerID, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue = null, Int32 resetAfter = 0, String resetMethod = "", List<RPCVariable> resetMethodParams = null) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerID, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue = null) : base(id, enabled, eventMethod, eventMethodParams)
+        {
+            _peerID = peerID;
+            _peerChannel = peerChannel;
+            _variableName = variableName;
+            _trigger = trigger;
+            _triggerValue = triggerValue;
+        }
+
+        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerID, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue, Int32 resetAfter, String resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerID = peerID;
             _peerChannel = peerChannel;
@@ -120,7 +129,7 @@ namespace HomegearLib
             _resetMethodParams = resetMethodParams;
         }
 
-        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerID, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, String resetMethod = "", List<RPCVariable> resetMethodParams = null) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerID, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, String resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerID = peerID;
             _peerChannel = peerChannel;

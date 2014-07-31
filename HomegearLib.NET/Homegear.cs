@@ -141,13 +141,13 @@ namespace HomegearLib
             }
         }
 
-        Events _events = null;
-        public Events Events
+        Events _timedEvents = null;
+        public Events TimedEvents
         {
             get
             {
-                if (_events == null || _events.Count == 0) _events = new Events(_rpc, _rpc.ListEvents(EventType.Timed), EventType.Timed);
-                return _events;
+                if (_timedEvents == null || _timedEvents.Count == 0) _timedEvents = new Events(_rpc, _rpc.ListEvents(EventType.Timed), EventType.Timed);
+                return _timedEvents;
             }
         }
 
@@ -192,23 +192,7 @@ namespace HomegearLib
             while (!_connectThread.IsAlive) ;
         }
 
-        private void _rpc_OnNewEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
-        {
-            if (type == EventType.Timed)
-            {
-                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Events);
-            }
-        }
-
-        void _rpc_OnUpdateEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
-        {
-            if (!Events.ContainsKey(id)) return;
-            Event currentEvent = Events[id];
-            _rpc.GetEvent(currentEvent);
-            if (EventUpdated != null) EventUpdated(this, currentEvent);
-        }
-
-        void _rpc_OnEventDeleted(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
+        private void _rpc_OnNewEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channelIndex, String variable)
         {
             if (type == EventType.Timed)
             {
@@ -216,7 +200,47 @@ namespace HomegearLib
             }
             else
             {
+                if (!Devices.ContainsKey(peerID)) return;
+                Device device = Devices[peerID];
+                if (!device.Channels.ContainsKey(channelIndex)) return;
+                Channel channel = device.Channels[channelIndex];
+                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Events);
+            }
+        }
 
+        void _rpc_OnUpdateEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channelIndex, String variable)
+        {
+            if (type == EventType.Timed)
+            {
+                if (!TimedEvents.ContainsKey(id)) return;
+                Event currentEvent = TimedEvents[id];
+                _rpc.GetEvent(currentEvent);
+                if (EventUpdated != null) EventUpdated(this, currentEvent);
+            }
+            else
+            {
+                if (!Devices.ContainsKey(peerID)) return;
+                Device device = Devices[peerID];
+                if (!device.Events.ContainsKey(id)) return;
+                Event currentEvent = device.Events[id];
+                _rpc.GetEvent(currentEvent);
+                if (EventUpdated != null) EventUpdated(this, currentEvent);              
+            }
+        }
+
+        void _rpc_OnEventDeleted(RPCController sender, String id, EventType type, Int32 peerID, Int32 channelIndex, String variable)
+        {
+            if (type == EventType.Timed)
+            {
+                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Events);
+            }
+            else
+            {
+                if (!Devices.ContainsKey(peerID)) return;
+                Device device = Devices[peerID];
+                if (!device.Channels.ContainsKey(channelIndex)) return;
+                Channel channel = device.Channels[channelIndex];
+                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Events);
             }
         }
 

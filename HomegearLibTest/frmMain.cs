@@ -23,6 +23,7 @@ namespace HomegearLibTest
         RPCController _rpc = null;
         Homegear _homegear = null;
         TimedEvent _rightClickedTimedEvent;
+        TriggeredEvent _rightClickedTriggeredEvent;
         SystemVariable _rightClickedSystemVariable;
         Device _rightClickedDevice = null;
         Channel _rightClickedChannel = null;
@@ -135,6 +136,11 @@ namespace HomegearLibTest
                         metadataNode.ContextMenuStrip = cmMetadataVariables;
                         deviceNode.Nodes.Add(metadataNode);
 
+                        eventsNode = new TreeNode("Events");
+                        eventsNode.Nodes.Add("<loading...>");
+                        eventsNode.ContextMenuStrip = cmTriggeredEvents;
+                        deviceNode.Nodes.Add(eventsNode);
+
                         try
                         {
                             foreach (KeyValuePair<Int32, Channel> channel in device.Value.Channels)
@@ -246,11 +252,79 @@ namespace HomegearLibTest
             else WriteLog("Event updated: Device: \"" + homegearEvent.ID + "\", Event ID: " + homegearEvent.ID);
             if (_selectedTimedEvent == homegearEvent)
             {
-                //Do nothing
+                SetEventEnabledChecked(_selectedTimedEvent.Enabled);
             }
             else if(_selectedTriggeredEvent == homegearEvent)
             {
-                //TODO: Implement
+                SetTriggeredEventEnabledChecked(_selectedTriggeredEvent.Enabled);
+                SetEventLastRaisedText(_selectedTriggeredEvent.LastRaised.ToString());
+                SetEventLastValueText((_selectedTriggeredEvent.LastValue != null) ? _selectedTriggeredEvent.LastValue.ToString() : "");
+                if (_selectedTriggeredEvent.LastReset > DateTime.MinValue) SetEventLastResetText(_selectedTriggeredEvent.LastReset.ToString());
+            }
+        }
+
+        void SetEventEnabledChecked(Boolean check)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                BooleanParameterCallback d = new BooleanParameterCallback(SetEventEnabledChecked);
+                this.Invoke(d, new object[] { check });
+            }
+            else
+            {
+                chkEventEnabled.Checked = check;
+            }
+        }
+
+        void SetTriggeredEventEnabledChecked(Boolean check)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                BooleanParameterCallback d = new BooleanParameterCallback(SetTriggeredEventEnabledChecked);
+                this.Invoke(d, new object[] { check });
+            }
+            else
+            {
+                chkTriggeredEventEnabled.Checked = check;
+            }
+        }
+
+        void SetEventLastRaisedText(String text)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetEventLastRaisedText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                txtEventLastRaised.Text = text;
+            }
+        }
+
+        void SetEventLastValueText(String text)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetEventLastValueText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                txtEventLastValue.Text = text;
+            }
+        }
+
+        void SetEventLastResetText(String text)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetEventLastResetText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                txtEventLastReset.Text = text;
             }
         }
 
@@ -366,8 +440,8 @@ namespace HomegearLibTest
                 WriteLog("Device events were updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString());
                 WriteLog("Reloading events of device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
-                //TODO: Reload
-                UpdateTreeView();
+                device.Events.Reload();
+                UpdateTriggeredEvents(device);
                 EnableSplitContainer(true);
             }
         }
@@ -392,7 +466,7 @@ namespace HomegearLibTest
             {
                 WriteLog("Reloading timed events.");
                 EnableSplitContainer(false);
-                _homegear.Events.Reload();
+                _homegear.TimedEvents.Reload();
                 UpdateEvents();
                 EnableSplitContainer(true);
             }
@@ -431,61 +505,24 @@ namespace HomegearLibTest
             _selectedMetadata = null;
             _selectedTimedEvent = null;
             _selectedTriggeredEvent = null;
+
+            pnTriggeredEvent.Visible = false;
+            pnTimedEvent.Visible = false;
+            pnHomegear.Visible = false;
+            pnMetadata.Visible = false;
+            pnDevice.Visible = false;
+            pnVariable.Visible = false;
+            pnChannel.Visible = false;
+            pnSystemVariable.Visible = false;
+            pnInterface.Visible = false;
+
             if (e.Node == null) return;
             _nodeLoading = true;
-            if(e.Node.Level == 0)
-            {
-                pnTimedEvent.Visible = false;
-                pnMetadata.Visible = false;
-                pnDevice.Visible = false;
-                pnVariable.Visible = false;
-                pnChannel.Visible = false;
-                pnSystemVariable.Visible = false;
-                pnInterface.Visible = false;
-                HomegearSelected(e);
-            }
-            else if (e.Node.FullPath.StartsWith("Devices"))
-            {
-                pnTimedEvent.Visible = false;
-                pnHomegear.Visible = false;
-                pnInterface.Visible = false;
-                pnSystemVariable.Visible = false;
-                pnMetadata.Visible = false;
-                DeviceSelected(e);
-            }
-            else if (e.Node.FullPath.StartsWith("Interfaces"))
-            {
-                pnTimedEvent.Visible = false;
-                pnHomegear.Visible = false;
-                pnMetadata.Visible = false;
-                pnDevice.Visible = false;
-                pnVariable.Visible = false;
-                pnChannel.Visible = false;
-                pnSystemVariable.Visible = false;
-                InterfaceSelected(e);
-            }
-            else if(e.Node.FullPath.StartsWith("System Variables"))
-            {
-                pnTimedEvent.Visible = false;
-                pnHomegear.Visible = false;
-                pnMetadata.Visible = false;
-                pnDevice.Visible = false;
-                pnVariable.Visible = false;
-                pnChannel.Visible = false;
-                pnInterface.Visible = false;
-                SystemVariableSelected(e);
-            }
-            else if(e.Node.FullPath.StartsWith("Timed Events"))
-            {
-                pnHomegear.Visible = false;
-                pnMetadata.Visible = false;
-                pnDevice.Visible = false;
-                pnVariable.Visible = false;
-                pnChannel.Visible = false;
-                pnInterface.Visible = false;
-                pnSystemVariable.Visible = false;
-                TimedEventSelected(e);
-            }
+            if(e.Node.Level == 0) HomegearSelected(e);
+            else if (e.Node.FullPath.StartsWith("Devices")) DeviceSelected(e);
+            else if (e.Node.FullPath.StartsWith("Interfaces")) InterfaceSelected(e);
+            else if(e.Node.FullPath.StartsWith("System Variables")) SystemVariableSelected(e);
+            else if (e.Node.FullPath.StartsWith("Timed Events")) TimedEventSelected(e);
             _nodeLoading = false;
         }
 
@@ -512,6 +549,7 @@ namespace HomegearLibTest
             _rightClickedChannel = null;
             _rightClickedSystemVariable = null;
             _rightClickedTimedEvent = null;
+            _rightClickedTriggeredEvent = null;
             if(e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 if(e.Node.FullPath.StartsWith("Devices"))
@@ -523,6 +561,7 @@ namespace HomegearLibTest
                         _rightClickedDevice = (Device)e.Node.Parent.Parent.Tag;
                         if (e.Node.Tag is MetadataVariable) _rightClickedMetadata = (MetadataVariable)e.Node.Tag;
                         if (e.Node.Parent.Tag is Channel) _rightClickedChannel = (Channel)e.Node.Parent.Tag;
+                        if (e.Node.Tag is TriggeredEvent) _rightClickedTriggeredEvent = (TriggeredEvent)e.Node.Tag;
                     }
                     else if (e.Node.Level == 5 && e.Node.Tag is Link) _rightClickedLink = (Link)e.Node.Tag;
                 }
@@ -590,13 +629,14 @@ namespace HomegearLibTest
             if (e.Node.Level == 0)
             {
                 e.Node.Nodes.Clear();
-                foreach (KeyValuePair<String, Event> eventPair in _homegear.Events)
+                foreach (KeyValuePair<String, Event> eventPair in _homegear.TimedEvents)
                 {
                     TreeNode eventNode = new TreeNode(eventPair.Key);
                     eventNode.Tag = eventPair.Value;
                     eventNode.ContextMenuStrip = cmTimedEvent;
                     e.Node.Nodes.Add(eventNode);
                 }
+                if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
             }
         }
 
@@ -615,7 +655,7 @@ namespace HomegearLibTest
                 txtEventMethodParams.Text = "";
                 foreach(RPCVariable param in _selectedTimedEvent.EventMethodParams)
                 {
-                    txtEventMethodParams.Text += param.ToString() + "\r\n";
+                    txtEventMethodParams.Text += "(" + param.Type.ToString() + ")\t" + param.ToString() + "\r\n";
                 }
                 pnTimedEvent.Visible = true;
             }
@@ -643,14 +683,14 @@ namespace HomegearLibTest
                 if (dialog.Type5.Length > 0 && dialog.Type5 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type5, dialog.Value5));
                 if (dialog.Type6.Length > 0 && dialog.Type6 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type6, dialog.Value6));
                 TimedEvent newEvent = new TimedEvent(dialog.ID, dialog.EventEnabled, dialog.RPCMethod, eventMethodParams, dialog.EventTime, recurEvery, dialog.EndTime);
-                _homegear.Events.Add(newEvent);
+                _homegear.TimedEvents.Add(newEvent);
             }
         }
 
         private void tsRemoveTimedEvent_Click(object sender, EventArgs e)
         {
-            if (_selectedTimedEvent == null) return;
-            _selectedTimedEvent.Remove();
+            if (_rightClickedTimedEvent == null) return;
+            _rightClickedTimedEvent.Remove();
         }
 
         RPCVariable GetRPCVariableFromString(String type, String value)
@@ -1067,6 +1107,165 @@ namespace HomegearLibTest
         }
         #endregion
 
+        #region Events
+        void UpdateTriggeredEvents(Device device)
+        {
+            if (tvDevices.InvokeRequired)
+            {
+                DeviceParameterCallback d = new DeviceParameterCallback(UpdateTriggeredEvents);
+                this.Invoke(d, new object[] { device });
+            }
+            else
+            {
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "Devices")
+                    {
+                        foreach (TreeNode deviceNode in node.Nodes)
+                        {
+                            if (deviceNode.Tag is Device)
+                            {
+                                Device currentDevice = (Device)deviceNode.Tag;
+                                if (currentDevice.ID != device.ID) continue;
+                                foreach (TreeNode eventsNode in deviceNode.Nodes)
+                                {
+                                    if (eventsNode.Text == "Events")
+                                    {
+                                        eventsNode.Collapse();
+                                        eventsNode.Nodes.Clear();
+                                        eventsNode.Nodes.Add("<loading...>");
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        private void TriggeredEventSelected(TreeViewEventArgs e)
+        {
+            if (_closing) return;
+            if (e.Node.Level == 3)
+            {
+                _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
+                _selectedTriggeredEvent = (TriggeredEvent)e.Node.Tag;
+                txtTriggeredEventID.Text = _selectedTriggeredEvent.ID;
+                chkTriggeredEventEnabled.Checked = _selectedTriggeredEvent.Enabled;
+                txtEventPeerID.Text = _selectedTriggeredEvent.PeerID.ToString();
+                txtEventPeerChannel.Text = _selectedTriggeredEvent.PeerChannel.ToString();
+                txtEventVariable.Text = _selectedTriggeredEvent.VariableName;
+                txtEventTrigger.Text = _selectedTriggeredEvent.Trigger.ToString();
+                txtEventTriggerValue.Text = _selectedTriggeredEvent.TriggerValue.ToString();
+                txtTriggeredEventMethod.Text = _selectedTriggeredEvent.EventMethod;
+                txtTriggeredEventMethodParams.Text = "";
+                foreach (RPCVariable param in _selectedTriggeredEvent.EventMethodParams)
+                {
+                    txtTriggeredEventMethodParams.Text += "(" + param.Type.ToString() + ")\t" + param.ToString() + "\r\n";
+                }
+                txtEventResetMethod.Text = _selectedTriggeredEvent.ResetMethod;
+                txtEventResetMethodParams.Text = "";
+                foreach (RPCVariable param in _selectedTriggeredEvent.ResetMethodParams)
+                {
+                    txtEventResetMethodParams.Text += "(" + param.Type.ToString() + ")\t" + param.ToString() + "\r\n";
+                }
+                txtEventResetAfter.Text = "";
+                if (_selectedTriggeredEvent.ResetAfterDynamic != null)
+                {
+                    txtEventResetAfter.Text = "Initial Time: " + _selectedTriggeredEvent.ResetAfterDynamic.InitialTime.ToString() + "\r\n"
+                                              + "Operation: " + _selectedTriggeredEvent.ResetAfterDynamic.Operation.ToString() + "\r\n"
+                                              + "Factor: " + _selectedTriggeredEvent.ResetAfterDynamic.Factor.ToString() + "\r\n"
+                                              + "Limit: " + _selectedTriggeredEvent.ResetAfterDynamic.Limit.ToString() + "\r\n"
+                                              + "Reset After: " + _selectedTriggeredEvent.ResetAfterDynamic.ResetAfter.ToString() + "\r\n"
+                                              + "Current Time: " + _selectedTriggeredEvent.ResetAfterDynamic.CurrentTime.ToString();
+                }
+                else if(_selectedTriggeredEvent.ResetAfterStatic > 0) txtEventResetAfter.Text = _selectedTriggeredEvent.ResetAfterStatic.ToString();
+                txtEventLastRaised.Text = _selectedTriggeredEvent.LastRaised.ToString();
+                txtEventLastValue.Text = (_selectedTriggeredEvent.LastValue != null) ? _selectedTriggeredEvent.LastValue.ToString() : "";
+                txtEventLastReset.Text = (_selectedTriggeredEvent.LastReset > DateTime.MinValue) ? _selectedTriggeredEvent.LastReset.ToString() : "";
+                pnTriggeredEvent.Visible = true;
+            }
+        }
+
+        private void chkTriggeredEventEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_selectedTriggeredEvent == null || _nodeLoading) return;
+            _selectedTriggeredEvent.Enabled = chkEventEnabled.Checked;
+        }
+
+        private void tsAddTriggeredEvent_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedDevice == null) return;
+            frmAddTriggeredEvent dialog = new frmAddTriggeredEvent();
+            dialog.Text = "Add Triggered Event (Device: " + _rightClickedDevice.ID.ToString() + ")";
+            if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (dialog.ID.Length == 0 || dialog.Variable.Length == 0 || dialog.RPCMethod.Length == 0) return;
+                Int32 peerChannel = -1;
+                Int32.TryParse(dialog.PeerChannel, out peerChannel);
+                Int32 integerValue = 0;
+                Int32.TryParse(dialog.Trigger, out integerValue);
+                EventTrigger trigger = (EventTrigger)integerValue;
+                RPCVariable triggerValue = null;
+                if(dialog.TriggerValueType.Length > 0 && dialog.TriggerValueType != "(empty)") triggerValue = GetRPCVariableFromString(dialog.TriggerValueType, dialog.TriggerValue);
+                Int32 resetAfterStatic = 0;
+                Int32.TryParse(dialog.ResetAfterStatic, out resetAfterStatic);
+                Int32 initialTime = 0;
+                Int32.TryParse(dialog.InitialTime, out initialTime);
+                integerValue = 0;
+                Int32.TryParse(dialog.Operation, out integerValue);
+                DynamicResetTimeOperation operation = (DynamicResetTimeOperation)integerValue;
+                Double factor = 0;
+                Double.TryParse(dialog.Factor, out factor);
+                Int32 limit = 0;
+                Int32.TryParse(dialog.Limit, out limit);
+                Int32 resetAfterDynamic = 0;
+                Int32.TryParse(dialog.ResetAfterDynamic, out resetAfterDynamic);
+                List<RPCVariable> eventMethodParams = new List<RPCVariable>();
+                if (dialog.Type1.Length > 0 && dialog.Type1 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type1, dialog.Value1));
+                if (dialog.Type2.Length > 0 && dialog.Type2 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type2, dialog.Value2));
+                if (dialog.Type3.Length > 0 && dialog.Type3 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type3, dialog.Value3));
+                if (dialog.Type4.Length > 0 && dialog.Type4 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type4, dialog.Value4));
+                if (dialog.Type5.Length > 0 && dialog.Type5 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type5, dialog.Value5));
+                if (dialog.Type6.Length > 0 && dialog.Type6 != "(empty)") eventMethodParams.Add(GetRPCVariableFromString(dialog.Type6, dialog.Value6));
+                List<RPCVariable> resetMethodParams = new List<RPCVariable>();
+                if (dialog.ResetType1.Length > 0 && dialog.ResetType1 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType1, dialog.ResetValue1));
+                if (dialog.ResetType2.Length > 0 && dialog.ResetType2 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType2, dialog.ResetValue2));
+                if (dialog.ResetType3.Length > 0 && dialog.ResetType3 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType3, dialog.ResetValue3));
+                if (dialog.ResetType4.Length > 0 && dialog.ResetType4 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType4, dialog.ResetValue4));
+                if (dialog.ResetType5.Length > 0 && dialog.ResetType5 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType5, dialog.ResetValue5));
+                if (dialog.ResetType6.Length > 0 && dialog.ResetType6 != "(empty)") resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType6, dialog.ResetValue6));
+                TriggeredEvent newEvent = null;
+                if (dialog.ResetEvent && dialog.ResetMethod.Length > 0) //Not everything necessary is checked here, but hey, this is only a demo app
+                {
+                    if (dialog.InitialTime.Length == 0 || dialog.Operation.Length == 0 || dialog.Factor.Length == 0 || dialog.Limit.Length == 0 || dialog.ResetAfterDynamic.Length == 0)
+                    {
+                        newEvent = new TriggeredEvent(dialog.ID, dialog.EventEnabled, dialog.RPCMethod, eventMethodParams, _rightClickedDevice.ID, peerChannel, dialog.Variable, trigger, triggerValue, resetAfterStatic, dialog.ResetMethod, resetMethodParams);
+                    }
+                    else
+                    {
+                        newEvent = new TriggeredEvent(dialog.ID, dialog.EventEnabled, dialog.RPCMethod, eventMethodParams, _rightClickedDevice.ID, peerChannel, dialog.Variable, trigger, triggerValue, new DynamicResetTime(initialTime, operation, factor, limit, resetAfterDynamic), dialog.ResetMethod, resetMethodParams);
+                    }
+                }
+                else
+                {
+                    newEvent = new TriggeredEvent(dialog.ID, dialog.EventEnabled, dialog.RPCMethod, eventMethodParams, _rightClickedDevice.ID, peerChannel, dialog.Variable, trigger, triggerValue);
+                }
+                _rightClickedDevice.Events.Add(newEvent);
+            }
+        }
+
+        private void tsRemoveTriggeredEvent_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedTriggeredEvent == null) return;
+            _rightClickedTriggeredEvent.Remove();
+        }
+        #endregion
+
         #region "Links"
         private void tsAddLink_Click(object sender, EventArgs e)
         {
@@ -1106,6 +1305,19 @@ namespace HomegearLibTest
                         variableNode.Tag = variable.Value;
                         variableNode.ContextMenuStrip = cmMetadataVariable;
                         e.Node.Nodes.Add(variableNode);
+                    }
+                    if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
+                }
+                else if (e.Node.Text == "Events")
+                {
+                    Device device = (Device)e.Node.Parent.Tag;
+                    e.Node.Nodes.Clear();
+                    foreach (KeyValuePair<String, Event> element in device.Events)
+                    {
+                        TreeNode eventNode = new TreeNode(element.Key);
+                        eventNode.Tag = element.Value;
+                        eventNode.ContextMenuStrip = cmTriggeredEvent;
+                        e.Node.Nodes.Add(eventNode);
                     }
                     if (e.Node.Nodes.Count == 0) e.Node.Nodes.Add("Empty");
                 }
@@ -1191,11 +1403,10 @@ namespace HomegearLibTest
                 if ((_selectedDevice.RXMode & DeviceRXMode.Config) == DeviceRXMode.Config) txtRXModes.Text += "Config\r\n";
                 if ((_selectedDevice.RXMode & DeviceRXMode.LazyConfig) == DeviceRXMode.LazyConfig) txtRXModes.Text += "LazyConfig\r\n";
                 if ((_selectedDevice.RXMode & DeviceRXMode.WakeUp) == DeviceRXMode.WakeUp) txtRXModes.Text += "WakeUp\r\n";
-                pnVariable.Visible = false;
-                pnChannel.Visible = false;
                 pnDevice.Visible = true;
             }
             else if (e.Node.Level == 3 && e.Node.Tag is MetadataVariable) MetadataSelected(e);
+            else if (e.Node.Level == 3 && e.Node.Tag is TriggeredEvent) TriggeredEventSelected(e);
             else if (e.Node.Level > 1 && e.Node.Level <= 3)
             {
                 if (e.Node.Level == 2 && e.Node.Tag is Channel)
@@ -1210,8 +1421,6 @@ namespace HomegearLibTest
                 }
                 if (_selectedChannel == null)
                 {
-                    pnChannel.Visible = false;
-                    pnDevice.Visible = false;
                     _nodeLoading = false;
                     return;
                 }
@@ -1240,8 +1449,6 @@ namespace HomegearLibTest
                     txtChannelTeamMembers.Text += teamMember + "\r\n";
                 }
                 txtChannelGroupedWith.Text = _selectedChannel.GroupedWith.ToString();
-                pnDevice.Visible = false;
-                pnVariable.Visible = false;
                 pnChannel.Visible = true;
             }
             else if (e.Node.Level == 4 || e.Node.Level == 7)
@@ -1299,8 +1506,6 @@ namespace HomegearLibTest
                     }
                 }
                 if (_selectedVariable.Writeable) txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
-                pnDevice.Visible = false;
-                pnChannel.Visible = false;
                 pnVariable.Visible = true;
             }
         }

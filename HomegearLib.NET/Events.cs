@@ -14,10 +14,20 @@ namespace HomegearLib
         EventType _type;
         public EventType Type { get { return _type; } }
 
+        Int32 _peerID;
+        public Int32 PeerID { get { return _peerID; } }
+
         public Events(RPCController rpc, Dictionary<String, Event> events, EventType type) : base(events)
         {
             _rpc = rpc;
             _type = type;
+        }
+
+        public Events(RPCController rpc, Dictionary<String, Event> events, Int32 peerID) : base(events)
+        {
+            _rpc = rpc;
+            _peerID = peerID;
+            _type = EventType.Triggered;
         }
 
         public void Dispose()
@@ -36,12 +46,13 @@ namespace HomegearLib
 
         public void Reload()
         {
-            _dictionary = _rpc.ListEvents(_type);
+            if (_type == EventType.Timed) _dictionary = _rpc.ListEvents(_type);
+            else _dictionary = _rpc.ListEvents(_peerID);
         }
 
         public List<Event> Update(out bool eventsDeleted, out bool eventsAdded)
         {
-            Dictionary<String, Event> events = _rpc.ListEvents(_type);
+            Dictionary<String, Event> events = (_type == EventType.Timed) ? _rpc.ListEvents(_type) : _rpc.ListEvents(_peerID);
             eventsDeleted = false;
             eventsAdded = false;
             List<Event> changedEvents = new List<Event>();

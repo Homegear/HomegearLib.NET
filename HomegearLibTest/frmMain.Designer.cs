@@ -33,6 +33,20 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnTriggeredEvent = new System.Windows.Forms.Panel();
+            this.txtEventPeerChannel = new System.Windows.Forms.TextBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.txtEventPeerID = new System.Windows.Forms.TextBox();
+            this.label69 = new System.Windows.Forms.Label();
+            this.txtTriggeredEventMethod = new System.Windows.Forms.TextBox();
+            this.label68 = new System.Windows.Forms.Label();
+            this.chkTriggeredEventEnabled = new System.Windows.Forms.CheckBox();
+            this.txtTriggeredEventMethodParams = new System.Windows.Forms.TextBox();
+            this.label73 = new System.Windows.Forms.Label();
+            this.txtEventLastRaised = new System.Windows.Forms.TextBox();
+            this.label75 = new System.Windows.Forms.Label();
+            this.txtTriggeredEventID = new System.Windows.Forms.TextBox();
+            this.label77 = new System.Windows.Forms.Label();
             this.pnTimedEvent = new System.Windows.Forms.Panel();
             this.txtEventMethod = new System.Windows.Forms.TextBox();
             this.label67 = new System.Windows.Forms.Label();
@@ -217,6 +231,26 @@
             this.tsRemoveTimedEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cmTimedEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsAddTimedEvent = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmTriggeredEvents = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsAddTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtEventVariable = new System.Windows.Forms.TextBox();
+            this.label72 = new System.Windows.Forms.Label();
+            this.txtEventTrigger = new System.Windows.Forms.TextBox();
+            this.label78 = new System.Windows.Forms.Label();
+            this.txtEventTriggerValue = new System.Windows.Forms.TextBox();
+            this.label79 = new System.Windows.Forms.Label();
+            this.label80 = new System.Windows.Forms.Label();
+            this.txtEventResetAfter = new System.Windows.Forms.TextBox();
+            this.txtEventResetMethod = new System.Windows.Forms.TextBox();
+            this.label81 = new System.Windows.Forms.Label();
+            this.txtEventResetMethodParams = new System.Windows.Forms.TextBox();
+            this.label82 = new System.Windows.Forms.Label();
+            this.txtEventLastValue = new System.Windows.Forms.TextBox();
+            this.label83 = new System.Windows.Forms.Label();
+            this.txtEventLastReset = new System.Windows.Forms.TextBox();
+            this.label84 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -225,6 +259,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnTriggeredEvent.SuspendLayout();
             this.pnTimedEvent.SuspendLayout();
             this.pnChannel.SuspendLayout();
             this.pnInterface.SuspendLayout();
@@ -244,6 +279,8 @@
             this.cmLinks.SuspendLayout();
             this.cmTimedEvent.SuspendLayout();
             this.cmTimedEvents.SuspendLayout();
+            this.cmTriggeredEvents.SuspendLayout();
+            this.cmTriggeredEvent.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
@@ -253,7 +290,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(846, 99);
+            this.txtLog.Size = new System.Drawing.Size(886, 99);
             this.txtLog.TabIndex = 0;
             // 
             // splitContainer1
@@ -272,7 +309,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer1.Size = new System.Drawing.Size(846, 495);
+            this.splitContainer1.Size = new System.Drawing.Size(886, 495);
             this.splitContainer1.SplitterDistance = 392;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -288,6 +325,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.pnTriggeredEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnTimedEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
             this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
@@ -296,8 +334,8 @@
             this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
-            this.splitContainer2.Size = new System.Drawing.Size(846, 392);
-            this.splitContainer2.SplitterDistance = 280;
+            this.splitContainer2.Size = new System.Drawing.Size(886, 392);
+            this.splitContainer2.SplitterDistance = 293;
             this.splitContainer2.TabIndex = 0;
             // 
             // tvDevices
@@ -305,11 +343,163 @@
             this.tvDevices.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvDevices.Location = new System.Drawing.Point(0, 0);
             this.tvDevices.Name = "tvDevices";
-            this.tvDevices.Size = new System.Drawing.Size(280, 392);
+            this.tvDevices.Size = new System.Drawing.Size(293, 392);
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnTriggeredEvent
+            // 
+            this.pnTriggeredEvent.Controls.Add(this.txtEventLastReset);
+            this.pnTriggeredEvent.Controls.Add(this.label84);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventLastValue);
+            this.pnTriggeredEvent.Controls.Add(this.label83);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventResetMethod);
+            this.pnTriggeredEvent.Controls.Add(this.label81);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventResetMethodParams);
+            this.pnTriggeredEvent.Controls.Add(this.label82);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventResetAfter);
+            this.pnTriggeredEvent.Controls.Add(this.label80);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventTriggerValue);
+            this.pnTriggeredEvent.Controls.Add(this.label79);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventTrigger);
+            this.pnTriggeredEvent.Controls.Add(this.label78);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventVariable);
+            this.pnTriggeredEvent.Controls.Add(this.label72);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventPeerChannel);
+            this.pnTriggeredEvent.Controls.Add(this.label70);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventPeerID);
+            this.pnTriggeredEvent.Controls.Add(this.label69);
+            this.pnTriggeredEvent.Controls.Add(this.txtTriggeredEventMethod);
+            this.pnTriggeredEvent.Controls.Add(this.label68);
+            this.pnTriggeredEvent.Controls.Add(this.chkTriggeredEventEnabled);
+            this.pnTriggeredEvent.Controls.Add(this.txtTriggeredEventMethodParams);
+            this.pnTriggeredEvent.Controls.Add(this.label73);
+            this.pnTriggeredEvent.Controls.Add(this.txtEventLastRaised);
+            this.pnTriggeredEvent.Controls.Add(this.label75);
+            this.pnTriggeredEvent.Controls.Add(this.txtTriggeredEventID);
+            this.pnTriggeredEvent.Controls.Add(this.label77);
+            this.pnTriggeredEvent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnTriggeredEvent.Location = new System.Drawing.Point(0, 0);
+            this.pnTriggeredEvent.Name = "pnTriggeredEvent";
+            this.pnTriggeredEvent.Size = new System.Drawing.Size(589, 392);
+            this.pnTriggeredEvent.TabIndex = 45;
+            this.pnTriggeredEvent.Visible = false;
+            // 
+            // txtEventPeerChannel
+            // 
+            this.txtEventPeerChannel.Location = new System.Drawing.Point(221, 48);
+            this.txtEventPeerChannel.Name = "txtEventPeerChannel";
+            this.txtEventPeerChannel.ReadOnly = true;
+            this.txtEventPeerChannel.Size = new System.Drawing.Size(65, 20);
+            this.txtEventPeerChannel.TabIndex = 40;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(144, 51);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(74, 13);
+            this.label70.TabIndex = 39;
+            this.label70.Text = "Peer Channel:";
+            // 
+            // txtEventPeerID
+            // 
+            this.txtEventPeerID.Location = new System.Drawing.Point(73, 48);
+            this.txtEventPeerID.Name = "txtEventPeerID";
+            this.txtEventPeerID.ReadOnly = true;
+            this.txtEventPeerID.Size = new System.Drawing.Size(65, 20);
+            this.txtEventPeerID.TabIndex = 38;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(3, 51);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(46, 13);
+            this.label69.TabIndex = 37;
+            this.label69.Text = "Peer ID:";
+            // 
+            // txtTriggeredEventMethod
+            // 
+            this.txtTriggeredEventMethod.Location = new System.Drawing.Point(73, 152);
+            this.txtTriggeredEventMethod.Name = "txtTriggeredEventMethod";
+            this.txtTriggeredEventMethod.ReadOnly = true;
+            this.txtTriggeredEventMethod.Size = new System.Drawing.Size(213, 20);
+            this.txtTriggeredEventMethod.TabIndex = 36;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(3, 155);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(71, 13);
+            this.label68.TabIndex = 35;
+            this.label68.Text = "RPC Method:";
+            // 
+            // chkTriggeredEventEnabled
+            // 
+            this.chkTriggeredEventEnabled.AutoSize = true;
+            this.chkTriggeredEventEnabled.Location = new System.Drawing.Point(73, 29);
+            this.chkTriggeredEventEnabled.Name = "chkTriggeredEventEnabled";
+            this.chkTriggeredEventEnabled.Size = new System.Drawing.Size(65, 17);
+            this.chkTriggeredEventEnabled.TabIndex = 29;
+            this.chkTriggeredEventEnabled.Text = "Enabled";
+            this.chkTriggeredEventEnabled.UseVisualStyleBackColor = true;
+            this.chkTriggeredEventEnabled.CheckedChanged += new System.EventHandler(this.chkTriggeredEventEnabled_CheckedChanged);
+            // 
+            // txtTriggeredEventMethodParams
+            // 
+            this.txtTriggeredEventMethodParams.Location = new System.Drawing.Point(73, 178);
+            this.txtTriggeredEventMethodParams.Multiline = true;
+            this.txtTriggeredEventMethodParams.Name = "txtTriggeredEventMethodParams";
+            this.txtTriggeredEventMethodParams.ReadOnly = true;
+            this.txtTriggeredEventMethodParams.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtTriggeredEventMethodParams.Size = new System.Drawing.Size(213, 97);
+            this.txtTriggeredEventMethodParams.TabIndex = 28;
+            // 
+            // label73
+            // 
+            this.label73.Location = new System.Drawing.Point(3, 178);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(64, 42);
+            this.label73.TabIndex = 27;
+            this.label73.Text = "Method Params:";
+            // 
+            // txtEventLastRaised
+            // 
+            this.txtEventLastRaised.Location = new System.Drawing.Point(364, 281);
+            this.txtEventLastRaised.Name = "txtEventLastRaised";
+            this.txtEventLastRaised.ReadOnly = true;
+            this.txtEventLastRaised.Size = new System.Drawing.Size(213, 20);
+            this.txtEventLastRaised.TabIndex = 15;
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(294, 284);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(66, 13);
+            this.label75.TabIndex = 14;
+            this.label75.Text = "Last Raised:";
+            // 
+            // txtTriggeredEventID
+            // 
+            this.txtTriggeredEventID.Location = new System.Drawing.Point(73, 3);
+            this.txtTriggeredEventID.Name = "txtTriggeredEventID";
+            this.txtTriggeredEventID.ReadOnly = true;
+            this.txtTriggeredEventID.Size = new System.Drawing.Size(213, 20);
+            this.txtTriggeredEventID.TabIndex = 7;
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(3, 6);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(52, 13);
+            this.label77.TabIndex = 6;
+            this.label77.Text = "Event ID:";
             // 
             // pnTimedEvent
             // 
@@ -330,7 +520,7 @@
             this.pnTimedEvent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnTimedEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTimedEvent.Name = "pnTimedEvent";
-            this.pnTimedEvent.Size = new System.Drawing.Size(562, 392);
+            this.pnTimedEvent.Size = new System.Drawing.Size(589, 392);
             this.pnTimedEvent.TabIndex = 44;
             this.pnTimedEvent.Visible = false;
             // 
@@ -489,7 +679,7 @@
             this.pnChannel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnChannel.Location = new System.Drawing.Point(0, 0);
             this.pnChannel.Name = "pnChannel";
-            this.pnChannel.Size = new System.Drawing.Size(562, 392);
+            this.pnChannel.Size = new System.Drawing.Size(589, 392);
             this.pnChannel.TabIndex = 2;
             this.pnChannel.Visible = false;
             // 
@@ -746,7 +936,7 @@
             this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnInterface.Location = new System.Drawing.Point(0, 0);
             this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(562, 392);
+            this.pnInterface.Size = new System.Drawing.Size(589, 392);
             this.pnInterface.TabIndex = 31;
             this.pnInterface.Visible = false;
             // 
@@ -897,7 +1087,7 @@
             this.pnHomegear.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnHomegear.Location = new System.Drawing.Point(0, 0);
             this.pnHomegear.Name = "pnHomegear";
-            this.pnHomegear.Size = new System.Drawing.Size(562, 392);
+            this.pnHomegear.Size = new System.Drawing.Size(589, 392);
             this.pnHomegear.TabIndex = 33;
             this.pnHomegear.Visible = false;
             // 
@@ -968,7 +1158,7 @@
             this.pnMetadata.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnMetadata.Location = new System.Drawing.Point(0, 0);
             this.pnMetadata.Name = "pnMetadata";
-            this.pnMetadata.Size = new System.Drawing.Size(562, 392);
+            this.pnMetadata.Size = new System.Drawing.Size(589, 392);
             this.pnMetadata.TabIndex = 32;
             this.pnMetadata.Visible = false;
             // 
@@ -1045,7 +1235,7 @@
             this.pnSystemVariable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
             this.pnSystemVariable.Name = "pnSystemVariable";
-            this.pnSystemVariable.Size = new System.Drawing.Size(562, 392);
+            this.pnSystemVariable.Size = new System.Drawing.Size(589, 392);
             this.pnSystemVariable.TabIndex = 31;
             this.pnSystemVariable.Visible = false;
             // 
@@ -1135,7 +1325,7 @@
             this.pnDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnDevice.Location = new System.Drawing.Point(0, 0);
             this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(562, 392);
+            this.pnDevice.Size = new System.Drawing.Size(589, 392);
             this.pnDevice.TabIndex = 1;
             this.pnDevice.Visible = false;
             // 
@@ -1344,7 +1534,7 @@
             this.pnVariable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnVariable.Location = new System.Drawing.Point(0, 0);
             this.pnVariable.Name = "pnVariable";
-            this.pnVariable.Size = new System.Drawing.Size(562, 392);
+            this.pnVariable.Size = new System.Drawing.Size(589, 392);
             this.pnVariable.TabIndex = 0;
             this.pnVariable.Visible = false;
             // 
@@ -1644,7 +1834,7 @@
             this.chkSSL.AutoSize = true;
             this.chkSSL.Checked = true;
             this.chkSSL.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSSL.Location = new System.Drawing.Point(677, 22);
+            this.chkSSL.Location = new System.Drawing.Point(717, 22);
             this.chkSSL.Name = "chkSSL";
             this.chkSSL.Size = new System.Drawing.Size(82, 17);
             this.chkSSL.TabIndex = 7;
@@ -1725,7 +1915,7 @@
             this.gbSSL.Controls.Add(this.txtHomegearUsername);
             this.gbSSL.Location = new System.Drawing.Point(12, 58);
             this.gbSSL.Name = "gbSSL";
-            this.gbSSL.Size = new System.Drawing.Size(846, 98);
+            this.gbSSL.Size = new System.Drawing.Size(886, 98);
             this.gbSSL.TabIndex = 14;
             this.gbSSL.TabStop = false;
             this.gbSSL.Text = "SSL Options";
@@ -1856,7 +2046,7 @@
             // bnConnect
             // 
             this.bnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnConnect.Location = new System.Drawing.Point(765, 12);
+            this.bnConnect.Location = new System.Drawing.Point(805, 12);
             this.bnConnect.Name = "bnConnect";
             this.bnConnect.Size = new System.Drawing.Size(93, 35);
             this.bnConnect.TabIndex = 15;
@@ -2026,7 +2216,7 @@
             // tsRemoveTimedEvent
             // 
             this.tsRemoveTimedEvent.Name = "tsRemoveTimedEvent";
-            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(152, 22);
+            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveTimedEvent.Text = "Remove";
             this.tsRemoveTimedEvent.Click += new System.EventHandler(this.tsRemoveTimedEvent_Click);
             // 
@@ -2044,11 +2234,178 @@
             this.tsAddTimedEvent.Text = "Add";
             this.tsAddTimedEvent.Click += new System.EventHandler(this.tsAddTimedEvent_Click);
             // 
+            // cmTriggeredEvents
+            // 
+            this.cmTriggeredEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsAddTriggeredEvent});
+            this.cmTriggeredEvents.Name = "cmDevice";
+            this.cmTriggeredEvents.Size = new System.Drawing.Size(153, 48);
+            // 
+            // tsAddTriggeredEvent
+            // 
+            this.tsAddTriggeredEvent.Name = "tsAddTriggeredEvent";
+            this.tsAddTriggeredEvent.Size = new System.Drawing.Size(152, 22);
+            this.tsAddTriggeredEvent.Text = "Add";
+            this.tsAddTriggeredEvent.Click += new System.EventHandler(this.tsAddTriggeredEvent_Click);
+            // 
+            // cmTriggeredEvent
+            // 
+            this.cmTriggeredEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsRemoveTriggeredEvent});
+            this.cmTriggeredEvent.Name = "cmDevice";
+            this.cmTriggeredEvent.Size = new System.Drawing.Size(118, 26);
+            // 
+            // tsRemoveTriggeredEvent
+            // 
+            this.tsRemoveTriggeredEvent.Name = "tsRemoveTriggeredEvent";
+            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(152, 22);
+            this.tsRemoveTriggeredEvent.Text = "Remove";
+            this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
+            // 
+            // txtEventVariable
+            // 
+            this.txtEventVariable.Location = new System.Drawing.Point(73, 74);
+            this.txtEventVariable.Name = "txtEventVariable";
+            this.txtEventVariable.ReadOnly = true;
+            this.txtEventVariable.Size = new System.Drawing.Size(213, 20);
+            this.txtEventVariable.TabIndex = 42;
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(3, 77);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(48, 13);
+            this.label72.TabIndex = 41;
+            this.label72.Text = "Variable:";
+            // 
+            // txtEventTrigger
+            // 
+            this.txtEventTrigger.Location = new System.Drawing.Point(73, 100);
+            this.txtEventTrigger.Name = "txtEventTrigger";
+            this.txtEventTrigger.ReadOnly = true;
+            this.txtEventTrigger.Size = new System.Drawing.Size(213, 20);
+            this.txtEventTrigger.TabIndex = 44;
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(3, 103);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(43, 13);
+            this.label78.TabIndex = 43;
+            this.label78.Text = "Trigger:";
+            // 
+            // txtEventTriggerValue
+            // 
+            this.txtEventTriggerValue.Location = new System.Drawing.Point(73, 126);
+            this.txtEventTriggerValue.Name = "txtEventTriggerValue";
+            this.txtEventTriggerValue.ReadOnly = true;
+            this.txtEventTriggerValue.Size = new System.Drawing.Size(213, 20);
+            this.txtEventTriggerValue.TabIndex = 46;
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(3, 129);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(73, 13);
+            this.label79.TabIndex = 45;
+            this.label79.Text = "Trigger Value:";
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(3, 284);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(63, 13);
+            this.label80.TabIndex = 47;
+            this.label80.Text = "Reset After:";
+            // 
+            // txtEventResetAfter
+            // 
+            this.txtEventResetAfter.Location = new System.Drawing.Point(73, 281);
+            this.txtEventResetAfter.Multiline = true;
+            this.txtEventResetAfter.Name = "txtEventResetAfter";
+            this.txtEventResetAfter.ReadOnly = true;
+            this.txtEventResetAfter.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtEventResetAfter.Size = new System.Drawing.Size(213, 97);
+            this.txtEventResetAfter.TabIndex = 48;
+            // 
+            // txtEventResetMethod
+            // 
+            this.txtEventResetMethod.Location = new System.Drawing.Point(364, 152);
+            this.txtEventResetMethod.Name = "txtEventResetMethod";
+            this.txtEventResetMethod.ReadOnly = true;
+            this.txtEventResetMethod.Size = new System.Drawing.Size(213, 20);
+            this.txtEventResetMethod.TabIndex = 52;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(294, 155);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(68, 13);
+            this.label81.TabIndex = 51;
+            this.label81.Text = "Reset Meth.:";
+            // 
+            // txtEventResetMethodParams
+            // 
+            this.txtEventResetMethodParams.Location = new System.Drawing.Point(364, 178);
+            this.txtEventResetMethodParams.Multiline = true;
+            this.txtEventResetMethodParams.Name = "txtEventResetMethodParams";
+            this.txtEventResetMethodParams.ReadOnly = true;
+            this.txtEventResetMethodParams.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtEventResetMethodParams.Size = new System.Drawing.Size(213, 97);
+            this.txtEventResetMethodParams.TabIndex = 50;
+            // 
+            // label82
+            // 
+            this.label82.Location = new System.Drawing.Point(294, 178);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(64, 42);
+            this.label82.TabIndex = 49;
+            this.label82.Text = "Method Params:";
+            // 
+            // txtEventLastValue
+            // 
+            this.txtEventLastValue.Location = new System.Drawing.Point(364, 307);
+            this.txtEventLastValue.Name = "txtEventLastValue";
+            this.txtEventLastValue.ReadOnly = true;
+            this.txtEventLastValue.Size = new System.Drawing.Size(213, 20);
+            this.txtEventLastValue.TabIndex = 54;
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(294, 310);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(60, 13);
+            this.label83.TabIndex = 53;
+            this.label83.Text = "Last Value:";
+            // 
+            // txtEventLastReset
+            // 
+            this.txtEventLastReset.Location = new System.Drawing.Point(364, 333);
+            this.txtEventLastReset.Name = "txtEventLastReset";
+            this.txtEventLastReset.ReadOnly = true;
+            this.txtEventLastReset.Size = new System.Drawing.Size(213, 20);
+            this.txtEventLastReset.TabIndex = 56;
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(294, 336);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(61, 13);
+            this.label84.TabIndex = 55;
+            this.label84.Text = "Last Reset:";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(870, 669);
+            this.ClientSize = new System.Drawing.Size(910, 669);
             this.Controls.Add(this.bnConnect);
             this.Controls.Add(this.gbSSL);
             this.Controls.Add(this.txtListenPort);
@@ -2076,6 +2433,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnTriggeredEvent.ResumeLayout(false);
+            this.pnTriggeredEvent.PerformLayout();
             this.pnTimedEvent.ResumeLayout(false);
             this.pnTimedEvent.PerformLayout();
             this.pnChannel.ResumeLayout(false);
@@ -2104,6 +2463,8 @@
             this.cmLinks.ResumeLayout(false);
             this.cmTimedEvent.ResumeLayout(false);
             this.cmTimedEvents.ResumeLayout(false);
+            this.cmTriggeredEvents.ResumeLayout(false);
+            this.cmTriggeredEvent.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2299,6 +2660,40 @@
         private System.Windows.Forms.TextBox txtEndTime;
         private System.Windows.Forms.Label label66;
         private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.Panel pnTriggeredEvent;
+        private System.Windows.Forms.TextBox txtTriggeredEventMethod;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.CheckBox chkTriggeredEventEnabled;
+        private System.Windows.Forms.TextBox txtTriggeredEventMethodParams;
+        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.TextBox txtEventLastRaised;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.TextBox txtTriggeredEventID;
+        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.ContextMenuStrip cmTriggeredEvents;
+        private System.Windows.Forms.ToolStripMenuItem tsAddTriggeredEvent;
+        private System.Windows.Forms.ContextMenuStrip cmTriggeredEvent;
+        private System.Windows.Forms.ToolStripMenuItem tsRemoveTriggeredEvent;
+        private System.Windows.Forms.TextBox txtEventPeerChannel;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.TextBox txtEventPeerID;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.TextBox txtEventResetMethod;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.TextBox txtEventResetMethodParams;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.TextBox txtEventResetAfter;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.TextBox txtEventTriggerValue;
+        private System.Windows.Forms.Label label79;
+        private System.Windows.Forms.TextBox txtEventTrigger;
+        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.TextBox txtEventVariable;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.TextBox txtEventLastReset;
+        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.TextBox txtEventLastValue;
+        private System.Windows.Forms.Label label83;
     }
 }
 
