@@ -81,7 +81,7 @@ namespace HomegearLib.RPC
             _sslInfo = sslInfo;
             if(_sslInfo != null)
             {
-                _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Password)))));
+                _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Password)))));
             }
         }
 

@@ -28,7 +28,7 @@ namespace HomegearLib.RPC.Encoding
         {
             int stringLength = DecodeInteger(encodedData, ref position);
             if (position + stringLength > encodedData.Length || stringLength == 0) return "";
-            String value = System.Text.ASCIIEncoding.ASCII.GetString(encodedData, (int)position, stringLength);
+            String value = System.Text.UTF8Encoding.UTF8.GetString(encodedData, (int)position, stringLength);
             position += (uint)stringLength;
             return value;
         }

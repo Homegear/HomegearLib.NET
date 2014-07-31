@@ -122,6 +122,22 @@ namespace HomegearLib.RPC
             _floatValue = value;
         }
 
+        public RPCVariable(IReadOnlyList<RPCVariable> value)
+        {
+            _type = RPCVariableType.rpcArray;
+            _arrayValue = new List<RPCVariable>();
+            foreach (RPCVariable element in value)
+            {
+                _arrayValue.Add(element);
+            }
+        }
+
+        public RPCVariable(List<RPCVariable> value)
+        {
+            _type = RPCVariableType.rpcArray;
+            _arrayValue = value;
+        }
+
         public RPCVariable(Variable variable)
         {
             switch (variable.Type)

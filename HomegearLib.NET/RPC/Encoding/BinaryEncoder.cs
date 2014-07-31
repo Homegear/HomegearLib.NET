@@ -28,9 +28,10 @@ namespace HomegearLib.RPC.Encoding
                 EncodeInteger(encodedData, 0);
                 return;
             }
-            EncodeInteger(encodedData, value.Length);
+            byte[] stringBytes = System.Text.UTF8Encoding.UTF8.GetBytes(value);
+            EncodeInteger(encodedData, stringBytes.Length);
             if (value.Length == 0) return;
-            encodedData.InsertRange(encodedData.Count(), System.Text.ASCIIEncoding.ASCII.GetBytes(value));
+            encodedData.InsertRange(encodedData.Count(), stringBytes);
         }
 
         public void EncodeBoolean(List<byte> encodedData, bool value)

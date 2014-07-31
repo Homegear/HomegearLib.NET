@@ -12,7 +12,8 @@ namespace HomegearLib
     public enum ReloadType
     {
         Full = 1,
-        SystemVariables = 2
+        SystemVariables = 2,
+        Events
     }
 
     public enum DeviceReloadType
@@ -21,7 +22,8 @@ namespace HomegearLib
         Metadata = 2,
         Channel = 4,
         Links = 8,
-        Team = 16
+        Team = 16,
+        Events = 32
     }
 
     public enum UpdateResultCode
@@ -91,6 +93,7 @@ namespace HomegearLib
         public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
         public delegate void DeviceLinkConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter);
+        public delegate void EventUpdatedEventHandler(Homegear sender, Event homegearEvent);
         public delegate void ReloadRequiredEventHandler(Homegear sender, ReloadType reloadType);
         public delegate void DeviceReloadRequiredEventHandler(Homegear sender, Device device, Channel channel, DeviceReloadType reloadType);
 
@@ -102,6 +105,7 @@ namespace HomegearLib
         public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
         public event DeviceConfigParameterUpdatedEventHandler DeviceConfigParameterUpdated;
         public event DeviceLinkConfigParameterUpdatedEventHandler DeviceLinkConfigParameterUpdated;
+        public event EventUpdatedEventHandler EventUpdated;
         public event ReloadRequiredEventHandler ReloadRequired;
         public event DeviceReloadRequiredEventHandler DeviceReloadRequired;
         public event ConnectedEventHandler Connected;
@@ -137,6 +141,16 @@ namespace HomegearLib
             }
         }
 
+        Events _events = null;
+        public Events Events
+        {
+            get
+            {
+                if (_events == null || _events.Count == 0) _events = new Events(_rpc, _rpc.ListEvents(EventType.Timed), EventType.Timed);
+                return _events;
+            }
+        }
+
         String _version = "";
         public String Version
         {
@@ -169,10 +183,41 @@ namespace HomegearLib
             _rpc.NewDevices += _rpc_OnNewDevices;
             _rpc.DevicesDeleted += _rpc_OnDevicesDeleted;
             _rpc.UpdateDevice += _rpc_OnUpdateDevice;
+            _rpc.NewEvent += _rpc_OnNewEvent;
+            _rpc.EventDeleted += _rpc_OnEventDeleted;
+            _rpc.UpdateEvent += _rpc_OnUpdateEvent;
             _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
             while (!_connectThread.IsAlive) ;
+        }
+
+        private void _rpc_OnNewEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
+        {
+            if (type == EventType.Timed)
+            {
+                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Events);
+            }
+        }
+
+        void _rpc_OnUpdateEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
+        {
+            if (!Events.ContainsKey(id)) return;
+            Event currentEvent = Events[id];
+            _rpc.GetEvent(currentEvent);
+            if (EventUpdated != null) EventUpdated(this, currentEvent);
+        }
+
+        void _rpc_OnEventDeleted(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variable)
+        {
+            if (type == EventType.Timed)
+            {
+                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Events);
+            }
+            else
+            {
+
+            }
         }
 
         private void _rpc_OnNewDevices(RPCController sender)
@@ -362,6 +407,9 @@ namespace HomegearLib
             _rpc.NewDevices -= _rpc_OnNewDevices;
             _rpc.DevicesDeleted -= _rpc_OnDevicesDeleted;
             _rpc.UpdateDevice -= _rpc_OnUpdateDevice;
+            _rpc.NewEvent -= _rpc_OnNewEvent;
+            _rpc.EventDeleted -= _rpc_OnEventDeleted;
+            _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {

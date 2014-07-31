@@ -49,6 +49,9 @@ namespace HomegearLib.RPC
         public delegate void NewDevicesEventHandler(RPCServer sender);
         public delegate void DevicesDeletedEventHandler(RPCServer sender);
         public delegate void UpdateDeviceEventHandler(RPCServer sender, Int32 peerID, Int32 channel, Int32 flags);
+        public delegate void NewEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
+        public delegate void EventDeletedEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
+        public delegate void UpdateEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
 
         #region "Events"
         public event ConnectedEventHandler Connected;
@@ -57,6 +60,10 @@ namespace HomegearLib.RPC
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
         public event UpdateDeviceEventHandler UpdateDevice;
+        public event NewEventEventHandler NewEvent;
+        public event EventDeletedEventHandler EventDeleted;
+        public event UpdateEventEventHandler UpdateEvent;
+
         #endregion
 
         volatile bool _starting = false;
@@ -94,7 +101,7 @@ namespace HomegearLib.RPC
             }
             _ipAddress = IPAddress.Parse(listenIP);
             _port = port;
-            if (_ssl && sslInfo.Username.Length > 0) _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.ASCIIEncoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Password)))));
+            if (_ssl && sslInfo.Username.Length > 0) _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Password)))));
         }
 
         ~RPCServer()
@@ -309,6 +316,9 @@ namespace HomegearLib.RPC
                 response.ArrayValue.Add(new RPCVariable("newDevices"));
                 response.ArrayValue.Add(new RPCVariable("updateDevice"));
                 response.ArrayValue.Add(new RPCVariable("deleteDevices"));
+                response.ArrayValue.Add(new RPCVariable("newEvent"));
+                response.ArrayValue.Add(new RPCVariable("deleteEvent"));
+                response.ArrayValue.Add(new RPCVariable("updateEvent"));
             }
             else if(methodName == "system.multicall" && parameters.Count() > 0)
             {
@@ -347,6 +357,37 @@ namespace HomegearLib.RPC
                 if (parameters.Count == 4 && parameters[0].Type == RPCVariableType.rpcString && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcInteger && parameters[3].Type == RPCVariableType.rpcInteger)
                 {
                     if (UpdateDevice != null) UpdateDevice(this, parameters[1].IntegerValue, parameters[2].IntegerValue, parameters[3].IntegerValue);
+                }
+            }
+            else if(methodName == "newEvent")
+            {
+                if(parameters.Count == 2 && parameters[1].Type == RPCVariableType.rpcStruct)
+                {
+                    String id = "";
+                    Int32 type = -1;
+                    Int32 peerID = 0;
+                    Int32 channel = -1;
+                    String variable = "";
+                    if (parameters[1].StructValue.ContainsKey("ID")) id = parameters[1].StructValue["ID"].StringValue;
+                    if (parameters[1].StructValue.ContainsKey("TYPE")) type = parameters[1].StructValue["TYPE"].IntegerValue;
+                    if (parameters[1].StructValue.ContainsKey("PEERID")) peerID = parameters[1].StructValue["PEERID"].IntegerValue;
+                    if (parameters[1].StructValue.ContainsKey("PEERCHANNEL")) channel = parameters[1].StructValue["PEERCHANNEL"].IntegerValue;
+                    if (parameters[1].StructValue.ContainsKey("VARIABLE")) variable = parameters[1].StructValue["VARIABLE"].StringValue;
+                    if (NewEvent != null) NewEvent(this, id, type, peerID, channel, variable);
+                }
+            }
+            else if(methodName == "deleteEvent")
+            {
+                if(parameters.Count == 6)
+                {
+                    if (EventDeleted != null) EventDeleted(this, parameters[1].StringValue, parameters[2].IntegerValue, parameters[3].IntegerValue, parameters[4].IntegerValue, parameters[5].StringValue);
+                }
+            }
+            else if(methodName == "updateEvent")
+            {
+                if (parameters.Count == 6)
+                {
+                    if (UpdateEvent != null) UpdateEvent(this, parameters[1].StringValue, parameters[2].IntegerValue, parameters[3].IntegerValue, parameters[4].IntegerValue, parameters[5].StringValue);
                 }
             }
             byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();

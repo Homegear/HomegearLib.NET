@@ -16,6 +16,15 @@ namespace HomegearLib
             _rpc = rpc;
         }
 
+        public void Dispose()
+        {
+            _rpc = null;
+            foreach (KeyValuePair<String, SystemVariable> systemVariable in _dictionary)
+            {
+                systemVariable.Value.Dispose();
+            }
+        }
+
         public void Add(SystemVariable variable)
         {
             _rpc.SetSystemVariable(variable);
@@ -25,15 +34,6 @@ namespace HomegearLib
         {
             _rpc.SystemVariables = _rpc.GetAllSystemVariables();
             _dictionary = _rpc.SystemVariables;
-        }
-
-        public void Dispose()
-        {
-            _rpc = null;
-            foreach (KeyValuePair<String, SystemVariable> systemVariable in _dictionary)
-            {
-                systemVariable.Value.Dispose();
-            }
         }
 
         public List<SystemVariable> Update(out bool variablesDeleted, out bool variablesAdded)

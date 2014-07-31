@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmAddTimedEvent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddTimedEvent.Designer.cs">
+      <DependentUpon>frmAddTimedEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSetTeam.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmAddTimedEvent.resx">
+      <DependentUpon>frmAddTimedEvent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmSetTeam.resx">
       <DependentUpon>frmSetTeam.cs</DependentUpon>
     </EmbeddedResource>
