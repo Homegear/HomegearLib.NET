@@ -196,6 +196,7 @@ This is all the important setup stuff. There are a bunch of other events, which 
 
 ### Exceptions
 
+Name | Description
 --- | ---
 HomegearException | Base class for all library specific exceptions.
 HomegearVariableException | Base class for variable/config parameter exceptions.
