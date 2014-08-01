@@ -60,11 +60,11 @@ Homegear homegear = new Homegear(rpc);
 
 The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are five events:
 
-* RPCController.ClientConnected: Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
-* RPCController.ClientDisconnected: Raised, when the connection to Homegear is closed.
-* RPCController.ServerConnected: Raised, when there is a successful incoming connection from Homegear to the librarie's callback event server.
-* RPCController.ServerDisconnected: Raised, when the incoming connection to our event server is closed.
-* Homegear.ConnectError: Raised on all errors during the connection procedure.
+RPCController.ClientConnected | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
+RPCController.ClientDisconnected | Raised, when the connection to Homegear is closed.
+RPCController.ServerConnected | Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
+RPCController.ServerDisconnected | Raised, when the incoming connection to our event server is closed.
+Homegear.ConnectError | Raised on all errors during the connection procedure.
 
 "Homegear.ConnectError" is the most important. Here's an example implementation of an event handler:
 
@@ -192,6 +192,19 @@ This is all the important setup stuff. There are a bunch of other events, which 
 * homegear.DeviceConfigParameterUpdated:
 * homegear.DeviceLinkConfigParameterUpdated:
 * homegear.EventUpdated
+
+### Exceptions
+
+HomegearException | Base class for all library specific exceptions.
+HomegearVariableException | Base class for variable/config parameter exceptions.
+HomegearVariableWriteOnlyException | Thrown when you try to get the value
+HomegearVariableReadOnlyException | Thrown when you try to set a read only variable.
+HomegearVariableTypeException | Thrown when the type of the value you try to set does not match the variable type.
+HomegearVariableValueOutOfBoundsException | Thrown when the value you try to set is not withing the range of valid values.
+HomegearRPCServerException | Thrown on all errors within the RPC server.
+HomegearRPCServerSSLException | Thrown on SSL specific errors within the RPC server.
+HomegearRPCClientException | Thrown on all errors withing the RPC client. You should always catch this exception, as it can be thrown by pretty much all operations.
+HomegearRPCClientSSLException | Thrown on SSL specific errors within the RPC client.
 
 ### Change the value of a device variable
 

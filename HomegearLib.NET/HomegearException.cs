@@ -19,19 +19,6 @@ namespace HomegearLib
         }
     }
 
-    public class HomegearObjectReadOnlyException : Exception
-    {
-        public HomegearObjectReadOnlyException() : base()
-        {
-
-        }
-
-        public HomegearObjectReadOnlyException(String message) : base(message)
-        {
-
-        }
-    }
-
     public class HomegearVariableException : Exception
     {
         public HomegearVariableException() : base()
@@ -71,19 +58,6 @@ namespace HomegearLib
         }
     }
 
-    public class HomegearVariableWriteOnlyException : HomegearVariableException
-    {
-        public HomegearVariableWriteOnlyException() : base()
-        {
-
-        }
-
-        public HomegearVariableWriteOnlyException(String message) : base(message)
-        {
-
-        }
-    }
-
     public class HomegearVariableValueOutOfBoundsException : HomegearVariableException
     {
         public HomegearVariableValueOutOfBoundsException() : base()
@@ -92,6 +66,60 @@ namespace HomegearLib
         }
 
         public HomegearVariableValueOutOfBoundsException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearRPCServerException : HomegearException
+    {
+        public HomegearRPCServerException() : base()
+        {
+
+        }
+
+        public HomegearRPCServerException(String message) : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearRPCServerSSLException : HomegearRPCServerException
+    {
+        public HomegearRPCServerSSLException() : base()
+        {
+
+        }
+
+        public HomegearRPCServerSSLException(String message)
+            : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearRPCClientException : HomegearException
+    {
+        public HomegearRPCClientException() : base()
+        {
+
+        }
+
+        public HomegearRPCClientException(String message)
+            : base(message)
+        {
+
+        }
+    }
+
+    public class HomegearRPCClientSSLException : HomegearRPCClientException
+    {
+        public HomegearRPCClientSSLException() : base()
+        {
+
+        }
+
+        public HomegearRPCClientSSLException(String message) : base(message)
         {
 
         }

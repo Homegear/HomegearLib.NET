@@ -15,32 +15,6 @@ using System.Threading;
 
 namespace HomegearLib.RPC
 {
-    public class HomegearRPCClientException : HomegearException
-    {
-        public HomegearRPCClientException() : base()
-        {
-            
-        }
-
-        public HomegearRPCClientException(String message) : base(message)
-        {
-
-        }
-    }
-
-    public class HomegearRPCClientSSLException : HomegearRPCClientException
-    {
-        public HomegearRPCClientSSLException() : base()
-        {
-
-        }
-
-        public HomegearRPCClientSSLException(String message) : base(message)
-        {
-
-        }
-    }
-
     public class RPCClient : IDisposable
     {
         public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);

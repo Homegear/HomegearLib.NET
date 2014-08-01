@@ -15,32 +15,6 @@ using System.Runtime.InteropServices;
 
 namespace HomegearLib.RPC
 {
-    public class HomegearRPCServerException : HomegearException
-    {
-        public HomegearRPCServerException() : base()
-        {
-
-        }
-
-        public HomegearRPCServerException(String message) : base(message)
-        {
-
-        }
-    }
-
-    public class HomegearRPCServerSSLException : HomegearRPCServerException
-    {
-        public HomegearRPCServerSSLException() : base()
-        {
-
-        }
-
-        public HomegearRPCServerSSLException(String message) : base(message)
-        {
-
-        }
-    }
-
     public class RPCServer
     {
         public delegate void ConnectedEventHandler(RPCServer server, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
@@ -263,7 +237,7 @@ namespace HomegearLib.RPC
                         }
                         else if (packet != null)
                         {
-                            if (packetLength + bytesReceived > dataSize) throw new HomegearRPCClientException("RPC client received response larger than the expected size from Homegear.");
+                            if (packetLength + bytesReceived > dataSize) throw new HomegearRPCServerException("RPC server received response larger than the expected size from Homegear.");
                             Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
                             packetLength += (uint)bytesReceived;
                         }
