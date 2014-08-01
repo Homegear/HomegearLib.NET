@@ -62,13 +62,13 @@ The Homegear object automatically handles the connection to Homegear. It will re
 
 Event | Description
 --- | ---
-RPCController.ClientConnected | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
-RPCController.ClientDisconnected | Raised, when the connection to Homegear is closed.
-RPCController.ServerConnected | Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
-RPCController.ServerDisconnected | Raised, when the incoming connection to our event server is closed.
-Homegear.ConnectError | Raised on all errors during the connection procedure.
+**RPCController.ClientConnected** | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
+**RPCController.ClientDisconnected** | Raised, when the connection to Homegear is closed.
+**RPCController.ServerConnected** | Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
+**RPCController.ServerDisconnected** | Raised, when the incoming connection to our event server is closed.
+**Homegear.ConnectError** | Raised on all errors during the connection procedure.
 
-"Homegear.ConnectError" is the most important. Here's an example implementation of an event handler:
+"**Homegear.ConnectError**" is the most important. Here's an example implementation of an event handler:
 
 ```
 	.
@@ -85,7 +85,7 @@ void homegear_OnConnectError(Homegear sender, string message, string stackTrace)
 }
 ```
 
-After this we need need to implement the event "Homegear.Reloaded". This event is always raised, when a full reload is successfully completed. We have to wait for the first "reload" to complete, before we can work with the Homegear object:
+After this we need to implement the event "**Homegear.Reloaded**". This event is always raised, when a full reload is successfully completed. We have to wait for the first "reload" to complete, before we can work with the Homegear object:
 
 ```
 	.
@@ -188,30 +188,30 @@ void homegear_OnDeviceReloadRequired(Homegear sender, Device device, Channel cha
 
 This is all the important setup stuff. There are a bunch of other events, which you can implement as needed:
 
-* homegear.SystemVariableUpdated
-* homegear.MetadataUpdated
-* homegear.DeviceVariableUpdated
-* homegear.DeviceConfigParameterUpdated:
-* homegear.DeviceLinkConfigParameterUpdated:
-* homegear.EventUpdated
+* **homegear.SystemVariableUpdated**
+* **homegear.MetadataUpdated**
+* **homegear.DeviceVariableUpdated**
+* **homegear.DeviceConfigParameterUpdated**
+* **homegear.DeviceLinkConfigParameterUpdated**
+* **homegear.EventUpdated**
 
 ### Exceptions
 
 Name | Description
 --- | ---
-HomegearException | Base class for all library specific exceptions.
-HomegearVariableException | Base class for variable/config parameter exceptions.
-HomegearVariableReadOnlyException | Thrown when you try to set a read only variable.
-HomegearVariableTypeException | Thrown when the type of the value you try to set does not match the variable type.
-HomegearVariableValueOutOfBoundsException | Thrown when the value you try to set is not withing the range of valid values.
-HomegearRPCServerException | Thrown on all errors within the RPC server.
-HomegearRPCServerSSLException | Thrown on SSL specific errors within the RPC server.
-HomegearRPCClientException | Thrown on all errors withing the RPC client. You should always catch this exception, as it can be thrown by pretty much all operations.
-HomegearRPCClientSSLException | Thrown on SSL specific errors within the RPC client.
+**HomegearException** | Base class for all library specific exceptions.
+**HomegearVariableException** | Base class for variable/config parameter exceptions.
+**HomegearVariableReadOnlyException**| Thrown when you try to set a read only variable.
+**HomegearVariableTypeException** | Thrown when the type of the value you try to set does not match the variable type.
+**HomegearVariableValueOutOfBoundsException** | Thrown when the value you try to set is not withing the range of valid values.
+**HomegearRPCServerException** | Thrown on all errors within the RPC server.
+**HomegearRPCServerSSLException** | Thrown on SSL specific errors within the RPC server.
+**HomegearRPCClientException** | Thrown on all errors withing the RPC client. **You should always catch this exception, as it can be thrown by pretty much all operations.**
+**HomegearRPCClientSSLException** | Thrown on SSL specific errors within the RPC client.
 
 ### Disposing
 
-To orderly destroy the Homegear object and to orderly disconnect from Homegear, call "Dispose". This might take a few seconds.
+To orderly destroy the Homegear object and to orderly disconnect from Homegear, call "**Dispose**". This might take a few seconds.
 
 ```
 homegear.Dispose()
