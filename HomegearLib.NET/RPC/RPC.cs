@@ -130,7 +130,7 @@ namespace HomegearLib.RPC
                 if (_systemVariables == null || _systemVariables.Count == 0) _systemVariables = GetAllSystemVariables();
                 return _systemVariables;
             }
-            internal set
+            set
             {
                 _systemVariables = value;
             }
