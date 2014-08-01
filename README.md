@@ -16,16 +16,39 @@ First add HomegearLib.NET.dll as reference to your project. Now you can access t
 
 ### Create a new Homegear object
 
-We need to create a RPC controller object first:
+We need to create a RPC controller object first. The RPC controller bundles a RPC client and RPC server. The RPC client connects to your server running Homegear and is used for all RPC requests. Homegear again will connect to the RPC controller's RPC server. This connection is used to notify your program immediately on for example variable changes.
 
 ```
 //Without SSL support:
-RPCController rpc = new RPCController("homegear", 2001, "MyComputer", "0.0.0.0", 9876);
+RPCController rpc = new RPCController
+					(
+						"homegear", 	//Hostname of your server running Homegear
+						2001,			//Port Homegear listens on
+						"MyComputer",	//The hostname or ip address of the computer your program runs on
+						"0.0.0.0",		//The ip address the callback event server listens on
+						9876			//The port the callback event server listens on
+					);
 
 //With SSL support:
-SSLClientInfo sslClientInfo = new SSLClientInfo("MyComputer", "user", "secret", true);
+SSLClientInfo sslClientInfo = new SSLClientInfo
+								(
+									"MyComputer",	//Hostname of the computer your program runs on.
+													//This hostname is used for certificate verification.
+									"user",
+									"secret",
+									true			//Enable certificate verification
+								);
 //You can create the certificate file with: openssl pkcs12 -export -inkey YourPrivateKey.key -in YourCA.pem -in YourPublicCert.pem -out MyCertificate.pfx
-SSLServerInfo sslServerInfo = new SSLServerInfo("MyCertificate.pfx", "secret", "localUser", "localSecret");
+SSLServerInfo sslServerInfo = new SSLServerInfo
+								(
+									"MyCertificate.pfx",	//Path to the certificate the callback server
+															//will use.
+									"secret",				//Certificate password
+									"localUser",			//The username Homegear needs to use to connect
+															//to our callback server
+									"localSecret"			//The password Homegear needs to use to connect
+															//to our callback server
+								);
 RPCController rpc = new RPCController("homegear", 2003, "MyComputer", "0.0.0.0", 9876, sslClientInfo, sslServerInfo);
 ```
 
