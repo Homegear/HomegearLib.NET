@@ -60,6 +60,7 @@ Homegear homegear = new Homegear(rpc);
 
 The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are five events:
 
+Event | Description
 --- | ---
 RPCController.ClientConnected | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
 RPCController.ClientDisconnected | Raised, when the connection to Homegear is closed.
@@ -200,7 +201,6 @@ Name | Description
 --- | ---
 HomegearException | Base class for all library specific exceptions.
 HomegearVariableException | Base class for variable/config parameter exceptions.
-HomegearVariableWriteOnlyException | Thrown when you try to get the value
 HomegearVariableReadOnlyException | Thrown when you try to set a read only variable.
 HomegearVariableTypeException | Thrown when the type of the value you try to set does not match the variable type.
 HomegearVariableValueOutOfBoundsException | Thrown when the value you try to set is not withing the range of valid values.
@@ -208,6 +208,14 @@ HomegearRPCServerException | Thrown on all errors within the RPC server.
 HomegearRPCServerSSLException | Thrown on SSL specific errors within the RPC server.
 HomegearRPCClientException | Thrown on all errors withing the RPC client. You should always catch this exception, as it can be thrown by pretty much all operations.
 HomegearRPCClientSSLException | Thrown on SSL specific errors within the RPC client.
+
+### Disposing
+
+To orderly destroy the Homegear object and to orderly disconnect from Homegear, call "Dispose". This might take a few seconds.
+
+```
+homegear.Dispose()
+```
 
 ### Change the value of a device variable
 

@@ -31,49 +31,69 @@ namespace HomegearLib.RPC
 
     public class RPCController : IDisposable
     {
-        public delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
-        public delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
-        public delegate void SystemVariableDeletedEventHandler(RPCController sender);
-        public delegate void MetadataUpdatedEventHandler(RPCController sender, Int32 peerID, MetadataVariable value);
-        public delegate void MetadataDeletedEventHandler(RPCController sender, Int32 peerID);
-        public delegate void NewDevicesEventHandler(RPCController sender);
-        public delegate void DevicesDeletedEventHandler(RPCController sender);
-        public delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerID, Int32 channel, RPCUpdateDeviceFlags flags);
-        public delegate void NewEventEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
-        public delegate void EventDeletedEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
-        public delegate void UpdateEventEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
+        internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
+        internal delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
+        internal delegate void SystemVariableDeletedEventHandler(RPCController sender);
+        internal delegate void MetadataUpdatedEventHandler(RPCController sender, Int32 peerID, MetadataVariable value);
+        internal delegate void MetadataDeletedEventHandler(RPCController sender, Int32 peerID);
+        internal delegate void NewDevicesEventHandler(RPCController sender);
+        internal delegate void DevicesDeletedEventHandler(RPCController sender);
+        internal delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerID, Int32 channel, RPCUpdateDeviceFlags flags);
+        internal delegate void NewEventEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
+        internal delegate void EventDeletedEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
+        internal delegate void UpdateEventEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
+        internal delegate void InitCompletedEventHandler(RPCController sender);
         public delegate void ClientConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
         public delegate void ClientDisconnectedEventHandler(RPCClient sender);
         public delegate void ServerConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
         public delegate void ServerDisconnectedEventHandler(RPCServer sender);
-        public delegate void InitCompletedEventHandler(RPCController sender);
 
         #region "Events"
-        public event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
-        public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
-        public event SystemVariableDeletedEventHandler SystemVariableDeleted;
-        public event MetadataUpdatedEventHandler MetadataUpdated;
-        public event MetadataDeletedEventHandler MetadataDeleted;
-        public event NewDevicesEventHandler NewDevices;
-        public event DevicesDeletedEventHandler DevicesDeleted;
-        public event UpdateDeviceEventHandler UpdateDevice;
-        public event NewEventEventHandler NewEvent;
-        public event EventDeletedEventHandler EventDeleted;
-        public event UpdateEventEventHandler UpdateEvent;
+        internal event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
+        internal event SystemVariableUpdatedEventHandler SystemVariableUpdated;
+        internal event SystemVariableDeletedEventHandler SystemVariableDeleted;
+        internal event MetadataUpdatedEventHandler MetadataUpdated;
+        internal event MetadataDeletedEventHandler MetadataDeleted;
+        internal event NewDevicesEventHandler NewDevices;
+        internal event DevicesDeletedEventHandler DevicesDeleted;
+        internal event UpdateDeviceEventHandler UpdateDevice;
+        internal event NewEventEventHandler NewEvent;
+        internal event EventDeletedEventHandler EventDeleted;
+        internal event UpdateEventEventHandler UpdateEvent;
+        internal event InitCompletedEventHandler InitCompleted;
+
+        /// <summary>
+        /// Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!  
+        /// </summary>
         public event ClientConnectedEventHandler ClientConnected;
+
+        /// <summary>
+        /// Raised, when the connection to Homegear is closed. 
+        /// </summary>
         public event ClientDisconnectedEventHandler ClientDisconnected;
+
+        /// <summary>
+        /// Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
+        /// </summary>
         public event ServerConnectedEventHandler ServerConnected;
+
+        /// <summary>
+        /// Raised, when the incoming connection to our event server is closed.
+        /// </summary>
         public event ServerDisconnectedEventHandler ServerDisconnected;
-        public event InitCompletedEventHandler InitCompleted;
         #endregion
 
-        String _callbackHostname = "";
-        
-        volatile bool _disposing = false;
+        private String _callbackHostname = "";
+
+        private volatile bool _disposing = false;
+
+        /// <summary>
+        /// Returns "true" when the RPC controller is connected to Homegear.
+        /// </summary>
         public bool IsConnected { get { return _client != null && _client.IsConnected; } }
 
-        Dictionary<Int32, Family> _families = null;
-        public Dictionary<Int32, Family> Families
+        private Dictionary<Int32, Family> _families = null;
+        internal Dictionary<Int32, Family> Families
         {
             get
             {
@@ -82,8 +102,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        Dictionary<Int32, Device> _devices = null;
-        public Dictionary<Int32, Device> Devices
+        private Dictionary<Int32, Device> _devices = null;
+        internal Dictionary<Int32, Device> Devices
         {
             get
             {
@@ -92,8 +112,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        Dictionary<String, Interface> _interfaces = null;
-        public Dictionary<String, Interface> Interfaces
+        private Dictionary<String, Interface> _interfaces = null;
+        internal Dictionary<String, Interface> Interfaces
         {
             get
             {
@@ -102,8 +122,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        Dictionary<String, SystemVariable> _systemVariables = null;
-        public Dictionary<String, SystemVariable> SystemVariables
+        private Dictionary<String, SystemVariable> _systemVariables = null;
+        internal Dictionary<String, SystemVariable> SystemVariables
         {
             get
             {
@@ -116,18 +136,18 @@ namespace HomegearLib.RPC
             }
         }
 
-        SSLClientInfo _sslClientInfo;
-        
-        RPCClient _client = null;
+        private SSLClientInfo _sslClientInfo;
+
+        private RPCClient _client = null;
         public RPCClient Client { get { return _client; } }
 
-        RPCServer _server = null;
+        private RPCServer _server = null;
         public RPCServer Server { get { return _server; } }
 
-        System.Timers.Timer _keepAliveTimer;
+        private System.Timers.Timer _keepAliveTimer;
 
         /// <summary>
-        /// Creates a new RPCController object
+        /// Creates a new RPCController object,
         /// </summary>
         /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
         /// <param name="homegearPort">The port Homegear is listening on.</param>
@@ -157,7 +177,7 @@ namespace HomegearLib.RPC
             _keepAliveTimer.Elapsed += _workerTimer_Elapsed;
         }
 
-        void _server_OnUpdateDevice(RPCServer sender, int peerID, int channel, int flags)
+        private void _server_OnUpdateDevice(RPCServer sender, int peerID, int channel, int flags)
         {
             if (UpdateDevice != null) UpdateDevice(this, peerID, channel, (RPCUpdateDeviceFlags)flags);
         }
@@ -167,12 +187,12 @@ namespace HomegearLib.RPC
             if (DevicesDeleted != null) DevicesDeleted(this);
         }
 
-        void _server_OnNewDevices(RPCServer sender)
+        private void _server_OnNewDevices(RPCServer sender)
         {
             if (NewDevices != null) NewDevices(this);
         }
 
-        void _server_OnUpdateEvent(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variable)
+        private void _server_OnUpdateEvent(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variable)
         {
             if (UpdateEvent != null) UpdateEvent(this, id, (EventType)eventType, peerID, channel, variable);
         }
@@ -182,12 +202,12 @@ namespace HomegearLib.RPC
             if (EventDeleted != null) EventDeleted(this, id, (EventType)eventType, peerID, channel, variable);
         }
 
-        void _server_OnNewEvent(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variable)
+        private void _server_OnNewEvent(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variable)
         {
             if (NewEvent != null) NewEvent(this, id, (EventType)eventType, peerID, channel, variable);
         }
 
-        void _workerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void _workerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
@@ -202,7 +222,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        void _server_OnRPCEvent(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value)
+        private void _server_OnRPCEvent(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value)
         {
             if (peerID == 0)
             {
@@ -229,6 +249,9 @@ namespace HomegearLib.RPC
             else if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, new Variable(peerID, channel, parameterName, value));
         }
 
+        /// <summary>
+        /// Disconnects from Homegear and stops the controller's RPC server.
+        /// </summary>
         public void Dispose()
         {
             try
@@ -242,7 +265,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
             _families = null;
             _devices = null;
@@ -250,12 +273,12 @@ namespace HomegearLib.RPC
             _systemVariables = null;
         }
 
-        void _client_Disconnected(RPCClient sender)
+        private void _client_Disconnected(RPCClient sender)
         {
             if (ClientDisconnected != null) ClientDisconnected(sender);
         }
 
-        void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        private void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
             if (ClientConnected != null) ClientConnected(sender, cipherAlgorithm, cipherStrength);
             _server.KnownDevices = Devices;
@@ -263,16 +286,19 @@ namespace HomegearLib.RPC
             if (InitCompleted != null) InitCompleted(this);
         }
 
-        void _server_Disconnected(RPCServer sender)
+        private void _server_Disconnected(RPCServer sender)
         {
             if (ServerDisconnected != null) ServerDisconnected(sender);
         }
 
-        void _server_Connected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        private void _server_Connected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
             if (ServerConnected != null) ServerConnected(sender, cipherAlgorithm, cipherStrength);
         }
 
+        /// <summary>
+        /// Connects to Homegear and starts the RPC controller's callback event server. Don't call this method, when you pass this object to the Homegear object's constructor!
+        /// </summary>
         public void Connect()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -281,6 +307,9 @@ namespace HomegearLib.RPC
             _keepAliveTimer.Start();
         }
 
+        /// <summary>
+        /// Disconnects from Homegear and stops the RPC controller's callback event server. Don't call this method, when you passed this object to the Homegear object!
+        /// </summary>
         public void Disconnect()
         {
             _keepAliveTimer.Stop();
@@ -293,7 +322,7 @@ namespace HomegearLib.RPC
             _server.Stop();
         }
 
-        void ThrowError(string methodName, RPCVariable errorStruct)
+        private void ThrowError(string methodName, RPCVariable errorStruct)
         {
             if (!errorStruct.ErrorStruct) return;
             throw new HomegearRPCClientException("Error calling RPC method \"" + methodName + "\". faultCode: " + errorStruct.StructValue["faultCode"].IntegerValue.ToString() + " faultString: " + errorStruct.StructValue["faultString"].StringValue);
