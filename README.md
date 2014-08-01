@@ -60,6 +60,7 @@ Homegear homegear = new Homegear(rpc);
 
 The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are five events:
 
+--- | ---
 RPCController.ClientConnected | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
 RPCController.ClientDisconnected | Raised, when the connection to Homegear is closed.
 RPCController.ServerConnected | Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
@@ -195,6 +196,7 @@ This is all the important setup stuff. There are a bunch of other events, which 
 
 ### Exceptions
 
+--- | ---
 HomegearException | Base class for all library specific exceptions.
 HomegearVariableException | Base class for variable/config parameter exceptions.
 HomegearVariableWriteOnlyException | Thrown when you try to get the value
