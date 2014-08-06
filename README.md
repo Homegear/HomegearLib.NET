@@ -11,8 +11,8 @@ HomegearLib.NET is an API to easily communicate with Homegear.
 
 First add HomegearLib.NET.dll as reference to your project. Now you can access the two main classes:
 
-* RPCController: Handles all RPC communication
-* Homegear: Main class to access Homegear features
+* **RPCController:** Handles all RPC communication
+* **Homegear:** Main class to access Homegear features
 
 ### Create a new Homegear object
 

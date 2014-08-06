@@ -1193,7 +1193,7 @@ namespace HomegearLibTest
         private void chkTriggeredEventEnabled_CheckedChanged(object sender, EventArgs e)
         {
             if (_selectedTriggeredEvent == null || _nodeLoading) return;
-            _selectedTriggeredEvent.Enabled = chkEventEnabled.Checked;
+            _selectedTriggeredEvent.Enabled = chkTriggeredEventEnabled.Checked;
         }
 
         private void tsAddTriggeredEvent_Click(object sender, EventArgs e)
@@ -1392,7 +1392,7 @@ namespace HomegearLibTest
                 if (_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
                 txtDeviceName.Text = _selectedDevice.Name;
                 txtInterface.BackColor = System.Drawing.SystemColors.Window;
-                txtInterface.Text = _selectedDevice.Interface.ID;
+                txtInterface.Text = (_selectedDevice.Interface != null) ? _selectedDevice.Interface.ID : "";
                 txtPhysicalAddress.Text = "0x" + _selectedDevice.Address.ToString("X2");
                 txtFirmware.Text = _selectedDevice.Firmware;
                 txtAvailableFirmware.Text = _selectedDevice.AvailableFirmware;

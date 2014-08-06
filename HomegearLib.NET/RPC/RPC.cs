@@ -529,7 +529,7 @@ namespace HomegearLib.RPC
                             Variable variable = new Variable(this, device.ID, channel.Index, parameterSet.ElementAt(i).Key, value);
                             if (variableInfo.ContainsKey("WRITEABLE")) variable.Writeable = variableInfo["WRITEABLE"].BooleanValue;
                             variable.Readable = readable;
-                            if (variableInfo.ContainsKey("MIN")) variable.SetMax(variableInfo["MIN"]);
+                            if (variableInfo.ContainsKey("MIN")) variable.SetMin(variableInfo["MIN"]);
                             if (variableInfo.ContainsKey("MAX")) variable.SetMax(variableInfo["MAX"]);
                             if (variableInfo.ContainsKey("SPECIAL")) variable.SetSpecialValues(variableInfo["SPECIAL"]);
                             if (variableInfo.ContainsKey("VALUE_LIST")) variable.SetValueList(variableInfo["VALUE_LIST"]);
