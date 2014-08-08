@@ -14,6 +14,13 @@ namespace HomegearLib
         private String _name = "";
         public String Name { get { return _name; } set { _name = value; } }
 
+        private IReadOnlyList<String> _pairingMethods = (new List<String>()).AsReadOnly();
+        public IReadOnlyList<String> PairingMethods { get { return _pairingMethods; } }
+        internal void SetPairingMethods(IReadOnlyList<String> pairingMethods)
+        {
+            _pairingMethods = pairingMethods;
+        }
+
         public Family(Int32 id, String name)
         {
             _id = id;

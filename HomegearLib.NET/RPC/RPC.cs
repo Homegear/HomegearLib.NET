@@ -947,7 +947,17 @@ namespace HomegearLib.RPC
             foreach(RPCVariable familyStruct in response.ArrayValue)
             {
                 if (!familyStruct.StructValue.ContainsKey("ID") || !familyStruct.StructValue.ContainsKey("NAME")) continue;
-                families.Add(familyStruct.StructValue["ID"].IntegerValue, new Family(familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue));
+                Family family = new Family(familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue);
+                if (familyStruct.StructValue.ContainsKey("PAIRING_METHODS"))
+                {
+                    List<String> pairingMethods = new List<String>();
+                    foreach(RPCVariable pairingMethod in familyStruct.StructValue["PAIRING_METHODS"].ArrayValue)
+                    {
+                        if (pairingMethod.StringValue.Length > 0) pairingMethods.Add(pairingMethod.StringValue);
+                    }
+                    family.SetPairingMethods(pairingMethods.AsReadOnly());
+                }
+                families.Add(familyStruct.StructValue["ID"].IntegerValue, family);
             }
             return families;
         }
