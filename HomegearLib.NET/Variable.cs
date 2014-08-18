@@ -94,8 +94,8 @@ namespace HomegearLib
             set 
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
-                if (_type != VariableType.tBoolean) throw new HomegearVariableTypeException("Variable is not of type boolean.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                if (_type != VariableType.tBoolean) throw new HomegearVariableTypeException("Variable " + _name + " is not of type boolean.");
                 _booleanValue = value;
                 _rpc.SetValue(this);
             } 
@@ -111,9 +111,9 @@ namespace HomegearLib
             set 
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
-                if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable is not of type integer or enum.");
-                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
+                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue = value;
                 _rpc.SetValue(this);
             } 
@@ -129,9 +129,9 @@ namespace HomegearLib
             set 
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
-                if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Variable is not of type double.");
-                if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Variable " + _name + " is not of type double.");
+                if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _doubleValue = value;
                 _rpc.SetValue(this);
             } 
@@ -147,8 +147,8 @@ namespace HomegearLib
             set 
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable is readonly");
-                if (_type != VariableType.tString) throw new HomegearVariableTypeException("Variable is not of type string.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                if (_type != VariableType.tString) throw new HomegearVariableTypeException("Variable " + _name + " is not of type string.");
                 if (_stringValue == null) _stringValue = "";
                 else _stringValue = value;
                 _rpc.SetValue(this);
