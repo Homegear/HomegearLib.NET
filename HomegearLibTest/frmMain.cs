@@ -1552,6 +1552,7 @@ namespace HomegearLibTest
         {
             if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
             Int32 integerValue = 0;
+            Boolean booleanValue = false;
             switch (_selectedVariable.Type)
             {
                 case VariableType.tString:
@@ -1587,7 +1588,15 @@ namespace HomegearLibTest
                     else txtVariableValue.BackColor = Color.PaleVioletRed;
                     break;
                 case VariableType.tBoolean:
-                    Boolean booleanValue = false;
+                    if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
+                    {
+                        txtVariableValue.BackColor = Color.PaleGreen;
+                        _selectedVariable.BooleanValue = booleanValue;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
+                    }
+                    else txtVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case VariableType.tAction:
                     if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
                     {
                         txtVariableValue.BackColor = Color.PaleGreen;
