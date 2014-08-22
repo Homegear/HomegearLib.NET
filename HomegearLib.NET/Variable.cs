@@ -10,6 +10,7 @@ namespace HomegearLib
     public enum VariableType
     { 
         tBoolean,
+        tAction,
         tInteger,
         tDouble,
         tString,
@@ -31,7 +32,7 @@ namespace HomegearLib
         protected RPCController _rpc = null;
 
         protected VariableType _type = VariableType.tInteger;
-        public VariableType Type { get { return _type; } }
+        public VariableType Type { get { return _type; } internal set { _type = value; } }
 
         protected Int32 _peerID = 0;
         public Int32 PeerID { get { return _peerID; } internal set { _peerID = value; } }
@@ -95,7 +96,7 @@ namespace HomegearLib
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
-                if (_type != VariableType.tBoolean) throw new HomegearVariableTypeException("Variable " + _name + " is not of type boolean.");
+                if (_type != VariableType.tBoolean && _type != VariableType.tAction) throw new HomegearVariableTypeException("Variable " + _name + " is not of type boolean or action.");
                 _booleanValue = value;
                 _rpc.SetValue(this);
             } 
@@ -172,11 +173,22 @@ namespace HomegearLib
 
         internal Variable(Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerID, channel, name, rpcVariable)
         {
+
+        }
+
+        internal Variable(Int32 peerID, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(null, peerID, channel, name, typeString, rpcVariable)
+        {
             
         }
 
         internal Variable(RPCController rpc, Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerID, channel, name)
         {
+            SetValue(rpcVariable);
+        }
+
+        internal Variable(RPCController rpc, Int32 peerID, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(rpc, peerID, channel, name)
+        {
+            SetType(typeString);
             SetValue(rpcVariable);
         }
 
@@ -216,7 +228,7 @@ namespace HomegearLib
                 case RPCVariableType.rpcBoolean:
                     if (_booleanValue != rpcVariable.BooleanValue) changed = true;
                     _booleanValue = rpcVariable.BooleanValue;
-                    _type = VariableType.tBoolean;
+                    if (_type != VariableType.tAction) _type = VariableType.tBoolean;
                     break;
                 case RPCVariableType.rpcInteger:
                     if (_integerValue != rpcVariable.IntegerValue) changed = true;
@@ -238,13 +250,42 @@ namespace HomegearLib
             return changed;
         }
 
+        internal void SetType(String type)
+        {
+            switch(type)
+            {
+                case "ACTION":
+                    _type = VariableType.tAction;
+                    break;
+                case "BOOL":
+                    _type = VariableType.tBoolean;
+                    break;
+                case "INTEGER":
+                    _type = VariableType.tInteger;
+                    break;
+                case "FLOAT":
+                    _type = VariableType.tDouble;
+                    break;
+                case "STRING":
+                    _type = VariableType.tString;
+                    break;
+                case "ENUM":
+                    _type = VariableType.tEnum;
+                    break;
+            }
+        }
+
         internal void SetValue(Variable variable)
         {
             switch (variable.Type)
             {
                 case VariableType.tBoolean:
                     _booleanValue = variable.BooleanValue;
-                    _type = VariableType.tBoolean;
+                    if (_type != VariableType.tAction) _type = VariableType.tBoolean;
+                    break;
+                case VariableType.tAction:
+                    _booleanValue = variable.BooleanValue;
+                    _type = VariableType.tAction;
                     break;
                 case VariableType.tInteger:
                     _integerValue = variable.IntegerValue;
@@ -297,6 +338,8 @@ namespace HomegearLib
             {
                 case VariableType.tBoolean:
                     return _defaultBoolean.ToString();
+                case VariableType.tAction:
+                    return _defaultBoolean.ToString();
                 case VariableType.tInteger:
                     return _defaultInteger.ToString();
                 case VariableType.tDouble:
@@ -314,6 +357,8 @@ namespace HomegearLib
             switch (_type)
             {
                 case VariableType.tBoolean:
+                    return _booleanValue.ToString();
+                case VariableType.tAction:
                     return _booleanValue.ToString();
                 case VariableType.tInteger:
                     return _integerValue.ToString();
@@ -333,6 +378,8 @@ namespace HomegearLib
             switch (_type)
             {
                 case VariableType.tBoolean:
+                    return _booleanValue == variable.BooleanValue;
+                case VariableType.tAction:
                     return _booleanValue == variable.BooleanValue;
                 case VariableType.tInteger:
                     return _integerValue == variable.IntegerValue;

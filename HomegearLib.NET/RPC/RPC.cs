@@ -517,16 +517,18 @@ namespace HomegearLib.RPC
                             Dictionary<String, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
                             bool readable = true;
                             if (variableInfo.ContainsKey("READABLE")) readable = variableInfo["READABLE"].BooleanValue;;
+                            String typeString = "";
+                            if (variableInfo.ContainsKey("TYPE")) typeString = variableInfo["TYPE"].StringValue;
                             RPCVariable value = null;
                             if (variableInfo.ContainsKey("VALUE")) value = variableInfo["VALUE"];
                             else
                             {
-                                if(readable || !variableInfo.ContainsKey("TYPE")) continue;
-                                value = RPCVariable.CreateFromTypeString(variableInfo["TYPE"].StringValue);
+                                if(readable || typeString.Length == 0) continue;
+                                value = RPCVariable.CreateFromTypeString(typeString);
                                 if (value.Type == RPCVariableType.rpcVoid) continue;
                             }
+                            Variable variable = new Variable(this, device.ID, channel.Index, parameterSet.ElementAt(i).Key, typeString, value);
 
-                            Variable variable = new Variable(this, device.ID, channel.Index, parameterSet.ElementAt(i).Key, value);
                             if (variableInfo.ContainsKey("WRITEABLE")) variable.Writeable = variableInfo["WRITEABLE"].BooleanValue;
                             variable.Readable = readable;
                             if (variableInfo.ContainsKey("MIN")) variable.SetMin(variableInfo["MIN"]);
