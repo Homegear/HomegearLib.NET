@@ -1600,7 +1600,7 @@ namespace HomegearLibTest
                     if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
                     {
                         txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.BooleanValue = booleanValue;
+                        _selectedVariable.BooleanValue = true;
                         WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
                     }
                     else txtVariableValue.BackColor = Color.PaleVioletRed;

@@ -146,6 +146,10 @@ namespace HomegearLib.RPC
                     _booleanValue = variable.BooleanValue;
                     _type = RPCVariableType.rpcBoolean;
                     break;
+                case VariableType.tAction:
+                    _booleanValue = variable.BooleanValue;
+                    _type = RPCVariableType.rpcBoolean;
+                    break;
                 case VariableType.tInteger:
                     _integerValue = variable.IntegerValue;
                     _type = RPCVariableType.rpcInteger;
