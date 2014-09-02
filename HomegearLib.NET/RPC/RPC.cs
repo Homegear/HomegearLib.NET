@@ -1132,11 +1132,11 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("setInstallMode", response);
         }
 
-        public void SetName(Int32 peerID, String name)
+        public void SetId(Int32 currentPeerID, Int32 newPeerId)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            RPCVariable response = _client.CallMethod("setName", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(name) });
-            if (response.ErrorStruct) ThrowError("setName", response);
+            RPCVariable response = _client.CallMethod("setId", new List<RPCVariable> { new RPCVariable(currentPeerID), new RPCVariable(newPeerId) });
+            if (response.ErrorStruct) ThrowError("setId", response);
         }
 
         public void SetInterface(Int32 peerID, Interface physicalInterface)
@@ -1144,6 +1144,13 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
             if (response.ErrorStruct) ThrowError("setInterface", response);
+        }
+
+        public void SetName(Int32 peerID, String name)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("setName", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(name) });
+            if (response.ErrorStruct) ThrowError("setName", response);
         }
 
         public void SetLinkInfo(Link link)

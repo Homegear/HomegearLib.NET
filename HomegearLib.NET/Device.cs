@@ -27,7 +27,24 @@ namespace HomegearLib
         public Family Family { get { return _family; } internal set { _family = value; } }
 
         private Int32 _id = -1;
-        public Int32 ID { get { return _id; } internal set { _id = value; } }
+        public Int32 ID
+        {
+            get { return _id; }
+            set
+            {
+                _rpc.SetId(_id, value);
+                _id = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets the device id without calling any RPC functions
+        /// </summary>
+        /// <param name="value">The device id</param>
+        internal void SetIDNoRPC(Int32 value)
+        {
+            _id = value;
+        }
 
         private Int32 _address = -1;
         public Int32 Address
