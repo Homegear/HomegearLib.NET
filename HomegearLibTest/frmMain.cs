@@ -53,6 +53,8 @@ namespace HomegearLibTest
             lblMetadataTimer.Text = "";
 
             //txtHomegearHostname.Text = "homegearpi";
+            //txtHomegearPort.Text = "2001";
+            //chkSSL.Checked = false;
             //txtCertificatePath.Text = "homegearpi.pfx";
         }
 

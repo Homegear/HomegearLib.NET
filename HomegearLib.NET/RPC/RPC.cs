@@ -679,7 +679,7 @@ namespace HomegearLib.RPC
                 Int32 remotePeerID = 0;
                 Int32 remoteChannel = -1;
                 bool isSender = true;
-                if(rpcLink.StructValue["SENDER_ID"].IntegerValue == peerID)
+                if (rpcLink.StructValue["SENDER_ID"].IntegerValue == peerID && rpcLink.StructValue["SENDER_CHANNEL"].IntegerValue == channel)
                 {
                     remotePeerID = rpcLink.StructValue["RECEIVER_ID"].IntegerValue;
                     remoteChannel = rpcLink.StructValue["RECEIVER_CHANNEL"].IntegerValue;
