@@ -11,6 +11,10 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
+        internal delegate void VariableReloadRequiredEventHandler(DeviceConfig sender);
+
+        internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
+
         private Int32 _peerID = 0;
         public Int32 PeerID { get { return _peerID; } }
 
@@ -66,10 +70,13 @@ namespace HomegearLib
             if (changedParameters.Count == 0) return;
             if (_type == RPCParameterSetType.rpcLink) _rpc.PutParamset(_peerID, _channel, _remotePeerID, _remoteChannel, changedParameters);
             else _rpc.PutParamset(_peerID, _channel, _type, changedParameters);
+            bool reloadRequired = false;
             foreach (KeyValuePair<String, ConfigParameter> parameter in changedParameters)
             {
                 parameter.Value.DataPending = false;
+                if (parameter.Value.UIFlags == VariableUIFlags.fTransform) reloadRequired = true;
             }
+            if (reloadRequired && VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this);
         }
     }
 }

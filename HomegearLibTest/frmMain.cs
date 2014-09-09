@@ -445,6 +445,14 @@ namespace HomegearLibTest
                 UpdateTriggeredEvents(device);
                 EnableSplitContainer(true);
             }
+            else if (reloadType == DeviceReloadType.Variables)
+            {
+                WriteLog("Reloading variables of channel " + channel.Index + " and device " + device.ID.ToString() + ".");
+                EnableSplitContainer(false);
+                channel.Variables.Reload();
+                UpdateTreeView();
+                EnableSplitContainer(true);
+            }
         }
 
         void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)

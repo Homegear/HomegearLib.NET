@@ -487,6 +487,55 @@ namespace HomegearLib.RPC
             return systemVariables;
         }
 
+        public Dictionary<String, Variable> GetAllValues(Int32 peerId, Int32 channelIndex)
+        {
+            if (_disposing) throw new ObjectDisposedException("RPC");
+            RPCVariable response = _client.CallMethod("getAllValues", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(true) });
+            if (response.ErrorStruct) ThrowError("getAllValues", response);
+            Dictionary<Int32, Family> families = Families;
+            Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
+            foreach (RPCVariable deviceStruct in response.ArrayValue)
+            {
+                if (deviceStruct.StructValue.ContainsKey("CHANNELS"))
+                {
+                    Dictionary<Int32, Channel> channels = new Dictionary<Int32, Channel>();
+                    foreach (RPCVariable channelStruct in deviceStruct.StructValue["CHANNELS"].ArrayValue)
+                    {
+                        if (!channelStruct.StructValue.ContainsKey("INDEX") || !channelStruct.StructValue.ContainsKey("PARAMSET")) continue;
+                        if(channelStruct.StructValue["INDEX"].IntegerValue != channelIndex) continue;
+                        Dictionary<String, RPCVariable> parameterSet = channelStruct.StructValue["PARAMSET"].StructValue;
+                        for (Int32 i = 0; i < parameterSet.Count; i++)
+                        {
+                            if (parameterSet.ElementAt(i).Key.Length == 0) continue;
+                            Dictionary<String, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
+                            bool readable = true;
+                            if (variableInfo.ContainsKey("READABLE")) readable = variableInfo["READABLE"].BooleanValue; ;
+                            String typeString = "";
+                            if (variableInfo.ContainsKey("TYPE")) typeString = variableInfo["TYPE"].StringValue;
+                            RPCVariable value = null;
+                            if (variableInfo.ContainsKey("VALUE")) value = variableInfo["VALUE"];
+                            else
+                            {
+                                if (readable || typeString.Length == 0) continue;
+                                value = RPCVariable.CreateFromTypeString(typeString);
+                                if (value.Type == RPCVariableType.rpcVoid) continue;
+                            }
+                            Variable variable = new Variable(this, peerId, channelIndex, parameterSet.ElementAt(i).Key, typeString, value);
+
+                            if (variableInfo.ContainsKey("WRITEABLE")) variable.Writeable = variableInfo["WRITEABLE"].BooleanValue;
+                            variable.Readable = readable;
+                            if (variableInfo.ContainsKey("MIN")) variable.SetMin(variableInfo["MIN"]);
+                            if (variableInfo.ContainsKey("MAX")) variable.SetMax(variableInfo["MAX"]);
+                            if (variableInfo.ContainsKey("SPECIAL")) variable.SetSpecialValues(variableInfo["SPECIAL"]);
+                            if (variableInfo.ContainsKey("VALUE_LIST")) variable.SetValueList(variableInfo["VALUE_LIST"]);
+                            variables.Add(variable.Name, variable);
+                        }
+                    }
+                }
+            }
+            return variables;
+        }
+
         public Dictionary<Int32, Device> GetAllValues()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
@@ -537,7 +586,7 @@ namespace HomegearLib.RPC
                             if (variableInfo.ContainsKey("VALUE_LIST")) variable.SetValueList(variableInfo["VALUE_LIST"]);
                             variables.Add(variable.Name, variable);
                         }
-                        channel.Variables = new Variables(this, variables);
+                        channel.Variables = new Variables(this, device.ID, channel.Index, variables);
                     }
                     device.Channels = new Channels(this, channels);
                 }

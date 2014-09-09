@@ -17,6 +17,11 @@ namespace HomegearLib
     public class Channel : IDisposable
     {
         private RPCController _rpc = null;
+
+        internal delegate void VariableReloadRequiredEventHandler(Channel sender);
+
+        internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
+
         bool _descriptionRequested = false;
 
         private Int32 _peerID = 0;
@@ -28,7 +33,11 @@ namespace HomegearLib
         private Variables _variables;
         public Variables Variables
         {
-            get { return _variables; }
+            get
+            {
+                if (_variables == null || _variables.Count == 0) _variables = new Variables(_rpc, _peerID, _index);
+                return _variables;
+            }
             internal set { _variables = value; }
         }
 
@@ -40,6 +49,7 @@ namespace HomegearLib
                 if (_config == null || _config.Count == 0)
                 {
                     _config = new DeviceConfig(_rpc, _peerID, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerID, _index, RPCParameterSetType.rpcMaster));
+                    _config.VariableReloadRequiredEvent += Config_OnVariableReloadRequired;
                     _config.Reload();
                 }
                 return _config;
@@ -264,7 +274,12 @@ namespace HomegearLib
             _descriptionRequested = false;
             _links = null;
             _config = null;
-            //Don't set variables to null!!! They are not reloaded on "get"!
+            _variables = null;
+        }
+
+        void Config_OnVariableReloadRequired(DeviceConfig sender)
+        {
+            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this);
         }
     }
 }

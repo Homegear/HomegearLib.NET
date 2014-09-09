@@ -29,7 +29,8 @@ namespace HomegearLib
         Channel = 4,
         Links = 8,
         Team = 16,
-        Events = 32
+        Events = 32,
+        Variables = 64
     }
 
     /// <summary>
@@ -331,6 +332,15 @@ namespace HomegearLib
             if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
         }
 
+        private void OnDevice_VariableReloadRequired(Device device, Channel channel)
+        {
+            if(DeviceReloadRequired != null)
+            {
+                if (channel == null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Full);
+                else DeviceReloadRequired(this, device, channel, DeviceReloadType.Variables);
+            }
+        }
+
         private void _rpc_OnUpdateDevice(RPCController sender, int peerID, int channelIndex, RPCUpdateDeviceFlags flags)
         {
             if (!Devices.ContainsKey(peerID)) return;
@@ -340,7 +350,7 @@ namespace HomegearLib
             if(flags == RPCUpdateDeviceFlags.rpcConfig)
             {
                 List<ConfigParameter> changedParameters = channel.Config.Reload();
-                foreach(ConfigParameter parameter in changedParameters)
+                foreach (ConfigParameter parameter in changedParameters)
                 {
                     if (DeviceConfigParameterUpdated != null) DeviceConfigParameterUpdated(this, device, channel, parameter);
                 }
@@ -544,6 +554,10 @@ namespace HomegearLib
             _families = new Families(_rpc, _rpc.Families);
             if(_devices != null) _devices.Dispose();
             _devices = new Devices(_rpc, _rpc.Devices);
+            foreach (KeyValuePair<Int32, Device> device in _devices)
+            {
+                device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
+            }
             if(_interfaces != null) _interfaces.Dispose();
             _interfaces = null;
             if (_systemVariables != null) _systemVariables.Dispose();

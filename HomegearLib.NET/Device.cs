@@ -20,6 +20,11 @@ namespace HomegearLib
     public class Device : IDisposable
     {
         RPCController _rpc = null;
+
+        internal delegate void VariableReloadRequiredEventHandler(Device device, Channel channel);
+
+        internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
+
         bool _descriptionRequested = false;
         bool _infoRequested = false;
 
@@ -68,7 +73,18 @@ namespace HomegearLib
         public String TypeString { get { return _typeString; } internal set { _typeString = value; } }
 
         private Channels _channels;
-        public Channels Channels { get { return _channels; } internal set { _channels = value; } }
+        public Channels Channels
+        {
+            get { return _channels; }
+            internal set
+            {
+                _channels = value;
+                foreach (KeyValuePair<Int32, Channel> channel in _channels)
+                {
+                    channel.Value.VariableReloadRequiredEvent += Channel_OnVariableReloadRequired;
+                }
+            }
+        }
 
         public bool MetadataRequested { get { return _metadata != null; } }
 
@@ -252,6 +268,11 @@ namespace HomegearLib
         public void Remove()
         {
             _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Force);
+        }
+
+        private void Channel_OnVariableReloadRequired(Channel sender)
+        {
+            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, sender);
         }
     }
 }
