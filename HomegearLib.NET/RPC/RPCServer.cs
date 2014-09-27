@@ -237,7 +237,7 @@ namespace HomegearLib.RPC
                         }
                         else if (packet != null)
                         {
-                            if (packetLength + bytesReceived > dataSize) throw new HomegearRPCServerException("RPC server received response larger than the expected size from Homegear.");
+                            if (packetLength + bytesReceived > dataSize) System.Diagnostics.Debug.WriteLine("RPC server received response larger than the expected size from Homegear.");
                             Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
                             packetLength += (uint)bytesReceived;
                         }
