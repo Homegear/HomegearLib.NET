@@ -576,11 +576,11 @@ namespace HomegearLibTest
                 }
                 else if(e.Node.FullPath.StartsWith("System Variables"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is SystemVariable) _selectedSystemVariable = (SystemVariable)e.Node.Tag;
+                    if (e.Node.Level == 1 && e.Node.Tag is SystemVariable) _rightClickedSystemVariable = (SystemVariable)e.Node.Tag;
                 }
                 else if(e.Node.FullPath.StartsWith("Timed Events"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is TimedEvent) _selectedTimedEvent = (TimedEvent)e.Node.Tag;
+                    //if (e.Node.Level == 1 && e.Node.Tag is TimedEvent) _rightClickedTimedEvent = (TimedEvent)e.Node.Tag;
                 }
             }
         }
