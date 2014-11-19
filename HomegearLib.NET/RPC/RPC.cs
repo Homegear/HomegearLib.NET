@@ -43,6 +43,7 @@ namespace HomegearLib.RPC
         internal delegate void EventDeletedEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
         internal delegate void UpdateEventEventHandler(RPCController sender, String id, EventType type, Int32 peerID, Int32 channel, String variableName);
         internal delegate void InitCompletedEventHandler(RPCController sender);
+        internal delegate void HomegearErrorEventHandler(RPCController sender, Int32 level, String message);
         public delegate void ClientConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
         public delegate void ClientDisconnectedEventHandler(RPCClient sender);
         public delegate void ServerConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
@@ -61,6 +62,7 @@ namespace HomegearLib.RPC
         internal event EventDeletedEventHandler EventDeleted;
         internal event UpdateEventEventHandler UpdateEvent;
         internal event InitCompletedEventHandler InitCompleted;
+        internal event HomegearErrorEventHandler HomegearError;
 
         /// <summary>
         /// Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!  
@@ -166,6 +168,7 @@ namespace HomegearLib.RPC
             _server = new RPCServer(callbackListenIP, callbackListenPort, sslServerInfo);
             _server.Connected += _server_Connected;
             _server.Disconnected += _server_Disconnected;
+            _server.HomegearError += _server_HomegearError;
             _server.RPCEvent += _server_OnRPCEvent;
             _server.NewDevices += _server_OnNewDevices;
             _server.DevicesDeleted += _server_OnDevicesDeleted;
@@ -175,6 +178,11 @@ namespace HomegearLib.RPC
             _server.UpdateEvent += _server_OnUpdateEvent;
             _keepAliveTimer = new System.Timers.Timer(10000);
             _keepAliveTimer.Elapsed += _workerTimer_Elapsed;
+        }
+
+        void _server_HomegearError(RPCServer sender, int level, string message)
+        {
+            if (HomegearError != null) HomegearError(this, level, message);
         }
 
         private void _server_OnUpdateDevice(RPCServer sender, int peerID, int channel, int flags)

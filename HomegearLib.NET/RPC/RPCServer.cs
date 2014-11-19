@@ -17,8 +17,9 @@ namespace HomegearLib.RPC
 {
     public class RPCServer
     {
-        public delegate void ConnectedEventHandler(RPCServer server, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
-        public delegate void DisconnectedEventHandler(RPCServer server);
+        public delegate void ConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
+        public delegate void DisconnectedEventHandler(RPCServer sender);
+        public delegate void HomegearErrorEventHandler(RPCServer sender, Int32 level, String message);
         public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value);
         public delegate void NewDevicesEventHandler(RPCServer sender);
         public delegate void DevicesDeletedEventHandler(RPCServer sender);
@@ -30,6 +31,7 @@ namespace HomegearLib.RPC
         #region "Events"
         public event ConnectedEventHandler Connected;
         public event DisconnectedEventHandler Disconnected;
+        public event HomegearErrorEventHandler HomegearError;
         public event RPCEventEventHandler RPCEvent;
         public event NewDevicesEventHandler NewDevices;
         public event DevicesDeletedEventHandler DevicesDeleted;
@@ -285,6 +287,7 @@ namespace HomegearLib.RPC
             {
                 response = new RPCVariable(RPCVariableType.rpcArray);
                 response.ArrayValue.Add(new RPCVariable("system.multicall"));
+                response.ArrayValue.Add(new RPCVariable("error"));
                 response.ArrayValue.Add(new RPCVariable("event"));
                 response.ArrayValue.Add(new RPCVariable("listDevices"));
                 response.ArrayValue.Add(new RPCVariable("newDevices"));
@@ -304,6 +307,10 @@ namespace HomegearLib.RPC
                     if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString || eventParams[1].Type != RPCVariableType.rpcInteger || eventParams[2].Type != RPCVariableType.rpcInteger || eventParams[3].Type != RPCVariableType.rpcString) continue;
                     if(RPCEvent != null) RPCEvent(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
                 }
+            }
+            else if(methodName == "error" && parameters.Count() == 3 && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcString)
+            {
+                if (HomegearError != null) HomegearError(this, parameters[1].IntegerValue, parameters[2].StringValue);
             }
             else if(methodName == "listDevices")
             {

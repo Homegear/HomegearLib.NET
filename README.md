@@ -195,6 +195,7 @@ void homegear_OnDeviceReloadRequired(Homegear sender, Device device, Channel cha
 
 This is all the important setup stuff. There are a bunch of other events, which you can implement as needed:
 
+* **homegear.HomegearError**
 * **homegear.SystemVariableUpdated**
 * **homegear.MetadataUpdated**
 * **homegear.DeviceVariableUpdated**

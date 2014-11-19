@@ -330,6 +330,11 @@ namespace HomegearLibTest
             }
         }
 
+        void _homegear_HomegearError(Homegear sender, int level, string message)
+        {
+            WriteLog("Error occured in Homegear (Level: " + level.ToString() + "): " + message);
+        }
+
         void _homegear_OnConnectError(Homegear sender, string message, string stackTrace)
         {
             WriteLog("Error connecting to Homegear: " + message + "\r\nStacktrace: " + stackTrace);
@@ -381,6 +386,7 @@ namespace HomegearLibTest
             _rpc.ServerDisconnected += _rpc_ServerDisconnected;
             _homegear = new Homegear(_rpc);
             _homegear.ConnectError += _homegear_OnConnectError;
+            _homegear.HomegearError += _homegear_HomegearError;
             _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
             _homegear.MetadataUpdated += _homegear_OnMetadataUpdated;
             _homegear.DeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;

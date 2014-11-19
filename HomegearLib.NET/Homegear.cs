@@ -106,6 +106,7 @@ namespace HomegearLib
         public delegate void ConnectErrorEventHandler(Homegear sender, String message, String stackTrace);
         public delegate void ConnectedEventHandler(Homegear sender);
         public delegate void DisconnectedEventHandler(Homegear sender);
+        public delegate void HomegearErrorEventHandler(Homegear sender, Int32 level, String message);
         public delegate void DataReloadEventHandler(Homegear sender);
         public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
         public delegate void MetadataUpdatedEventHandler(Homegear sender, Device device, MetadataVariable variable);
@@ -121,6 +122,11 @@ namespace HomegearLib
         /// Raised when there is an error during the connection or reconnection procedure.
         /// </summary>
         public event ConnectErrorEventHandler ConnectError;
+
+        /// <summary>
+        /// Raised when an error occures within Homegear.
+        /// </summary>
+        public event HomegearErrorEventHandler HomegearError;
 
         /// <summary>
         /// Raised after a full reload of the Homegear object. After this event is first raised, the Homegear object is ready for use.
@@ -258,6 +264,7 @@ namespace HomegearLib
             _systemVariables = new SystemVariables(_rpc, new Dictionary<String, SystemVariable>());
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.InitCompleted += _rpc_InitCompleted;
+            _rpc.HomegearError += _rpc_HomegearError;
             _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated += _rpc_OnSystemVariableUpdated;
             _rpc.SystemVariableDeleted += _rpc_OnSystemVariableDeleted;
@@ -273,6 +280,11 @@ namespace HomegearLib
             _connectThread = new Thread(Connect);
             _connectThread.Start();
             while (!_connectThread.IsAlive) ;
+        }
+
+        void _rpc_HomegearError(RPCController sender, int level, string message)
+        {
+            if (HomegearError != null) HomegearError(this, level, message);
         }
 
         private void _rpc_OnNewEvent(RPCController sender, String id, EventType type, Int32 peerID, Int32 channelIndex, String variable)
