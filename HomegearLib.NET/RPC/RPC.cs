@@ -613,6 +613,7 @@ namespace HomegearLib.RPC
             if (response.StructValue.ContainsKey("RX_MODE")) device.RXMode = (DeviceRXMode)response.StructValue["RX_MODE"].IntegerValue;
             if (response.StructValue.ContainsKey("FIRMWARE")) device.Firmware = response.StructValue["FIRMWARE"].StringValue;
             if (response.StructValue.ContainsKey("AVAILABLE_FIRMWARE")) device.AvailableFirmware = response.StructValue["AVAILABLE_FIRMWARE"].StringValue;
+            else if (response.StructValue.ContainsKey("FIRMWARE")) device.AvailableFirmware = response.StructValue["FIRMWARE"].StringValue;
         }
 
         public void GetDeviceDescription(Channel channel)

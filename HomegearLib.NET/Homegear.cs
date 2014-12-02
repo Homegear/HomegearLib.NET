@@ -561,6 +561,7 @@ namespace HomegearLib
         public void Reload()
         {
             if (_disposing) return;
+            _version = "";
             _rpc.Clear();
             if(_families != null) _families.Dispose();
             _families = new Families(_rpc, _rpc.Families);

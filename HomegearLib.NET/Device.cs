@@ -143,11 +143,7 @@ namespace HomegearLib
         {
             get
             {
-                if (!_infoRequested)
-                {
-                    _rpc.GetDeviceInfo(this);
-                    _infoRequested = true;
-                }
+                _rpc.GetDeviceInfo(this);
                 return _interface;
             }
             set
