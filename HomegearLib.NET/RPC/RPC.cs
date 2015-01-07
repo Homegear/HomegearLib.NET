@@ -608,7 +608,7 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getDeviceDescription", new List<RPCVariable> { new RPCVariable(device.ID), new RPCVariable(-1) });
             if (response.ErrorStruct) ThrowError("getDeviceDescription", response);
-            if (response.StructValue.ContainsKey("AES_ACTIVE")) device.AESActive = response.StructValue["AES_ACTIVE"].BooleanValue;
+            if (response.StructValue.ContainsKey("AES_ACTIVE")) device.AESActive = (response.StructValue["AES_ACTIVE"].IntegerValue != 0);
             if (response.StructValue.ContainsKey("PHYSICAL_ADDRESS")) device.Address = response.StructValue["PHYSICAL_ADDRESS"].IntegerValue;
             if (response.StructValue.ContainsKey("RX_MODE")) device.RXMode = (DeviceRXMode)response.StructValue["RX_MODE"].IntegerValue;
             if (response.StructValue.ContainsKey("FIRMWARE")) device.Firmware = response.StructValue["FIRMWARE"].StringValue;
@@ -622,7 +622,7 @@ namespace HomegearLib.RPC
             RPCVariable response = _client.CallMethod("getDeviceDescription", new List<RPCVariable> { new RPCVariable(channel.PeerID), new RPCVariable(channel.Index) });
             if (response.ErrorStruct) ThrowError("getDeviceDescription", response);
             if (response.StructValue.ContainsKey("TYPE")) channel.TypeString = response.StructValue["TYPE"].StringValue;
-            if (response.StructValue.ContainsKey("AES_ACTIVE")) channel.AESActive = response.StructValue["AES_ACTIVE"].BooleanValue;
+            if (response.StructValue.ContainsKey("AES_ACTIVE")) channel.AESActive = (response.StructValue["AES_ACTIVE"].IntegerValue != 0);
             if (response.StructValue.ContainsKey("DIRECTION")) channel.Direction = (ChannelDirection)response.StructValue["DIRECTION"].IntegerValue;
             if (response.StructValue.ContainsKey("LINK_SOURCE_ROLES"))
             {
