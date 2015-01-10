@@ -246,6 +246,14 @@ namespace HomegearLib
             }
         }
 
+        /// <summary>
+        /// Resets the physical interface to the default physical interface.
+        /// </summary>
+        public void ResetInterface()
+        {
+            _rpc.SetInterface(_id, null);
+        }
+
         public void UpdateFirmware(bool manually)
         {
             _rpc.UpdateFirmware(this, manually);

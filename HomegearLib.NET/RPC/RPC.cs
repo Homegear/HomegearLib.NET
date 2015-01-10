@@ -1200,7 +1200,9 @@ namespace HomegearLib.RPC
         public void SetInterface(Int32 peerID, Interface physicalInterface)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            RPCVariable response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
+            RPCVariable response;
+            if (physicalInterface == null) response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable("") });
+            else response = _client.CallMethod("setInterface", new List<RPCVariable> { new RPCVariable(peerID), new RPCVariable(physicalInterface.ID) });
             if (response.ErrorStruct) ThrowError("setInterface", response);
         }
 

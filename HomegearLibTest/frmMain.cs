@@ -1647,6 +1647,12 @@ namespace HomegearLibTest
         private void txtInterface_TextChanged(object sender, EventArgs e)
         {
             if (_selectedDevice == null || _nodeLoading) return;
+            if(txtInterface.Text == "")
+            {
+                _selectedDevice.ResetInterface();
+                txtInterface.BackColor = Color.PaleGreen;
+                return;
+            }
             Interfaces interfaces = _homegear.Interfaces;
             if (!interfaces.ContainsKey(txtInterface.Text))
             {
