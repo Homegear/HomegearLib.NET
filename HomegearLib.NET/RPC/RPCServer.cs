@@ -218,6 +218,7 @@ namespace HomegearLib.RPC
                             if (dataSize > 104857600) continue;
                             if (headerSize > 1024) continue;
                             packetLength = (uint)bytesReceived - 8;
+                            if (packetLength > dataSize) packetLength = dataSize;
                             packet = new byte[dataSize + 8];
                             Array.Copy(buffer, bufferPos, packet, 0, ((dataSize + 8) > bytesReceived) ? bytesReceived : (Int32)dataSize + 8);
                             if (_authString != null && _authString.Length > 0)

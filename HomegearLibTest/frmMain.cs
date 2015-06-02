@@ -586,7 +586,7 @@ namespace HomegearLibTest
                 }
                 else if(e.Node.FullPath.StartsWith("Timed Events"))
                 {
-                    //if (e.Node.Level == 1 && e.Node.Tag is TimedEvent) _rightClickedTimedEvent = (TimedEvent)e.Node.Tag;
+                    if (e.Node.Level == 1 && e.Node.Tag is TimedEvent) _rightClickedTimedEvent = (TimedEvent)e.Node.Tag;
                 }
             }
         }
@@ -1175,7 +1175,7 @@ namespace HomegearLibTest
                 txtEventPeerChannel.Text = _selectedTriggeredEvent.PeerChannel.ToString();
                 txtEventVariable.Text = _selectedTriggeredEvent.VariableName;
                 txtEventTrigger.Text = _selectedTriggeredEvent.Trigger.ToString();
-                txtEventTriggerValue.Text = _selectedTriggeredEvent.TriggerValue.ToString();
+                txtEventTriggerValue.Text = (_selectedTriggeredEvent.TriggerValue == null) ? "" : _selectedTriggeredEvent.TriggerValue.ToString();
                 txtTriggeredEventMethod.Text = _selectedTriggeredEvent.EventMethod;
                 txtTriggeredEventMethodParams.Text = "";
                 foreach (RPCVariable param in _selectedTriggeredEvent.EventMethodParams)
