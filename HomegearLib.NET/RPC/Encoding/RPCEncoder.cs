@@ -37,7 +37,7 @@ namespace HomegearLib.RPC.Encoding
 
 		    int dataSize = (int)(packet.Count() - 4 - headerSize);
             List<byte> sizeBytes = new List<byte>(4);
-            sizeBytes.Add((byte)(dataSize >> 24));
+            sizeBytes.Add((byte)((dataSize >> 24) & 0xFF));
             sizeBytes.Add((byte)((dataSize >> 16) & 0xFF));
             sizeBytes.Add((byte)((dataSize >> 8) & 0xFF));
             sizeBytes.Add((byte)(dataSize & 0xFF));
@@ -58,7 +58,7 @@ namespace HomegearLib.RPC.Encoding
 
 		    int dataSize = packet.Count() - 4;
             List<byte> sizeBytes = new List<byte>(4);
-            sizeBytes.Add((byte)(dataSize >> 24));
+            sizeBytes.Add((byte)((dataSize >> 24) & 0xFF));
             sizeBytes.Add((byte)((dataSize >> 16) & 0xFF));
             sizeBytes.Add((byte)((dataSize >> 8) & 0xFF));
             sizeBytes.Add((byte)(dataSize & 0xFF));
@@ -91,7 +91,7 @@ namespace HomegearLib.RPC.Encoding
             }
             else return 0;
             List<byte> parameterCountBytes = new List<byte>(4);
-            parameterCountBytes.Add((byte)(parameterCount >> 24));
+            parameterCountBytes.Add((byte)((parameterCount >> 24) & 0xFF));
             parameterCountBytes.Add((byte)((parameterCount >> 16) & 0xFF));
             parameterCountBytes.Add((byte)((parameterCount >> 8) & 0xFF));
             parameterCountBytes.Add((byte)(parameterCount & 0xFF));
@@ -99,7 +99,7 @@ namespace HomegearLib.RPC.Encoding
 
             uint headerSize = (uint)packet.Count() - oldPacketSize;
             List<byte> sizeBytes = new List<byte>(4);
-            sizeBytes.Add((byte)(headerSize >> 24));
+            sizeBytes.Add((byte)((headerSize >> 24) & 0xFF));
             sizeBytes.Add((byte)((headerSize >> 16) & 0xFF));
             sizeBytes.Add((byte)((headerSize >> 8) & 0xFF));
             sizeBytes.Add((byte)(headerSize & 0xFF));
