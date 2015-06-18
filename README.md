@@ -236,3 +236,12 @@ Here's now how to set the "STATE" variable of the first output of an actor as an
 ```
 homegear.Devices[myActorId].Channels[1].Variables["STATE"].BooleanValue = true
 ```
+
+### Change the value of a configuration parameter
+
+As changing configuration parameters might cause a lot of traffic, the library doesn't submit the configuration value changes immediately to Homegear. Instead you can change as many configuration parameters as you want. When you are finished, call the method ```put``` to commit your changes.
+
+```
+homegear.Devices[myActorId].Channels[0].Config["ROAMING"].BooleanValue = true
+_selectedDevice.Channels[_selectedVariable.Channel].Config.Put();
+```
