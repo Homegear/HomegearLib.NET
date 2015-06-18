@@ -1405,6 +1405,7 @@ namespace HomegearLibTest
                 txtSerialNumber.Text = _selectedDevice.SerialNumber;
                 txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                 txtTypeString.Text = _selectedDevice.TypeString;
+                txtTypeID.Text = _selectedDevice.TypeID.ToString();
                 if (_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
                 txtDeviceName.Text = _selectedDevice.Name;
                 txtInterface.BackColor = System.Drawing.SystemColors.Window;

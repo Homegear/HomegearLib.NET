@@ -124,7 +124,7 @@ namespace HomegearLib.RPC
             _stopServer = true;
             if (_listenThread != null && _listenThread.IsAlive)
             {
-                if (!_listenThread.Join(10000))
+                if (!_listenThread.Join(20000))
                 {
                     try
                     {

@@ -176,7 +176,7 @@ namespace HomegearLib.RPC
             _server.NewEvent += _server_OnNewEvent;
             _server.EventDeleted += _server_OnEventDeleted;
             _server.UpdateEvent += _server_OnUpdateEvent;
-            _keepAliveTimer = new System.Timers.Timer(10000);
+            _keepAliveTimer = new System.Timers.Timer(30000);
             _keepAliveTimer.Elapsed += _workerTimer_Elapsed;
         }
 
@@ -219,6 +219,7 @@ namespace HomegearLib.RPC
         {
             try
             {
+                _keepAliveTimer.Interval = 10000;
                 if (!ClientServerInitialized("HomegearLib." + _callbackHostname + ":" + _server.ListenPort))
                 {
                     _client.Disconnect();
@@ -558,6 +559,7 @@ namespace HomegearLib.RPC
                 Device device = new Device(this, families[deviceStruct.StructValue["FAMILY"].IntegerValue], deviceStruct.StructValue["ID"].IntegerValue);
                 if (deviceStruct.StructValue.ContainsKey("ADDRESS")) device.SerialNumber = deviceStruct.StructValue["ADDRESS"].StringValue;
                 if (deviceStruct.StructValue.ContainsKey("TYPE")) device.TypeString = deviceStruct.StructValue["TYPE"].StringValue;
+                if (deviceStruct.StructValue.ContainsKey("TYPE_ID")) device.TypeID = deviceStruct.StructValue["TYPE_ID"].IntegerValue;
                 if(deviceStruct.StructValue.ContainsKey("CHANNELS"))
                 {
                     Dictionary<Int32, Channel> channels = new Dictionary<Int32, Channel>();

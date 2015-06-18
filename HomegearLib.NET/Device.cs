@@ -69,6 +69,9 @@ namespace HomegearLib
         private String _serialNumber = "";
         public String SerialNumber { get { return _serialNumber; } internal set { _serialNumber = value; } }
 
+        private Int32 _typeID = 0;
+        public Int32 TypeID { get { return _typeID; } internal set { _typeID = value; } }
+
         private String _typeString = "";
         public String TypeString { get { return _typeString; } internal set { _typeString = value; } }
 
