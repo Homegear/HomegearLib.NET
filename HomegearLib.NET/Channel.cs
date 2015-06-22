@@ -18,7 +18,7 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
-        internal delegate void VariableReloadRequiredEventHandler(Channel sender);
+        internal delegate void VariableReloadRequiredEventHandler(Channel sender, bool reloadDevice);
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
@@ -277,9 +277,9 @@ namespace HomegearLib
             _variables = null;
         }
 
-        void Config_OnVariableReloadRequired(DeviceConfig sender)
+        void Config_OnVariableReloadRequired(DeviceConfig sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this);
+            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, reloadDevice);
         }
     }
 }

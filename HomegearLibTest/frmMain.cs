@@ -56,6 +56,46 @@ namespace HomegearLibTest
             //txtHomegearPort.Text = "2001";
             //chkSSL.Checked = false;
             //txtCertificatePath.Text = "homegearpi.pfx";
+
+            System.Threading.Thread thread = new System.Threading.Thread(() =>
+            {
+                List<Tuple<String, Int32>> instances = Homegear.FindInstances();
+                foreach (Tuple<String, Int32> instance in instances)
+                {
+                    AddHomegearHost(instance.Item1);
+                }
+                if (instances.Count > 0) SetCbHomegearHostText(instances.First().Item1);
+            });
+            thread.Start();
+
+            System.Net.IPAddress localNetwork = System.Net.Dns.GetHostAddresses(Environment.GetEnvironmentVariable("COMPUTERNAME")).Where(ia => (ia.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)).First();
+            txtCallbackHostname.Text = localNetwork.ToString();
+        }
+
+        void AddHomegearHost(String text)
+        {
+            if (cbHomegearHostname.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(AddHomegearHost);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                cbHomegearHostname.Items.Add(text);
+            }
+        }
+
+        void SetCbHomegearHostText(String text)
+        {
+            if (cbHomegearHostname.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetCbHomegearHostText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                cbHomegearHostname.Text = text;
+            }
         }
 
         void _variableValueChangedTimer_Tick(object sender, EventArgs e)
@@ -361,7 +401,7 @@ namespace HomegearLibTest
         {
             bnConnect.Enabled = false;
             gbSSL.Enabled = false;
-            txtHomegearHostname.ReadOnly = true;
+            cbHomegearHostname.Enabled = false;
             txtHomegearPort.ReadOnly = true;
             txtListenIP.ReadOnly = true;
             txtListenPort.ReadOnly = true;
@@ -379,7 +419,7 @@ namespace HomegearLibTest
             Int32 listenPort = 0;
             Int32.TryParse(txtHomegearPort.Text, out homegearPort);
             Int32.TryParse(txtListenPort.Text, out listenPort);
-            _rpc = new RPCController(txtHomegearHostname.Text, homegearPort, txtCallbackHostname.Text, txtListenIP.Text, listenPort, sslClientInfo, sslServerInfo);
+            _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, txtCallbackHostname.Text, txtListenIP.Text, listenPort, sslClientInfo, sslServerInfo);
             _rpc.ClientConnected += _rpc_ClientConnected;
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.ServerConnected += _rpc_ServerConnected;
@@ -1406,6 +1446,7 @@ namespace HomegearLibTest
                 txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                 txtTypeString.Text = _selectedDevice.TypeString;
                 txtTypeID.Text = _selectedDevice.TypeID.ToString();
+                txtAESActive.Text = _selectedDevice.AESActive.ToString();
                 if (_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
                 txtDeviceName.Text = _selectedDevice.Name;
                 txtInterface.BackColor = System.Drawing.SystemColors.Window;

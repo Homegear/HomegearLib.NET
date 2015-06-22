@@ -344,11 +344,11 @@ namespace HomegearLib
             if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
         }
 
-        private void OnDevice_VariableReloadRequired(Device device, Channel channel)
+        private void OnDevice_VariableReloadRequired(Device device, Channel channel, bool reloadDevice)
         {
             if(DeviceReloadRequired != null)
             {
-                if (channel == null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Full);
+                if (channel == null || reloadDevice) DeviceReloadRequired(this, device, channel, DeviceReloadType.Full);
                 else DeviceReloadRequired(this, device, channel, DeviceReloadType.Variables);
             }
         }
@@ -604,6 +604,11 @@ namespace HomegearLib
                 throw ex;
             }
             _connecting = false;
+        }
+
+        public static List<Tuple<String, Int32>> FindInstances()
+        {
+            return SSDP.Search();
         }
 
         private void _rpc_ClientDisconnected(RPCClient sender)

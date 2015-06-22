@@ -21,7 +21,7 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        internal delegate void VariableReloadRequiredEventHandler(Device device, Channel channel);
+        internal delegate void VariableReloadRequiredEventHandler(Device device, Channel channel, bool reloadDevice);
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
@@ -185,12 +185,11 @@ namespace HomegearLib
         {
             get
             {
-                if (!_descriptionRequested)
+                foreach (KeyValuePair<Int32, Channel> channel in _channels)
                 {
-                    _rpc.GetDeviceDescription(this);
-                    _descriptionRequested = true;
+                    if (channel.Value.Config.ContainsKey("AES_ACTIVE") && channel.Value.Config["AES_ACTIVE"].BooleanValue) return true;
                 }
-                return _aesActive;
+                return false;
             }
             internal set { _aesActive = value; }
         }
@@ -277,9 +276,9 @@ namespace HomegearLib
             _rpc.DeleteDevice(_id, RPCDeleteDeviceFlags.Force);
         }
 
-        private void Channel_OnVariableReloadRequired(Channel sender)
+        private void Channel_OnVariableReloadRequired(Channel sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, sender);
+            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, sender, reloadDevice);
         }
     }
 }

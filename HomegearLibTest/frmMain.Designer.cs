@@ -33,6 +33,29 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnDevice = new System.Windows.Forms.Panel();
+            this.txtTypeID = new System.Windows.Forms.TextBox();
+            this.label85 = new System.Windows.Forms.Label();
+            this.txtInterface = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.txtDeviceName = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.txtRXModes = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.txtAvailableFirmware = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtFirmware = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtFamily = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtPhysicalAddress = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtTypeString = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtID = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtSerialNumber = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.pnTriggeredEvent = new System.Windows.Forms.Panel();
             this.txtEventLastReset = new System.Windows.Forms.TextBox();
             this.label84 = new System.Windows.Forms.Label();
@@ -146,27 +169,6 @@
             this.label52 = new System.Windows.Forms.Label();
             this.txtSystemVariableName = new System.Windows.Forms.TextBox();
             this.label61 = new System.Windows.Forms.Label();
-            this.pnDevice = new System.Windows.Forms.Panel();
-            this.txtInterface = new System.Windows.Forms.TextBox();
-            this.label44 = new System.Windows.Forms.Label();
-            this.txtDeviceName = new System.Windows.Forms.TextBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.txtRXModes = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.txtAvailableFirmware = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.txtFirmware = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.txtFamily = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.txtPhysicalAddress = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.txtTypeString = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txtID = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtSerialNumber = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.pnVariable = new System.Windows.Forms.Panel();
             this.bnPutParamset = new System.Windows.Forms.Button();
             this.txtUnit = new System.Windows.Forms.TextBox();
@@ -197,7 +199,6 @@
             this.txtVariableName = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtHomegearHostname = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtHomegearPort = new System.Windows.Forms.TextBox();
             this.chkSSL = new System.Windows.Forms.CheckBox();
@@ -251,8 +252,9 @@
             this.tsAddTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtTypeID = new System.Windows.Forms.TextBox();
-            this.label85 = new System.Windows.Forms.Label();
+            this.label86 = new System.Windows.Forms.Label();
+            this.txtAESActive = new System.Windows.Forms.TextBox();
+            this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -261,6 +263,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnDevice.SuspendLayout();
             this.pnTriggeredEvent.SuspendLayout();
             this.pnTimedEvent.SuspendLayout();
             this.pnChannel.SuspendLayout();
@@ -268,7 +271,6 @@
             this.pnHomegear.SuspendLayout();
             this.pnMetadata.SuspendLayout();
             this.pnSystemVariable.SuspendLayout();
-            this.pnDevice.SuspendLayout();
             this.pnVariable.SuspendLayout();
             this.gbSSL.SuspendLayout();
             this.cmDevices.SuspendLayout();
@@ -356,6 +358,251 @@
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnDevice
+            // 
+            this.pnDevice.Controls.Add(this.txtAESActive);
+            this.pnDevice.Controls.Add(this.label86);
+            this.pnDevice.Controls.Add(this.txtTypeID);
+            this.pnDevice.Controls.Add(this.label85);
+            this.pnDevice.Controls.Add(this.txtInterface);
+            this.pnDevice.Controls.Add(this.label44);
+            this.pnDevice.Controls.Add(this.txtDeviceName);
+            this.pnDevice.Controls.Add(this.label41);
+            this.pnDevice.Controls.Add(this.txtRXModes);
+            this.pnDevice.Controls.Add(this.label31);
+            this.pnDevice.Controls.Add(this.txtAvailableFirmware);
+            this.pnDevice.Controls.Add(this.label30);
+            this.pnDevice.Controls.Add(this.txtFirmware);
+            this.pnDevice.Controls.Add(this.label29);
+            this.pnDevice.Controls.Add(this.txtFamily);
+            this.pnDevice.Controls.Add(this.label28);
+            this.pnDevice.Controls.Add(this.txtPhysicalAddress);
+            this.pnDevice.Controls.Add(this.label27);
+            this.pnDevice.Controls.Add(this.txtTypeString);
+            this.pnDevice.Controls.Add(this.label21);
+            this.pnDevice.Controls.Add(this.txtID);
+            this.pnDevice.Controls.Add(this.label14);
+            this.pnDevice.Controls.Add(this.txtSerialNumber);
+            this.pnDevice.Controls.Add(this.label12);
+            this.pnDevice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnDevice.Location = new System.Drawing.Point(0, 0);
+            this.pnDevice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnDevice.Name = "pnDevice";
+            this.pnDevice.Size = new System.Drawing.Size(884, 603);
+            this.pnDevice.TabIndex = 1;
+            this.pnDevice.Visible = false;
+            // 
+            // txtTypeID
+            // 
+            this.txtTypeID.Location = new System.Drawing.Point(145, 166);
+            this.txtTypeID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtTypeID.Name = "txtTypeID";
+            this.txtTypeID.ReadOnly = true;
+            this.txtTypeID.Size = new System.Drawing.Size(385, 26);
+            this.txtTypeID.TabIndex = 32;
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(3, 170);
+            this.label85.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(68, 20);
+            this.label85.TabIndex = 31;
+            this.label85.Text = "Type ID:";
+            // 
+            // txtInterface
+            // 
+            this.txtInterface.Location = new System.Drawing.Point(145, 207);
+            this.txtInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterface.Name = "txtInterface";
+            this.txtInterface.Size = new System.Drawing.Size(385, 26);
+            this.txtInterface.TabIndex = 30;
+            this.txtInterface.TextChanged += new System.EventHandler(this.txtInterface_TextChanged);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(3, 211);
+            this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(77, 20);
+            this.label44.TabIndex = 29;
+            this.label44.Text = "Interface:";
+            // 
+            // txtDeviceName
+            // 
+            this.txtDeviceName.BackColor = System.Drawing.SystemColors.Window;
+            this.txtDeviceName.Location = new System.Drawing.Point(146, 85);
+            this.txtDeviceName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtDeviceName.Name = "txtDeviceName";
+            this.txtDeviceName.Size = new System.Drawing.Size(385, 26);
+            this.txtDeviceName.TabIndex = 28;
+            this.txtDeviceName.TextChanged += new System.EventHandler(this.txtDeviceName_TextChanged);
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(4, 89);
+            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(55, 20);
+            this.label41.TabIndex = 27;
+            this.label41.Text = "Name:";
+            // 
+            // txtRXModes
+            // 
+            this.txtRXModes.Location = new System.Drawing.Point(145, 327);
+            this.txtRXModes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtRXModes.Multiline = true;
+            this.txtRXModes.Name = "txtRXModes";
+            this.txtRXModes.ReadOnly = true;
+            this.txtRXModes.Size = new System.Drawing.Size(115, 86);
+            this.txtRXModes.TabIndex = 26;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(3, 327);
+            this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(88, 20);
+            this.label31.TabIndex = 25;
+            this.label31.Text = "RX Modes:";
+            // 
+            // txtAvailableFirmware
+            // 
+            this.txtAvailableFirmware.Location = new System.Drawing.Point(413, 287);
+            this.txtAvailableFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtAvailableFirmware.Name = "txtAvailableFirmware";
+            this.txtAvailableFirmware.ReadOnly = true;
+            this.txtAvailableFirmware.Size = new System.Drawing.Size(116, 26);
+            this.txtAvailableFirmware.TabIndex = 13;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(272, 291);
+            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(119, 20);
+            this.label30.TabIndex = 12;
+            this.label30.Text = "Avail. Firmware:";
+            // 
+            // txtFirmware
+            // 
+            this.txtFirmware.Location = new System.Drawing.Point(145, 287);
+            this.txtFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtFirmware.Name = "txtFirmware";
+            this.txtFirmware.ReadOnly = true;
+            this.txtFirmware.Size = new System.Drawing.Size(116, 26);
+            this.txtFirmware.TabIndex = 11;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(3, 291);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(78, 20);
+            this.label29.TabIndex = 10;
+            this.label29.Text = "Firmware:";
+            // 
+            // txtFamily
+            // 
+            this.txtFamily.Location = new System.Drawing.Point(146, 45);
+            this.txtFamily.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtFamily.Name = "txtFamily";
+            this.txtFamily.ReadOnly = true;
+            this.txtFamily.Size = new System.Drawing.Size(385, 26);
+            this.txtFamily.TabIndex = 9;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(4, 49);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(58, 20);
+            this.label28.TabIndex = 8;
+            this.label28.Text = "Family:";
+            // 
+            // txtPhysicalAddress
+            // 
+            this.txtPhysicalAddress.Location = new System.Drawing.Point(145, 247);
+            this.txtPhysicalAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtPhysicalAddress.Name = "txtPhysicalAddress";
+            this.txtPhysicalAddress.ReadOnly = true;
+            this.txtPhysicalAddress.Size = new System.Drawing.Size(385, 26);
+            this.txtPhysicalAddress.TabIndex = 7;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(3, 251);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(133, 20);
+            this.label27.TabIndex = 6;
+            this.label27.Text = "Physical Address:";
+            // 
+            // txtTypeString
+            // 
+            this.txtTypeString.Location = new System.Drawing.Point(146, 125);
+            this.txtTypeString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtTypeString.Name = "txtTypeString";
+            this.txtTypeString.ReadOnly = true;
+            this.txtTypeString.Size = new System.Drawing.Size(385, 26);
+            this.txtTypeString.TabIndex = 5;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(4, 129);
+            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(93, 20);
+            this.label21.TabIndex = 4;
+            this.label21.Text = "Type String:";
+            // 
+            // txtID
+            // 
+            this.txtID.Location = new System.Drawing.Point(146, 5);
+            this.txtID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtID.Name = "txtID";
+            this.txtID.ReadOnly = true;
+            this.txtID.Size = new System.Drawing.Size(116, 26);
+            this.txtID.TabIndex = 3;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(4, 9);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(30, 20);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "ID:";
+            // 
+            // txtSerialNumber
+            // 
+            this.txtSerialNumber.Location = new System.Drawing.Point(414, 5);
+            this.txtSerialNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtSerialNumber.Name = "txtSerialNumber";
+            this.txtSerialNumber.ReadOnly = true;
+            this.txtSerialNumber.Size = new System.Drawing.Size(116, 26);
+            this.txtSerialNumber.TabIndex = 1;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(273, 9);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(113, 20);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Serial Number:";
             // 
             // pnTriggeredEvent
             // 
@@ -1560,230 +1807,6 @@
             this.label61.TabIndex = 2;
             this.label61.Text = "Name:";
             // 
-            // pnDevice
-            // 
-            this.pnDevice.Controls.Add(this.txtTypeID);
-            this.pnDevice.Controls.Add(this.label85);
-            this.pnDevice.Controls.Add(this.txtInterface);
-            this.pnDevice.Controls.Add(this.label44);
-            this.pnDevice.Controls.Add(this.txtDeviceName);
-            this.pnDevice.Controls.Add(this.label41);
-            this.pnDevice.Controls.Add(this.txtRXModes);
-            this.pnDevice.Controls.Add(this.label31);
-            this.pnDevice.Controls.Add(this.txtAvailableFirmware);
-            this.pnDevice.Controls.Add(this.label30);
-            this.pnDevice.Controls.Add(this.txtFirmware);
-            this.pnDevice.Controls.Add(this.label29);
-            this.pnDevice.Controls.Add(this.txtFamily);
-            this.pnDevice.Controls.Add(this.label28);
-            this.pnDevice.Controls.Add(this.txtPhysicalAddress);
-            this.pnDevice.Controls.Add(this.label27);
-            this.pnDevice.Controls.Add(this.txtTypeString);
-            this.pnDevice.Controls.Add(this.label21);
-            this.pnDevice.Controls.Add(this.txtID);
-            this.pnDevice.Controls.Add(this.label14);
-            this.pnDevice.Controls.Add(this.txtSerialNumber);
-            this.pnDevice.Controls.Add(this.label12);
-            this.pnDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnDevice.Location = new System.Drawing.Point(0, 0);
-            this.pnDevice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(884, 603);
-            this.pnDevice.TabIndex = 1;
-            this.pnDevice.Visible = false;
-            // 
-            // txtInterface
-            // 
-            this.txtInterface.Location = new System.Drawing.Point(145, 207);
-            this.txtInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterface.Name = "txtInterface";
-            this.txtInterface.Size = new System.Drawing.Size(385, 26);
-            this.txtInterface.TabIndex = 30;
-            this.txtInterface.TextChanged += new System.EventHandler(this.txtInterface_TextChanged);
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(3, 211);
-            this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(77, 20);
-            this.label44.TabIndex = 29;
-            this.label44.Text = "Interface:";
-            // 
-            // txtDeviceName
-            // 
-            this.txtDeviceName.BackColor = System.Drawing.SystemColors.Window;
-            this.txtDeviceName.Location = new System.Drawing.Point(146, 85);
-            this.txtDeviceName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtDeviceName.Name = "txtDeviceName";
-            this.txtDeviceName.Size = new System.Drawing.Size(385, 26);
-            this.txtDeviceName.TabIndex = 28;
-            this.txtDeviceName.TextChanged += new System.EventHandler(this.txtDeviceName_TextChanged);
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(4, 89);
-            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(55, 20);
-            this.label41.TabIndex = 27;
-            this.label41.Text = "Name:";
-            // 
-            // txtRXModes
-            // 
-            this.txtRXModes.Location = new System.Drawing.Point(145, 327);
-            this.txtRXModes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtRXModes.Multiline = true;
-            this.txtRXModes.Name = "txtRXModes";
-            this.txtRXModes.ReadOnly = true;
-            this.txtRXModes.Size = new System.Drawing.Size(115, 86);
-            this.txtRXModes.TabIndex = 26;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 327);
-            this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(88, 20);
-            this.label31.TabIndex = 25;
-            this.label31.Text = "RX Modes:";
-            // 
-            // txtAvailableFirmware
-            // 
-            this.txtAvailableFirmware.Location = new System.Drawing.Point(413, 287);
-            this.txtAvailableFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtAvailableFirmware.Name = "txtAvailableFirmware";
-            this.txtAvailableFirmware.ReadOnly = true;
-            this.txtAvailableFirmware.Size = new System.Drawing.Size(116, 26);
-            this.txtAvailableFirmware.TabIndex = 13;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(272, 291);
-            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(119, 20);
-            this.label30.TabIndex = 12;
-            this.label30.Text = "Avail. Firmware:";
-            // 
-            // txtFirmware
-            // 
-            this.txtFirmware.Location = new System.Drawing.Point(145, 287);
-            this.txtFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtFirmware.Name = "txtFirmware";
-            this.txtFirmware.ReadOnly = true;
-            this.txtFirmware.Size = new System.Drawing.Size(116, 26);
-            this.txtFirmware.TabIndex = 11;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(3, 291);
-            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(78, 20);
-            this.label29.TabIndex = 10;
-            this.label29.Text = "Firmware:";
-            // 
-            // txtFamily
-            // 
-            this.txtFamily.Location = new System.Drawing.Point(146, 45);
-            this.txtFamily.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtFamily.Name = "txtFamily";
-            this.txtFamily.ReadOnly = true;
-            this.txtFamily.Size = new System.Drawing.Size(385, 26);
-            this.txtFamily.TabIndex = 9;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(4, 49);
-            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(58, 20);
-            this.label28.TabIndex = 8;
-            this.label28.Text = "Family:";
-            // 
-            // txtPhysicalAddress
-            // 
-            this.txtPhysicalAddress.Location = new System.Drawing.Point(145, 247);
-            this.txtPhysicalAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtPhysicalAddress.Name = "txtPhysicalAddress";
-            this.txtPhysicalAddress.ReadOnly = true;
-            this.txtPhysicalAddress.Size = new System.Drawing.Size(385, 26);
-            this.txtPhysicalAddress.TabIndex = 7;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 251);
-            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(133, 20);
-            this.label27.TabIndex = 6;
-            this.label27.Text = "Physical Address:";
-            // 
-            // txtTypeString
-            // 
-            this.txtTypeString.Location = new System.Drawing.Point(146, 125);
-            this.txtTypeString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtTypeString.Name = "txtTypeString";
-            this.txtTypeString.ReadOnly = true;
-            this.txtTypeString.Size = new System.Drawing.Size(385, 26);
-            this.txtTypeString.TabIndex = 5;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(4, 129);
-            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(93, 20);
-            this.label21.TabIndex = 4;
-            this.label21.Text = "Type String:";
-            // 
-            // txtID
-            // 
-            this.txtID.Location = new System.Drawing.Point(146, 5);
-            this.txtID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtID.Name = "txtID";
-            this.txtID.ReadOnly = true;
-            this.txtID.Size = new System.Drawing.Size(116, 26);
-            this.txtID.TabIndex = 3;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(4, 9);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(30, 20);
-            this.label14.TabIndex = 2;
-            this.label14.Text = "ID:";
-            // 
-            // txtSerialNumber
-            // 
-            this.txtSerialNumber.Location = new System.Drawing.Point(414, 5);
-            this.txtSerialNumber.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtSerialNumber.Name = "txtSerialNumber";
-            this.txtSerialNumber.ReadOnly = true;
-            this.txtSerialNumber.Size = new System.Drawing.Size(116, 26);
-            this.txtSerialNumber.TabIndex = 1;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(273, 9);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(113, 20);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Serial Number:";
-            // 
             // pnVariable
             // 
             this.pnVariable.Controls.Add(this.bnPutParamset);
@@ -2113,16 +2136,6 @@
             this.label1.Size = new System.Drawing.Size(248, 20);
             this.label1.TabIndex = 3;
             this.label1.Text = "Homegear Hostname/IP Address:";
-            // 
-            // txtHomegearHostname
-            // 
-            this.txtHomegearHostname.Location = new System.Drawing.Point(282, 9);
-            this.txtHomegearHostname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtHomegearHostname.Name = "txtHomegearHostname";
-            this.txtHomegearHostname.Size = new System.Drawing.Size(139, 26);
-            this.txtHomegearHostname.TabIndex = 4;
-            this.txtHomegearHostname.Text = "homegear";
-            this.txtHomegearHostname.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2
             // 
@@ -2612,30 +2625,39 @@
             this.tsRemoveTriggeredEvent.Text = "Remove";
             this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
             // 
-            // txtTypeID
+            // label86
             // 
-            this.txtTypeID.Location = new System.Drawing.Point(145, 166);
-            this.txtTypeID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtTypeID.Name = "txtTypeID";
-            this.txtTypeID.ReadOnly = true;
-            this.txtTypeID.Size = new System.Drawing.Size(385, 26);
-            this.txtTypeID.TabIndex = 32;
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(273, 327);
+            this.label86.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(46, 20);
+            this.label86.TabIndex = 33;
+            this.label86.Text = "AES:";
             // 
-            // label85
+            // txtAESActive
             // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(3, 170);
-            this.label85.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(68, 20);
-            this.label85.TabIndex = 31;
-            this.label85.Text = "Type ID:";
+            this.txtAESActive.Location = new System.Drawing.Point(413, 324);
+            this.txtAESActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtAESActive.Name = "txtAESActive";
+            this.txtAESActive.ReadOnly = true;
+            this.txtAESActive.Size = new System.Drawing.Size(116, 26);
+            this.txtAESActive.TabIndex = 34;
+            // 
+            // cbHomegearHostname
+            // 
+            this.cbHomegearHostname.FormattingEnabled = true;
+            this.cbHomegearHostname.Location = new System.Drawing.Point(282, 11);
+            this.cbHomegearHostname.Name = "cbHomegearHostname";
+            this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
+            this.cbHomegearHostname.TabIndex = 16;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1365, 1029);
+            this.Controls.Add(this.cbHomegearHostname);
             this.Controls.Add(this.bnConnect);
             this.Controls.Add(this.gbSSL);
             this.Controls.Add(this.txtListenPort);
@@ -2645,7 +2667,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtHomegearPort);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtHomegearHostname);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label3);
@@ -2664,6 +2685,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnDevice.ResumeLayout(false);
+            this.pnDevice.PerformLayout();
             this.pnTriggeredEvent.ResumeLayout(false);
             this.pnTriggeredEvent.PerformLayout();
             this.pnTimedEvent.ResumeLayout(false);
@@ -2678,8 +2701,6 @@
             this.pnMetadata.PerformLayout();
             this.pnSystemVariable.ResumeLayout(false);
             this.pnSystemVariable.PerformLayout();
-            this.pnDevice.ResumeLayout(false);
-            this.pnDevice.PerformLayout();
             this.pnVariable.ResumeLayout(false);
             this.pnVariable.PerformLayout();
             this.gbSSL.ResumeLayout(false);
@@ -2708,7 +2729,6 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.TreeView tvDevices;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtHomegearHostname;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtHomegearPort;
         private System.Windows.Forms.CheckBox chkSSL;
@@ -2927,6 +2947,9 @@
         private System.Windows.Forms.Label label83;
         private System.Windows.Forms.TextBox txtTypeID;
         private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.TextBox txtAESActive;
+        private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.ComboBox cbHomegearHostname;
     }
 }
 

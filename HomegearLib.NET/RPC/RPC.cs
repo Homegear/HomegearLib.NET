@@ -610,7 +610,13 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getDeviceDescription", new List<RPCVariable> { new RPCVariable(device.ID), new RPCVariable(-1) });
             if (response.ErrorStruct) ThrowError("getDeviceDescription", response);
-            if (response.StructValue.ContainsKey("AES_ACTIVE")) device.AESActive = (response.StructValue["AES_ACTIVE"].IntegerValue != 0);
+            if (response.StructValue.ContainsKey("FAMILY"))
+            {
+                if (Families.ContainsKey(response.StructValue["FAMILY"].IntegerValue)) device.Family = Families[response.StructValue["FAMILY"].IntegerValue];
+            }
+            if (response.StructValue.ContainsKey("ADDRESS")) device.SerialNumber = response.StructValue["ADDRESS"].StringValue;
+            if (response.StructValue.ContainsKey("TYPE")) device.TypeString = response.StructValue["TYPE"].StringValue;
+            if (response.StructValue.ContainsKey("TYPE_ID")) device.TypeID = response.StructValue["TYPE_ID"].IntegerValue;
             if (response.StructValue.ContainsKey("PHYSICAL_ADDRESS")) device.Address = response.StructValue["PHYSICAL_ADDRESS"].IntegerValue;
             if (response.StructValue.ContainsKey("RX_MODE")) device.RXMode = (DeviceRXMode)response.StructValue["RX_MODE"].IntegerValue;
             if (response.StructValue.ContainsKey("FIRMWARE")) device.Firmware = response.StructValue["FIRMWARE"].StringValue;

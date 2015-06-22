@@ -11,7 +11,7 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
-        internal delegate void VariableReloadRequiredEventHandler(DeviceConfig sender);
+        internal delegate void VariableReloadRequiredEventHandler(DeviceConfig sender, bool reloadDevice);
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
@@ -75,8 +75,9 @@ namespace HomegearLib
             {
                 parameter.Value.DataPending = false;
                 if (parameter.Value.UIFlags == VariableUIFlags.fTransform) reloadRequired = true;
+                if (parameter.Key == "AES_ACTIVE") VariableReloadRequiredEvent(this, true);
             }
-            if (reloadRequired && VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this);
+            if (reloadRequired && VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, false);
         }
     }
 }
