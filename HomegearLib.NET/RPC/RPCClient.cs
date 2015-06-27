@@ -88,7 +88,7 @@ namespace HomegearLib.RPC
                 try
                 {
                     _client = new TcpClient(_hostname, _port);
-                    _client.ReceiveTimeout = 20000;
+                    _client.ReceiveTimeout = 60000;
                 }
                 catch (SocketException ex)
                 {
@@ -228,7 +228,7 @@ namespace HomegearLib.RPC
                             }
                             if (packetLength == dataSize) break;
                         } while (bytesReceived != 0);
-                        result = _rpcDecoder.DecodeResponse(packet);
+                        if(packet != null) result = _rpcDecoder.DecodeResponse(packet);
                         break;
                     }
                     catch (System.IO.IOException ex)

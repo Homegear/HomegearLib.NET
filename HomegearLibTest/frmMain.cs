@@ -68,8 +68,22 @@ namespace HomegearLibTest
             });
             thread.Start();
 
-            System.Net.IPAddress localNetwork = System.Net.Dns.GetHostAddresses(Environment.GetEnvironmentVariable("COMPUTERNAME")).Where(ia => (ia.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)).First();
+            System.Net.IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+            System.Net.IPAddress localNetwork = hostEntry.AddressList.Where(ia => (ia.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)).First();
             txtCallbackHostname.Text = localNetwork.ToString();
+        }
+
+        void ClearHomegearHosts()
+        {
+            if (cbHomegearHostname.InvokeRequired)
+            {
+                NoParameterCallback d = new NoParameterCallback(ClearHomegearHosts);
+                this.Invoke(d);
+            }
+            else
+            {
+                cbHomegearHostname.Items.Clear();
+            }
         }
 
         void AddHomegearHost(String text)
@@ -94,7 +108,7 @@ namespace HomegearLibTest
             }
             else
             {
-                cbHomegearHostname.Text = text;
+                if(cbHomegearHostname.Text.Length == 0) cbHomegearHostname.Text = text;
             }
         }
 

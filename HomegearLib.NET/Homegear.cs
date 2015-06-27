@@ -543,7 +543,7 @@ namespace HomegearLib
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {
-                if(!_connectThread.Join(20000))
+                if(!_connectThread.Join(2000))
                 {
                     try
                     {
@@ -608,7 +608,12 @@ namespace HomegearLib
 
         public static List<Tuple<String, Int32>> FindInstances()
         {
-            return SSDP.Search();
+            HashSet<Tuple<String, Int32>> result = SSDP.Search(1000);
+            result.UnionWith(SSDP.Search(1000));
+            result.UnionWith(SSDP.Search(1000));
+            result.UnionWith(SSDP.Search(1000));
+            result.UnionWith(SSDP.Search(1000));
+            return result.ToList();
         }
 
         private void _rpc_ClientDisconnected(RPCClient sender)

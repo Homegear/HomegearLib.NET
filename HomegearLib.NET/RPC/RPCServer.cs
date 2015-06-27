@@ -122,9 +122,11 @@ namespace HomegearLib.RPC
         public void Stop()
         {
             _stopServer = true;
+            if (_client != null && _client.Client != null && _client.Client.Connected) _client.Close();
+            if (_listener != null) _listener.Stop();
             if (_listenThread != null && _listenThread.IsAlive)
             {
-                if (!_listenThread.Join(20000))
+                if (!_listenThread.Join(2000))
                 {
                     try
                     {
@@ -134,10 +136,9 @@ namespace HomegearLib.RPC
                 }
             }
             _listenThread = null;
-            if (_client != null) _client.Close();
-            _client = null;
-            if(_listener != null) _listener.Stop();
             _listener = null;
+            _client = null;
+            _sslStream = null;
         }
 
         void Listen()
@@ -174,8 +175,11 @@ namespace HomegearLib.RPC
                 }
                 ReadClient();
 
-                _client.Close();
-                _client = null;
+                if (_client != null && _client.Client != null && _client.Client.Connected) //Might be closed through "Disconnect()"
+                {
+                    _client.Close();
+                    _client = null;
+                }
                 Disconnected(this);
             }
         }
@@ -194,7 +198,7 @@ namespace HomegearLib.RPC
                 {
                     if (_client == null || !_client.Connected) break;
                     if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
-                    else bytesReceived =_client.Client.Receive(buffer);
+                    else bytesReceived = _client.Client.Receive(buffer);
                     if (bytesReceived == 0) continue;
                     UInt32 bufferPos = 0;
                     while (bufferPos == 0 || bufferPos + dataSize + 8 < bytesReceived)
@@ -240,7 +244,11 @@ namespace HomegearLib.RPC
                         }
                         else if (packet != null)
                         {
-                            if (packetLength + bytesReceived > dataSize) System.Diagnostics.Debug.WriteLine("RPC server received response larger than the expected size from Homegear.");
+                            if (packetLength + bytesReceived > dataSize)
+                            {
+                                System.Diagnostics.Debug.WriteLine("RPC server received response larger than the expected size from Homegear.");
+                                bytesReceived = (int)(dataSize - packetLength);
+                            }
                             Array.Copy(buffer, 0, packet, packetLength + 8, bytesReceived);
                             packetLength += (uint)bytesReceived;
                         }
