@@ -438,7 +438,7 @@ namespace HomegearLibTest
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.ServerConnected += _rpc_ServerConnected;
             _rpc.ServerDisconnected += _rpc_ServerDisconnected;
-            _homegear = new Homegear(_rpc, false);
+            _homegear = new Homegear(_rpc, true);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;
             _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;

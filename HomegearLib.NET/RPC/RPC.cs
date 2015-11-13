@@ -325,6 +325,7 @@ namespace HomegearLib.RPC
         /// </summary>
         public void Connect(bool events)
         {
+            _events = events;
             if (_disposing) throw new ObjectDisposedException("RPC");
             if(events) _server.Start();
             _client.Connect();
