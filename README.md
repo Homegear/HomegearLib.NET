@@ -52,10 +52,10 @@ SSLServerInfo sslServerInfo = new SSLServerInfo
 RPCController rpc = new RPCController("homegear", 2003, "MyComputer", "0.0.0.0", 9876, sslClientInfo, sslServerInfo);
 ```
 
-Now we can instantiate a new Homegear object. Upon creation the Homegear object will connect to Homegear.
+Now we can instantiate a new Homegear object. Upon creation the Homegear object will connect to Homegear. The second parameter defines, whether the library starts the event server or not. When set to "true" the event server is started and you will receive device state changes from Homegear immediately. As this is not always needed - i. e. when you only want to set values - it can be disabled by specifying "false" here.
 
 ```
-Homegear homegear = new Homegear(rpc);
+Homegear homegear = new Homegear(rpc, true);
 ```
 
 The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are five events:

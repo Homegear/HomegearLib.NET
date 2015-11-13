@@ -37,7 +37,10 @@ namespace HomegearLib
                     {
                         receivedBytes = socket.ReceiveFrom(buffer, ref localEndPoint);
                     }
-                    catch (SocketException) { }
+                    catch (SocketException ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
+                    }
                     if (receivedBytes > 0) responses.Add(Encoding.UTF8.GetString(buffer, 0, receivedBytes));
                     timeout = timeout - (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
                     if (timeout < 0) break;

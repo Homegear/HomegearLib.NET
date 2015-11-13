@@ -176,6 +176,7 @@ namespace HomegearLib
 
         private volatile bool _connecting = false;
         private RPCController _rpc = null;
+        private volatile bool _events = false;
         private volatile bool _disposing = false;
         private volatile bool _stopConnectThread = false;
         private Thread _connectThread = null;
@@ -255,10 +256,12 @@ namespace HomegearLib
         /// Creates and initializes the Homegear object. Upon instantiation, the object tries to connect to Homegear. And it tries to keep the connection up, no matter what. To orderly destroy the object again and to orderly disconnect from Homegear, call "Dispose".
         /// </summary>
         /// <param name="rpc">An initialized RPC controller object</param>
-        public Homegear(RPCController rpc)
+        /// <param name="events">When set to "true" the library starts an event server to receive events from Homegear.</param>
+        public Homegear(RPCController rpc, bool events)
         {
             if (rpc == null) throw new NullReferenceException("RPC object is null.");
             _rpc = rpc;
+            _events = events;
             _families = new Families(_rpc, new Dictionary<Int32, Family>());
             _devices = new Devices(_rpc, new Dictionary<Int32, Device>());
             _systemVariables = new SystemVariables(_rpc, new Dictionary<String, SystemVariable>());
@@ -588,7 +591,7 @@ namespace HomegearLib
                 {
                     try
                     {
-                        if (!_rpc.IsConnected) _rpc.Connect();
+                        if (!_rpc.IsConnected) _rpc.Connect(_events);
                         break;
                     }
                     catch (Exception ex)

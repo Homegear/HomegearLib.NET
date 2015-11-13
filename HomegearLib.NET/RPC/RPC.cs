@@ -88,6 +88,7 @@ namespace HomegearLib.RPC
         private String _callbackHostname = "";
 
         private volatile bool _disposing = false;
+        private volatile bool _events = false;
 
         /// <summary>
         /// Returns "true" when the RPC controller is connected to Homegear.
@@ -220,9 +221,19 @@ namespace HomegearLib.RPC
             try
             {
                 _keepAliveTimer.Interval = 10000;
-                if (!ClientServerInitialized("HomegearLib." + _callbackHostname + ":" + _server.ListenPort))
+                if (_events)
                 {
-                    _client.Disconnect();
+                    if (!ClientServerInitialized("HomegearLib." + _callbackHostname + ":" + _server.ListenPort))
+                    {
+                        _client.Disconnect();
+                    }
+                }
+                else
+                {
+                    if(_client.CallMethod("logLevel", new List<RPCVariable>()).ErrorStruct)
+                    {
+                        _client.Disconnect();
+                    }
                 }
             }
             catch(Exception)
@@ -290,8 +301,11 @@ namespace HomegearLib.RPC
         private void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
             if (ClientConnected != null) ClientConnected(sender, cipherAlgorithm, cipherStrength);
-            _server.KnownDevices = Devices;
-            Init("HomegearLib." + _callbackHostname + ":" + _server.ListenPort);
+            if (_events)
+            {
+                _server.KnownDevices = Devices;
+                Init("HomegearLib." + _callbackHostname + ":" + _server.ListenPort);
+            }
             if (InitCompleted != null) InitCompleted(this);
         }
 
@@ -307,11 +321,12 @@ namespace HomegearLib.RPC
 
         /// <summary>
         /// Connects to Homegear and starts the RPC controller's callback event server. Don't call this method, when you pass this object to the Homegear object's constructor!
+        /// <param name="events">When set to "true" the library starts an event server to receive events from Homegear.</param>
         /// </summary>
-        public void Connect()
+        public void Connect(bool events)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            _server.Start();
+            if(events) _server.Start();
             _client.Connect();
             _keepAliveTimer.Start();
         }
@@ -324,7 +339,7 @@ namespace HomegearLib.RPC
             _keepAliveTimer.Stop();
             try
             {
-                if(IsConnected) Init("");
+                if(IsConnected && _events) Init("");
             }
             catch (Exception) { }
             _client.Disconnect();

@@ -438,7 +438,7 @@ namespace HomegearLibTest
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.ServerConnected += _rpc_ServerConnected;
             _rpc.ServerDisconnected += _rpc_ServerDisconnected;
-            _homegear = new Homegear(_rpc);
+            _homegear = new Homegear(_rpc, false);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;
             _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
@@ -1452,132 +1452,139 @@ namespace HomegearLibTest
 
         private void DeviceSelected(TreeViewEventArgs e)
         {
-            if (_closing) return;
-            if (e.Node.Level == 1)
+            try
             {
-                if (e.Node.Level == 1) _selectedDevice = (Device)e.Node.Tag;
-                txtSerialNumber.Text = _selectedDevice.SerialNumber;
-                txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
-                txtTypeString.Text = _selectedDevice.TypeString;
-                txtTypeID.Text = _selectedDevice.TypeID.ToString();
-                txtAESActive.Text = _selectedDevice.AESActive.ToString();
-                if (_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
-                txtDeviceName.Text = _selectedDevice.Name;
-                txtInterface.BackColor = System.Drawing.SystemColors.Window;
-                txtInterface.Text = (_selectedDevice.Interface != null) ? _selectedDevice.Interface.ID : "";
-                txtPhysicalAddress.Text = "0x" + _selectedDevice.Address.ToString("X2");
-                txtFirmware.Text = _selectedDevice.Firmware;
-                txtAvailableFirmware.Text = _selectedDevice.AvailableFirmware;
-                txtRXModes.Text = "";
-                if ((_selectedDevice.RXMode & DeviceRXMode.Always) == DeviceRXMode.Always) txtRXModes.Text += "Always\r\n";
-                if ((_selectedDevice.RXMode & DeviceRXMode.Burst) == DeviceRXMode.Burst) txtRXModes.Text += "Burst\r\n";
-                if ((_selectedDevice.RXMode & DeviceRXMode.Config) == DeviceRXMode.Config) txtRXModes.Text += "Config\r\n";
-                if ((_selectedDevice.RXMode & DeviceRXMode.LazyConfig) == DeviceRXMode.LazyConfig) txtRXModes.Text += "LazyConfig\r\n";
-                if ((_selectedDevice.RXMode & DeviceRXMode.WakeUp) == DeviceRXMode.WakeUp) txtRXModes.Text += "WakeUp\r\n";
-                pnDevice.Visible = true;
-            }
-            else if (e.Node.Level == 3 && e.Node.Tag is MetadataVariable) MetadataSelected(e);
-            else if (e.Node.Level == 3 && e.Node.Tag is TriggeredEvent) TriggeredEventSelected(e);
-            else if (e.Node.Level > 1 && e.Node.Level <= 3)
-            {
-                if (e.Node.Level == 2 && e.Node.Tag is Channel)
+                if (_closing) return;
+                if (e.Node.Level == 1)
                 {
-                    _selectedDevice = (Device)e.Node.Parent.Tag;
-                    _selectedChannel = (Channel)e.Node.Tag;
+                    if (e.Node.Level == 1) _selectedDevice = (Device)e.Node.Tag;
+                    txtSerialNumber.Text = _selectedDevice.SerialNumber;
+                    txtID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
+                    txtTypeString.Text = _selectedDevice.TypeString;
+                    txtTypeID.Text = _selectedDevice.TypeID.ToString();
+                    txtAESActive.Text = _selectedDevice.AESActive.ToString();
+                    if (_selectedDevice.Family != null) txtFamily.Text = _selectedDevice.Family.Name;
+                    txtDeviceName.Text = _selectedDevice.Name;
+                    txtInterface.BackColor = System.Drawing.SystemColors.Window;
+                    txtInterface.Text = (_selectedDevice.Interface != null) ? _selectedDevice.Interface.ID : "";
+                    txtPhysicalAddress.Text = "0x" + _selectedDevice.Address.ToString("X2");
+                    txtFirmware.Text = _selectedDevice.Firmware;
+                    txtAvailableFirmware.Text = _selectedDevice.AvailableFirmware;
+                    txtRXModes.Text = "";
+                    if ((_selectedDevice.RXMode & DeviceRXMode.Always) == DeviceRXMode.Always) txtRXModes.Text += "Always\r\n";
+                    if ((_selectedDevice.RXMode & DeviceRXMode.Burst) == DeviceRXMode.Burst) txtRXModes.Text += "Burst\r\n";
+                    if ((_selectedDevice.RXMode & DeviceRXMode.Config) == DeviceRXMode.Config) txtRXModes.Text += "Config\r\n";
+                    if ((_selectedDevice.RXMode & DeviceRXMode.LazyConfig) == DeviceRXMode.LazyConfig) txtRXModes.Text += "LazyConfig\r\n";
+                    if ((_selectedDevice.RXMode & DeviceRXMode.WakeUp) == DeviceRXMode.WakeUp) txtRXModes.Text += "WakeUp\r\n";
+                    pnDevice.Visible = true;
                 }
-                if (e.Node.Level == 3 && e.Node.Parent.Tag is Channel)
+                else if (e.Node.Level == 3 && e.Node.Tag is MetadataVariable) MetadataSelected(e);
+                else if (e.Node.Level == 3 && e.Node.Tag is TriggeredEvent) TriggeredEventSelected(e);
+                else if (e.Node.Level > 1 && e.Node.Level <= 3)
                 {
-                    _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
-                    _selectedChannel = (Channel)e.Node.Parent.Tag;
-                }
-                if (_selectedChannel == null)
-                {
-                    _nodeLoading = false;
-                    return;
-                }
-                txtChannelPeerID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
-                txtChannelIndex.Text = _selectedChannel.Index.ToString();
-                txtChannelTypeString.Text = _selectedChannel.TypeString;
-                txtChannelAESActive.Text = _selectedChannel.AESActive.ToString();
-                txtChannelDirection.Text = _selectedChannel.Direction.ToString();
-                txtChannelLinkSourceRoles.Text = "";
-                foreach (String role in _selectedChannel.LinkSourceRoles)
-                {
-                    txtChannelLinkSourceRoles.Text += role + "\r\n";
-                }
-                txtChannelLinkTargetRoles.Text = "";
-                foreach (String role in _selectedChannel.LinkTargetRoles)
-                {
-                    txtChannelLinkTargetRoles.Text += role + "\r\n";
-                }
-                txtChannelTeam.Text = _selectedChannel.TeamSerialNumber;
-                txtChannelTeamID.Text = "0x" + _selectedChannel.TeamID.ToString("X2");
-                txtChannelTeamChannel.Text = _selectedChannel.TeamChannel.ToString();
-                txtChannelTeamTag.Text = _selectedChannel.TeamTag;
-                txtChannelTeamMembers.Text = "";
-                foreach (String teamMember in _selectedChannel.TeamMembers)
-                {
-                    txtChannelTeamMembers.Text += teamMember + "\r\n";
-                }
-                txtChannelGroupedWith.Text = _selectedChannel.GroupedWith.ToString();
-                pnChannel.Visible = true;
-            }
-            else if (e.Node.Level == 4 || e.Node.Level == 7)
-            {
-                if (e.Node.Tag == null || !(e.Node.Tag is Variable))
-                {
-                    _nodeLoading = false;
-                    return;
-                }
-                _selectedVariable = (Variable)e.Node.Tag;
-                if (e.Node.Level == 4) _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Tag;
-                else
-                {
-                    _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Parent.Parent.Parent.Tag;
-                    _selectedLink = (Link)e.Node.Parent.Tag;
-                }
-                txtDeviceID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
-                txtDeviceChannel.Text = _selectedVariable.Channel.ToString();
-                txtVariableName.Text = _selectedVariable.Name;
-                txtVariableType.Text = _selectedVariable.Type.ToString();
-                chkVariableReadable.Checked = _selectedVariable.Readable;
-                chkVariableWriteable.Checked = _selectedVariable.Writeable;
-                txtUnit.Text = _selectedVariable.Unit;
-                txtVariableMin.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MinDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MinInteger.ToString() : "");
-                txtVariableMax.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MaxDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MaxInteger.ToString() : "");
-                txtVariableDefault.Text = _selectedVariable.DefaultToString();
-                txtVariableValue.BackColor = System.Drawing.SystemColors.Window;
-                txtVariableValue.Text = _selectedVariable.ToString();
-                if (_selectedVariable is ConfigParameter) bnPutParamset.Visible = true; else bnPutParamset.Visible = false;
-                lblVariableTimer.Text = "";
-                txtUIFlags.Text = "";
-                if ((_selectedVariable.UIFlags & VariableUIFlags.fVisible) == VariableUIFlags.fVisible) txtUIFlags.Text += "Visible\r\n";
-                if ((_selectedVariable.UIFlags & VariableUIFlags.fInternal) == VariableUIFlags.fInternal) txtUIFlags.Text += "Internal\r\n";
-                if ((_selectedVariable.UIFlags & VariableUIFlags.fTransform) == VariableUIFlags.fTransform) txtUIFlags.Text += "Transform\r\n";
-                if ((_selectedVariable.UIFlags & VariableUIFlags.fService) == VariableUIFlags.fService) txtUIFlags.Text += "Service\r\n";
-                if ((_selectedVariable.UIFlags & VariableUIFlags.fSticky) == VariableUIFlags.fSticky) txtUIFlags.Text += "Sticky\r\n";
-                txtValueList.Text = "";
-                for (Int32 i = 0; i < _selectedVariable.ValueList.Length; i++)
-                {
-                    txtValueList.Text += i.ToString() + " " + _selectedVariable.ValueList[i] + "\r\n";
-                }
-                txtSpecialValues.Text = "";
-                if (_selectedVariable.Type == VariableType.tDouble)
-                {
-                    foreach (KeyValuePair<Double, String> specialValue in _selectedVariable.SpecialDoubleValues)
+                    if (e.Node.Level == 2 && e.Node.Tag is Channel)
                     {
-                        txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                        _selectedDevice = (Device)e.Node.Parent.Tag;
+                        _selectedChannel = (Channel)e.Node.Tag;
                     }
-                }
-                else
-                {
-                    foreach (KeyValuePair<Int32, String> specialValue in _selectedVariable.SpecialIntegerValues)
+                    if (e.Node.Level == 3 && e.Node.Parent.Tag is Channel)
                     {
-                        txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                        _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
+                        _selectedChannel = (Channel)e.Node.Parent.Tag;
                     }
+                    if (_selectedChannel == null)
+                    {
+                        _nodeLoading = false;
+                        return;
+                    }
+                    txtChannelPeerID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
+                    txtChannelIndex.Text = _selectedChannel.Index.ToString();
+                    txtChannelTypeString.Text = _selectedChannel.TypeString;
+                    txtChannelAESActive.Text = _selectedChannel.AESActive.ToString();
+                    txtChannelDirection.Text = _selectedChannel.Direction.ToString();
+                    txtChannelLinkSourceRoles.Text = "";
+                    foreach (String role in _selectedChannel.LinkSourceRoles)
+                    {
+                        txtChannelLinkSourceRoles.Text += role + "\r\n";
+                    }
+                    txtChannelLinkTargetRoles.Text = "";
+                    foreach (String role in _selectedChannel.LinkTargetRoles)
+                    {
+                        txtChannelLinkTargetRoles.Text += role + "\r\n";
+                    }
+                    txtChannelTeam.Text = _selectedChannel.TeamSerialNumber;
+                    txtChannelTeamID.Text = "0x" + _selectedChannel.TeamID.ToString("X2");
+                    txtChannelTeamChannel.Text = _selectedChannel.TeamChannel.ToString();
+                    txtChannelTeamTag.Text = _selectedChannel.TeamTag;
+                    txtChannelTeamMembers.Text = "";
+                    foreach (String teamMember in _selectedChannel.TeamMembers)
+                    {
+                        txtChannelTeamMembers.Text += teamMember + "\r\n";
+                    }
+                    txtChannelGroupedWith.Text = _selectedChannel.GroupedWith.ToString();
+                    pnChannel.Visible = true;
                 }
-                if (_selectedVariable.Writeable) txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
-                pnVariable.Visible = true;
+                else if (e.Node.Level == 4 || e.Node.Level == 7)
+                {
+                    if (e.Node.Tag == null || !(e.Node.Tag is Variable))
+                    {
+                        _nodeLoading = false;
+                        return;
+                    }
+                    _selectedVariable = (Variable)e.Node.Tag;
+                    if (e.Node.Level == 4) _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Tag;
+                    else
+                    {
+                        _selectedDevice = (Device)e.Node.Parent.Parent.Parent.Parent.Parent.Parent.Tag;
+                        _selectedLink = (Link)e.Node.Parent.Tag;
+                    }
+                    txtDeviceID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
+                    txtDeviceChannel.Text = _selectedVariable.Channel.ToString();
+                    txtVariableName.Text = _selectedVariable.Name;
+                    txtVariableType.Text = _selectedVariable.Type.ToString();
+                    chkVariableReadable.Checked = _selectedVariable.Readable;
+                    chkVariableWriteable.Checked = _selectedVariable.Writeable;
+                    txtUnit.Text = _selectedVariable.Unit;
+                    txtVariableMin.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MinDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MinInteger.ToString() : "");
+                    txtVariableMax.Text = (_selectedVariable.Type == VariableType.tDouble) ? _selectedVariable.MaxDouble.ToString() : ((_selectedVariable.Type == VariableType.tInteger || _selectedVariable.Type == VariableType.tEnum) ? _selectedVariable.MaxInteger.ToString() : "");
+                    txtVariableDefault.Text = _selectedVariable.DefaultToString();
+                    txtVariableValue.BackColor = System.Drawing.SystemColors.Window;
+                    txtVariableValue.Text = _selectedVariable.ToString();
+                    if (_selectedVariable is ConfigParameter) bnPutParamset.Visible = true; else bnPutParamset.Visible = false;
+                    lblVariableTimer.Text = "";
+                    txtUIFlags.Text = "";
+                    if ((_selectedVariable.UIFlags & VariableUIFlags.fVisible) == VariableUIFlags.fVisible) txtUIFlags.Text += "Visible\r\n";
+                    if ((_selectedVariable.UIFlags & VariableUIFlags.fInternal) == VariableUIFlags.fInternal) txtUIFlags.Text += "Internal\r\n";
+                    if ((_selectedVariable.UIFlags & VariableUIFlags.fTransform) == VariableUIFlags.fTransform) txtUIFlags.Text += "Transform\r\n";
+                    if ((_selectedVariable.UIFlags & VariableUIFlags.fService) == VariableUIFlags.fService) txtUIFlags.Text += "Service\r\n";
+                    if ((_selectedVariable.UIFlags & VariableUIFlags.fSticky) == VariableUIFlags.fSticky) txtUIFlags.Text += "Sticky\r\n";
+                    txtValueList.Text = "";
+                    for (Int32 i = 0; i < _selectedVariable.ValueList.Length; i++)
+                    {
+                        txtValueList.Text += i.ToString() + " " + _selectedVariable.ValueList[i] + "\r\n";
+                    }
+                    txtSpecialValues.Text = "";
+                    if (_selectedVariable.Type == VariableType.tDouble)
+                    {
+                        foreach (KeyValuePair<Double, String> specialValue in _selectedVariable.SpecialDoubleValues)
+                        {
+                            txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                        }
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<Int32, String> specialValue in _selectedVariable.SpecialIntegerValues)
+                        {
+                            txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
+                        }
+                    }
+                    if (_selectedVariable.Writeable) txtVariableValue.ReadOnly = false; else txtVariableValue.ReadOnly = true;
+                    pnVariable.Visible = true;
+                }
+            }
+            catch(Exception ex)
+            {
+                WriteLog(ex.Message);
             }
         }
 
