@@ -28,7 +28,7 @@ namespace HomegearLib
                 socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse("239.255.255.250"), IPAddress.Any));
                 timeout += 500;
                 socket.SendTimeout = 1000;
-                socket.ReceiveTimeout = timeout;
+                socket.ReceiveTimeout = timeout + 1000;
                 socket.SendTo(message, 0, message.Length, SocketFlags.None, multicastEndPoint);
 
                 while(DateTime.Now.Subtract(startTime).TotalMilliseconds < timeout)

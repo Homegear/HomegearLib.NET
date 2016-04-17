@@ -57,6 +57,24 @@ namespace HomegearLibTest
             //chkSSL.Checked = false;
             //txtCertificatePath.Text = "homegearpi.pfx";
 
+            if (Properties.Settings.Default.lastHomegearHostname != "")
+            {
+                AddHomegearHost(Properties.Settings.Default.lastHomegearHostname);
+                SetCbHomegearHostText(Properties.Settings.Default.lastHomegearHostname);
+            }
+
+            txtCallbackPassword.Text = Properties.Settings.Default.lastCallbackPassword;
+            txtCallbackUsername.Text = Properties.Settings.Default.lastCallbackUsername;
+            txtCertificatePassword.Text = Properties.Settings.Default.lastCertificatePassword;
+            txtCertificatePath.Text = Properties.Settings.Default.lastCertificatePath;
+            chkSSL.Checked = Properties.Settings.Default.lastChkSsl;
+            chkVerifyCertificate.Checked = Properties.Settings.Default.lastChkVerifyCertificate;
+            txtHomegearPassword.Text = Properties.Settings.Default.lastHomegearPassword;
+            txtHomegearPort.Text = Properties.Settings.Default.lastHomegearPort;
+            txtHomegearUsername.Text = Properties.Settings.Default.lastHomegearUsername;
+            txtListenIP.Text = Properties.Settings.Default.lastListenIP;
+            txtListenPort.Text = Properties.Settings.Default.lastListenPort;
+
             System.Threading.Thread thread = new System.Threading.Thread(() =>
             {
                 List<Tuple<String, Int32>> instances = Homegear.FindInstances();
@@ -95,7 +113,8 @@ namespace HomegearLibTest
             }
             else
             {
-                cbHomegearHostname.Items.Add(text);
+                if (!cbHomegearHostname.Items.Contains(text) && (text.Length > 0))
+                    cbHomegearHostname.Items.Add(text);
             }
         }
 
@@ -183,7 +202,7 @@ namespace HomegearLibTest
                     devicesNode.ContextMenuStrip = cmDevices;
                     foreach (KeyValuePair<Int32, Device> device in _homegear.Devices)
                     {
-                        TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()));
+                        TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()) + ((device.Value.Name != "") ? " (" + device.Value.Name + ")" : ""));
                         deviceNode.Tag = device.Value;
                         deviceNode.ContextMenuStrip = cmDevice;
 
@@ -201,7 +220,7 @@ namespace HomegearLibTest
                         {
                             foreach (KeyValuePair<Int32, Channel> channel in device.Value.Channels)
                             {
-                                TreeNode channelNode = new TreeNode("Channel " + channel.Key);
+                                TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + channel.Value.TypeString + ")");
                                 channelNode.Tag = channel.Value;
 
                                 TreeNode valuesNode = new TreeNode("Variables");
@@ -397,7 +416,7 @@ namespace HomegearLibTest
         private void frmHaupt_FormClosing(object sender, FormClosingEventArgs e)
         {
             _closing = true;
-            if(_homegear != null) _homegear.Dispose();
+            if (_homegear != null) _homegear.Dispose();
         }
 
         /*private void button1_Click(object sender, EventArgs e)
@@ -433,6 +452,21 @@ namespace HomegearLibTest
             Int32 listenPort = 0;
             Int32.TryParse(txtHomegearPort.Text, out homegearPort);
             Int32.TryParse(txtListenPort.Text, out listenPort);
+
+            Properties.Settings.Default.lastCallbackPassword = txtCallbackPassword.Text;
+            Properties.Settings.Default.lastCallbackUsername = txtCallbackUsername.Text;
+            Properties.Settings.Default.lastCertificatePassword = txtCertificatePassword.Text;
+            Properties.Settings.Default.lastCertificatePath = txtCertificatePath.Text;
+            Properties.Settings.Default.lastChkSsl = chkSSL.Checked;
+            Properties.Settings.Default.lastChkVerifyCertificate = chkVerifyCertificate.Checked;
+            Properties.Settings.Default.lastHomegearHostname = cbHomegearHostname.Text;
+            Properties.Settings.Default.lastHomegearPassword = txtHomegearPassword.Text;
+            Properties.Settings.Default.lastHomegearPort = txtHomegearPort.Text;
+            Properties.Settings.Default.lastHomegearUsername = txtHomegearUsername.Text;
+            Properties.Settings.Default.lastListenIP = txtListenIP.Text;
+            Properties.Settings.Default.lastListenPort = txtListenPort.Text;
+            Properties.Settings.Default.Save();
+
             _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, txtCallbackHostname.Text, txtListenIP.Text, listenPort, sslClientInfo, sslServerInfo);
             _rpc.ClientConnected += _rpc_ClientConnected;
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
@@ -1792,5 +1826,10 @@ namespace HomegearLibTest
             MessageBox.Show(this, "Removing device with ID " + _rightClickedDevice.ID.ToString(), "Removing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
+
+        private void cmDevices_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
     }
 }

@@ -34,6 +34,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
             this.pnDevice = new System.Windows.Forms.Panel();
+            this.txtAESActive = new System.Windows.Forms.TextBox();
+            this.label86 = new System.Windows.Forms.Label();
             this.txtTypeID = new System.Windows.Forms.TextBox();
             this.label85 = new System.Windows.Forms.Label();
             this.txtInterface = new System.Windows.Forms.TextBox();
@@ -252,8 +254,6 @@
             this.tsAddTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
-            this.label86 = new System.Windows.Forms.Label();
-            this.txtAESActive = new System.Windows.Forms.TextBox();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -295,7 +295,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(1329, 153);
+            this.txtLog.Size = new System.Drawing.Size(1329, 155);
             this.txtLog.TabIndex = 0;
             // 
             // splitContainer1
@@ -316,7 +316,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtLog);
             this.splitContainer1.Size = new System.Drawing.Size(1329, 762);
-            this.splitContainer1.SplitterDistance = 603;
+            this.splitContainer1.SplitterDistance = 601;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -342,8 +342,8 @@
             this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
             this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
-            this.splitContainer2.Size = new System.Drawing.Size(1329, 603);
-            this.splitContainer2.SplitterDistance = 439;
+            this.splitContainer2.Size = new System.Drawing.Size(1329, 601);
+            this.splitContainer2.SplitterDistance = 438;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -353,7 +353,7 @@
             this.tvDevices.Location = new System.Drawing.Point(0, 0);
             this.tvDevices.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tvDevices.Name = "tvDevices";
-            this.tvDevices.Size = new System.Drawing.Size(439, 603);
+            this.tvDevices.Size = new System.Drawing.Size(438, 601);
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
@@ -389,13 +389,32 @@
             this.pnDevice.Location = new System.Drawing.Point(0, 0);
             this.pnDevice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(884, 603);
+            this.pnDevice.Size = new System.Drawing.Size(885, 601);
             this.pnDevice.TabIndex = 1;
             this.pnDevice.Visible = false;
             // 
+            // txtAESActive
+            // 
+            this.txtAESActive.Location = new System.Drawing.Point(412, 325);
+            this.txtAESActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtAESActive.Name = "txtAESActive";
+            this.txtAESActive.ReadOnly = true;
+            this.txtAESActive.Size = new System.Drawing.Size(116, 26);
+            this.txtAESActive.TabIndex = 34;
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(273, 328);
+            this.label86.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(46, 20);
+            this.label86.TabIndex = 33;
+            this.label86.Text = "AES:";
+            // 
             // txtTypeID
             // 
-            this.txtTypeID.Location = new System.Drawing.Point(145, 166);
+            this.txtTypeID.Location = new System.Drawing.Point(146, 166);
             this.txtTypeID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtTypeID.Name = "txtTypeID";
             this.txtTypeID.ReadOnly = true;
@@ -405,7 +424,7 @@
             // label85
             // 
             this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(3, 170);
+            this.label85.Location = new System.Drawing.Point(3, 169);
             this.label85.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label85.Name = "label85";
             this.label85.Size = new System.Drawing.Size(68, 20);
@@ -414,7 +433,7 @@
             // 
             // txtInterface
             // 
-            this.txtInterface.Location = new System.Drawing.Point(145, 207);
+            this.txtInterface.Location = new System.Drawing.Point(146, 208);
             this.txtInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtInterface.Name = "txtInterface";
             this.txtInterface.Size = new System.Drawing.Size(385, 26);
@@ -453,7 +472,7 @@
             // 
             // txtRXModes
             // 
-            this.txtRXModes.Location = new System.Drawing.Point(145, 327);
+            this.txtRXModes.Location = new System.Drawing.Point(146, 328);
             this.txtRXModes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtRXModes.Multiline = true;
             this.txtRXModes.Name = "txtRXModes";
@@ -464,7 +483,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 327);
+            this.label31.Location = new System.Drawing.Point(3, 328);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(88, 20);
@@ -473,7 +492,7 @@
             // 
             // txtAvailableFirmware
             // 
-            this.txtAvailableFirmware.Location = new System.Drawing.Point(413, 287);
+            this.txtAvailableFirmware.Location = new System.Drawing.Point(412, 288);
             this.txtAvailableFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtAvailableFirmware.Name = "txtAvailableFirmware";
             this.txtAvailableFirmware.ReadOnly = true;
@@ -492,7 +511,7 @@
             // 
             // txtFirmware
             // 
-            this.txtFirmware.Location = new System.Drawing.Point(145, 287);
+            this.txtFirmware.Location = new System.Drawing.Point(146, 288);
             this.txtFirmware.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFirmware.Name = "txtFirmware";
             this.txtFirmware.ReadOnly = true;
@@ -530,7 +549,7 @@
             // 
             // txtPhysicalAddress
             // 
-            this.txtPhysicalAddress.Location = new System.Drawing.Point(145, 247);
+            this.txtPhysicalAddress.Location = new System.Drawing.Point(146, 248);
             this.txtPhysicalAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtPhysicalAddress.Name = "txtPhysicalAddress";
             this.txtPhysicalAddress.ReadOnly = true;
@@ -639,7 +658,7 @@
             this.pnTriggeredEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTriggeredEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTriggeredEvent.Name = "pnTriggeredEvent";
-            this.pnTriggeredEvent.Size = new System.Drawing.Size(884, 603);
+            this.pnTriggeredEvent.Size = new System.Drawing.Size(885, 601);
             this.pnTriggeredEvent.TabIndex = 45;
             this.pnTriggeredEvent.Visible = false;
             // 
@@ -945,7 +964,7 @@
             this.pnTimedEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTimedEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTimedEvent.Name = "pnTimedEvent";
-            this.pnTimedEvent.Size = new System.Drawing.Size(884, 603);
+            this.pnTimedEvent.Size = new System.Drawing.Size(885, 601);
             this.pnTimedEvent.TabIndex = 44;
             this.pnTimedEvent.Visible = false;
             // 
@@ -1119,7 +1138,7 @@
             this.pnChannel.Location = new System.Drawing.Point(0, 0);
             this.pnChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnChannel.Name = "pnChannel";
-            this.pnChannel.Size = new System.Drawing.Size(884, 603);
+            this.pnChannel.Size = new System.Drawing.Size(885, 601);
             this.pnChannel.TabIndex = 2;
             this.pnChannel.Visible = false;
             // 
@@ -1404,7 +1423,7 @@
             this.pnInterface.Location = new System.Drawing.Point(0, 0);
             this.pnInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(884, 603);
+            this.pnInterface.Size = new System.Drawing.Size(885, 601);
             this.pnInterface.TabIndex = 31;
             this.pnInterface.Visible = false;
             // 
@@ -1572,7 +1591,7 @@
             this.pnHomegear.Location = new System.Drawing.Point(0, 0);
             this.pnHomegear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnHomegear.Name = "pnHomegear";
-            this.pnHomegear.Size = new System.Drawing.Size(884, 603);
+            this.pnHomegear.Size = new System.Drawing.Size(885, 601);
             this.pnHomegear.TabIndex = 33;
             this.pnHomegear.Visible = false;
             // 
@@ -1586,7 +1605,7 @@
             this.txtServiceMessages.Name = "txtServiceMessages";
             this.txtServiceMessages.ReadOnly = true;
             this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtServiceMessages.Size = new System.Drawing.Size(684, 482);
+            this.txtServiceMessages.Size = new System.Drawing.Size(684, 480);
             this.txtServiceMessages.TabIndex = 7;
             // 
             // label59
@@ -1650,7 +1669,7 @@
             this.pnMetadata.Location = new System.Drawing.Point(0, 0);
             this.pnMetadata.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnMetadata.Name = "pnMetadata";
-            this.pnMetadata.Size = new System.Drawing.Size(884, 603);
+            this.pnMetadata.Size = new System.Drawing.Size(885, 601);
             this.pnMetadata.TabIndex = 32;
             this.pnMetadata.Visible = false;
             // 
@@ -1735,7 +1754,7 @@
             this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
             this.pnSystemVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnSystemVariable.Name = "pnSystemVariable";
-            this.pnSystemVariable.Size = new System.Drawing.Size(884, 603);
+            this.pnSystemVariable.Size = new System.Drawing.Size(885, 601);
             this.pnSystemVariable.TabIndex = 31;
             this.pnSystemVariable.Visible = false;
             // 
@@ -1841,7 +1860,7 @@
             this.pnVariable.Location = new System.Drawing.Point(0, 0);
             this.pnVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnVariable.Name = "pnVariable";
-            this.pnVariable.Size = new System.Drawing.Size(884, 603);
+            this.pnVariable.Size = new System.Drawing.Size(885, 601);
             this.pnVariable.TabIndex = 0;
             this.pnVariable.Visible = false;
             // 
@@ -2349,7 +2368,7 @@
             this.txtCallbackUsername.Name = "txtCallbackUsername";
             this.txtCallbackUsername.Size = new System.Drawing.Size(139, 26);
             this.txtCallbackUsername.TabIndex = 15;
-            this.txtCallbackUsername.Text = "temp";
+            this.txtCallbackUsername.Text = "homegear";
             this.txtCallbackUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label7
@@ -2390,7 +2409,7 @@
             this.txtHomegearUsername.Name = "txtHomegearUsername";
             this.txtHomegearUsername.Size = new System.Drawing.Size(139, 26);
             this.txtHomegearUsername.TabIndex = 11;
-            this.txtHomegearUsername.Text = "test2";
+            this.txtHomegearUsername.Text = "homegear";
             this.txtHomegearUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // bnConnect
@@ -2415,6 +2434,7 @@
             this.tsAddDevice});
             this.cmDevices.Name = "cmDevices";
             this.cmDevices.Size = new System.Drawing.Size(317, 124);
+            this.cmDevices.Opening += new System.ComponentModel.CancelEventHandler(this.cmDevices_Opening);
             // 
             // tsEnablePairingMode
             // 
@@ -2452,26 +2472,26 @@
             this.tsReset,
             this.tsRemove});
             this.cmDevice.Name = "cmDevice";
-            this.cmDevice.Size = new System.Drawing.Size(150, 94);
+            this.cmDevice.Size = new System.Drawing.Size(149, 94);
             // 
             // tsUnpair
             // 
             this.tsUnpair.Name = "tsUnpair";
-            this.tsUnpair.Size = new System.Drawing.Size(149, 30);
+            this.tsUnpair.Size = new System.Drawing.Size(148, 30);
             this.tsUnpair.Text = "Unpair";
             this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
             // 
             // tsReset
             // 
             this.tsReset.Name = "tsReset";
-            this.tsReset.Size = new System.Drawing.Size(149, 30);
+            this.tsReset.Size = new System.Drawing.Size(148, 30);
             this.tsReset.Text = "Reset";
             this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
             // 
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(149, 30);
+            this.tsRemove.Size = new System.Drawing.Size(148, 30);
             this.tsRemove.Text = "Remove";
             this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
             // 
@@ -2481,12 +2501,12 @@
             this.cmSystemVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsDeleteSystemVariable});
             this.cmSystemVariable.Name = "cmDevice";
-            this.cmSystemVariable.Size = new System.Drawing.Size(150, 34);
+            this.cmSystemVariable.Size = new System.Drawing.Size(149, 34);
             // 
             // tsDeleteSystemVariable
             // 
             this.tsDeleteSystemVariable.Name = "tsDeleteSystemVariable";
-            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(149, 30);
+            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(148, 30);
             this.tsDeleteSystemVariable.Text = "Remove";
             this.tsDeleteSystemVariable.Click += new System.EventHandler(this.tsDeleteSystemVariable_Click);
             // 
@@ -2526,12 +2546,12 @@
             this.cmMetadataVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveMetadata});
             this.cmMetadataVariable.Name = "cmDevice";
-            this.cmMetadataVariable.Size = new System.Drawing.Size(150, 34);
+            this.cmMetadataVariable.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveMetadata
             // 
             this.tsRemoveMetadata.Name = "tsRemoveMetadata";
-            this.tsRemoveMetadata.Size = new System.Drawing.Size(149, 30);
+            this.tsRemoveMetadata.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveMetadata.Text = "Remove";
             this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
             // 
@@ -2541,12 +2561,12 @@
             this.cmLink.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveLink});
             this.cmLink.Name = "cmDevice";
-            this.cmLink.Size = new System.Drawing.Size(150, 34);
+            this.cmLink.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveLink
             // 
             this.tsRemoveLink.Name = "tsRemoveLink";
-            this.tsRemoveLink.Size = new System.Drawing.Size(149, 30);
+            this.tsRemoveLink.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveLink.Text = "Remove";
             this.tsRemoveLink.Click += new System.EventHandler(this.tsRemoveLink_Click);
             // 
@@ -2571,12 +2591,12 @@
             this.cmTimedEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTimedEvent});
             this.cmTimedEvent.Name = "cmDevice";
-            this.cmTimedEvent.Size = new System.Drawing.Size(150, 34);
+            this.cmTimedEvent.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveTimedEvent
             // 
             this.tsRemoveTimedEvent.Name = "tsRemoveTimedEvent";
-            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(149, 30);
+            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveTimedEvent.Text = "Remove";
             this.tsRemoveTimedEvent.Click += new System.EventHandler(this.tsRemoveTimedEvent_Click);
             // 
@@ -2616,33 +2636,14 @@
             this.cmTriggeredEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTriggeredEvent});
             this.cmTriggeredEvent.Name = "cmDevice";
-            this.cmTriggeredEvent.Size = new System.Drawing.Size(150, 34);
+            this.cmTriggeredEvent.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveTriggeredEvent
             // 
             this.tsRemoveTriggeredEvent.Name = "tsRemoveTriggeredEvent";
-            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(149, 30);
+            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveTriggeredEvent.Text = "Remove";
             this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
-            // 
-            // label86
-            // 
-            this.label86.AutoSize = true;
-            this.label86.Location = new System.Drawing.Point(273, 327);
-            this.label86.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(46, 20);
-            this.label86.TabIndex = 33;
-            this.label86.Text = "AES:";
-            // 
-            // txtAESActive
-            // 
-            this.txtAESActive.Location = new System.Drawing.Point(413, 324);
-            this.txtAESActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtAESActive.Name = "txtAESActive";
-            this.txtAESActive.ReadOnly = true;
-            this.txtAESActive.Size = new System.Drawing.Size(116, 26);
-            this.txtAESActive.TabIndex = 34;
             // 
             // cbHomegearHostname
             // 
@@ -2672,7 +2673,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtCallbackHostname);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(1189, 739);
+            this.MinimumSize = new System.Drawing.Size(1186, 730);
             this.Name = "frmMain";
             this.Text = "HomegearLibTest";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHaupt_FormClosing);

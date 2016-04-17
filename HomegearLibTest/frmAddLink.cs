@@ -35,7 +35,7 @@ namespace HomegearLibTest
             {
                 foreach (KeyValuePair<Int32, Device> devicePair in _homegear.Devices)
                 {
-                    TreeNode deviceNode = new TreeNode("Device " + devicePair.Key);
+                    TreeNode deviceNode = new TreeNode("Device " + devicePair.Key + ((devicePair.Value.Name != "") ? " (" + devicePair.Value.Name + ")" : ""));
                     foreach(KeyValuePair<Int32, Channel> channelPair in devicePair.Value.Channels)
                     {
                         if(channel.LinkSourceRoles.Length > 0)
