@@ -1275,7 +1275,7 @@ namespace HomegearLib.RPC
         public void SetValue(Variable variable)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            RPCVariable response = _client.CallMethod("setValue", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(variable) });
+            RPCVariable response = _client.CallMethod("setValue", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(variable), new RPCVariable(variable.SetValueWait) });
             if (response.ErrorStruct) ThrowError("setValue", response);
         }
 

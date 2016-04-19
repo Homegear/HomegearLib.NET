@@ -85,14 +85,17 @@ namespace HomegearLib
         protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double,string>();
         public ReadOnlyDictionary<Double, String> SpecialDoubleValues { get { return _specialDoubleValues; } }
 
+        protected Boolean _setValueWait = false;
+        public Boolean SetValueWait { get { return _setValueWait; } set { _setValueWait = value; } }
+
         protected Boolean _booleanValue = false;
         public virtual Boolean BooleanValue 
         {
             get
             {
                 return _booleanValue;
-            } 
-            set 
+            }
+            set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
@@ -109,7 +112,7 @@ namespace HomegearLib
             {
                 return _integerValue;
             } 
-            set 
+            set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
@@ -117,7 +120,7 @@ namespace HomegearLib
                 if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue = value;
                 _rpc.SetValue(this);
-            } 
+            }
         }
 
         protected Double _doubleValue = 0;
