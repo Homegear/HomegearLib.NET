@@ -159,8 +159,8 @@ namespace HomegearLib
             } 
         }
 
-        protected String[] _valueList = new String[0];
-        public String[] ValueList { get { return _valueList; } internal set {_valueList = value; } }
+        protected Dictionary<int, string> _valueList = new Dictionary<int, string>();
+        public Dictionary<int, string> ValueList { get { return _valueList; } internal set { _valueList = value; } }
 
         public Variable(Int32 peerID, Int32 channel, String name) : this(null, peerID, channel, name)
         {
@@ -312,11 +312,13 @@ namespace HomegearLib
         internal void SetValueList(RPCVariable valueList)
         {
             if (_type == VariableType.tInteger) _type = VariableType.tEnum;
-            _valueList = new String[valueList.ArrayValue.Count];
-            for(int i = 0; i < valueList.ArrayValue.Count; i++)
+            _valueList = new Dictionary<int, string>();
+            int offset = (int)((_minInteger < 0) ? _minInteger : 0);
+            int x = 0;
+            for (int i = (int)_minInteger; i < valueList.ArrayValue.Count + offset; i++, x++)
             {
-                if (valueList.ArrayValue[i].Type != RPCVariableType.rpcString) continue;
-                _valueList[i] = valueList.ArrayValue[i].StringValue;
+                if (valueList.ArrayValue[x].Type != RPCVariableType.rpcString) continue;
+                _valueList[i] = valueList.ArrayValue[x].StringValue;
             }
         }
 

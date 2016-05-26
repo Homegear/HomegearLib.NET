@@ -1593,9 +1593,9 @@ namespace HomegearLibTest
                     if ((_selectedVariable.UIFlags & VariableUIFlags.fService) == VariableUIFlags.fService) txtUIFlags.Text += "Service\r\n";
                     if ((_selectedVariable.UIFlags & VariableUIFlags.fSticky) == VariableUIFlags.fSticky) txtUIFlags.Text += "Sticky\r\n";
                     txtValueList.Text = "";
-                    for (Int32 i = 0; i < _selectedVariable.ValueList.Length; i++)
+                    foreach (KeyValuePair<int, String> value in _selectedVariable.ValueList)
                     {
-                        txtValueList.Text += i.ToString() + " " + _selectedVariable.ValueList[i] + "\r\n";
+                        txtValueList.Text += value.Key.ToString() + " " + value.Value + "\r\n";
                     }
                     txtSpecialValues.Text = "";
                     if (_selectedVariable.Type == VariableType.tDouble)
@@ -1619,6 +1619,16 @@ namespace HomegearLibTest
             catch(Exception ex)
             {
                 WriteLog(ex.Message);
+            }
+        }
+
+        private void txtVariableValue_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == '\r')
+            {
+                _variableValueChangedTimer.Stop();
+                _variableTimerIndex = 0;
+                _variableValueChangedTimer_Tick(sender, new EventArgs());
             }
         }
 
@@ -1701,7 +1711,8 @@ namespace HomegearLibTest
                     else txtVariableValue.BackColor = Color.PaleVioletRed;
                     break;
                 case VariableType.tBoolean:
-                    if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
+                    String tempBooleanValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
+                    if (Boolean.TryParse(tempBooleanValue, out booleanValue))
                     {
                         txtVariableValue.BackColor = Color.PaleGreen;
                         _selectedVariable.BooleanValue = booleanValue;
@@ -1710,7 +1721,8 @@ namespace HomegearLibTest
                     else txtVariableValue.BackColor = Color.PaleVioletRed;
                     break;
                 case VariableType.tAction:
-                    if (Boolean.TryParse(txtVariableValue.Text, out booleanValue))
+                    String tempActionValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
+                    if (Boolean.TryParse(tempActionValue, out booleanValue))
                     {
                         txtVariableValue.BackColor = Color.PaleGreen;
                         _selectedVariable.BooleanValue = true;
