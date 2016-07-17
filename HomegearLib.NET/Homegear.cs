@@ -109,6 +109,7 @@ namespace HomegearLib
         public delegate void HomegearErrorEventHandler(Homegear sender, Int32 level, String message);
         public delegate void DataReloadEventHandler(Homegear sender);
         public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
+        public delegate void PongEventHandler(Homegear sender, String id);
         public delegate void MetadataUpdatedEventHandler(Homegear sender, Device device, MetadataVariable variable);
         public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
@@ -137,6 +138,11 @@ namespace HomegearLib
         /// Raised when the value of a system variable has changed.
         /// </summary>
         public event SystemVariableUpdatedEventHandler SystemVariableUpdated;
+
+        /// <summary>
+        /// Raised when a pong packet is received.
+        /// </summary>
+        public event PongEventHandler Pong;
 
         /// <summary>
         /// Raised when the value of a metadata variable has changed.
@@ -270,6 +276,7 @@ namespace HomegearLib
             _rpc.HomegearError += _rpc_HomegearError;
             _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated += _rpc_OnSystemVariableUpdated;
+            _rpc.Pong += _rpc_Pong;
             _rpc.SystemVariableDeleted += _rpc_OnSystemVariableDeleted;
             _rpc.MetadataUpdated += _rpc_OnMetadataUpdated;
             _rpc.MetadataDeleted += _rpc_OnMetadataDeleted;
@@ -422,6 +429,12 @@ namespace HomegearLib
             SystemVariable variable = SystemVariables[value.Name];
             variable.SetValue(value);
             if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
+        }
+
+        private void _rpc_Pong(RPCController sender, string id)
+        {
+            if (_disposing) return;
+            if (Pong != null) Pong(this, id);
         }
 
         private void _rpc_OnSystemVariableDeleted(RPCController sender)

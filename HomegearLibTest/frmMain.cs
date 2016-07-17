@@ -285,6 +285,11 @@ namespace HomegearLibTest
             }
         }
 
+        void _homegear_Pong(Homegear sender, string id)
+        {
+            WriteLog("Pong received: ID: " + id);
+        }
+
         void _homegear_OnMetadataUpdated(Homegear sender, Device device, MetadataVariable variable)
         {
             WriteLog("Metadata updated: Device: " + device.ID.ToString() + ", Value: " + variable.ToString());
@@ -476,6 +481,7 @@ namespace HomegearLibTest
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;
             _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
+            _homegear.Pong += _homegear_Pong;
             _homegear.MetadataUpdated += _homegear_OnMetadataUpdated;
             _homegear.DeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
             _homegear.DeviceConfigParameterUpdated += _homegear_OnDeviceConfigParameterUpdated;

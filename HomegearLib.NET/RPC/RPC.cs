@@ -33,6 +33,7 @@ namespace HomegearLib.RPC
     {
         internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
         internal delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
+        internal delegate void PongEventHandler(RPCController sender, String id);
         internal delegate void SystemVariableDeletedEventHandler(RPCController sender);
         internal delegate void MetadataUpdatedEventHandler(RPCController sender, Int32 peerID, MetadataVariable value);
         internal delegate void MetadataDeletedEventHandler(RPCController sender, Int32 peerID);
@@ -52,6 +53,7 @@ namespace HomegearLib.RPC
         #region "Events"
         internal event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
         internal event SystemVariableUpdatedEventHandler SystemVariableUpdated;
+        internal event PongEventHandler Pong;
         internal event SystemVariableDeletedEventHandler SystemVariableDeleted;
         internal event MetadataUpdatedEventHandler MetadataUpdated;
         internal event MetadataDeletedEventHandler MetadataDeleted;
@@ -249,6 +251,10 @@ namespace HomegearLib.RPC
                 if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 0)
                 {
                     if (SystemVariableDeleted != null) SystemVariableDeleted(this);
+                }
+                else if(parameterName == "PONG")
+                {
+                    if (Pong != null) Pong(this, value.StringValue);
                 }
                 else
                 {
