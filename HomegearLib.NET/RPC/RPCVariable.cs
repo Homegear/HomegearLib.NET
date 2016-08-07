@@ -17,6 +17,8 @@ namespace HomegearLib.RPC
         rpcStruct = 0x101,
         rpcDate = 0x10,
         rpcBase64 = 0x11,
+        rpcBinary = 0xD0,
+        rpcInteger64 = 0xD1,
         rpcVariant = 0x1111
     }
 
@@ -41,11 +43,18 @@ namespace HomegearLib.RPC
             set { _stringValue = (value == null) ? "" : value; }
         }
 
-        protected int _integerValue;
-        public virtual int IntegerValue
+        protected Int32 _integerValue;
+        public virtual Int32 IntegerValue
         {
             get { return _integerValue; }
             set { _integerValue = value; }
+        }
+
+        protected Int64 _integerValue64;
+        public virtual Int64 IntegerValue64
+        {
+            get { return _integerValue64; }
+            set { _integerValue64 = value; }
         }
 
         protected bool _booleanValue;
@@ -95,6 +104,18 @@ namespace HomegearLib.RPC
         {
             _type = RPCVariableType.rpcInteger;
             _integerValue = (Int32)value;
+        }
+
+        public RPCVariable(Int64 value)
+        {
+            _type = RPCVariableType.rpcInteger64;
+            _integerValue64 = value;
+        }
+
+        public RPCVariable(UInt64 value)
+        {
+            _type = RPCVariableType.rpcInteger64;
+            _integerValue64 = (Int32)value;
         }
 
         public RPCVariable(Byte value)
@@ -154,6 +175,10 @@ namespace HomegearLib.RPC
                     _integerValue = variable.IntegerValue;
                     _type = RPCVariableType.rpcInteger;
                     break;
+                case VariableType.tInteger64:
+                    _integerValue64 = variable.IntegerValue64;
+                    _type = RPCVariableType.rpcInteger64;
+                    break;
                 case VariableType.tDouble:
                     _floatValue = variable.DoubleValue;
                     _type = RPCVariableType.rpcFloat;
@@ -189,6 +214,8 @@ namespace HomegearLib.RPC
                     return new RPCVariable(RPCVariableType.rpcBoolean);
                 case "INTEGER":
                     return new RPCVariable(RPCVariableType.rpcInteger);
+                case "INTEGER64":
+                    return new RPCVariable(RPCVariableType.rpcInteger64);
                 case "ENUM":
                     return new RPCVariable(RPCVariableType.rpcInteger);
                 case "FLOAT":
@@ -207,6 +234,8 @@ namespace HomegearLib.RPC
                     return _booleanValue.ToString();
                 case RPCVariableType.rpcInteger:
                     return _integerValue.ToString();
+                case RPCVariableType.rpcInteger64:
+                    return _integerValue64.ToString();
                 case RPCVariableType.rpcString:
                     return _stringValue;
                 case RPCVariableType.rpcFloat:
@@ -255,6 +284,9 @@ namespace HomegearLib.RPC
                 case RPCVariableType.rpcInteger:
                     if (_integerValue != variable.IntegerValue) return false;
                     break;
+                case RPCVariableType.rpcInteger64:
+                    if (_integerValue64 != variable.IntegerValue64) return false;
+                    break;
                 case RPCVariableType.rpcString:
                     if (_stringValue != variable.StringValue) return false;
                     break;
@@ -285,6 +317,9 @@ namespace HomegearLib.RPC
                     break;
                 case RPCVariableType.rpcInteger:
                     _integerValue = value.IntegerValue;
+                    break;
+                case RPCVariableType.rpcInteger64:
+                    _integerValue64 = value.IntegerValue64;
                     break;
                 case RPCVariableType.rpcString:
                     _stringValue = (value.StringValue == null) ? "" : value.StringValue;

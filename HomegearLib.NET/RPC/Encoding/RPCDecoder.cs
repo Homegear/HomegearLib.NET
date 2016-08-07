@@ -73,10 +73,18 @@ namespace HomegearLib.RPC.Encoding
 		    {
 			    variable.StringValue = _decoder.DecodeString(packet, ref position);
 		    }
+            else if(type == RPCVariableType.rpcBinary)
+            {
+                _decoder.DecodeBinary(packet, ref position);
+            }
 		    else if(type == RPCVariableType.rpcInteger)
 		    {
 			    variable.IntegerValue = _decoder.DecodeInteger(packet, ref position);
 		    }
+            else if (type == RPCVariableType.rpcInteger64)
+            {
+                variable.IntegerValue64 = _decoder.DecodeInteger64(packet, ref position);
+            }
 		    else if(type == RPCVariableType.rpcFloat)
 		    {
 			    variable.FloatValue = _decoder.DecodeFloat(packet, ref position);
@@ -114,7 +122,7 @@ namespace HomegearLib.RPC.Encoding
 		    for(int i = 0; i < structLength; i++)
 		    {
 			    string name = _decoder.DecodeString(packet, ref position);
-			    rpcStruct.Add(name, DecodeParameter(packet, ref position));
+                rpcStruct.Add(name, DecodeParameter(packet, ref position));
 		    }
 		    return rpcStruct;
         }

@@ -118,6 +118,10 @@ namespace HomegearLib.RPC.Encoding
 		    {
 			    EncodeInteger(packet, variable);
 		    }
+            else if (variable.Type == RPCVariableType.rpcInteger64)
+            {
+                EncodeInteger64(packet, variable);
+            }
             else if (variable.Type == RPCVariableType.rpcFloat)
 		    {
 			    EncodeFloat(packet, variable);
@@ -175,6 +179,12 @@ namespace HomegearLib.RPC.Encoding
         {
 	        EncodeType(packet, RPCVariableType.rpcInteger);
 	        _encoder.EncodeInteger(packet, variable.IntegerValue);
+        }
+
+        private void EncodeInteger64(List<byte> packet, RPCVariable variable)
+        {
+            EncodeType(packet, RPCVariableType.rpcInteger64);
+            _encoder.EncodeInteger64(packet, variable.IntegerValue64);
         }
 
         private void EncodeFloat(List<byte> packet, RPCVariable variable)

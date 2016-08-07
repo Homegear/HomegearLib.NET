@@ -12,6 +12,7 @@ namespace HomegearLib
         tBoolean,
         tAction,
         tInteger,
+        tInteger64,
         tDouble,
         tString,
         tEnum
@@ -79,8 +80,8 @@ namespace HomegearLib
         protected Boolean _writeable = true;
         public Boolean Writeable { get { return _writeable; } internal set { _writeable = value; } }
 
-        protected ReadOnlyDictionary<Int32, String> _specialIntegerValues = new ReadOnlyDictionary<int,string>();
-        public ReadOnlyDictionary<Int32, String> SpecialIntegerValues { get { return _specialIntegerValues; } }
+        protected ReadOnlyDictionary<Int64, String> _specialIntegerValues = new ReadOnlyDictionary<Int64, String>();
+        public ReadOnlyDictionary<Int64, String> SpecialIntegerValues { get { return _specialIntegerValues; } }
 
         protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double,string>();
         public ReadOnlyDictionary<Double, String> SpecialDoubleValues { get { return _specialDoubleValues; } }
@@ -106,12 +107,12 @@ namespace HomegearLib
         }
 
         protected Int32 _integerValue = 0;
-        public virtual Int32 IntegerValue 
-        { 
+        public virtual Int32 IntegerValue
+        {
             get
             {
                 return _integerValue;
-            } 
+            }
             set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
@@ -119,6 +120,24 @@ namespace HomegearLib
                 if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
                 if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue = value;
+                _rpc.SetValue(this);
+            }
+        }
+
+        protected Int64 _integerValue64 = 0;
+        public virtual Int64 IntegerValue64 
+        { 
+            get
+            {
+                return _integerValue64;
+            } 
+            set
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                if (_type != VariableType.tInteger64 && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
+                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
+                _integerValue64 = value;
                 _rpc.SetValue(this);
             }
         }
@@ -204,6 +223,7 @@ namespace HomegearLib
         {
             if (value.Type == RPCVariableType.rpcBoolean) _defaultBoolean = value.BooleanValue;
             else if (value.Type == RPCVariableType.rpcInteger) _defaultInteger = value.IntegerValue;
+            else if (value.Type == RPCVariableType.rpcInteger64) _defaultInteger = value.IntegerValue64;
             else if (value.Type == RPCVariableType.rpcFloat) _defaultDouble = value.FloatValue;
             else if (value.Type == RPCVariableType.rpcString)
             {
@@ -214,12 +234,14 @@ namespace HomegearLib
         internal void SetMin(RPCVariable min)
         {
             if (min.Type == RPCVariableType.rpcInteger) _minInteger = min.IntegerValue;
+            else if (min.Type == RPCVariableType.rpcInteger64) _minInteger = min.IntegerValue64;
             else if (min.Type == RPCVariableType.rpcFloat) _minDouble = min.FloatValue;
         }
 
         internal void SetMax(RPCVariable max)
         {
             if (max.Type == RPCVariableType.rpcInteger) _maxInteger = max.IntegerValue;
+            else if (max.Type == RPCVariableType.rpcInteger64) _maxInteger = max.IntegerValue64;
             else if (max.Type == RPCVariableType.rpcFloat) _maxDouble = max.FloatValue;
         }
 
@@ -236,7 +258,12 @@ namespace HomegearLib
                 case RPCVariableType.rpcInteger:
                     if (_integerValue != rpcVariable.IntegerValue) changed = true;
                     _integerValue = rpcVariable.IntegerValue;
-                    if (_type != VariableType.tEnum) _type = VariableType.tInteger;
+                    if (_type != VariableType.tEnum && _type != VariableType.tInteger64) _type = VariableType.tInteger;
+                    break;
+                case RPCVariableType.rpcInteger64:
+                    if (_integerValue64 != rpcVariable.IntegerValue64) changed = true;
+                    _integerValue64 = rpcVariable.IntegerValue64;
+                    if (_type != VariableType.tEnum && _type != VariableType.tInteger) _type = VariableType.tInteger64;
                     break;
                 case RPCVariableType.rpcFloat:
                     if (_doubleValue != rpcVariable.FloatValue) changed = true;
@@ -266,6 +293,9 @@ namespace HomegearLib
                 case "INTEGER":
                     _type = VariableType.tInteger;
                     break;
+                case "INTEGER64":
+                    _type = VariableType.tInteger64;
+                    break;
                 case "FLOAT":
                     _type = VariableType.tDouble;
                     break;
@@ -292,7 +322,11 @@ namespace HomegearLib
                     break;
                 case VariableType.tInteger:
                     _integerValue = variable.IntegerValue;
-                    if (_type != VariableType.tEnum) _type = VariableType.tInteger;
+                    if (_type != VariableType.tEnum && _type != VariableType.tInteger64) _type = VariableType.tInteger;
+                    break;
+                case VariableType.tInteger64:
+                    _integerValue64 = variable.IntegerValue64;
+                    if (_type != VariableType.tEnum && _type != VariableType.tInteger) _type = VariableType.tInteger64;
                     break;
                 case VariableType.tDouble:
                     _doubleValue = variable.DoubleValue;
@@ -324,16 +358,17 @@ namespace HomegearLib
 
         internal void SetSpecialValues(RPCVariable specialValues)
         {
-            Dictionary<Int32, String> specialIntegerValues = new Dictionary<int,string>();
+            Dictionary<Int64, String> specialIntegerValues = new Dictionary<Int64, string>();
             Dictionary<Double, String> specialDoubleValues = new Dictionary<double,string>();
             foreach (RPCVariable specialValue in specialValues.ArrayValue)
             {
                 if (!specialValue.StructValue.ContainsKey("ID") || !specialValue.StructValue.ContainsKey("VALUE")) continue;
                 RPCVariable value = specialValue.StructValue["VALUE"];
                 if (value.Type == RPCVariableType.rpcInteger) specialIntegerValues.Add(value.IntegerValue, specialValue.StructValue["ID"].StringValue);
+                else if (value.Type == RPCVariableType.rpcInteger64) specialIntegerValues.Add(value.IntegerValue64, specialValue.StructValue["ID"].StringValue);
                 else if (value.Type == RPCVariableType.rpcFloat) specialDoubleValues.Add(value.FloatValue, specialValue.StructValue["ID"].StringValue);
             }
-            if (specialIntegerValues.Count > 0) _specialIntegerValues = new ReadOnlyDictionary<int, string>(specialIntegerValues);
+            if (specialIntegerValues.Count > 0) _specialIntegerValues = new ReadOnlyDictionary<Int64, string>(specialIntegerValues);
             if (specialDoubleValues.Count > 0) _specialDoubleValues = new ReadOnlyDictionary<double, string>(specialDoubleValues);
         }
 
@@ -346,6 +381,8 @@ namespace HomegearLib
                 case VariableType.tAction:
                     return _defaultBoolean.ToString();
                 case VariableType.tInteger:
+                    return _defaultInteger.ToString();
+                case VariableType.tInteger64:
                     return _defaultInteger.ToString();
                 case VariableType.tDouble:
                     return _defaultDouble.ToString();
@@ -367,6 +404,8 @@ namespace HomegearLib
                     return _booleanValue.ToString();
                 case VariableType.tInteger:
                     return _integerValue.ToString();
+                case VariableType.tInteger64:
+                    return _integerValue64.ToString();
                 case VariableType.tDouble:
                     return _doubleValue.ToString();
                 case VariableType.tString:
@@ -388,6 +427,8 @@ namespace HomegearLib
                     return _booleanValue == variable.BooleanValue;
                 case VariableType.tInteger:
                     return _integerValue == variable.IntegerValue;
+                case VariableType.tInteger64:
+                    return _integerValue64 == variable.IntegerValue64;
                 case VariableType.tDouble:
                     return _doubleValue == variable.DoubleValue;
                 case VariableType.tString:

@@ -29,12 +29,22 @@ namespace HomegearLib
             }
         }
 
-        public override int IntegerValue
+        public override Int32 IntegerValue
         {
             get { return _integerValue; }
             set
             {
                 _integerValue = value;
+                if (_rpc != null) _rpc.SetSystemVariable(this);
+            }
+        }
+
+        public override Int64 IntegerValue64
+        {
+            get { return _integerValue64; }
+            set
+            {
+                _integerValue64 = value;
                 if (_rpc != null) _rpc.SetSystemVariable(this);
             }
         }
@@ -112,6 +122,20 @@ namespace HomegearLib
             _name = name;
             _type = RPCVariableType.rpcInteger;
             _integerValue = (Int32)value;
+        }
+
+        public SystemVariable(String name, Int64 value)
+        {
+            _name = name;
+            _type = RPCVariableType.rpcInteger64;
+            _integerValue64 = value;
+        }
+
+        public SystemVariable(String name, UInt64 value)
+        {
+            _name = name;
+            _type = RPCVariableType.rpcInteger64;
+            _integerValue64 = (Int32)value;
         }
 
         public SystemVariable(String name, Byte value)

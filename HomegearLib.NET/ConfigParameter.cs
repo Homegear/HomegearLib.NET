@@ -52,6 +52,26 @@ namespace HomegearLib
         }
 
         /// <summary>
+        /// Sets the integer value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
+        /// </summary>
+        public override Int64 IntegerValue64
+        {
+            get
+            {
+                return _integerValue64;
+            }
+            set
+            {
+                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
+                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
+                if (_type != VariableType.tInteger64 && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
+                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                _integerValue64 = value;
+                _dataPending = true;
+            }
+        }
+
+        /// <summary>
         /// Sets the double value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
         public override Double DoubleValue

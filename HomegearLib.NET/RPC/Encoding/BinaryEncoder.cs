@@ -16,6 +16,18 @@ namespace HomegearLib.RPC.Encoding
             encodedData.Add((byte)(value & 0xFF));
         }
 
+        public void EncodeInteger64(List<byte> encodedData, Int64 value)
+        {
+            encodedData.Add((byte)((value >> 56) & 0xFF));
+            encodedData.Add((byte)((value >> 48) & 0xFF));
+            encodedData.Add((byte)((value >> 40) & 0xFF));
+            encodedData.Add((byte)((value >> 32) & 0xFF));
+            encodedData.Add((byte)((value >> 24) & 0xFF));
+            encodedData.Add((byte)((value >> 16) & 0xFF));
+            encodedData.Add((byte)((value >> 8) & 0xFF));
+            encodedData.Add((byte)(value & 0xFF));
+        }
+
         public void EncodeByte(List<byte> encodedData, byte value)
         {
             encodedData.Add(value);

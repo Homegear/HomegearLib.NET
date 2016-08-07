@@ -11,8 +11,16 @@ namespace HomegearLib.RPC.Encoding
         public int DecodeInteger(byte[] encodedData, ref uint position)
         {
             if (position + 4 > encodedData.Length) return 0;
-            int value = (encodedData[position] << 24) + (encodedData[position + 1] << 16) + (encodedData[position + 2] << 8) + encodedData[position + 3];
+            int value = (encodedData[position] << 24) | (encodedData[position + 1] << 16) | (encodedData[position + 2] << 8) | encodedData[position + 3];
             position += 4;
+            return value;
+        }
+
+        public Int64 DecodeInteger64(byte[] encodedData, ref uint position)
+        {
+            if (position + 8 > encodedData.Length) return 0;
+            Int64 value = ((Int64)encodedData[position] << 56) + ((Int64)encodedData[position + 1] << 48) + ((Int64)encodedData[position + 2] << 40) + ((Int64)encodedData[position + 3] << 32) + ((Int64)encodedData[position + 4] << 24) + ((Int64)encodedData[position + 5] << 16) + ((Int64)encodedData[position + 6] << 8) + (Int64)encodedData[position + 7];
+            position += 8;
             return value;
         }
 
@@ -31,6 +39,15 @@ namespace HomegearLib.RPC.Encoding
             String value = System.Text.UTF8Encoding.UTF8.GetString(encodedData, (int)position, stringLength);
             position += (uint)stringLength;
             return value;
+        }
+
+        public byte[] DecodeBinary(byte[] encodedData, ref uint position)
+        {
+            int binaryLength = DecodeInteger(encodedData, ref position);
+            if (position + binaryLength > encodedData.Length || binaryLength == 0) return new byte[0];
+            byte[] result = new byte[binaryLength];
+            Array.Copy(encodedData, position, result, 0, binaryLength);
+            return result;
         }
 
         public bool DecodeBoolean(byte[] encodedData, ref uint position)

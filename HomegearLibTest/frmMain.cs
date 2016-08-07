@@ -965,6 +965,16 @@ namespace HomegearLibTest
                     }
                     else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
                     break;
+                case RPCVariableType.rpcInteger64:
+                    Int64 integerValue64 = 0;
+                    if (Int64.TryParse(txtSystemVariableValue.Text, out integerValue64))
+                    {
+                        txtSystemVariableValue.BackColor = Color.PaleGreen;
+                        _selectedSystemVariable.IntegerValue64 = integerValue64;
+                        WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + integerValue64.ToString());
+                    }
+                    else txtSystemVariableValue.BackColor = Color.PaleVioletRed;
+                    break;
                 case RPCVariableType.rpcBoolean:
                     Boolean booleanValue = false;
                     if (Boolean.TryParse(txtSystemVariableValue.Text, out booleanValue))
@@ -1139,6 +1149,16 @@ namespace HomegearLibTest
                         txtMetadataValue.BackColor = Color.PaleGreen;
                         _selectedMetadata.IntegerValue = integerValue;
                         WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + integerValue.ToString());
+                    }
+                    else txtMetadataValue.BackColor = Color.PaleVioletRed;
+                    break;
+                case RPCVariableType.rpcInteger64:
+                    Int64 integerValue64 = 0;
+                    if (Int64.TryParse(txtMetadataValue.Text, out integerValue64))
+                    {
+                        txtMetadataValue.BackColor = Color.PaleGreen;
+                        _selectedMetadata.IntegerValue64 = integerValue64;
+                        WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + integerValue64.ToString());
                     }
                     else txtMetadataValue.BackColor = Color.PaleVioletRed;
                     break;
@@ -1613,7 +1633,7 @@ namespace HomegearLibTest
                     }
                     else
                     {
-                        foreach (KeyValuePair<Int32, String> specialValue in _selectedVariable.SpecialIntegerValues)
+                        foreach (KeyValuePair<Int64, String> specialValue in _selectedVariable.SpecialIntegerValues)
                         {
                             txtSpecialValues.Text += specialValue.Key.ToString() + ": " + specialValue.Value + "\r\n";
                         }
@@ -1679,63 +1699,80 @@ namespace HomegearLibTest
 
         void SetVariable()
         {
-            if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
-            Int32 integerValue = 0;
-            Boolean booleanValue = false;
-            switch (_selectedVariable.Type)
+            try
             {
-                case VariableType.tString:
-                    _selectedVariable.StringValue = txtVariableValue.Text;
-                    WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + txtVariableValue.Text);
-                    break;
-                case VariableType.tInteger:
-                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.IntegerValue = integerValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tEnum:
-                    if (Int32.TryParse(txtVariableValue.Text, out integerValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.IntegerValue = integerValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tDouble:
-                    Double doubleValue = 0;
-                    if (Double.TryParse(txtVariableValue.Text, out doubleValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.DoubleValue = doubleValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + doubleValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tBoolean:
-                    String tempBooleanValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
-                    if (Boolean.TryParse(tempBooleanValue, out booleanValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.BooleanValue = booleanValue;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
-                case VariableType.tAction:
-                    String tempActionValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
-                    if (Boolean.TryParse(tempActionValue, out booleanValue))
-                    {
-                        txtVariableValue.BackColor = Color.PaleGreen;
-                        _selectedVariable.BooleanValue = true;
-                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
-                    }
-                    else txtVariableValue.BackColor = Color.PaleVioletRed;
-                    break;
+                if (_selectedVariable == null || _nodeLoading || !_selectedVariable.Writeable) return;
+                Int32 integerValue = 0;
+                Boolean booleanValue = false;
+                switch (_selectedVariable.Type)
+                {
+                    case VariableType.tString:
+                        _selectedVariable.StringValue = txtVariableValue.Text;
+                        WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + txtVariableValue.Text);
+                        break;
+                    case VariableType.tInteger:
+                        if (Int32.TryParse(txtVariableValue.Text, out integerValue))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.IntegerValue = integerValue;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                    case VariableType.tInteger64:
+                        Int64 integerValue64 = 0;
+                        if (Int64.TryParse(txtVariableValue.Text, out integerValue64))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.IntegerValue64 = integerValue64;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue64.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                    case VariableType.tEnum:
+                        if (Int32.TryParse(txtVariableValue.Text, out integerValue))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.IntegerValue = integerValue;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + integerValue.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                    case VariableType.tDouble:
+                        Double doubleValue = 0;
+                        if (Double.TryParse(txtVariableValue.Text, out doubleValue))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.DoubleValue = doubleValue;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + doubleValue.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                    case VariableType.tBoolean:
+                        String tempBooleanValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
+                        if (Boolean.TryParse(tempBooleanValue, out booleanValue))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.BooleanValue = booleanValue;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                    case VariableType.tAction:
+                        String tempActionValue = (txtVariableValue.Text == "1" || txtVariableValue.Text == "t" || txtVariableValue.Text == "T") ? "true" : (txtVariableValue.Text == "0" || txtVariableValue.Text == "f" || txtVariableValue.Text == "F") ? "false" : txtVariableValue.Text;
+                        if (Boolean.TryParse(tempActionValue, out booleanValue))
+                        {
+                            txtVariableValue.BackColor = Color.PaleGreen;
+                            _selectedVariable.BooleanValue = true;
+                            WriteLog("Setting variable \"" + _selectedVariable.Name + "\" of device " + _selectedVariable.PeerID.ToString() + " and channel " + _selectedVariable.Channel.ToString() + " to: " + booleanValue.ToString());
+                        }
+                        else txtVariableValue.BackColor = Color.PaleVioletRed;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
             }
         }
 
