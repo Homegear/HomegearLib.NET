@@ -124,26 +124,23 @@ namespace HomegearLib.RPC
         public void Stop()
         {
             _stopServer = true;
-            lock (_streamLockKey)
+            if (_client != null && _client.Client != null && _client.Client.Connected) _client.Close();
+            if (_listener != null) _listener.Stop();
+            if (_listenThread != null && _listenThread.IsAlive)
             {
-                if (_client != null && _client.Client != null && _client.Client.Connected) _client.Close();
-                if (_listener != null) _listener.Stop();
-                if (_listenThread != null && _listenThread.IsAlive)
+                if (!_listenThread.Join(2000))
                 {
-                    if (!_listenThread.Join(2000))
+                    try
                     {
-                        try
-                        {
-                            _listenThread.Abort();
-                        }
-                        catch (Exception) { }
+                        _listenThread.Abort();
                     }
+                    catch (Exception) { }
                 }
-                _listenThread = null;
-                _listener = null;
-                _client = null;
-                _sslStream = null;
             }
+            _listenThread = null;
+            _listener = null;
+            _client = null;
+            _sslStream = null;
         }
 
         void Listen()
@@ -156,12 +153,12 @@ namespace HomegearLib.RPC
                 {
                     if (_clientConnected.WaitOne(1000)) break;
                 }
-                if(_stopServer) return;
+                if (_stopServer) break;
                 if(_client == null) continue;
                 _sslStream = null;
                 lock (_streamLockKey)
                 {
-                    if (_client == null || !_client.Connected || _stopServer) return;
+                    if (_client == null || !_client.Connected || _stopServer) break;
                     if (_ssl)
                     {
                         _sslStream = new SslStream(_client.GetStream(), true);
@@ -173,18 +170,19 @@ namespace HomegearLib.RPC
                         catch (IOException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
                         _sslStream.ReadTimeout = 5000;
                         _sslStream.WriteTimeout = 5000;
-                        Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
                     }
                     else
                     {
                         _client.Client.ReceiveTimeout = 5000;
                         _client.Client.SendTimeout = 5000;
-                        Connected(this);
                     }
                 }
+
+                if (_ssl) Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
+                else Connected(this);
                 
                 ReadClient();
-                if (_stopServer) return;
+                if (_stopServer) break;
 
                 lock (_streamLockKey)
                 {
@@ -193,8 +191,8 @@ namespace HomegearLib.RPC
                         _client.Close();
                         _client = null;
                     }
-                    Disconnected(this);
                 }
+                Disconnected(this);
             }
         }
 
