@@ -149,6 +149,9 @@ namespace HomegearLib.RPC
         private RPCServer _server = null;
         public RPCServer Server { get { return _server; } }
 
+        private bool _asciiDeviceTypeIdString = false;
+        public bool AsciiDeviceTypeIdString { get { return _asciiDeviceTypeIdString; } set { _asciiDeviceTypeIdString = value; } }
+
         private System.Timers.Timer _keepAliveTimer;
 
         /// <summary>
@@ -580,7 +583,16 @@ namespace HomegearLib.RPC
                 if (!families.ContainsKey(deviceStruct.StructValue["FAMILY"].IntegerValue)) continue;
                 Device device = new Device(this, families[deviceStruct.StructValue["FAMILY"].IntegerValue], deviceStruct.StructValue["ID"].IntegerValue);
                 if (deviceStruct.StructValue.ContainsKey("ADDRESS")) device.SerialNumber = deviceStruct.StructValue["ADDRESS"].StringValue;
-                if (deviceStruct.StructValue.ContainsKey("TYPE")) device.TypeString = deviceStruct.StructValue["TYPE"].StringValue;
+                if (deviceStruct.StructValue.ContainsKey("TYPE"))
+                {
+                    device.TypeString = deviceStruct.StructValue["TYPE"].StringValue;
+                    if(_asciiDeviceTypeIdString)
+                    {
+                        device.TypeString = device.TypeString.Replace(' ', '_');
+                        System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^a-zA-Z0-9_-]");
+                        device.TypeString = regex.Replace(device.TypeString, "");
+                    }
+                }
                 if (deviceStruct.StructValue.ContainsKey("TYPE_ID")) device.TypeID = deviceStruct.StructValue["TYPE_ID"].IntegerValue;
                 if(deviceStruct.StructValue.ContainsKey("CHANNELS"))
                 {
@@ -637,7 +649,16 @@ namespace HomegearLib.RPC
                 if (Families.ContainsKey(response.StructValue["FAMILY"].IntegerValue)) device.Family = Families[response.StructValue["FAMILY"].IntegerValue];
             }
             if (response.StructValue.ContainsKey("ADDRESS")) device.SerialNumber = response.StructValue["ADDRESS"].StringValue;
-            if (response.StructValue.ContainsKey("TYPE")) device.TypeString = response.StructValue["TYPE"].StringValue;
+            if (response.StructValue.ContainsKey("TYPE"))
+            {
+                device.TypeString = response.StructValue["TYPE"].StringValue;
+                if (_asciiDeviceTypeIdString)
+                {
+                    device.TypeString = device.TypeString.Replace(' ', '_');
+                    System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^a-zA-Z0-9_-]");
+                    device.TypeString = regex.Replace(device.TypeString, "");
+                }
+            }
             if (response.StructValue.ContainsKey("TYPE_ID")) device.TypeID = response.StructValue["TYPE_ID"].IntegerValue;
             if (response.StructValue.ContainsKey("PHYSICAL_ADDRESS")) device.Address = response.StructValue["PHYSICAL_ADDRESS"].IntegerValue;
             if (response.StructValue.ContainsKey("RX_MODE")) device.RXMode = (DeviceRXMode)response.StructValue["RX_MODE"].IntegerValue;

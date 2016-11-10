@@ -223,7 +223,7 @@ namespace HomegearLibTest
                                 TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + channel.Value.TypeString + ")");
                                 channelNode.Tag = channel.Value;
 
-                                TreeNode valuesNode = new TreeNode("Variables");
+                                TreeNode valuesNode = new TreeNode("Variables (" + channel.Value.Variables.Count + ")");
                                 foreach (KeyValuePair<String, Variable> variable in channel.Value.Variables)
                                 {
                                     TreeNode variableNode = new TreeNode(variable.Key);
@@ -477,6 +477,7 @@ namespace HomegearLibTest
             _rpc.ClientDisconnected += _rpc_ClientDisconnected;
             _rpc.ServerConnected += _rpc_ServerConnected;
             _rpc.ServerDisconnected += _rpc_ServerDisconnected;
+            _rpc.AsciiDeviceTypeIdString = true;
             _homegear = new Homegear(_rpc, true);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;

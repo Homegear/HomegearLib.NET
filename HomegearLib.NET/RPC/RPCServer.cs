@@ -67,6 +67,8 @@ namespace HomegearLib.RPC
         private Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
 
+        private Object _streamLockKey = new Object();
+
         public RPCServer(String listenIP, Int32 port, SSLServerInfo sslInfo)
         {
             _ssl = sslInfo != null;
@@ -122,23 +124,26 @@ namespace HomegearLib.RPC
         public void Stop()
         {
             _stopServer = true;
-            if (_client != null && _client.Client != null && _client.Client.Connected) _client.Close();
-            if (_listener != null) _listener.Stop();
-            if (_listenThread != null && _listenThread.IsAlive)
+            lock (_streamLockKey)
             {
-                if (!_listenThread.Join(2000))
+                if (_client != null && _client.Client != null && _client.Client.Connected) _client.Close();
+                if (_listener != null) _listener.Stop();
+                if (_listenThread != null && _listenThread.IsAlive)
                 {
-                    try
+                    if (!_listenThread.Join(2000))
                     {
-                        _listenThread.Abort();
+                        try
+                        {
+                            _listenThread.Abort();
+                        }
+                        catch (Exception) { }
                     }
-                    catch (Exception) { }
                 }
+                _listenThread = null;
+                _listener = null;
+                _client = null;
+                _sslStream = null;
             }
-            _listenThread = null;
-            _listener = null;
-            _client = null;
-            _sslStream = null;
         }
 
         void Listen()
@@ -154,33 +159,42 @@ namespace HomegearLib.RPC
                 if(_stopServer) return;
                 if(_client == null) continue;
                 _sslStream = null;
-                if(_ssl)
+                lock (_streamLockKey)
                 {
-                    _sslStream = new SslStream(_client.GetStream(), true);
-                    try
+                    if (_client == null || !_client.Connected || _stopServer) return;
+                    if (_ssl)
                     {
-                        _sslStream.AuthenticateAsServer(_serverCertificate, false, SslProtocols.Tls, true);
+                        _sslStream = new SslStream(_client.GetStream(), true);
+                        try
+                        {
+                            _sslStream.AuthenticateAsServer(_serverCertificate, false, SslProtocols.Tls, true);
+                        }
+                        catch (AuthenticationException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
+                        catch (IOException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
+                        _sslStream.ReadTimeout = 5000;
+                        _sslStream.WriteTimeout = 5000;
+                        Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
                     }
-                    catch (AuthenticationException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
-                    catch (IOException ex) { System.Diagnostics.Debug.WriteLine(ex.Message); continue; }
-                    _sslStream.ReadTimeout = 5000;
-                    _sslStream.WriteTimeout = 5000;
-                    Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
+                    else
+                    {
+                        _client.Client.ReceiveTimeout = 5000;
+                        _client.Client.SendTimeout = 5000;
+                        Connected(this);
+                    }
                 }
-                else
-                {
-                    _client.Client.ReceiveTimeout = 5000;
-                    _client.Client.SendTimeout = 5000;
-                    Connected(this);
-                }
+                
                 ReadClient();
+                if (_stopServer) return;
 
-                if (_client != null && _client.Client != null && _client.Client.Connected) //Might be closed through "Disconnect()"
+                lock (_streamLockKey)
                 {
-                    _client.Close();
-                    _client = null;
+                    if (_client != null && _client.Client != null && _client.Client.Connected) //Might be closed through "Disconnect()"
+                    {
+                        _client.Close();
+                        _client = null;
+                    }
+                    Disconnected(this);
                 }
-                Disconnected(this);
             }
         }
 
@@ -196,9 +210,12 @@ namespace HomegearLib.RPC
             {
                 try
                 {
-                    if (_client == null || !_client.Connected) break;
-                    if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
-                    else bytesReceived = _client.Client.Receive(buffer);
+                    lock (_streamLockKey)
+                    {
+                        if (_client == null || !_client.Connected || _stopServer) break;
+                        if (_ssl) bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
+                        else bytesReceived = _client.Client.Receive(buffer);
+                    }
                     if (bytesReceived == 0) continue;
                     UInt32 bufferPos = 0;
                     while (bufferPos == 0 || bufferPos + dataSize + 8 < bytesReceived)
@@ -232,12 +249,16 @@ namespace HomegearLib.RPC
                                 {
                                     packet = null;
                                     List<byte> responsePacket = _rpcEncoder.EncodeResponse(RPCVariable.CreateError(-32603, "Unauthorized"));
-                                    if (_ssl)
+                                    lock (_streamLockKey)
                                     {
-                                        _sslStream.Write(responsePacket.ToArray());
-                                        _sslStream.Flush();
+                                        if (_client == null || !_client.Connected || _stopServer) break;
+                                        if (_ssl)
+                                        {
+                                            _sslStream.Write(responsePacket.ToArray());
+                                            _sslStream.Flush();
+                                        }
+                                        else _client.Client.Send(responsePacket.ToArray());
                                     }
-                                    else _client.Client.Send(responsePacket.ToArray());
                                     continue;
                                 }
                             }
@@ -257,7 +278,7 @@ namespace HomegearLib.RPC
                             ProcessPacket(packet);
                             packet = null;
                         }
-                        bufferPos = dataSize + 8;
+                        bufferPos += dataSize + 8;
                     }
                 }
                 catch(TimeoutException)
@@ -383,15 +404,19 @@ namespace HomegearLib.RPC
             byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();
             Int32 bytesSent = 1024;
             Int32 bytesToSend = 0;
-            for (int i = 0; i < responsePacket.Length; i += bytesSent)
+            lock (_streamLockKey)
             {
-                bytesToSend = (i + 1024 >= responsePacket.Length) ? responsePacket.Length - i : 1024;
-                if (_ssl)
+                if (_client == null || !_client.Connected || _stopServer) return;
+                for (int i = 0; i < responsePacket.Length; i += bytesSent)
                 {
-                    _sslStream.Write(responsePacket, i, bytesToSend);
-                    _sslStream.Flush();
+                    bytesToSend = (i + 1024 >= responsePacket.Length) ? responsePacket.Length - i : 1024;
+                    if (_ssl)
+                    {
+                        _sslStream.Write(responsePacket, i, bytesToSend);
+                        _sslStream.Flush();
+                    }
+                    else bytesSent = _client.Client.Send(responsePacket, i, bytesToSend, SocketFlags.None);
                 }
-                else bytesSent = _client.Client.Send(responsePacket, i, bytesToSend, SocketFlags.None);
             }
         }
 
@@ -400,8 +425,11 @@ namespace HomegearLib.RPC
             try
             {
                 TcpListener listener = (TcpListener)ar.AsyncState;
-                _client = listener.EndAcceptTcpClient(ar);
-                _clientConnected.Set();
+                lock (_streamLockKey)
+                {
+                    _client = listener.EndAcceptTcpClient(ar);
+                    _clientConnected.Set();
+                }
             }
             catch(ObjectDisposedException)
             {
