@@ -859,6 +859,8 @@ namespace HomegearLibTest
                 txtInterfaceFamily.Text = physicalInterface.Family.Name.ToString();
                 txtInterfaceType.Text = physicalInterface.Type;
                 txtInterfaceAddress.Text = "0x" + physicalInterface.PhysicalAddress.ToString("X2");
+                txtInterfaceIpAddress.Text = physicalInterface.IpAddress;
+                txtInterfaceHostname.Text = physicalInterface.Hostname;
                 txtInterfaceSent.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketSent).ToLongTimeString();
                 txtInterfaceReceived.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketReceived).ToLongTimeString();
                 pnInterface.Visible = true;

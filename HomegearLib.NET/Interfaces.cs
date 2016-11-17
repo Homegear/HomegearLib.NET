@@ -44,6 +44,8 @@ namespace HomegearLib
                     interfacesAdded = true;
                     continue;
                 }
+                physicalInterface.IpAddress = interfacePair.Value.IpAddress;
+                physicalInterface.Hostname = interfacePair.Value.Hostname;
                 physicalInterface.LastPacketReceived = interfacePair.Value.LastPacketReceived;
                 physicalInterface.LastPacketSent = interfacePair.Value.LastPacketSent;
                 physicalInterface.Connected = interfacePair.Value.Connected;

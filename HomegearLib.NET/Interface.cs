@@ -26,6 +26,12 @@ namespace HomegearLib
         private Int32 _physicalAddress = 0;
         public Int32 PhysicalAddress { get { return _physicalAddress; } internal set { _physicalAddress = value; } }
 
+        private String _ipAddress = "";
+        public String IpAddress { get { return _ipAddress; } internal set { _ipAddress = value; } }
+
+        private String _hostname = "";
+        public String Hostname { get { return _hostname; } internal set { _hostname = value; } }
+
         private Int32 _lastPacketReceived = 0;
         public Int32 LastPacketReceived { get { return _lastPacketReceived; } internal set { _lastPacketReceived = value; } }
 

@@ -255,6 +255,10 @@
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
+            this.txtInterfaceIpAddress = new System.Windows.Forms.TextBox();
+            this.label87 = new System.Windows.Forms.Label();
+            this.txtInterfaceHostname = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -333,15 +337,15 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
+            this.splitContainer2.Panel2.Controls.Add(this.pnHomegear);
+            this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
+            this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnTriggeredEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnTimedEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
-            this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
-            this.splitContainer2.Panel2.Controls.Add(this.pnHomegear);
-            this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
-            this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Size = new System.Drawing.Size(1329, 601);
             this.splitContainer2.SplitterDistance = 438;
             this.splitContainer2.SplitterWidth = 6;
@@ -1724,6 +1728,10 @@
             // 
             // pnInterface
             // 
+            this.pnInterface.Controls.Add(this.txtInterfaceHostname);
+            this.pnInterface.Controls.Add(this.label88);
+            this.pnInterface.Controls.Add(this.txtInterfaceIpAddress);
+            this.pnInterface.Controls.Add(this.label87);
             this.pnInterface.Controls.Add(this.txtInterfaceReceived);
             this.pnInterface.Controls.Add(this.label48);
             this.pnInterface.Controls.Add(this.txtInterfaceSent);
@@ -1750,7 +1758,7 @@
             // 
             // txtInterfaceReceived
             // 
-            this.txtInterfaceReceived.Location = new System.Drawing.Point(146, 245);
+            this.txtInterfaceReceived.Location = new System.Drawing.Point(146, 313);
             this.txtInterfaceReceived.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtInterfaceReceived.Name = "txtInterfaceReceived";
             this.txtInterfaceReceived.ReadOnly = true;
@@ -1760,7 +1768,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(4, 249);
+            this.label48.Location = new System.Drawing.Point(4, 317);
             this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(114, 20);
@@ -1769,7 +1777,7 @@
             // 
             // txtInterfaceSent
             // 
-            this.txtInterfaceSent.Location = new System.Drawing.Point(146, 205);
+            this.txtInterfaceSent.Location = new System.Drawing.Point(146, 273);
             this.txtInterfaceSent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtInterfaceSent.Name = "txtInterfaceSent";
             this.txtInterfaceSent.ReadOnly = true;
@@ -1779,7 +1787,7 @@
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(4, 209);
+            this.label47.Location = new System.Drawing.Point(4, 277);
             this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(82, 20);
@@ -2654,6 +2662,44 @@
             this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
             this.cbHomegearHostname.TabIndex = 16;
             // 
+            // txtInterfaceIpAddress
+            // 
+            this.txtInterfaceIpAddress.Location = new System.Drawing.Point(146, 201);
+            this.txtInterfaceIpAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceIpAddress.Name = "txtInterfaceIpAddress";
+            this.txtInterfaceIpAddress.ReadOnly = true;
+            this.txtInterfaceIpAddress.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceIpAddress.TabIndex = 40;
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(4, 205);
+            this.label87.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(91, 20);
+            this.label87.TabIndex = 39;
+            this.label87.Text = "IP Address:";
+            // 
+            // txtInterfaceHostname
+            // 
+            this.txtInterfaceHostname.Location = new System.Drawing.Point(146, 237);
+            this.txtInterfaceHostname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceHostname.Name = "txtInterfaceHostname";
+            this.txtInterfaceHostname.ReadOnly = true;
+            this.txtInterfaceHostname.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceHostname.TabIndex = 42;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(4, 241);
+            this.label88.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(87, 20);
+            this.label88.TabIndex = 41;
+            this.label88.Text = "Hostname:";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -2952,6 +2998,10 @@
         private System.Windows.Forms.TextBox txtAESActive;
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.ComboBox cbHomegearHostname;
+        private System.Windows.Forms.TextBox txtInterfaceHostname;
+        private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.TextBox txtInterfaceIpAddress;
+        private System.Windows.Forms.Label label87;
     }
 }
 

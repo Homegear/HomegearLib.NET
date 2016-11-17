@@ -1089,6 +1089,8 @@ namespace HomegearLib.RPC
                 if (interfaceStruct.StructValue.ContainsKey("CONNECTED")) physicalInterface.Connected = interfaceStruct.StructValue["CONNECTED"].BooleanValue;
                 if (interfaceStruct.StructValue.ContainsKey("DEFAULT")) physicalInterface.Default = interfaceStruct.StructValue["DEFAULT"].BooleanValue;
                 if (interfaceStruct.StructValue.ContainsKey("PHYSICALADDRESS")) physicalInterface.PhysicalAddress = interfaceStruct.StructValue["PHYSICALADDRESS"].IntegerValue;
+                if (interfaceStruct.StructValue.ContainsKey("IP_ADDRESS")) physicalInterface.IpAddress = interfaceStruct.StructValue["IP_ADDRESS"].StringValue;
+                if (interfaceStruct.StructValue.ContainsKey("HOSTNAME")) physicalInterface.Hostname = interfaceStruct.StructValue["HOSTNAME"].StringValue;
                 if (interfaceStruct.StructValue.ContainsKey("LASTPACKETRECEIVED")) physicalInterface.LastPacketReceived = interfaceStruct.StructValue["LASTPACKETRECEIVED"].IntegerValue;
                 if (interfaceStruct.StructValue.ContainsKey("LASTPACKETSENT")) physicalInterface.LastPacketSent = interfaceStruct.StructValue["LASTPACKETSENT"].IntegerValue;
                 interfaces.Add(physicalInterface.ID, physicalInterface);
