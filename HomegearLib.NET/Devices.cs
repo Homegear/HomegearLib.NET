@@ -75,5 +75,34 @@ namespace HomegearLib
         {
             return _rpc.AddDevice(serialNumber);
         }
+
+        public Int32 Create(Family family, Int32 deviceType, String serialNumber, Int32 address, Int32 firmwareVersion)
+        {
+            return _rpc.CreateDevice(family, deviceType, serialNumber, address, firmwareVersion);
+        }
+
+        /// <summary>
+        /// Searches for new devices on all supported device families and returns the number of newly found devices.
+        /// </summary>
+        /// <returns>The number of newly found devices.</returns>
+        public Int32 Search()
+        {
+            return _rpc.SearchDevices();
+        }
+
+        public void StartSniffing(Family family)
+        {
+            _rpc.StartSniffing(family);
+        }
+
+        public void StopSniffing(Family family)
+        {
+            _rpc.StopSniffing(family);
+        }
+
+        public Dictionary<Int32, SniffedDeviceInfo> GetSniffedDevices(Family family)
+        {
+            return _rpc.GetSniffedDevices(family);
+        }
     }
 }

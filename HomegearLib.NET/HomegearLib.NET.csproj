@@ -76,6 +76,7 @@
     <Compile Include="RPC\SSLClientInfo.cs" />
     <Compile Include="RPC\SSLServerInfo.cs" />
     <Compile Include="ServiceMessage.cs" />
+    <Compile Include="SniffedDeviceInfo.cs" />
     <Compile Include="SSDP.cs" />
     <Compile Include="SystemVariable.cs" />
     <Compile Include="SystemVariables.cs" />

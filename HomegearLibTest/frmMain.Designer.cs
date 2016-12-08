@@ -33,6 +33,50 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnInterface = new System.Windows.Forms.Panel();
+            this.txtInterfaceHostname = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
+            this.txtInterfaceIpAddress = new System.Windows.Forms.TextBox();
+            this.label87 = new System.Windows.Forms.Label();
+            this.txtInterfaceReceived = new System.Windows.Forms.TextBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.txtInterfaceSent = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.txtInterfaceDefault = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.txtInterfaceConnected = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.txtInterfaceType = new System.Windows.Forms.TextBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.txtInterfaceFamily = new System.Windows.Forms.TextBox();
+            this.label50 = new System.Windows.Forms.Label();
+            this.txtInterfaceAddress = new System.Windows.Forms.TextBox();
+            this.label51 = new System.Windows.Forms.Label();
+            this.txtInterfaceID = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.pnHomegear = new System.Windows.Forms.Panel();
+            this.txtServiceMessages = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.TextBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.txtLogLevel = new System.Windows.Forms.TextBox();
+            this.label62 = new System.Windows.Forms.Label();
+            this.pnMetadata = new System.Windows.Forms.Panel();
+            this.txtMetadataType = new System.Windows.Forms.TextBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.lblMetadataTimer = new System.Windows.Forms.Label();
+            this.txtMetadataValue = new System.Windows.Forms.TextBox();
+            this.label57 = new System.Windows.Forms.Label();
+            this.txtMetadataName = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.pnSystemVariable = new System.Windows.Forms.Panel();
+            this.txtSystemVariableType = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
+            this.lblSystemVariableTimer = new System.Windows.Forms.Label();
+            this.txtSystemVariableValue = new System.Windows.Forms.TextBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.txtSystemVariableName = new System.Windows.Forms.TextBox();
+            this.label61 = new System.Windows.Forms.Label();
             this.pnVariable = new System.Windows.Forms.Panel();
             this.bnPutParamset = new System.Windows.Forms.Button();
             this.txtUnit = new System.Windows.Forms.TextBox();
@@ -160,46 +204,6 @@
             this.label42 = new System.Windows.Forms.Label();
             this.txtChannelPeerID = new System.Windows.Forms.TextBox();
             this.label43 = new System.Windows.Forms.Label();
-            this.pnInterface = new System.Windows.Forms.Panel();
-            this.txtInterfaceReceived = new System.Windows.Forms.TextBox();
-            this.label48 = new System.Windows.Forms.Label();
-            this.txtInterfaceSent = new System.Windows.Forms.TextBox();
-            this.label47 = new System.Windows.Forms.Label();
-            this.txtInterfaceDefault = new System.Windows.Forms.TextBox();
-            this.label45 = new System.Windows.Forms.Label();
-            this.txtInterfaceConnected = new System.Windows.Forms.TextBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.txtInterfaceType = new System.Windows.Forms.TextBox();
-            this.label46 = new System.Windows.Forms.Label();
-            this.txtInterfaceFamily = new System.Windows.Forms.TextBox();
-            this.label50 = new System.Windows.Forms.Label();
-            this.txtInterfaceAddress = new System.Windows.Forms.TextBox();
-            this.label51 = new System.Windows.Forms.Label();
-            this.txtInterfaceID = new System.Windows.Forms.TextBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.pnHomegear = new System.Windows.Forms.Panel();
-            this.txtServiceMessages = new System.Windows.Forms.TextBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.txtVersion = new System.Windows.Forms.TextBox();
-            this.label56 = new System.Windows.Forms.Label();
-            this.txtLogLevel = new System.Windows.Forms.TextBox();
-            this.label62 = new System.Windows.Forms.Label();
-            this.pnMetadata = new System.Windows.Forms.Panel();
-            this.txtMetadataType = new System.Windows.Forms.TextBox();
-            this.label55 = new System.Windows.Forms.Label();
-            this.lblMetadataTimer = new System.Windows.Forms.Label();
-            this.txtMetadataValue = new System.Windows.Forms.TextBox();
-            this.label57 = new System.Windows.Forms.Label();
-            this.txtMetadataName = new System.Windows.Forms.TextBox();
-            this.label58 = new System.Windows.Forms.Label();
-            this.pnSystemVariable = new System.Windows.Forms.Panel();
-            this.txtSystemVariableType = new System.Windows.Forms.TextBox();
-            this.label49 = new System.Windows.Forms.Label();
-            this.lblSystemVariableTimer = new System.Windows.Forms.Label();
-            this.txtSystemVariableValue = new System.Windows.Forms.TextBox();
-            this.label52 = new System.Windows.Forms.Label();
-            this.txtSystemVariableName = new System.Windows.Forms.TextBox();
-            this.label61 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtHomegearPort = new System.Windows.Forms.TextBox();
@@ -230,6 +234,7 @@
             this.tsDisablePairingMode = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSearchDevices = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsCreateDevice = new System.Windows.Forms.ToolStripMenuItem();
             this.cmDevice = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsUnpair = new System.Windows.Forms.ToolStripMenuItem();
             this.tsReset = new System.Windows.Forms.ToolStripMenuItem();
@@ -255,10 +260,7 @@
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
-            this.txtInterfaceIpAddress = new System.Windows.Forms.TextBox();
-            this.label87 = new System.Windows.Forms.Label();
-            this.txtInterfaceHostname = new System.Windows.Forms.TextBox();
-            this.label88 = new System.Windows.Forms.Label();
+            this.tsSniffPackets = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -267,15 +269,15 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnInterface.SuspendLayout();
+            this.pnHomegear.SuspendLayout();
+            this.pnMetadata.SuspendLayout();
+            this.pnSystemVariable.SuspendLayout();
             this.pnVariable.SuspendLayout();
             this.pnDevice.SuspendLayout();
             this.pnTriggeredEvent.SuspendLayout();
             this.pnTimedEvent.SuspendLayout();
             this.pnChannel.SuspendLayout();
-            this.pnInterface.SuspendLayout();
-            this.pnHomegear.SuspendLayout();
-            this.pnMetadata.SuspendLayout();
-            this.pnSystemVariable.SuspendLayout();
             this.gbSSL.SuspendLayout();
             this.cmDevices.SuspendLayout();
             this.cmDevice.SuspendLayout();
@@ -362,6 +364,473 @@
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnInterface
+            // 
+            this.pnInterface.Controls.Add(this.txtInterfaceHostname);
+            this.pnInterface.Controls.Add(this.label88);
+            this.pnInterface.Controls.Add(this.txtInterfaceIpAddress);
+            this.pnInterface.Controls.Add(this.label87);
+            this.pnInterface.Controls.Add(this.txtInterfaceReceived);
+            this.pnInterface.Controls.Add(this.label48);
+            this.pnInterface.Controls.Add(this.txtInterfaceSent);
+            this.pnInterface.Controls.Add(this.label47);
+            this.pnInterface.Controls.Add(this.txtInterfaceDefault);
+            this.pnInterface.Controls.Add(this.label45);
+            this.pnInterface.Controls.Add(this.txtInterfaceConnected);
+            this.pnInterface.Controls.Add(this.label54);
+            this.pnInterface.Controls.Add(this.txtInterfaceType);
+            this.pnInterface.Controls.Add(this.label46);
+            this.pnInterface.Controls.Add(this.txtInterfaceFamily);
+            this.pnInterface.Controls.Add(this.label50);
+            this.pnInterface.Controls.Add(this.txtInterfaceAddress);
+            this.pnInterface.Controls.Add(this.label51);
+            this.pnInterface.Controls.Add(this.txtInterfaceID);
+            this.pnInterface.Controls.Add(this.label53);
+            this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnInterface.Location = new System.Drawing.Point(0, 0);
+            this.pnInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnInterface.Name = "pnInterface";
+            this.pnInterface.Size = new System.Drawing.Size(885, 601);
+            this.pnInterface.TabIndex = 31;
+            this.pnInterface.Visible = false;
+            // 
+            // txtInterfaceHostname
+            // 
+            this.txtInterfaceHostname.Location = new System.Drawing.Point(146, 237);
+            this.txtInterfaceHostname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceHostname.Name = "txtInterfaceHostname";
+            this.txtInterfaceHostname.ReadOnly = true;
+            this.txtInterfaceHostname.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceHostname.TabIndex = 42;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(4, 241);
+            this.label88.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(87, 20);
+            this.label88.TabIndex = 41;
+            this.label88.Text = "Hostname:";
+            // 
+            // txtInterfaceIpAddress
+            // 
+            this.txtInterfaceIpAddress.Location = new System.Drawing.Point(146, 201);
+            this.txtInterfaceIpAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceIpAddress.Name = "txtInterfaceIpAddress";
+            this.txtInterfaceIpAddress.ReadOnly = true;
+            this.txtInterfaceIpAddress.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceIpAddress.TabIndex = 40;
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(4, 205);
+            this.label87.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(91, 20);
+            this.label87.TabIndex = 39;
+            this.label87.Text = "IP Address:";
+            // 
+            // txtInterfaceReceived
+            // 
+            this.txtInterfaceReceived.Location = new System.Drawing.Point(146, 313);
+            this.txtInterfaceReceived.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceReceived.Name = "txtInterfaceReceived";
+            this.txtInterfaceReceived.ReadOnly = true;
+            this.txtInterfaceReceived.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceReceived.TabIndex = 38;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(4, 317);
+            this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(114, 20);
+            this.label48.TabIndex = 37;
+            this.label48.Text = "Last Received:";
+            // 
+            // txtInterfaceSent
+            // 
+            this.txtInterfaceSent.Location = new System.Drawing.Point(146, 273);
+            this.txtInterfaceSent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceSent.Name = "txtInterfaceSent";
+            this.txtInterfaceSent.ReadOnly = true;
+            this.txtInterfaceSent.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceSent.TabIndex = 36;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(4, 277);
+            this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(82, 20);
+            this.label47.TabIndex = 35;
+            this.label47.Text = "Last Sent:";
+            // 
+            // txtInterfaceDefault
+            // 
+            this.txtInterfaceDefault.Location = new System.Drawing.Point(414, 45);
+            this.txtInterfaceDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceDefault.Name = "txtInterfaceDefault";
+            this.txtInterfaceDefault.ReadOnly = true;
+            this.txtInterfaceDefault.Size = new System.Drawing.Size(116, 26);
+            this.txtInterfaceDefault.TabIndex = 34;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(273, 49);
+            this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(65, 20);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "Default:";
+            // 
+            // txtInterfaceConnected
+            // 
+            this.txtInterfaceConnected.Location = new System.Drawing.Point(146, 45);
+            this.txtInterfaceConnected.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceConnected.Name = "txtInterfaceConnected";
+            this.txtInterfaceConnected.ReadOnly = true;
+            this.txtInterfaceConnected.Size = new System.Drawing.Size(116, 26);
+            this.txtInterfaceConnected.TabIndex = 32;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(4, 49);
+            this.label54.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(91, 20);
+            this.label54.TabIndex = 31;
+            this.label54.Text = "Connected:";
+            // 
+            // txtInterfaceType
+            // 
+            this.txtInterfaceType.Location = new System.Drawing.Point(146, 125);
+            this.txtInterfaceType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceType.Name = "txtInterfaceType";
+            this.txtInterfaceType.ReadOnly = true;
+            this.txtInterfaceType.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceType.TabIndex = 28;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(4, 129);
+            this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(47, 20);
+            this.label46.TabIndex = 27;
+            this.label46.Text = "Type:";
+            // 
+            // txtInterfaceFamily
+            // 
+            this.txtInterfaceFamily.Location = new System.Drawing.Point(146, 85);
+            this.txtInterfaceFamily.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceFamily.Name = "txtInterfaceFamily";
+            this.txtInterfaceFamily.ReadOnly = true;
+            this.txtInterfaceFamily.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceFamily.TabIndex = 9;
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(4, 89);
+            this.label50.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(58, 20);
+            this.label50.TabIndex = 8;
+            this.label50.Text = "Family:";
+            // 
+            // txtInterfaceAddress
+            // 
+            this.txtInterfaceAddress.Location = new System.Drawing.Point(146, 165);
+            this.txtInterfaceAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceAddress.Name = "txtInterfaceAddress";
+            this.txtInterfaceAddress.ReadOnly = true;
+            this.txtInterfaceAddress.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceAddress.TabIndex = 7;
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(4, 169);
+            this.label51.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(133, 20);
+            this.label51.TabIndex = 6;
+            this.label51.Text = "Physical Address:";
+            // 
+            // txtInterfaceID
+            // 
+            this.txtInterfaceID.Location = new System.Drawing.Point(146, 5);
+            this.txtInterfaceID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtInterfaceID.Name = "txtInterfaceID";
+            this.txtInterfaceID.ReadOnly = true;
+            this.txtInterfaceID.Size = new System.Drawing.Size(385, 26);
+            this.txtInterfaceID.TabIndex = 3;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(4, 9);
+            this.label53.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(30, 20);
+            this.label53.TabIndex = 2;
+            this.label53.Text = "ID:";
+            // 
+            // pnHomegear
+            // 
+            this.pnHomegear.Controls.Add(this.txtServiceMessages);
+            this.pnHomegear.Controls.Add(this.label59);
+            this.pnHomegear.Controls.Add(this.txtVersion);
+            this.pnHomegear.Controls.Add(this.label56);
+            this.pnHomegear.Controls.Add(this.txtLogLevel);
+            this.pnHomegear.Controls.Add(this.label62);
+            this.pnHomegear.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnHomegear.Location = new System.Drawing.Point(0, 0);
+            this.pnHomegear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnHomegear.Name = "pnHomegear";
+            this.pnHomegear.Size = new System.Drawing.Size(885, 601);
+            this.pnHomegear.TabIndex = 33;
+            this.pnHomegear.Visible = false;
+            // 
+            // txtServiceMessages
+            // 
+            this.txtServiceMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtServiceMessages.Location = new System.Drawing.Point(9, 114);
+            this.txtServiceMessages.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtServiceMessages.Multiline = true;
+            this.txtServiceMessages.Name = "txtServiceMessages";
+            this.txtServiceMessages.ReadOnly = true;
+            this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtServiceMessages.Size = new System.Drawing.Size(684, 480);
+            this.txtServiceMessages.TabIndex = 7;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(4, 89);
+            this.label59.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(142, 20);
+            this.label59.TabIndex = 6;
+            this.label59.Text = "Service Messages:";
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.Location = new System.Drawing.Point(99, 5);
+            this.txtVersion.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.ReadOnly = true;
+            this.txtVersion.Size = new System.Drawing.Size(150, 26);
+            this.txtVersion.TabIndex = 5;
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(4, 9);
+            this.label56.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(67, 20);
+            this.label56.TabIndex = 4;
+            this.label56.Text = "Version:";
+            // 
+            // txtLogLevel
+            // 
+            this.txtLogLevel.Location = new System.Drawing.Point(99, 45);
+            this.txtLogLevel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtLogLevel.Name = "txtLogLevel";
+            this.txtLogLevel.Size = new System.Drawing.Size(150, 26);
+            this.txtLogLevel.TabIndex = 3;
+            this.txtLogLevel.TextChanged += new System.EventHandler(this.txtLogLevel_TextChanged);
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(4, 49);
+            this.label62.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(81, 20);
+            this.label62.TabIndex = 2;
+            this.label62.Text = "Log Level:";
+            // 
+            // pnMetadata
+            // 
+            this.pnMetadata.Controls.Add(this.txtMetadataType);
+            this.pnMetadata.Controls.Add(this.label55);
+            this.pnMetadata.Controls.Add(this.lblMetadataTimer);
+            this.pnMetadata.Controls.Add(this.txtMetadataValue);
+            this.pnMetadata.Controls.Add(this.label57);
+            this.pnMetadata.Controls.Add(this.txtMetadataName);
+            this.pnMetadata.Controls.Add(this.label58);
+            this.pnMetadata.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnMetadata.Location = new System.Drawing.Point(0, 0);
+            this.pnMetadata.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnMetadata.Name = "pnMetadata";
+            this.pnMetadata.Size = new System.Drawing.Size(885, 601);
+            this.pnMetadata.TabIndex = 32;
+            this.pnMetadata.Visible = false;
+            // 
+            // txtMetadataType
+            // 
+            this.txtMetadataType.Location = new System.Drawing.Point(146, 45);
+            this.txtMetadataType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtMetadataType.Name = "txtMetadataType";
+            this.txtMetadataType.ReadOnly = true;
+            this.txtMetadataType.Size = new System.Drawing.Size(385, 26);
+            this.txtMetadataType.TabIndex = 31;
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(4, 49);
+            this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(47, 20);
+            this.label55.TabIndex = 30;
+            this.label55.Text = "Type:";
+            // 
+            // lblMetadataTimer
+            // 
+            this.lblMetadataTimer.AutoSize = true;
+            this.lblMetadataTimer.Location = new System.Drawing.Point(542, 89);
+            this.lblMetadataTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblMetadataTimer.Name = "lblMetadataTimer";
+            this.lblMetadataTimer.Size = new System.Drawing.Size(173, 20);
+            this.lblMetadataTimer.TabIndex = 29;
+            this.lblMetadataTimer.Text = "Sending in 5 seconds...";
+            // 
+            // txtMetadataValue
+            // 
+            this.txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
+            this.txtMetadataValue.Location = new System.Drawing.Point(146, 85);
+            this.txtMetadataValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtMetadataValue.Name = "txtMetadataValue";
+            this.txtMetadataValue.Size = new System.Drawing.Size(385, 26);
+            this.txtMetadataValue.TabIndex = 28;
+            this.txtMetadataValue.TextChanged += new System.EventHandler(this.txtMetadataValue_TextChanged);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(4, 89);
+            this.label57.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(54, 20);
+            this.label57.TabIndex = 27;
+            this.label57.Text = "Value:";
+            // 
+            // txtMetadataName
+            // 
+            this.txtMetadataName.Location = new System.Drawing.Point(146, 5);
+            this.txtMetadataName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtMetadataName.Name = "txtMetadataName";
+            this.txtMetadataName.ReadOnly = true;
+            this.txtMetadataName.Size = new System.Drawing.Size(385, 26);
+            this.txtMetadataName.TabIndex = 3;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(4, 9);
+            this.label58.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(55, 20);
+            this.label58.TabIndex = 2;
+            this.label58.Text = "Name:";
+            // 
+            // pnSystemVariable
+            // 
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableType);
+            this.pnSystemVariable.Controls.Add(this.label49);
+            this.pnSystemVariable.Controls.Add(this.lblSystemVariableTimer);
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableValue);
+            this.pnSystemVariable.Controls.Add(this.label52);
+            this.pnSystemVariable.Controls.Add(this.txtSystemVariableName);
+            this.pnSystemVariable.Controls.Add(this.label61);
+            this.pnSystemVariable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
+            this.pnSystemVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnSystemVariable.Name = "pnSystemVariable";
+            this.pnSystemVariable.Size = new System.Drawing.Size(885, 601);
+            this.pnSystemVariable.TabIndex = 31;
+            this.pnSystemVariable.Visible = false;
+            // 
+            // txtSystemVariableType
+            // 
+            this.txtSystemVariableType.Location = new System.Drawing.Point(146, 45);
+            this.txtSystemVariableType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtSystemVariableType.Name = "txtSystemVariableType";
+            this.txtSystemVariableType.ReadOnly = true;
+            this.txtSystemVariableType.Size = new System.Drawing.Size(385, 26);
+            this.txtSystemVariableType.TabIndex = 31;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(4, 49);
+            this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(47, 20);
+            this.label49.TabIndex = 30;
+            this.label49.Text = "Type:";
+            // 
+            // lblSystemVariableTimer
+            // 
+            this.lblSystemVariableTimer.AutoSize = true;
+            this.lblSystemVariableTimer.Location = new System.Drawing.Point(542, 89);
+            this.lblSystemVariableTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSystemVariableTimer.Name = "lblSystemVariableTimer";
+            this.lblSystemVariableTimer.Size = new System.Drawing.Size(173, 20);
+            this.lblSystemVariableTimer.TabIndex = 29;
+            this.lblSystemVariableTimer.Text = "Sending in 5 seconds...";
+            // 
+            // txtSystemVariableValue
+            // 
+            this.txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSystemVariableValue.Location = new System.Drawing.Point(146, 85);
+            this.txtSystemVariableValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtSystemVariableValue.Name = "txtSystemVariableValue";
+            this.txtSystemVariableValue.Size = new System.Drawing.Size(385, 26);
+            this.txtSystemVariableValue.TabIndex = 28;
+            this.txtSystemVariableValue.TextChanged += new System.EventHandler(this.txtSystemVariableValue_TextChanged);
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(4, 89);
+            this.label52.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(54, 20);
+            this.label52.TabIndex = 27;
+            this.label52.Text = "Value:";
+            // 
+            // txtSystemVariableName
+            // 
+            this.txtSystemVariableName.Location = new System.Drawing.Point(146, 5);
+            this.txtSystemVariableName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtSystemVariableName.Name = "txtSystemVariableName";
+            this.txtSystemVariableName.ReadOnly = true;
+            this.txtSystemVariableName.Size = new System.Drawing.Size(385, 26);
+            this.txtSystemVariableName.TabIndex = 3;
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(4, 9);
+            this.label61.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(55, 20);
+            this.label61.TabIndex = 2;
+            this.label61.Text = "Name:";
             // 
             // pnVariable
             // 
@@ -1726,435 +2195,6 @@
             this.label43.TabIndex = 6;
             this.label43.Text = "Device ID:";
             // 
-            // pnInterface
-            // 
-            this.pnInterface.Controls.Add(this.txtInterfaceHostname);
-            this.pnInterface.Controls.Add(this.label88);
-            this.pnInterface.Controls.Add(this.txtInterfaceIpAddress);
-            this.pnInterface.Controls.Add(this.label87);
-            this.pnInterface.Controls.Add(this.txtInterfaceReceived);
-            this.pnInterface.Controls.Add(this.label48);
-            this.pnInterface.Controls.Add(this.txtInterfaceSent);
-            this.pnInterface.Controls.Add(this.label47);
-            this.pnInterface.Controls.Add(this.txtInterfaceDefault);
-            this.pnInterface.Controls.Add(this.label45);
-            this.pnInterface.Controls.Add(this.txtInterfaceConnected);
-            this.pnInterface.Controls.Add(this.label54);
-            this.pnInterface.Controls.Add(this.txtInterfaceType);
-            this.pnInterface.Controls.Add(this.label46);
-            this.pnInterface.Controls.Add(this.txtInterfaceFamily);
-            this.pnInterface.Controls.Add(this.label50);
-            this.pnInterface.Controls.Add(this.txtInterfaceAddress);
-            this.pnInterface.Controls.Add(this.label51);
-            this.pnInterface.Controls.Add(this.txtInterfaceID);
-            this.pnInterface.Controls.Add(this.label53);
-            this.pnInterface.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnInterface.Location = new System.Drawing.Point(0, 0);
-            this.pnInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(885, 601);
-            this.pnInterface.TabIndex = 31;
-            this.pnInterface.Visible = false;
-            // 
-            // txtInterfaceReceived
-            // 
-            this.txtInterfaceReceived.Location = new System.Drawing.Point(146, 313);
-            this.txtInterfaceReceived.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceReceived.Name = "txtInterfaceReceived";
-            this.txtInterfaceReceived.ReadOnly = true;
-            this.txtInterfaceReceived.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceReceived.TabIndex = 38;
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(4, 317);
-            this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(114, 20);
-            this.label48.TabIndex = 37;
-            this.label48.Text = "Last Received:";
-            // 
-            // txtInterfaceSent
-            // 
-            this.txtInterfaceSent.Location = new System.Drawing.Point(146, 273);
-            this.txtInterfaceSent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceSent.Name = "txtInterfaceSent";
-            this.txtInterfaceSent.ReadOnly = true;
-            this.txtInterfaceSent.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceSent.TabIndex = 36;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(4, 277);
-            this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(82, 20);
-            this.label47.TabIndex = 35;
-            this.label47.Text = "Last Sent:";
-            // 
-            // txtInterfaceDefault
-            // 
-            this.txtInterfaceDefault.Location = new System.Drawing.Point(414, 45);
-            this.txtInterfaceDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceDefault.Name = "txtInterfaceDefault";
-            this.txtInterfaceDefault.ReadOnly = true;
-            this.txtInterfaceDefault.Size = new System.Drawing.Size(116, 26);
-            this.txtInterfaceDefault.TabIndex = 34;
-            // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(273, 49);
-            this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(65, 20);
-            this.label45.TabIndex = 33;
-            this.label45.Text = "Default:";
-            // 
-            // txtInterfaceConnected
-            // 
-            this.txtInterfaceConnected.Location = new System.Drawing.Point(146, 45);
-            this.txtInterfaceConnected.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceConnected.Name = "txtInterfaceConnected";
-            this.txtInterfaceConnected.ReadOnly = true;
-            this.txtInterfaceConnected.Size = new System.Drawing.Size(116, 26);
-            this.txtInterfaceConnected.TabIndex = 32;
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(4, 49);
-            this.label54.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(91, 20);
-            this.label54.TabIndex = 31;
-            this.label54.Text = "Connected:";
-            // 
-            // txtInterfaceType
-            // 
-            this.txtInterfaceType.Location = new System.Drawing.Point(146, 125);
-            this.txtInterfaceType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceType.Name = "txtInterfaceType";
-            this.txtInterfaceType.ReadOnly = true;
-            this.txtInterfaceType.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceType.TabIndex = 28;
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(4, 129);
-            this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(47, 20);
-            this.label46.TabIndex = 27;
-            this.label46.Text = "Type:";
-            // 
-            // txtInterfaceFamily
-            // 
-            this.txtInterfaceFamily.Location = new System.Drawing.Point(146, 85);
-            this.txtInterfaceFamily.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceFamily.Name = "txtInterfaceFamily";
-            this.txtInterfaceFamily.ReadOnly = true;
-            this.txtInterfaceFamily.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceFamily.TabIndex = 9;
-            // 
-            // label50
-            // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(4, 89);
-            this.label50.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(58, 20);
-            this.label50.TabIndex = 8;
-            this.label50.Text = "Family:";
-            // 
-            // txtInterfaceAddress
-            // 
-            this.txtInterfaceAddress.Location = new System.Drawing.Point(146, 165);
-            this.txtInterfaceAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceAddress.Name = "txtInterfaceAddress";
-            this.txtInterfaceAddress.ReadOnly = true;
-            this.txtInterfaceAddress.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceAddress.TabIndex = 7;
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(4, 169);
-            this.label51.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(133, 20);
-            this.label51.TabIndex = 6;
-            this.label51.Text = "Physical Address:";
-            // 
-            // txtInterfaceID
-            // 
-            this.txtInterfaceID.Location = new System.Drawing.Point(146, 5);
-            this.txtInterfaceID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceID.Name = "txtInterfaceID";
-            this.txtInterfaceID.ReadOnly = true;
-            this.txtInterfaceID.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceID.TabIndex = 3;
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(4, 9);
-            this.label53.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(30, 20);
-            this.label53.TabIndex = 2;
-            this.label53.Text = "ID:";
-            // 
-            // pnHomegear
-            // 
-            this.pnHomegear.Controls.Add(this.txtServiceMessages);
-            this.pnHomegear.Controls.Add(this.label59);
-            this.pnHomegear.Controls.Add(this.txtVersion);
-            this.pnHomegear.Controls.Add(this.label56);
-            this.pnHomegear.Controls.Add(this.txtLogLevel);
-            this.pnHomegear.Controls.Add(this.label62);
-            this.pnHomegear.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnHomegear.Location = new System.Drawing.Point(0, 0);
-            this.pnHomegear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnHomegear.Name = "pnHomegear";
-            this.pnHomegear.Size = new System.Drawing.Size(885, 601);
-            this.pnHomegear.TabIndex = 33;
-            this.pnHomegear.Visible = false;
-            // 
-            // txtServiceMessages
-            // 
-            this.txtServiceMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtServiceMessages.Location = new System.Drawing.Point(9, 114);
-            this.txtServiceMessages.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtServiceMessages.Multiline = true;
-            this.txtServiceMessages.Name = "txtServiceMessages";
-            this.txtServiceMessages.ReadOnly = true;
-            this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtServiceMessages.Size = new System.Drawing.Size(684, 480);
-            this.txtServiceMessages.TabIndex = 7;
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(4, 89);
-            this.label59.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(142, 20);
-            this.label59.TabIndex = 6;
-            this.label59.Text = "Service Messages:";
-            // 
-            // txtVersion
-            // 
-            this.txtVersion.Location = new System.Drawing.Point(99, 5);
-            this.txtVersion.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtVersion.Name = "txtVersion";
-            this.txtVersion.ReadOnly = true;
-            this.txtVersion.Size = new System.Drawing.Size(150, 26);
-            this.txtVersion.TabIndex = 5;
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(4, 9);
-            this.label56.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(67, 20);
-            this.label56.TabIndex = 4;
-            this.label56.Text = "Version:";
-            // 
-            // txtLogLevel
-            // 
-            this.txtLogLevel.Location = new System.Drawing.Point(99, 45);
-            this.txtLogLevel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtLogLevel.Name = "txtLogLevel";
-            this.txtLogLevel.Size = new System.Drawing.Size(150, 26);
-            this.txtLogLevel.TabIndex = 3;
-            this.txtLogLevel.TextChanged += new System.EventHandler(this.txtLogLevel_TextChanged);
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(4, 49);
-            this.label62.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(81, 20);
-            this.label62.TabIndex = 2;
-            this.label62.Text = "Log Level:";
-            // 
-            // pnMetadata
-            // 
-            this.pnMetadata.Controls.Add(this.txtMetadataType);
-            this.pnMetadata.Controls.Add(this.label55);
-            this.pnMetadata.Controls.Add(this.lblMetadataTimer);
-            this.pnMetadata.Controls.Add(this.txtMetadataValue);
-            this.pnMetadata.Controls.Add(this.label57);
-            this.pnMetadata.Controls.Add(this.txtMetadataName);
-            this.pnMetadata.Controls.Add(this.label58);
-            this.pnMetadata.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnMetadata.Location = new System.Drawing.Point(0, 0);
-            this.pnMetadata.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnMetadata.Name = "pnMetadata";
-            this.pnMetadata.Size = new System.Drawing.Size(885, 601);
-            this.pnMetadata.TabIndex = 32;
-            this.pnMetadata.Visible = false;
-            // 
-            // txtMetadataType
-            // 
-            this.txtMetadataType.Location = new System.Drawing.Point(146, 45);
-            this.txtMetadataType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtMetadataType.Name = "txtMetadataType";
-            this.txtMetadataType.ReadOnly = true;
-            this.txtMetadataType.Size = new System.Drawing.Size(385, 26);
-            this.txtMetadataType.TabIndex = 31;
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(4, 49);
-            this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(47, 20);
-            this.label55.TabIndex = 30;
-            this.label55.Text = "Type:";
-            // 
-            // lblMetadataTimer
-            // 
-            this.lblMetadataTimer.AutoSize = true;
-            this.lblMetadataTimer.Location = new System.Drawing.Point(542, 89);
-            this.lblMetadataTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblMetadataTimer.Name = "lblMetadataTimer";
-            this.lblMetadataTimer.Size = new System.Drawing.Size(173, 20);
-            this.lblMetadataTimer.TabIndex = 29;
-            this.lblMetadataTimer.Text = "Sending in 5 seconds...";
-            // 
-            // txtMetadataValue
-            // 
-            this.txtMetadataValue.BackColor = System.Drawing.SystemColors.Window;
-            this.txtMetadataValue.Location = new System.Drawing.Point(146, 85);
-            this.txtMetadataValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtMetadataValue.Name = "txtMetadataValue";
-            this.txtMetadataValue.Size = new System.Drawing.Size(385, 26);
-            this.txtMetadataValue.TabIndex = 28;
-            this.txtMetadataValue.TextChanged += new System.EventHandler(this.txtMetadataValue_TextChanged);
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(4, 89);
-            this.label57.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(54, 20);
-            this.label57.TabIndex = 27;
-            this.label57.Text = "Value:";
-            // 
-            // txtMetadataName
-            // 
-            this.txtMetadataName.Location = new System.Drawing.Point(146, 5);
-            this.txtMetadataName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtMetadataName.Name = "txtMetadataName";
-            this.txtMetadataName.ReadOnly = true;
-            this.txtMetadataName.Size = new System.Drawing.Size(385, 26);
-            this.txtMetadataName.TabIndex = 3;
-            // 
-            // label58
-            // 
-            this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(4, 9);
-            this.label58.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(55, 20);
-            this.label58.TabIndex = 2;
-            this.label58.Text = "Name:";
-            // 
-            // pnSystemVariable
-            // 
-            this.pnSystemVariable.Controls.Add(this.txtSystemVariableType);
-            this.pnSystemVariable.Controls.Add(this.label49);
-            this.pnSystemVariable.Controls.Add(this.lblSystemVariableTimer);
-            this.pnSystemVariable.Controls.Add(this.txtSystemVariableValue);
-            this.pnSystemVariable.Controls.Add(this.label52);
-            this.pnSystemVariable.Controls.Add(this.txtSystemVariableName);
-            this.pnSystemVariable.Controls.Add(this.label61);
-            this.pnSystemVariable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
-            this.pnSystemVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnSystemVariable.Name = "pnSystemVariable";
-            this.pnSystemVariable.Size = new System.Drawing.Size(885, 601);
-            this.pnSystemVariable.TabIndex = 31;
-            this.pnSystemVariable.Visible = false;
-            // 
-            // txtSystemVariableType
-            // 
-            this.txtSystemVariableType.Location = new System.Drawing.Point(146, 45);
-            this.txtSystemVariableType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtSystemVariableType.Name = "txtSystemVariableType";
-            this.txtSystemVariableType.ReadOnly = true;
-            this.txtSystemVariableType.Size = new System.Drawing.Size(385, 26);
-            this.txtSystemVariableType.TabIndex = 31;
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(4, 49);
-            this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(47, 20);
-            this.label49.TabIndex = 30;
-            this.label49.Text = "Type:";
-            // 
-            // lblSystemVariableTimer
-            // 
-            this.lblSystemVariableTimer.AutoSize = true;
-            this.lblSystemVariableTimer.Location = new System.Drawing.Point(542, 89);
-            this.lblSystemVariableTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblSystemVariableTimer.Name = "lblSystemVariableTimer";
-            this.lblSystemVariableTimer.Size = new System.Drawing.Size(173, 20);
-            this.lblSystemVariableTimer.TabIndex = 29;
-            this.lblSystemVariableTimer.Text = "Sending in 5 seconds...";
-            // 
-            // txtSystemVariableValue
-            // 
-            this.txtSystemVariableValue.BackColor = System.Drawing.SystemColors.Window;
-            this.txtSystemVariableValue.Location = new System.Drawing.Point(146, 85);
-            this.txtSystemVariableValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtSystemVariableValue.Name = "txtSystemVariableValue";
-            this.txtSystemVariableValue.Size = new System.Drawing.Size(385, 26);
-            this.txtSystemVariableValue.TabIndex = 28;
-            this.txtSystemVariableValue.TextChanged += new System.EventHandler(this.txtSystemVariableValue_TextChanged);
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(4, 89);
-            this.label52.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(54, 20);
-            this.label52.TabIndex = 27;
-            this.label52.Text = "Value:";
-            // 
-            // txtSystemVariableName
-            // 
-            this.txtSystemVariableName.Location = new System.Drawing.Point(146, 5);
-            this.txtSystemVariableName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtSystemVariableName.Name = "txtSystemVariableName";
-            this.txtSystemVariableName.ReadOnly = true;
-            this.txtSystemVariableName.Size = new System.Drawing.Size(385, 26);
-            this.txtSystemVariableName.TabIndex = 3;
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(4, 9);
-            this.label61.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(55, 20);
-            this.label61.TabIndex = 2;
-            this.label61.Text = "Name:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -2440,10 +2480,11 @@
             this.tsEnablePairingMode,
             this.tsDisablePairingMode,
             this.tsSearchDevices,
-            this.tsAddDevice});
+            this.tsAddDevice,
+            this.tsCreateDevice,
+            this.tsSniffPackets});
             this.cmDevices.Name = "cmDevices";
-            this.cmDevices.Size = new System.Drawing.Size(330, 124);
-            this.cmDevices.Opening += new System.ComponentModel.CancelEventHandler(this.cmDevices_Opening);
+            this.cmDevices.Size = new System.Drawing.Size(330, 217);
             // 
             // tsEnablePairingMode
             // 
@@ -2472,6 +2513,13 @@
             this.tsAddDevice.Size = new System.Drawing.Size(329, 30);
             this.tsAddDevice.Text = "Add Device By Serial Number";
             this.tsAddDevice.Click += new System.EventHandler(this.tsAddDevice_Click);
+            // 
+            // tsCreateDevice
+            // 
+            this.tsCreateDevice.Name = "tsCreateDevice";
+            this.tsCreateDevice.Size = new System.Drawing.Size(329, 30);
+            this.tsCreateDevice.Text = "Create Device";
+            this.tsCreateDevice.Click += new System.EventHandler(this.tsCreateDevice_Click);
             // 
             // cmDevice
             // 
@@ -2662,43 +2710,12 @@
             this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
             this.cbHomegearHostname.TabIndex = 16;
             // 
-            // txtInterfaceIpAddress
+            // tsSniffPackets
             // 
-            this.txtInterfaceIpAddress.Location = new System.Drawing.Point(146, 201);
-            this.txtInterfaceIpAddress.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceIpAddress.Name = "txtInterfaceIpAddress";
-            this.txtInterfaceIpAddress.ReadOnly = true;
-            this.txtInterfaceIpAddress.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceIpAddress.TabIndex = 40;
-            // 
-            // label87
-            // 
-            this.label87.AutoSize = true;
-            this.label87.Location = new System.Drawing.Point(4, 205);
-            this.label87.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(91, 20);
-            this.label87.TabIndex = 39;
-            this.label87.Text = "IP Address:";
-            // 
-            // txtInterfaceHostname
-            // 
-            this.txtInterfaceHostname.Location = new System.Drawing.Point(146, 237);
-            this.txtInterfaceHostname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtInterfaceHostname.Name = "txtInterfaceHostname";
-            this.txtInterfaceHostname.ReadOnly = true;
-            this.txtInterfaceHostname.Size = new System.Drawing.Size(385, 26);
-            this.txtInterfaceHostname.TabIndex = 42;
-            // 
-            // label88
-            // 
-            this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(4, 241);
-            this.label88.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(87, 20);
-            this.label88.TabIndex = 41;
-            this.label88.Text = "Hostname:";
+            this.tsSniffPackets.Name = "tsSniffPackets";
+            this.tsSniffPackets.Size = new System.Drawing.Size(329, 30);
+            this.tsSniffPackets.Text = "Sniff Packets";
+            this.tsSniffPackets.Click += new System.EventHandler(this.tsSniffPackets_Click);
             // 
             // frmMain
             // 
@@ -2733,6 +2750,14 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnInterface.ResumeLayout(false);
+            this.pnInterface.PerformLayout();
+            this.pnHomegear.ResumeLayout(false);
+            this.pnHomegear.PerformLayout();
+            this.pnMetadata.ResumeLayout(false);
+            this.pnMetadata.PerformLayout();
+            this.pnSystemVariable.ResumeLayout(false);
+            this.pnSystemVariable.PerformLayout();
             this.pnVariable.ResumeLayout(false);
             this.pnVariable.PerformLayout();
             this.pnDevice.ResumeLayout(false);
@@ -2743,14 +2768,6 @@
             this.pnTimedEvent.PerformLayout();
             this.pnChannel.ResumeLayout(false);
             this.pnChannel.PerformLayout();
-            this.pnInterface.ResumeLayout(false);
-            this.pnInterface.PerformLayout();
-            this.pnHomegear.ResumeLayout(false);
-            this.pnHomegear.PerformLayout();
-            this.pnMetadata.ResumeLayout(false);
-            this.pnMetadata.PerformLayout();
-            this.pnSystemVariable.ResumeLayout(false);
-            this.pnSystemVariable.PerformLayout();
             this.gbSSL.ResumeLayout(false);
             this.gbSSL.PerformLayout();
             this.cmDevices.ResumeLayout(false);
@@ -3002,6 +3019,8 @@
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.TextBox txtInterfaceIpAddress;
         private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.ToolStripMenuItem tsCreateDevice;
+        private System.Windows.Forms.ToolStripMenuItem tsSniffPackets;
     }
 }
 

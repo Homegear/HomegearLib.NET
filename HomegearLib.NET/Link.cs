@@ -19,8 +19,8 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
-        protected Int32 _peerID = 0;
-        public Int32 PeerID { get { return _peerID; } internal set { _peerID = value; } }
+        protected Int32 _peerId = 0;
+        public Int32 PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
         protected Int32 _channel = -1;
         public Int32 Channel { get { return _channel; } internal set { _channel = value; } }
@@ -84,7 +84,7 @@ namespace HomegearLib
             {
                 if (_config == null || _config.Count == 0)
                 {
-                    _config = new DeviceConfig(_rpc, _peerID, _channel, _remotePeerID, _remoteChannel, RPCParameterSetType.rpcLink, _rpc.GetParamsetDescription(_peerID, _channel, RPCParameterSetType.rpcLink));
+                    _config = new DeviceConfig(_rpc, _peerId, _channel, _remotePeerID, _remoteChannel, RPCParameterSetType.rpcLink, _rpc.GetParamsetDescription(_peerId, _channel, RPCParameterSetType.rpcLink));
                     _config.Reload();
                 }
                 return _config;
@@ -95,10 +95,10 @@ namespace HomegearLib
             }
         }
 
-        public Link(RPCController rpc, Int32 peerID, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, bool isSender)
+        public Link(RPCController rpc, Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, bool isSender)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _channel = channel;
             _remotePeerID = remotePeerID;
             _remoteChannel = remoteChannel;

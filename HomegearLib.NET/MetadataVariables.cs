@@ -11,13 +11,13 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private Int32 _peerID;
-        public Int32 PeerID { get { return _peerID; } }
+        private Int32 _peerId;
+        public Int32 PeerID { get { return _peerId; } }
 
-        public MetadataVariables(RPCController rpc, Int32 peerID, Dictionary<String, MetadataVariable> metadataVariables) : base(metadataVariables)
+        public MetadataVariables(RPCController rpc, Int32 peerId, Dictionary<String, MetadataVariable> metadataVariables) : base(metadataVariables)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
         }
 
         public void Add(MetadataVariable variable)
@@ -27,7 +27,7 @@ namespace HomegearLib
 
         public void Reload()
         {
-            _dictionary = _rpc.GetAllMetadata(_peerID);
+            _dictionary = _rpc.GetAllMetadata(_peerId);
         }
 
         public void Dispose()
@@ -41,7 +41,7 @@ namespace HomegearLib
 
         public List<MetadataVariable> Update(out bool variablesDeleted, out bool variablesAdded)
         {
-            Dictionary<String, MetadataVariable> variables = _rpc.GetAllMetadata(_peerID);
+            Dictionary<String, MetadataVariable> variables = _rpc.GetAllMetadata(_peerId);
             variablesDeleted = false;
             variablesAdded = false;
             List<MetadataVariable> changedVariables = new List<MetadataVariable>();

@@ -24,8 +24,8 @@ namespace HomegearLib
 
         bool _descriptionRequested = false;
 
-        private Int32 _peerID = 0;
-        public Int32 PeerID { get { return _peerID; } }
+        private Int32 _peerId = 0;
+        public Int32 PeerID { get { return _peerId; } }
 
         private Int32 _index = 0;
         public Int32 Index { get { return _index; } }
@@ -35,7 +35,7 @@ namespace HomegearLib
         {
             get
             {
-                if (_variables == null || _variables.Count == 0) _variables = new Variables(_rpc, _peerID, _index);
+                if (_variables == null || _variables.Count == 0) _variables = new Variables(_rpc, _peerId, _index);
                 return _variables;
             }
             internal set { _variables = value; }
@@ -48,7 +48,7 @@ namespace HomegearLib
             {
                 if (_config == null || _config.Count == 0)
                 {
-                    _config = new DeviceConfig(_rpc, _peerID, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerID, _index, RPCParameterSetType.rpcMaster));
+                    _config = new DeviceConfig(_rpc, _peerId, _index, RPCParameterSetType.rpcMaster, _rpc.GetParamsetDescription(_peerId, _index, RPCParameterSetType.rpcMaster));
                     _config.VariableReloadRequiredEvent += Config_OnVariableReloadRequired;
                     _config.Reload();
                 }
@@ -67,7 +67,7 @@ namespace HomegearLib
             {
                 if(_links == null || _links.Count == 0)
                 {
-                    _links = new Links(_rpc, _peerID, _index);
+                    _links = new Links(_rpc, _peerId, _index);
                     _links.Reload();                    
                 }
                 return _links;
@@ -255,10 +255,10 @@ namespace HomegearLib
             internal set { _teamMembers = value; }
         }
 
-        public Channel(RPCController rpc, Int32 peerID, Int32 index)
+        public Channel(RPCController rpc, Int32 peerId, Int32 index)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _index = index;
         }
 

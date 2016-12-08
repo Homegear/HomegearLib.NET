@@ -1860,7 +1860,38 @@ namespace HomegearLibTest
 
         private void tsSearchDevices_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, _homegear.SearchDevices().ToString() + " new devices found.", "Device Search Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, _homegear.Devices.Search().ToString() + " new devices found.", "Device Search Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void tsCreateDevice_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmCreateDevice dialog = new frmCreateDevice(_homegear);
+                if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (dialog.Family == null) return;
+                    Int32 peerId = _homegear.Devices.Create(dialog.Family, dialog.DeviceType, dialog.SerialNumber, dialog.Address, dialog.FirmwareVersion);
+                    MessageBox.Show(this, "Device created successfully.", "Device created. ID: " + peerId, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void tsSniffPackets_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmSniffPackets dialog = new frmSniffPackets(_homegear);
+                dialog.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
         }
 
         private void tsUnpair_Click(object sender, EventArgs e)
@@ -1884,10 +1915,5 @@ namespace HomegearLibTest
             MessageBox.Show(this, "Removing device with ID " + _rightClickedDevice.ID.ToString(), "Removing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
-
-        private void cmDevices_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
     }
 }

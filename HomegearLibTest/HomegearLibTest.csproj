@@ -45,6 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmSniffPackets.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSniffPackets.Designer.cs">
+      <DependentUpon>frmSniffPackets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCreateDevice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCreateDevice.Designer.cs">
+      <DependentUpon>frmCreateDevice.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmAddTriggeredEvent.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +101,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmSniffPackets.resx">
+      <DependentUpon>frmSniffPackets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCreateDevice.resx">
+      <DependentUpon>frmCreateDevice.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmAddTriggeredEvent.resx">
       <DependentUpon>frmAddTriggeredEvent.cs</DependentUpon>
     </EmbeddedResource>

@@ -35,8 +35,8 @@ namespace HomegearLib
         protected VariableType _type = VariableType.tInteger;
         public VariableType Type { get { return _type; } internal set { _type = value; } }
 
-        protected Int32 _peerID = 0;
-        public Int32 PeerID { get { return _peerID; } internal set { _peerID = value; } }
+        protected Int32 _peerId = 0;
+        public Int32 PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
         protected Int32 _channel = -1;
         public Int32 Channel { get { return _channel; } internal set { _channel = value; } }
@@ -181,34 +181,34 @@ namespace HomegearLib
         protected Dictionary<int, string> _valueList = new Dictionary<int, string>();
         public Dictionary<int, string> ValueList { get { return _valueList; } internal set { _valueList = value; } }
 
-        public Variable(Int32 peerID, Int32 channel, String name) : this(null, peerID, channel, name)
+        public Variable(Int32 peerId, Int32 channel, String name) : this(null, peerId, channel, name)
         {
         }
 
-        public Variable(RPCController rpc, Int32 peerID, Int32 channel, String name)
+        public Variable(RPCController rpc, Int32 peerId, Int32 channel, String name)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _channel = channel;
             _name = name;
         }
 
-        internal Variable(Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerID, channel, name, rpcVariable)
+        internal Variable(Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
         {
 
         }
 
-        internal Variable(Int32 peerID, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(null, peerID, channel, name, typeString, rpcVariable)
+        internal Variable(Int32 peerId, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(null, peerId, channel, name, typeString, rpcVariable)
         {
             
         }
 
-        internal Variable(RPCController rpc, Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerID, channel, name)
+        internal Variable(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
         {
             SetValue(rpcVariable);
         }
 
-        internal Variable(RPCController rpc, Int32 peerID, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(rpc, peerID, channel, name)
+        internal Variable(RPCController rpc, Int32 peerId, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
         {
             SetType(typeString);
             SetValue(rpcVariable);

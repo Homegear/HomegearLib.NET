@@ -20,13 +20,13 @@ namespace HomegearLib.RPC
         public delegate void ConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
         public delegate void DisconnectedEventHandler(RPCServer sender);
         public delegate void HomegearErrorEventHandler(RPCServer sender, Int32 level, String message);
-        public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerID, Int32 channel, String parameterName, RPCVariable value);
+        public delegate void RPCEventEventHandler(RPCServer sender, Int32 peerId, Int32 channel, String parameterName, RPCVariable value);
         public delegate void NewDevicesEventHandler(RPCServer sender);
         public delegate void DevicesDeletedEventHandler(RPCServer sender);
-        public delegate void UpdateDeviceEventHandler(RPCServer sender, Int32 peerID, Int32 channel, Int32 flags);
-        public delegate void NewEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
-        public delegate void EventDeletedEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
-        public delegate void UpdateEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerID, Int32 channel, String variableName);
+        public delegate void UpdateDeviceEventHandler(RPCServer sender, Int32 peerId, Int32 channel, Int32 flags);
+        public delegate void NewEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variableName);
+        public delegate void EventDeletedEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variableName);
+        public delegate void UpdateEventEventHandler(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variableName);
 
         #region "Events"
         public event ConnectedEventHandler Connected;
@@ -345,10 +345,10 @@ namespace HomegearLib.RPC
                 response = new RPCVariable(RPCVariableType.rpcArray);
                 if (_knownDevices != null)
                 {
-                    foreach (Int32 peerID in _knownDevices.Keys)
+                    foreach (Int32 peerId in _knownDevices.Keys)
                     {
                         RPCVariable device = new RPCVariable(RPCVariableType.rpcStruct);
-                        device.StructValue.Add("ID", new RPCVariable(peerID));
+                        device.StructValue.Add("ID", new RPCVariable(peerId));
                         response.ArrayValue.Add(device);
                     }
                 }
@@ -374,15 +374,15 @@ namespace HomegearLib.RPC
                 {
                     String id = "";
                     Int32 type = -1;
-                    Int32 peerID = 0;
+                    Int32 peerId = 0;
                     Int32 channel = -1;
                     String variable = "";
                     if (parameters[1].StructValue.ContainsKey("ID")) id = parameters[1].StructValue["ID"].StringValue;
                     if (parameters[1].StructValue.ContainsKey("TYPE")) type = parameters[1].StructValue["TYPE"].IntegerValue;
-                    if (parameters[1].StructValue.ContainsKey("PEERID")) peerID = parameters[1].StructValue["PEERID"].IntegerValue;
+                    if (parameters[1].StructValue.ContainsKey("PEERID")) peerId = parameters[1].StructValue["PEERID"].IntegerValue;
                     if (parameters[1].StructValue.ContainsKey("PEERCHANNEL")) channel = parameters[1].StructValue["PEERCHANNEL"].IntegerValue;
                     if (parameters[1].StructValue.ContainsKey("VARIABLE")) variable = parameters[1].StructValue["VARIABLE"].StringValue;
-                    if (NewEvent != null) NewEvent(this, id, type, peerID, channel, variable);
+                    if (NewEvent != null) NewEvent(this, id, type, peerId, channel, variable);
                 }
             }
             else if(methodName == "deleteEvent")

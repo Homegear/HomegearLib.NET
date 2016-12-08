@@ -31,5 +31,10 @@ namespace HomegearLib
         {
             
         }
+
+        public override String ToString()
+        {
+            return _name;
+        }
     }
 }

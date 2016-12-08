@@ -15,8 +15,8 @@ namespace HomegearLib
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
-        private Int32 _peerID = 0;
-        public Int32 PeerID { get { return _peerID; } }
+        private Int32 _peerId = 0;
+        public Int32 PeerID { get { return _peerId; } }
 
         private Int32 _channel;
         public Int32 Channel { get { return _channel; } }
@@ -30,19 +30,19 @@ namespace HomegearLib
         private RPCParameterSetType _type;
         public RPCParameterSetType Type { get { return _type; } }
 
-        public DeviceConfig(RPCController rpc, Int32 peerID, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig) : base(deviceConfig)
+        public DeviceConfig(RPCController rpc, Int32 peerId, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig) : base(deviceConfig)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _channel = channel;
             _type = type;
         }
 
-        public DeviceConfig(RPCController rpc, Int32 peerID, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig)
+        public DeviceConfig(RPCController rpc, Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig)
             : base(deviceConfig)
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _channel = channel;
             _remotePeerID = remotePeerID;
             _remoteChannel = remoteChannel;
@@ -56,8 +56,8 @@ namespace HomegearLib
 
         public List<ConfigParameter> Reload()
         {
-            if (_type == RPCParameterSetType.rpcLink)  return _rpc.GetParamset(_peerID, _channel, _remotePeerID, _remoteChannel, this);
-            else return _rpc.GetParamset(_peerID, _channel, RPCParameterSetType.rpcMaster, this);
+            if (_type == RPCParameterSetType.rpcLink)  return _rpc.GetParamset(_peerId, _channel, _remotePeerID, _remoteChannel, this);
+            else return _rpc.GetParamset(_peerId, _channel, RPCParameterSetType.rpcMaster, this);
         }
 
         public void Put()
@@ -68,8 +68,8 @@ namespace HomegearLib
                 if(parameter.Value.DataPending) changedParameters.Add(parameter.Key, parameter.Value);
             }
             if (changedParameters.Count == 0) return;
-            if (_type == RPCParameterSetType.rpcLink) _rpc.PutParamset(_peerID, _channel, _remotePeerID, _remoteChannel, changedParameters);
-            else _rpc.PutParamset(_peerID, _channel, _type, changedParameters);
+            if (_type == RPCParameterSetType.rpcLink) _rpc.PutParamset(_peerId, _channel, _remotePeerID, _remoteChannel, changedParameters);
+            else _rpc.PutParamset(_peerId, _channel, _type, changedParameters);
             bool reloadRequired = false;
             foreach (KeyValuePair<String, ConfigParameter> parameter in changedParameters)
             {

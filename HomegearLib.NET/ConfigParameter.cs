@@ -111,22 +111,22 @@ namespace HomegearLib
             }
         }
 
-        public ConfigParameter(Int32 peerID, Int32 channel, String name) : this(null, peerID, channel, name)
+        public ConfigParameter(Int32 peerId, Int32 channel, String name) : this(null, peerId, channel, name)
         {
 
         }
 
-        public ConfigParameter(RPCController rpc, Int32 peerID, Int32 channel, String name) : base(rpc, peerID, channel, name)
-        {
-            
-        }
-
-        internal ConfigParameter(Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerID, channel, name, rpcVariable)
+        public ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name) : base(rpc, peerId, channel, name)
         {
             
         }
 
-        internal ConfigParameter(RPCController rpc, Int32 peerID, Int32 channel, String name, RPCVariable rpcVariable) : base(rpc, peerID, channel, name)
+        internal ConfigParameter(Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
+        {
+            
+        }
+
+        internal ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
         {
             
         }

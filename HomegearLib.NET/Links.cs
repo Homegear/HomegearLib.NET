@@ -11,16 +11,16 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        Int32 _peerID = 0;
-        public Int32 PeerID { get { return _peerID; } }
+        Int32 _peerId = 0;
+        public Int32 PeerID { get { return _peerId; } }
 
         Int32 _channel = -1;
         public Int32 Channel { get { return _channel; } }
 
-        public Links(RPCController rpc, Int32 peerID, Int32 channel) : base()
+        public Links(RPCController rpc, Int32 peerId, Int32 channel) : base()
         {
             _rpc = rpc;
-            _peerID = peerID;
+            _peerId = peerId;
             _channel = channel;
         }
 
@@ -31,7 +31,7 @@ namespace HomegearLib
 
         public void Reload()
         {
-            List<Link> allLinks = _rpc.GetLinks(_peerID, _channel);
+            List<Link> allLinks = _rpc.GetLinks(_peerId, _channel);
             Dictionary<Int32, Dictionary<Int32, Link>> links = new Dictionary<Int32, Dictionary<Int32, Link>>();
             foreach (Link link in allLinks)
             {
@@ -49,8 +49,8 @@ namespace HomegearLib
 
         public void Add(Int32 remoteID, Int32 remoteChannel, bool isSender)
         {
-            if (isSender) _rpc.AddLink(_peerID, _channel, remoteID, remoteChannel);
-            else _rpc.AddLink(remoteID, remoteChannel, _peerID, _channel);
+            if (isSender) _rpc.AddLink(_peerId, _channel, remoteID, remoteChannel);
+            else _rpc.AddLink(remoteID, remoteChannel, _peerId, _channel);
         }
     }
 }
