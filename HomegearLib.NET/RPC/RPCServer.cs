@@ -77,7 +77,7 @@ namespace HomegearLib.RPC
                 if (File.Exists(sslInfo.CertificatePath)) _serverCertificate = new X509Certificate2(sslInfo.CertificatePath, sslInfo.CertificatePassword);
                 else throw new HomegearRPCServerSSLException("Certificate file does not exist.");
             }
-            _ipAddress = IPAddress.Parse(listenIP);
+            if(listenIP.Length > 0) _ipAddress = IPAddress.Parse(listenIP);
             _port = port;
             if (_ssl && sslInfo.Username.Length > 0) _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Password)))));
         }
@@ -100,7 +100,7 @@ namespace HomegearLib.RPC
 
         public void Start()
         {
-            if (_starting) return;
+            if (_starting || _ipAddress == null || _port == -1) return;
             try
             {
                 _starting = true;

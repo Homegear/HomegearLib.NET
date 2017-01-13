@@ -235,6 +235,7 @@
             this.tsSearchDevices = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddDevice = new System.Windows.Forms.ToolStripMenuItem();
             this.tsCreateDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSniffPackets = new System.Windows.Forms.ToolStripMenuItem();
             this.cmDevice = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsUnpair = new System.Windows.Forms.ToolStripMenuItem();
             this.tsReset = new System.Windows.Forms.ToolStripMenuItem();
@@ -260,7 +261,6 @@
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
-            this.tsSniffPackets = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -301,7 +301,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(1329, 155);
+            this.txtLog.Size = new System.Drawing.Size(1236, 130);
             this.txtLog.TabIndex = 0;
             // 
             // splitContainer1
@@ -321,8 +321,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer1.Size = new System.Drawing.Size(1329, 762);
-            this.splitContainer1.SplitterDistance = 601;
+            this.splitContainer1.Size = new System.Drawing.Size(1236, 639);
+            this.splitContainer1.SplitterDistance = 503;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -348,8 +348,8 @@
             this.splitContainer2.Panel2.Controls.Add(this.pnTriggeredEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnTimedEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
-            this.splitContainer2.Size = new System.Drawing.Size(1329, 601);
-            this.splitContainer2.SplitterDistance = 438;
+            this.splitContainer2.Size = new System.Drawing.Size(1236, 503);
+            this.splitContainer2.SplitterDistance = 407;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -359,7 +359,7 @@
             this.tvDevices.Location = new System.Drawing.Point(0, 0);
             this.tvDevices.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tvDevices.Name = "tvDevices";
-            this.tvDevices.Size = new System.Drawing.Size(438, 601);
+            this.tvDevices.Size = new System.Drawing.Size(407, 503);
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
@@ -391,7 +391,7 @@
             this.pnInterface.Location = new System.Drawing.Point(0, 0);
             this.pnInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(885, 601);
+            this.pnInterface.Size = new System.Drawing.Size(823, 503);
             this.pnInterface.TabIndex = 31;
             this.pnInterface.Visible = false;
             // 
@@ -597,7 +597,7 @@
             this.pnHomegear.Location = new System.Drawing.Point(0, 0);
             this.pnHomegear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnHomegear.Name = "pnHomegear";
-            this.pnHomegear.Size = new System.Drawing.Size(885, 601);
+            this.pnHomegear.Size = new System.Drawing.Size(823, 503);
             this.pnHomegear.TabIndex = 33;
             this.pnHomegear.Visible = false;
             // 
@@ -611,7 +611,7 @@
             this.txtServiceMessages.Name = "txtServiceMessages";
             this.txtServiceMessages.ReadOnly = true;
             this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtServiceMessages.Size = new System.Drawing.Size(684, 480);
+            this.txtServiceMessages.Size = new System.Drawing.Size(684, 382);
             this.txtServiceMessages.TabIndex = 7;
             // 
             // label59
@@ -675,7 +675,7 @@
             this.pnMetadata.Location = new System.Drawing.Point(0, 0);
             this.pnMetadata.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnMetadata.Name = "pnMetadata";
-            this.pnMetadata.Size = new System.Drawing.Size(885, 601);
+            this.pnMetadata.Size = new System.Drawing.Size(823, 503);
             this.pnMetadata.TabIndex = 32;
             this.pnMetadata.Visible = false;
             // 
@@ -760,7 +760,7 @@
             this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
             this.pnSystemVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnSystemVariable.Name = "pnSystemVariable";
-            this.pnSystemVariable.Size = new System.Drawing.Size(885, 601);
+            this.pnSystemVariable.Size = new System.Drawing.Size(823, 503);
             this.pnSystemVariable.TabIndex = 31;
             this.pnSystemVariable.Visible = false;
             // 
@@ -866,7 +866,7 @@
             this.pnVariable.Location = new System.Drawing.Point(0, 0);
             this.pnVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnVariable.Name = "pnVariable";
-            this.pnVariable.Size = new System.Drawing.Size(885, 601);
+            this.pnVariable.Size = new System.Drawing.Size(823, 503);
             this.pnVariable.TabIndex = 0;
             this.pnVariable.Visible = false;
             // 
@@ -1183,7 +1183,7 @@
             this.pnDevice.Location = new System.Drawing.Point(0, 0);
             this.pnDevice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(885, 601);
+            this.pnDevice.Size = new System.Drawing.Size(823, 503);
             this.pnDevice.TabIndex = 1;
             this.pnDevice.Visible = false;
             // 
@@ -1452,7 +1452,7 @@
             this.pnTriggeredEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTriggeredEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTriggeredEvent.Name = "pnTriggeredEvent";
-            this.pnTriggeredEvent.Size = new System.Drawing.Size(885, 601);
+            this.pnTriggeredEvent.Size = new System.Drawing.Size(823, 503);
             this.pnTriggeredEvent.TabIndex = 45;
             this.pnTriggeredEvent.Visible = false;
             // 
@@ -1758,7 +1758,7 @@
             this.pnTimedEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTimedEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTimedEvent.Name = "pnTimedEvent";
-            this.pnTimedEvent.Size = new System.Drawing.Size(885, 601);
+            this.pnTimedEvent.Size = new System.Drawing.Size(823, 503);
             this.pnTimedEvent.TabIndex = 44;
             this.pnTimedEvent.Visible = false;
             // 
@@ -1932,7 +1932,7 @@
             this.pnChannel.Location = new System.Drawing.Point(0, 0);
             this.pnChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnChannel.Name = "pnChannel";
-            this.pnChannel.Size = new System.Drawing.Size(885, 601);
+            this.pnChannel.Size = new System.Drawing.Size(823, 503);
             this.pnChannel.TabIndex = 2;
             this.pnChannel.Visible = false;
             // 
@@ -2229,7 +2229,7 @@
             // 
             this.chkSSL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkSSL.AutoSize = true;
-            this.chkSSL.Location = new System.Drawing.Point(1079, 34);
+            this.chkSSL.Location = new System.Drawing.Point(986, 34);
             this.chkSSL.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkSSL.Name = "chkSSL";
             this.chkSSL.Size = new System.Drawing.Size(120, 24);
@@ -2320,7 +2320,7 @@
             this.gbSSL.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbSSL.Name = "gbSSL";
             this.gbSSL.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbSSL.Size = new System.Drawing.Size(1329, 151);
+            this.gbSSL.Size = new System.Drawing.Size(1236, 151);
             this.gbSSL.TabIndex = 14;
             this.gbSSL.TabStop = false;
             this.gbSSL.Text = "SSL Options";
@@ -2464,7 +2464,7 @@
             // bnConnect
             // 
             this.bnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnConnect.Location = new System.Drawing.Point(1208, 18);
+            this.bnConnect.Location = new System.Drawing.Point(1115, 18);
             this.bnConnect.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bnConnect.Name = "bnConnect";
             this.bnConnect.Size = new System.Drawing.Size(140, 54);
@@ -2484,42 +2484,49 @@
             this.tsCreateDevice,
             this.tsSniffPackets});
             this.cmDevices.Name = "cmDevices";
-            this.cmDevices.Size = new System.Drawing.Size(330, 217);
+            this.cmDevices.Size = new System.Drawing.Size(317, 184);
             // 
             // tsEnablePairingMode
             // 
             this.tsEnablePairingMode.Name = "tsEnablePairingMode";
-            this.tsEnablePairingMode.Size = new System.Drawing.Size(329, 30);
+            this.tsEnablePairingMode.Size = new System.Drawing.Size(316, 30);
             this.tsEnablePairingMode.Text = "Enable Pairing Mode";
             this.tsEnablePairingMode.Click += new System.EventHandler(this.tsEnablePairingMode_Click);
             // 
             // tsDisablePairingMode
             // 
             this.tsDisablePairingMode.Name = "tsDisablePairingMode";
-            this.tsDisablePairingMode.Size = new System.Drawing.Size(329, 30);
+            this.tsDisablePairingMode.Size = new System.Drawing.Size(316, 30);
             this.tsDisablePairingMode.Text = "Disable Pairing Mode";
             this.tsDisablePairingMode.Click += new System.EventHandler(this.tsDisablePairingMode_Click);
             // 
             // tsSearchDevices
             // 
             this.tsSearchDevices.Name = "tsSearchDevices";
-            this.tsSearchDevices.Size = new System.Drawing.Size(329, 30);
+            this.tsSearchDevices.Size = new System.Drawing.Size(316, 30);
             this.tsSearchDevices.Text = "Search Devices";
             this.tsSearchDevices.Click += new System.EventHandler(this.tsSearchDevices_Click);
             // 
             // tsAddDevice
             // 
             this.tsAddDevice.Name = "tsAddDevice";
-            this.tsAddDevice.Size = new System.Drawing.Size(329, 30);
+            this.tsAddDevice.Size = new System.Drawing.Size(316, 30);
             this.tsAddDevice.Text = "Add Device By Serial Number";
             this.tsAddDevice.Click += new System.EventHandler(this.tsAddDevice_Click);
             // 
             // tsCreateDevice
             // 
             this.tsCreateDevice.Name = "tsCreateDevice";
-            this.tsCreateDevice.Size = new System.Drawing.Size(329, 30);
+            this.tsCreateDevice.Size = new System.Drawing.Size(316, 30);
             this.tsCreateDevice.Text = "Create Device";
             this.tsCreateDevice.Click += new System.EventHandler(this.tsCreateDevice_Click);
+            // 
+            // tsSniffPackets
+            // 
+            this.tsSniffPackets.Name = "tsSniffPackets";
+            this.tsSniffPackets.Size = new System.Drawing.Size(316, 30);
+            this.tsSniffPackets.Text = "Sniff Packets";
+            this.tsSniffPackets.Click += new System.EventHandler(this.tsSniffPackets_Click);
             // 
             // cmDevice
             // 
@@ -2529,26 +2536,26 @@
             this.tsReset,
             this.tsRemove});
             this.cmDevice.Name = "cmDevice";
-            this.cmDevice.Size = new System.Drawing.Size(162, 94);
+            this.cmDevice.Size = new System.Drawing.Size(149, 94);
             // 
             // tsUnpair
             // 
             this.tsUnpair.Name = "tsUnpair";
-            this.tsUnpair.Size = new System.Drawing.Size(161, 30);
+            this.tsUnpair.Size = new System.Drawing.Size(148, 30);
             this.tsUnpair.Text = "Unpair";
             this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
             // 
             // tsReset
             // 
             this.tsReset.Name = "tsReset";
-            this.tsReset.Size = new System.Drawing.Size(161, 30);
+            this.tsReset.Size = new System.Drawing.Size(148, 30);
             this.tsReset.Text = "Reset";
             this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
             // 
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(161, 30);
+            this.tsRemove.Size = new System.Drawing.Size(148, 30);
             this.tsRemove.Text = "Remove";
             this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
             // 
@@ -2558,12 +2565,12 @@
             this.cmSystemVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsDeleteSystemVariable});
             this.cmSystemVariable.Name = "cmDevice";
-            this.cmSystemVariable.Size = new System.Drawing.Size(162, 34);
+            this.cmSystemVariable.Size = new System.Drawing.Size(149, 34);
             // 
             // tsDeleteSystemVariable
             // 
             this.tsDeleteSystemVariable.Name = "tsDeleteSystemVariable";
-            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(161, 30);
+            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(148, 30);
             this.tsDeleteSystemVariable.Text = "Remove";
             this.tsDeleteSystemVariable.Click += new System.EventHandler(this.tsDeleteSystemVariable_Click);
             // 
@@ -2573,12 +2580,12 @@
             this.cmSystemVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddSystemVariable});
             this.cmSystemVariables.Name = "cmDevice";
-            this.cmSystemVariables.Size = new System.Drawing.Size(132, 34);
+            this.cmSystemVariables.Size = new System.Drawing.Size(119, 34);
             // 
             // tsAddSystemVariable
             // 
             this.tsAddSystemVariable.Name = "tsAddSystemVariable";
-            this.tsAddSystemVariable.Size = new System.Drawing.Size(131, 30);
+            this.tsAddSystemVariable.Size = new System.Drawing.Size(118, 30);
             this.tsAddSystemVariable.Text = "Add";
             this.tsAddSystemVariable.Click += new System.EventHandler(this.tsAddSystemVariable_Click);
             // 
@@ -2588,12 +2595,12 @@
             this.cmMetadataVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddMetadata});
             this.cmMetadataVariables.Name = "cmDevice";
-            this.cmMetadataVariables.Size = new System.Drawing.Size(132, 34);
+            this.cmMetadataVariables.Size = new System.Drawing.Size(119, 34);
             // 
             // tsAddMetadata
             // 
             this.tsAddMetadata.Name = "tsAddMetadata";
-            this.tsAddMetadata.Size = new System.Drawing.Size(131, 30);
+            this.tsAddMetadata.Size = new System.Drawing.Size(118, 30);
             this.tsAddMetadata.Text = "Add";
             this.tsAddMetadata.Click += new System.EventHandler(this.tsAddMetadata_Click);
             // 
@@ -2603,12 +2610,12 @@
             this.cmMetadataVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveMetadata});
             this.cmMetadataVariable.Name = "cmDevice";
-            this.cmMetadataVariable.Size = new System.Drawing.Size(162, 34);
+            this.cmMetadataVariable.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveMetadata
             // 
             this.tsRemoveMetadata.Name = "tsRemoveMetadata";
-            this.tsRemoveMetadata.Size = new System.Drawing.Size(161, 30);
+            this.tsRemoveMetadata.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveMetadata.Text = "Remove";
             this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
             // 
@@ -2618,12 +2625,12 @@
             this.cmLink.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveLink});
             this.cmLink.Name = "cmDevice";
-            this.cmLink.Size = new System.Drawing.Size(162, 34);
+            this.cmLink.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveLink
             // 
             this.tsRemoveLink.Name = "tsRemoveLink";
-            this.tsRemoveLink.Size = new System.Drawing.Size(161, 30);
+            this.tsRemoveLink.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveLink.Text = "Remove";
             this.tsRemoveLink.Click += new System.EventHandler(this.tsRemoveLink_Click);
             // 
@@ -2633,12 +2640,12 @@
             this.cmLinks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddLink});
             this.cmLinks.Name = "cmDevice";
-            this.cmLinks.Size = new System.Drawing.Size(132, 34);
+            this.cmLinks.Size = new System.Drawing.Size(119, 34);
             // 
             // tsAddLink
             // 
             this.tsAddLink.Name = "tsAddLink";
-            this.tsAddLink.Size = new System.Drawing.Size(131, 30);
+            this.tsAddLink.Size = new System.Drawing.Size(118, 30);
             this.tsAddLink.Text = "Add";
             this.tsAddLink.Click += new System.EventHandler(this.tsAddLink_Click);
             // 
@@ -2648,12 +2655,12 @@
             this.cmTimedEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTimedEvent});
             this.cmTimedEvent.Name = "cmDevice";
-            this.cmTimedEvent.Size = new System.Drawing.Size(162, 34);
+            this.cmTimedEvent.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveTimedEvent
             // 
             this.tsRemoveTimedEvent.Name = "tsRemoveTimedEvent";
-            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(161, 30);
+            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveTimedEvent.Text = "Remove";
             this.tsRemoveTimedEvent.Click += new System.EventHandler(this.tsRemoveTimedEvent_Click);
             // 
@@ -2663,12 +2670,12 @@
             this.cmTimedEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddTimedEvent});
             this.cmTimedEvents.Name = "cmDevice";
-            this.cmTimedEvents.Size = new System.Drawing.Size(132, 34);
+            this.cmTimedEvents.Size = new System.Drawing.Size(119, 34);
             // 
             // tsAddTimedEvent
             // 
             this.tsAddTimedEvent.Name = "tsAddTimedEvent";
-            this.tsAddTimedEvent.Size = new System.Drawing.Size(131, 30);
+            this.tsAddTimedEvent.Size = new System.Drawing.Size(118, 30);
             this.tsAddTimedEvent.Text = "Add";
             this.tsAddTimedEvent.Click += new System.EventHandler(this.tsAddTimedEvent_Click);
             // 
@@ -2678,12 +2685,12 @@
             this.cmTriggeredEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddTriggeredEvent});
             this.cmTriggeredEvents.Name = "cmDevice";
-            this.cmTriggeredEvents.Size = new System.Drawing.Size(132, 34);
+            this.cmTriggeredEvents.Size = new System.Drawing.Size(119, 34);
             // 
             // tsAddTriggeredEvent
             // 
             this.tsAddTriggeredEvent.Name = "tsAddTriggeredEvent";
-            this.tsAddTriggeredEvent.Size = new System.Drawing.Size(131, 30);
+            this.tsAddTriggeredEvent.Size = new System.Drawing.Size(118, 30);
             this.tsAddTriggeredEvent.Text = "Add";
             this.tsAddTriggeredEvent.Click += new System.EventHandler(this.tsAddTriggeredEvent_Click);
             // 
@@ -2693,12 +2700,12 @@
             this.cmTriggeredEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTriggeredEvent});
             this.cmTriggeredEvent.Name = "cmDevice";
-            this.cmTriggeredEvent.Size = new System.Drawing.Size(162, 34);
+            this.cmTriggeredEvent.Size = new System.Drawing.Size(149, 34);
             // 
             // tsRemoveTriggeredEvent
             // 
             this.tsRemoveTriggeredEvent.Name = "tsRemoveTriggeredEvent";
-            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(161, 30);
+            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(148, 30);
             this.tsRemoveTriggeredEvent.Text = "Remove";
             this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
             // 
@@ -2710,18 +2717,11 @@
             this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
             this.cbHomegearHostname.TabIndex = 16;
             // 
-            // tsSniffPackets
-            // 
-            this.tsSniffPackets.Name = "tsSniffPackets";
-            this.tsSniffPackets.Size = new System.Drawing.Size(329, 30);
-            this.tsSniffPackets.Text = "Sniff Packets";
-            this.tsSniffPackets.Click += new System.EventHandler(this.tsSniffPackets_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1365, 1029);
+            this.ClientSize = new System.Drawing.Size(1272, 906);
             this.Controls.Add(this.cbHomegearHostname);
             this.Controls.Add(this.bnConnect);
             this.Controls.Add(this.gbSSL);

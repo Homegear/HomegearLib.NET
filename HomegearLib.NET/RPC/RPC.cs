@@ -155,7 +155,7 @@ namespace HomegearLib.RPC
         private System.Timers.Timer _keepAliveTimer;
 
         /// <summary>
-        /// Creates a new RPCController object,
+        /// Creates a new RPCController object with event support.
         /// </summary>
         /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
         /// <param name="homegearPort">The port Homegear is listening on.</param>
@@ -165,6 +165,23 @@ namespace HomegearLib.RPC
         /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
         /// <param name="SSLServerInfo">When a SSLServerInfo object is passed, the connection to the callback server will be SSL encrypted.</param>
         public RPCController(String homegearHostname, int homegearPort, String callbackHostname, String callbackListenIP, int callbackListenPort, SSLClientInfo sslClientInfo = null, SSLServerInfo sslServerInfo = null)
+        {
+            init(homegearHostname, homegearPort, callbackHostname, callbackListenIP, callbackListenPort, sslClientInfo, sslServerInfo);
+        }
+
+        /// <summary>
+        /// Creates a new RPCController object without support for events.
+        /// </summary>
+        /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
+        /// <param name="homegearPort">The port Homegear is listening on.</param>
+        /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
+        /// <param name="SSLServerInfo">When a SSLServerInfo object is passed, the connection to the callback server will be SSL encrypted.</param>
+        public RPCController(String homegearHostname, int homegearPort, SSLClientInfo sslClientInfo = null, SSLServerInfo sslServerInfo = null)
+        {
+            init(homegearHostname, homegearPort, "", "", -1, sslClientInfo, sslServerInfo);
+        }
+
+        void init(String homegearHostname, int homegearPort, String callbackHostname, String callbackListenIP, int callbackListenPort, SSLClientInfo sslClientInfo, SSLServerInfo sslServerInfo)
         {
             _callbackHostname = callbackHostname;
             _sslClientInfo = sslClientInfo;
@@ -568,6 +585,7 @@ namespace HomegearLib.RPC
                             variable.Readable = readable;
                             if (variableInfo.ContainsKey("MIN")) variable.SetMin(variableInfo["MIN"]);
                             if (variableInfo.ContainsKey("MAX")) variable.SetMax(variableInfo["MAX"]);
+                            if (variableInfo.ContainsKey("UNIT")) variable.Unit = variableInfo["UNIT"].StringValue;
                             if (variableInfo.ContainsKey("SPECIAL")) variable.SetSpecialValues(variableInfo["SPECIAL"]);
                             if (variableInfo.ContainsKey("VALUE_LIST")) variable.SetValueList(variableInfo["VALUE_LIST"]);
                             variables.Add(variable.Name, variable);
