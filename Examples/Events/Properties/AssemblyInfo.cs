@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HomegearLibTest")]
+[assembly: AssemblyTitle("Events")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HomegearLibTest")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("Events")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ed3282d8-b37d-432e-b244-696e4065bce3")]
+[assembly: Guid("e81f4d79-116d-43f2-9010-5a3cbde320ce")]
 
 // Version information for an assembly consists of the following four values:
 //

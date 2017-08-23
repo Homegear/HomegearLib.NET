@@ -278,7 +278,9 @@ namespace HomegearLibTest
 
         void _homegear_OnSystemVariableUpdated(Homegear sender, SystemVariable variable)
         {
-            WriteLog("System variable updated: Value: " + variable.ToString());
+            string value = variable.ToString();
+            if (value.Length > 200) value = value.Substring(0, 200) + "...";
+            WriteLog("System variable updated: Value: " + value);
             if (_selectedSystemVariable == variable)
             {
                 SetSystemVariableValue(variable.ToString());
@@ -292,7 +294,9 @@ namespace HomegearLibTest
 
         void _homegear_OnMetadataUpdated(Homegear sender, Device device, MetadataVariable variable)
         {
-            WriteLog("Metadata updated: Device: " + device.ID.ToString() + ", Value: " + variable.ToString());
+            string value = variable.ToString();
+            if (value.Length > 200) value = value.Substring(0, 200) + "...";
+            WriteLog("Metadata updated: Device: " + device.ID.ToString() + ", Value: " + value);
             if (_selectedMetadata == variable)
             {
                 SetMetadataValue(variable.ToString());
@@ -301,7 +305,9 @@ namespace HomegearLibTest
 
         void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable)
         {
-            WriteLog("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + variable.ToString());
+            string value = variable.ToString();
+            if (value.Length > 200) value = value.Substring(0, 200) + "...";
+            WriteLog("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + value);
             if(_selectedVariable == variable)
             {
                 SetVariableValue(variable.ToString());
