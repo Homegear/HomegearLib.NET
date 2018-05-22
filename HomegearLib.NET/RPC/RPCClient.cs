@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Collections;
-using System.Security;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace HomegearLib.RPC
@@ -25,7 +20,6 @@ namespace HomegearLib.RPC
         public event DisconnectedEventHandler Disconnected;
         #endregion
 
-        bool _disposing = false;
         Mutex _sendMutex = new Mutex();
         volatile bool _connecting = false;
         const int _maxTries = 3;
@@ -34,7 +28,7 @@ namespace HomegearLib.RPC
 
         private bool _ssl = false;
         public bool SSL { get { return _ssl; } }
-        
+
         private SSLClientInfo _sslInfo;
         private TcpClient _client = null;
         private SslStream _sslStream = null;
@@ -44,7 +38,7 @@ namespace HomegearLib.RPC
 
         public bool IsConnected { get { return _client != null && _client.Connected; } }
 
-        public CipherAlgorithmType CipherAlgorithm { get { if(_sslStream != null) return _sslStream.CipherAlgorithm; else return CipherAlgorithmType.Null; } }
+        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null) return _sslStream.CipherAlgorithm; else return CipherAlgorithmType.Null; } }
         public Int32 CipherStrength { get { if (_sslStream != null) return _sslStream.CipherStrength; else return -1; } }
 
         public RPCClient(String hostname, int port, SSLClientInfo sslInfo = null)
@@ -53,7 +47,7 @@ namespace HomegearLib.RPC
             _port = port;
             _ssl = sslInfo != null;
             _sslInfo = sslInfo;
-            if(_sslInfo != null)
+            if (_sslInfo != null)
             {
                 _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Password)))));
             }
@@ -120,7 +114,7 @@ namespace HomegearLib.RPC
                 else if (Connected != null) Connected(this);
                 _connecting = false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _connecting = false;
                 throw ex;
@@ -228,7 +222,7 @@ namespace HomegearLib.RPC
                             }
                             if (packetLength == dataSize) break;
                         } while (bytesReceived != 0);
-                        if(packet != null) result = _rpcDecoder.DecodeResponse(packet);
+                        if (packet != null) result = _rpcDecoder.DecodeResponse(packet);
                         break;
                     }
                     catch (System.IO.IOException ex)
@@ -263,7 +257,6 @@ namespace HomegearLib.RPC
 
         public void Dispose()
         {
-            _disposing = true;
         }
     }
 }

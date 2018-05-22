@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HomegearLib.RPC;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -30,6 +27,34 @@ namespace HomegearLib
         private Int32 _index = 0;
         public Int32 Index { get { return _index; } }
 
+        private String _name;
+        public String Name
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _name;
+            }
+            set
+            {
+                _name = value;
+                _rpc.SetName(_peerId, _index, _name);
+            }
+        }
+
+        /// <summary>
+        /// Sets the name without calling any RPC functions
+        /// </summary>
+        /// <param name="name">The name of the device</param>
+        internal void SetNameNoRPC(String name)
+        {
+            _name = name;
+        }
+
         private Variables _variables;
         public Variables Variables
         {
@@ -43,7 +68,7 @@ namespace HomegearLib
 
         private DeviceConfig _config = null;
         public DeviceConfig Config
-        { 
+        {
             get
             {
                 if (_config == null || _config.Count == 0)
@@ -53,7 +78,7 @@ namespace HomegearLib
                     _config.Reload();
                 }
                 return _config;
-            } 
+            }
             internal set
             {
                 _config = value;
@@ -65,10 +90,10 @@ namespace HomegearLib
         {
             get
             {
-                if(_links == null || _links.Count == 0)
+                if (_links == null || _links.Count == 0)
                 {
                     _links = new Links(_rpc, _peerId, _index);
-                    _links.Reload();                    
+                    _links.Reload();
                 }
                 return _links;
             }

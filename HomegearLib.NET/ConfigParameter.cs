@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
+﻿using HomegearLib.RPC;
+using System;
 
 namespace HomegearLib
 {
@@ -118,17 +114,17 @@ namespace HomegearLib
 
         public ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name) : base(rpc, peerId, channel, name)
         {
-            
+
         }
 
         internal ConfigParameter(Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
         {
-            
+
         }
 
         internal ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
         {
-            
+
         }
     }
 }

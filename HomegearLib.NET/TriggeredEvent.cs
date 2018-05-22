@@ -1,9 +1,7 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -182,45 +180,45 @@ namespace HomegearLib
                 changed = true;
                 _resetAfterDynamic = e.ResetAfterDynamic;
             }
-            else if(_resetAfterDynamic != null && e.ResetAfterDynamic == null)
+            else if (_resetAfterDynamic != null && e.ResetAfterDynamic == null)
             {
                 changed = true;
                 _resetAfterDynamic = null;
             }
-            else if(_resetAfterDynamic != null && e.ResetAfterDynamic != null)
+            else if (_resetAfterDynamic != null && e.ResetAfterDynamic != null)
             {
-                if(_resetAfterDynamic.CurrentTime != e.ResetAfterDynamic.CurrentTime)
+                if (_resetAfterDynamic.CurrentTime != e.ResetAfterDynamic.CurrentTime)
                 {
                     changed = true;
                     _resetAfterDynamic.CurrentTime = e.ResetAfterDynamic.CurrentTime;
                 }
-                if(_resetAfterDynamic.Factor != e.ResetAfterDynamic.Factor)
+                if (_resetAfterDynamic.Factor != e.ResetAfterDynamic.Factor)
                 {
                     changed = true;
                     _resetAfterDynamic.Factor = e.ResetAfterDynamic.Factor;
                 }
-                if(_resetAfterDynamic.InitialTime != e.ResetAfterDynamic.InitialTime)
+                if (_resetAfterDynamic.InitialTime != e.ResetAfterDynamic.InitialTime)
                 {
                     changed = true;
                     _resetAfterDynamic.InitialTime = e.ResetAfterDynamic.InitialTime;
                 }
-                if(_resetAfterDynamic.Limit != e.ResetAfterDynamic.Limit)
+                if (_resetAfterDynamic.Limit != e.ResetAfterDynamic.Limit)
                 {
                     changed = true;
                     _resetAfterDynamic.Limit = e.ResetAfterDynamic.Limit;
                 }
-                if(_resetAfterDynamic.Operation != e.ResetAfterDynamic.Operation)
+                if (_resetAfterDynamic.Operation != e.ResetAfterDynamic.Operation)
                 {
                     changed = true;
                     _resetAfterDynamic.Operation = e.ResetAfterDynamic.Operation;
                 }
-                if(_resetAfterDynamic.ResetAfter != e.ResetAfterDynamic.ResetAfter)
+                if (_resetAfterDynamic.ResetAfter != e.ResetAfterDynamic.ResetAfter)
                 {
                     changed = true;
                     _resetAfterDynamic.ResetAfter = e.ResetAfterDynamic.ResetAfter;
                 }
             }
-            if(_resetMethod != e.ResetMethod)
+            if (_resetMethod != e.ResetMethod)
             {
                 changed = true;
                 _resetMethod = e.ResetMethod;
@@ -229,7 +227,7 @@ namespace HomegearLib
             {
                 changed = true;
                 _resetMethodParams = new List<RPCVariable>();
-                foreach(RPCVariable element in e.ResetMethodParams)
+                foreach (RPCVariable element in e.ResetMethodParams)
                 {
                     _resetMethodParams.Add(element);
                 }
@@ -237,26 +235,26 @@ namespace HomegearLib
             else
             {
                 var pair = _resetMethodParams.Zip(e.ResetMethodParams, (l, r) => new { Left = l, Right = r });
-                foreach(var element in pair)
+                foreach (var element in pair)
                 {
-                    if(!element.Left.Compare(element.Right))
+                    if (!element.Left.Compare(element.Right))
                     {
                         changed = true;
                         element.Left.SetValue(element.Right);
                     }
                 }
             }
-            if(_lastValue != e.LastValue)
+            if (_lastValue != e.LastValue)
             {
                 changed = true;
                 _lastValue = e.LastValue;
             }
-            if(_lastRaised != e.LastRaised)
+            if (_lastRaised != e.LastRaised)
             {
                 changed = true;
                 _lastRaised = e.LastRaised;
             }
-            if(_lastReset != e.LastReset)
+            if (_lastReset != e.LastReset)
             {
                 changed = true;
                 _lastReset = e.LastReset;

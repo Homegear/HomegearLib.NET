@@ -1,9 +1,6 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -19,7 +16,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach(KeyValuePair<Int32, Device> device in _dictionary)
+            foreach (KeyValuePair<Int32, Device> device in _dictionary)
             {
                 device.Value.Dispose();
             }
@@ -46,13 +43,13 @@ namespace HomegearLib
                 }
                 foreach (KeyValuePair<Int32, Channel> channelPair in devicePair.Value.Channels)
                 {
-                    if(!device.Channels.ContainsKey(channelPair.Key)) continue;
+                    if (!device.Channels.ContainsKey(channelPair.Key)) continue;
                     Channel channel = device.Channels[channelPair.Key];
-                    foreach(KeyValuePair<String, Variable> variablePair in channelPair.Value.Variables)
+                    foreach (KeyValuePair<String, Variable> variablePair in channelPair.Value.Variables)
                     {
                         if (!channel.Variables.ContainsKey(variablePair.Key)) continue;
                         Variable variable = channel.Variables[variablePair.Key];
-                        if(!variable.Compare(variablePair.Value))
+                        if (!variable.Compare(variablePair.Value))
                         {
                             variable.SetValue(variablePair.Value);
                             changedVariables.Add(variable);
@@ -60,7 +57,7 @@ namespace HomegearLib
                     }
                 }
             }
-            foreach(KeyValuePair<Int32, Device> devicePair in _dictionary)
+            foreach (KeyValuePair<Int32, Device> devicePair in _dictionary)
             {
                 if (!variables.ContainsKey(devicePair.Key))
                 {

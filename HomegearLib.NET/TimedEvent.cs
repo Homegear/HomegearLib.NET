@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HomegearLib.RPC;
 
 namespace HomegearLib
@@ -38,7 +35,7 @@ namespace HomegearLib
 
         public override bool Update(Event value)
         {
-            if(!(value is TimedEvent)) return true;
+            if (!(value is TimedEvent)) return true;
             bool changed = false;
             TimedEvent e = (TimedEvent)value;
             base.Update(value);

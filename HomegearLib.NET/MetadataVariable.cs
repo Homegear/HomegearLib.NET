@@ -1,9 +1,6 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -88,7 +85,7 @@ namespace HomegearLib
             set
             {
                 _structValue = value;
-                if(_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null) _rpc.SetMetadata(this);
             }
         }
 

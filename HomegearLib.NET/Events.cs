@@ -1,16 +1,13 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
     public class Events : ReadOnlyDictionary<String, Event>, IDisposable
     {
         RPCController _rpc = null;
-        
+
         EventType _type;
         public EventType Type { get { return _type; } }
 

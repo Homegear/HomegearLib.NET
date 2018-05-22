@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomegearLib.RPC.Encoding
 {
@@ -35,7 +33,7 @@ namespace HomegearLib.RPC.Encoding
 
         public void EncodeString(List<byte> encodedData, string value)
         {
-            if(value == null)
+            if (value == null)
             {
                 EncodeInteger(encodedData, 0);
                 return;
@@ -56,9 +54,9 @@ namespace HomegearLib.RPC.Encoding
         {
             double temp = Math.Abs(value);
             int exponent = 0;
-            if(temp != 0 && temp < 0.5)
+            if (temp != 0 && temp < 0.5)
             {
-                while(temp < 0.5)
+                while (temp < 0.5)
                 {
                     temp *= 2;
                     exponent--;
@@ -66,7 +64,7 @@ namespace HomegearLib.RPC.Encoding
             }
             else
             {
-                while(temp >= 1)
+                while (temp >= 1)
                 {
                     temp /= 2;
                     exponent++;

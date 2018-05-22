@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HomegearLib.RPC;
 
 namespace HomegearLib
 {
     public enum VariableType
-    { 
+    {
         tBoolean,
         tAction,
         tInteger,
@@ -83,14 +80,14 @@ namespace HomegearLib
         protected ReadOnlyDictionary<Int64, String> _specialIntegerValues = new ReadOnlyDictionary<Int64, String>();
         public ReadOnlyDictionary<Int64, String> SpecialIntegerValues { get { return _specialIntegerValues; } }
 
-        protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double,string>();
+        protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double, string>();
         public ReadOnlyDictionary<Double, String> SpecialDoubleValues { get { return _specialDoubleValues; } }
 
         protected Boolean _setValueWait = false;
         public Boolean SetValueWait { get { return _setValueWait; } set { _setValueWait = value; } }
 
         protected Boolean _booleanValue = false;
-        public virtual Boolean BooleanValue 
+        public virtual Boolean BooleanValue
         {
             get
             {
@@ -103,7 +100,7 @@ namespace HomegearLib
                 if (_type != VariableType.tBoolean && _type != VariableType.tAction) throw new HomegearVariableTypeException("Variable " + _name + " is not of type boolean or action.");
                 _booleanValue = value;
                 _rpc.SetValue(this);
-            } 
+            }
         }
 
         protected Int32 _integerValue = 0;
@@ -120,17 +117,18 @@ namespace HomegearLib
                 if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
                 if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue = value;
+                _integerValue64 = value;
                 _rpc.SetValue(this);
             }
         }
 
         protected Int64 _integerValue64 = 0;
-        public virtual Int64 IntegerValue64 
-        { 
+        public virtual Int64 IntegerValue64
+        {
             get
             {
                 return _integerValue64;
-            } 
+            }
             set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
@@ -138,18 +136,19 @@ namespace HomegearLib
                 if (_type != VariableType.tInteger64 && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
                 if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue64 = value;
+                _integerValue = (Int32)value;
                 _rpc.SetValue(this);
             }
         }
 
         protected Double _doubleValue = 0;
-        public virtual Double DoubleValue 
-        { 
+        public virtual Double DoubleValue
+        {
             get
             {
                 return _doubleValue;
-            } 
-            set 
+            }
+            set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
@@ -157,17 +156,17 @@ namespace HomegearLib
                 if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _doubleValue = value;
                 _rpc.SetValue(this);
-            } 
+            }
         }
 
         protected String _stringValue = "";
-        public virtual String StringValue 
-        { 
+        public virtual String StringValue
+        {
             get
             {
                 return _stringValue;
-            } 
-            set 
+            }
+            set
             {
                 if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
                 if (!_writeable) throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
@@ -175,7 +174,7 @@ namespace HomegearLib
                 if (_stringValue == null) _stringValue = "";
                 else _stringValue = value;
                 _rpc.SetValue(this);
-            } 
+            }
         }
 
         protected Dictionary<int, string> _valueList = new Dictionary<int, string>();
@@ -200,7 +199,7 @@ namespace HomegearLib
 
         internal Variable(Int32 peerId, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(null, peerId, channel, name, typeString, rpcVariable)
         {
-            
+
         }
 
         internal Variable(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
@@ -227,7 +226,7 @@ namespace HomegearLib
             else if (value.Type == RPCVariableType.rpcFloat) _defaultDouble = value.FloatValue;
             else if (value.Type == RPCVariableType.rpcString)
             {
-                if(value.StringValue != null) _defaultString = value.StringValue;
+                if (value.StringValue != null) _defaultString = value.StringValue;
             }
         }
 
@@ -282,7 +281,7 @@ namespace HomegearLib
 
         internal void SetType(String type)
         {
-            switch(type)
+            switch (type)
             {
                 case "ACTION":
                     _type = VariableType.tAction;
@@ -359,7 +358,7 @@ namespace HomegearLib
         internal void SetSpecialValues(RPCVariable specialValues)
         {
             Dictionary<Int64, String> specialIntegerValues = new Dictionary<Int64, string>();
-            Dictionary<Double, String> specialDoubleValues = new Dictionary<double,string>();
+            Dictionary<Double, String> specialDoubleValues = new Dictionary<double, string>();
             foreach (RPCVariable specialValue in specialValues.ArrayValue)
             {
                 if (!specialValue.StructValue.ContainsKey("ID") || !specialValue.StructValue.ContainsKey("VALUE")) continue;

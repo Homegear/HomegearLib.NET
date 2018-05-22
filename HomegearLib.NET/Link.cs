@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
+﻿using HomegearLib.RPC;
+using System;
 
 namespace HomegearLib
 {
@@ -42,7 +38,7 @@ namespace HomegearLib
         {
             get { return _name; }
             set
-            { 
+            {
                 _name = value;
                 _rpc.SetLinkInfo(this);
             }

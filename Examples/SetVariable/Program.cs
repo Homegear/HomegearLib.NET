@@ -1,11 +1,7 @@
 ﻿using HomegearLib;
 using HomegearLib.RPC;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SetVariable
 {
@@ -16,7 +12,7 @@ namespace SetVariable
         static void Main(string[] args)
         {
             Console.Write("Please enter the hostname or IP address of your server running Homegear: ");
-            string homegearHost = Console.ReadLine();           
+            string homegearHost = Console.ReadLine();
 
             #region Without SSL support
             RPCController rpc = new RPCController
@@ -59,7 +55,7 @@ namespace SetVariable
             Console.WriteLine("Connecting to Homegaer...");
             _connectedEvent.WaitOne();
 
-            if(!rpc.IsConnected)
+            if (!rpc.IsConnected)
             {
                 Console.WriteLine("Exiting...");
                 homegear.Dispose();
@@ -73,7 +69,7 @@ namespace SetVariable
                 key = Console.ReadKey();
                 Console.WriteLine();
 
-                switch(key.KeyChar)
+                switch (key.KeyChar)
                 {
                     case '1':
                         {
@@ -106,7 +102,7 @@ namespace SetVariable
                             {
                                 variable = homegear.Devices[peerId].Channels[channel].Variables[variableName];
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 Console.WriteLine(ex.GetType().ToString() + ": " + ex.Message);
                                 break;
@@ -133,7 +129,7 @@ namespace SetVariable
                                 Console.WriteLine("Peer ID was not a number.");
                                 break;
                             }
-                            
+
                             Int32 channel = 0;
                             if (!Int32.TryParse(channelString, out channel))
                             {

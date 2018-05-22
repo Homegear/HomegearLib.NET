@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomegearLib.RPC
 {
     public enum RPCVariableType
-    { 
+    {
         rpcVoid = 0,
         rpcInteger = 1,
         rpcBoolean = 2,
@@ -47,14 +45,14 @@ namespace HomegearLib.RPC
         public virtual Int32 IntegerValue
         {
             get { return _integerValue; }
-            set { _integerValue = value; }
+            set { _integerValue = value; _integerValue64 = value; }
         }
 
         protected Int64 _integerValue64;
         public virtual Int64 IntegerValue64
         {
             get { return _integerValue64; }
-            set { _integerValue64 = value; }
+            set { _integerValue64 = value; _integerValue = (Int32)value; }
         }
 
         protected bool _booleanValue;
@@ -204,7 +202,7 @@ namespace HomegearLib.RPC
 
         public static RPCVariable CreateFromTypeString(String type)
         {
-            switch(type)
+            switch (type)
             {
                 case "BOOL":
                     return new RPCVariable(RPCVariableType.rpcBoolean);
@@ -304,7 +302,7 @@ namespace HomegearLib.RPC
         {
             bool valueChanged = !Compare(value);
             if (!valueChanged) return false;
-            switch(_type)
+            switch (_type)
             {
                 case RPCVariableType.rpcBoolean:
                     _booleanValue = value.BooleanValue;

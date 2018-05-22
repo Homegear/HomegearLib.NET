@@ -1,96 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1FFDC929-026B-46D0-9855-BA46C63D799C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <RootNamespace>HomegearLib</RootNamespace>
     <AssemblyName>HomegearLib.NET</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Copyright>Copyright © Homegear GmbH 2015-2018</Copyright>
+    <AssemblyVersion>0.1.7.0</AssemblyVersion>
+    <FileVersion>0.1.7.0</FileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Channel.cs" />
-    <Compile Include="Channels.cs" />
-    <Compile Include="ConfigParameter.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="DeviceConfig.cs" />
-    <Compile Include="Devices.cs" />
-    <Compile Include="Event.cs" />
-    <Compile Include="Events.cs" />
-    <Compile Include="Families.cs" />
-    <Compile Include="Family.cs" />
-    <Compile Include="HelperFunctions.cs" />
-    <Compile Include="Interface.cs" />
-    <Compile Include="Interfaces.cs" />
-    <Compile Include="Link.cs" />
-    <Compile Include="Links.cs" />
-    <Compile Include="MetadataVariable.cs" />
-    <Compile Include="MetadataVariables.cs" />
-    <Compile Include="ReadOnlyDictionary.cs" />
-    <Compile Include="RPC\Encoding\BinaryDecoder.cs" />
-    <Compile Include="RPC\Encoding\BinaryEncoder.cs" />
-    <Compile Include="RPC\Encoding\RPCDecoder.cs" />
-    <Compile Include="RPC\Encoding\RPCEncoder.cs" />
-    <Compile Include="RPC\Encoding\RPCHeader.cs" />
-    <Compile Include="Homegear.cs" />
-    <Compile Include="HomegearException.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RPC\RPC.cs" />
-    <Compile Include="RPC\RPCClient.cs" />
-    <Compile Include="RPC\RPCServer.cs" />
-    <Compile Include="RPC\RPCVariable.cs" />
-    <Compile Include="RPC\SSLClientInfo.cs" />
-    <Compile Include="RPC\SSLServerInfo.cs" />
-    <Compile Include="ServiceMessage.cs" />
-    <Compile Include="SniffedDeviceInfo.cs" />
-    <Compile Include="SSDP.cs" />
-    <Compile Include="SystemVariable.cs" />
-    <Compile Include="SystemVariables.cs" />
-    <Compile Include="TimedEvent.cs" />
-    <Compile Include="TriggeredEvent.cs" />
-    <Compile Include="Variable.cs" />
-    <Compile Include="Variables.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

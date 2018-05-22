@@ -1,9 +1,6 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -56,16 +53,16 @@ namespace HomegearLib
 
         public List<ConfigParameter> Reload()
         {
-            if (_type == RPCParameterSetType.rpcLink)  return _rpc.GetParamset(_peerId, _channel, _remotePeerID, _remoteChannel, this);
+            if (_type == RPCParameterSetType.rpcLink) return _rpc.GetParamset(_peerId, _channel, _remotePeerID, _remoteChannel, this);
             else return _rpc.GetParamset(_peerId, _channel, RPCParameterSetType.rpcMaster, this);
         }
 
         public void Put()
         {
-            Dictionary<String, ConfigParameter> changedParameters = new Dictionary<string,ConfigParameter>();
-            foreach(KeyValuePair<String, ConfigParameter> parameter in _dictionary)
+            Dictionary<String, ConfigParameter> changedParameters = new Dictionary<string, ConfigParameter>();
+            foreach (KeyValuePair<String, ConfigParameter> parameter in _dictionary)
             {
-                if(parameter.Value.DataPending) changedParameters.Add(parameter.Key, parameter.Value);
+                if (parameter.Value.DataPending) changedParameters.Add(parameter.Key, parameter.Value);
             }
             if (changedParameters.Count == 0) return;
             if (_type == RPCParameterSetType.rpcLink) _rpc.PutParamset(_peerId, _channel, _remotePeerID, _remoteChannel, changedParameters);

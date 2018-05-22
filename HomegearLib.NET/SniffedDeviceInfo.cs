@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomegearLib
 {
@@ -36,7 +33,7 @@ namespace HomegearLib
         private Int32 _rssi;
         public Int32 Rssi { get { return _rssi; } internal set { _rssi = value; } }
 
-        private Dictionary<String, String> _additionalData = new Dictionary<string,string>();
+        private Dictionary<String, String> _additionalData = new Dictionary<string, string>();
         public Dictionary<String, String> AdditionalData { get { return _additionalData; } }
 
         private List<SniffedDevicePacketInfo> _packets = new List<SniffedDevicePacketInfo>();
@@ -49,7 +46,7 @@ namespace HomegearLib
 
         public void Dispose()
         {
-            
+
         }
     }
 }

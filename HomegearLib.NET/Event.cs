@@ -1,9 +1,7 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -88,9 +86,9 @@ namespace HomegearLib
             else
             {
                 var pair = _eventMethodParams.Zip(value.EventMethodParams, (l, r) => new { Left = l, Right = r });
-                foreach(var element in pair)
+                foreach (var element in pair)
                 {
-                    if(!element.Left.Compare(element.Right))
+                    if (!element.Left.Compare(element.Right))
                     {
                         changed = true;
                         element.Left.SetValue(element.Right);

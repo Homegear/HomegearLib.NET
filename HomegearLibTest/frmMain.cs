@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using HomegearLib;
 using HomegearLib.RPC;
@@ -220,7 +217,7 @@ namespace HomegearLibTest
                         {
                             foreach (KeyValuePair<Int32, Channel> channel in device.Value.Channels)
                             {
-                                TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + channel.Value.TypeString + ")");
+                                TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + (channel.Value.Name.Length > 0 ? channel.Value.Name : channel.Value.TypeString) + ")");
                                 channelNode.Tag = channel.Value;
 
                                 TreeNode valuesNode = new TreeNode("Variables (" + channel.Value.Variables.Count + ")");
@@ -652,7 +649,7 @@ namespace HomegearLibTest
             txtServiceMessages.Text = "";
             foreach(ServiceMessage message in serviceMessages)
             {
-                txtServiceMessages.Text += "Device ID: " + message.PeerID.ToString() + "\t" + "Channel: " + message.Channel.ToString() + "\t" + "Type: " + message.Type + "\t" + "Value: " + message.Value.ToString() + "\r\n";
+                txtServiceMessages.Text += "Time: " + message.Timestamp.ToShortDateString() + " " + message.Timestamp.ToShortTimeString() +  "\tType: " + message.Type.ToString() + "\tFamily ID: " + message.FamilyID.ToString() + "\tDevice ID: " + message.PeerID.ToString() + "\t" + "Channel: " + message.Channel.ToString() + "\tMessage ID: " + message.MessageID.ToString() + "\tMessage: " + message.Message + "\tValue: " + message.Value.ToString() + "\tData: " + message.Data.ToString() + "\r\n";
             }
             pnHomegear.Visible = true;
         }
@@ -1568,6 +1565,7 @@ namespace HomegearLibTest
                     }
                     txtChannelPeerID.Text = (_selectedDevice.ID >= 0x40000000) ? "0x" + _selectedDevice.ID.ToString("X2") : _selectedDevice.ID.ToString();
                     txtChannelIndex.Text = _selectedChannel.Index.ToString();
+                    txtChannelName.Text = _selectedChannel.Name;
                     txtChannelTypeString.Text = _selectedChannel.TypeString;
                     txtChannelAESActive.Text = _selectedChannel.AESActive.ToString();
                     txtChannelDirection.Text = _selectedChannel.Direction.ToString();
@@ -1803,6 +1801,12 @@ namespace HomegearLibTest
         {
             if (_selectedDevice == null || _nodeLoading) return;
             _selectedDevice.Name = txtDeviceName.Text;
+        }
+
+        private void txtChannelName_TextChanged(object sender, EventArgs e)
+        {
+            if (_selectedChannel == null || _nodeLoading) return;
+            _selectedChannel.Name = txtChannelName.Text;
         }
 
         private void txtInterface_TextChanged(object sender, EventArgs e)

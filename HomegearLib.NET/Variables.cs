@@ -1,9 +1,6 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -36,7 +33,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach(KeyValuePair<String, Variable> variable in _dictionary)
+            foreach (KeyValuePair<String, Variable> variable in _dictionary)
             {
                 variable.Value.Dispose();
             }

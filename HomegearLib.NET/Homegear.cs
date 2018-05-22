@@ -1,11 +1,8 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using HomegearLib.RPC;
-using System.Security.Authentication;
 
 namespace HomegearLib
 {
@@ -85,7 +82,7 @@ namespace HomegearLib
         Int32 _currentUpdate = 0;
         public Int32 CurrentUpdate { get { return _currentUpdate; } }
 
-        ReadOnlyDictionary<Int32, UpdateResult> _results = new ReadOnlyDictionary<Int32,UpdateResult>();
+        ReadOnlyDictionary<Int32, UpdateResult> _results = new ReadOnlyDictionary<Int32, UpdateResult>();
         public ReadOnlyDictionary<Int32, UpdateResult> Results { get { return _results; } }
 
         public UpdateStatus(Int32 currentDevice, Int32 currentDeviceProgress, Int32 deviceCount, Int32 currentUpdate, Dictionary<Int32, UpdateResult> results)
@@ -329,7 +326,7 @@ namespace HomegearLib
                 if (!device.Events.ContainsKey(id)) return;
                 Event currentEvent = device.Events[id];
                 _rpc.GetEvent(currentEvent);
-                if (EventUpdated != null) EventUpdated(this, currentEvent);              
+                if (EventUpdated != null) EventUpdated(this, currentEvent);
             }
         }
 
@@ -356,7 +353,7 @@ namespace HomegearLib
 
         private void OnDevice_VariableReloadRequired(Device device, Channel channel, bool reloadDevice)
         {
-            if(DeviceReloadRequired != null)
+            if (DeviceReloadRequired != null)
             {
                 if (channel == null || reloadDevice) DeviceReloadRequired(this, device, channel, DeviceReloadType.Full);
                 else DeviceReloadRequired(this, device, channel, DeviceReloadType.Variables);
@@ -369,7 +366,7 @@ namespace HomegearLib
             Device device = Devices[peerId];
             if (!device.Channels.ContainsKey(channelIndex)) return;
             Channel channel = device.Channels[channelIndex];
-            if(flags == RPCUpdateDeviceFlags.rpcConfig)
+            if (flags == RPCUpdateDeviceFlags.rpcConfig)
             {
                 List<ConfigParameter> changedParameters = channel.Config.Reload();
                 foreach (ConfigParameter parameter in changedParameters)
@@ -388,7 +385,7 @@ namespace HomegearLib
                     }
                 }
             }
-            else if(flags == RPCUpdateDeviceFlags.rpcTeam)
+            else if (flags == RPCUpdateDeviceFlags.rpcTeam)
             {
                 if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Team);
             }
@@ -406,7 +403,7 @@ namespace HomegearLib
         private void _rpc_OnDeviceVariableUpdated(RPCController sender, Variable value)
         {
             if (_disposing) return;
-            if(value.PeerID == 0) return; //System variable
+            if (value.PeerID == 0) return; //System variable
             if (!Devices.ContainsKey(value.PeerID)) return;
             Device device = Devices[value.PeerID];
             if (!device.Channels.ContainsKey(value.Channel)) return;
@@ -447,7 +444,7 @@ namespace HomegearLib
         private void _rpc_OnMetadataUpdated(RPCController sender, Int32 peerId, MetadataVariable value)
         {
             if (_disposing) return;
-            if(!Devices.ContainsKey(peerId))
+            if (!Devices.ContainsKey(peerId))
             {
                 if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
                 return;
@@ -480,17 +477,17 @@ namespace HomegearLib
                 bool devicesDeleted = false;
                 bool newDevices = false;
                 List<Variable> updatedVariables = Devices.UpdateVariables(_rpc.GetAllValues(), out devicesDeleted, out newDevices);
-                foreach(Variable variable in updatedVariables)
+                foreach (Variable variable in updatedVariables)
                 {
-                    if(!Devices.ContainsKey(variable.PeerID)) continue;
+                    if (!Devices.ContainsKey(variable.PeerID)) continue;
                     Device device = Devices[variable.PeerID];
-                    if(!device.Channels.ContainsKey(variable.Channel)) continue;
+                    if (!device.Channels.ContainsKey(variable.Channel)) continue;
                     if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, device.Channels[variable.Channel], variable);
                 }
                 bool systemVariablesAdded = false;
                 bool systemVariablesDeleted = false;
                 List<SystemVariable> updatedSystemVariables = SystemVariables.Update(out systemVariablesDeleted, out systemVariablesAdded);
-                foreach(SystemVariable variable in updatedSystemVariables)
+                foreach (SystemVariable variable in updatedSystemVariables)
                 {
                     if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
                 }
@@ -525,7 +522,7 @@ namespace HomegearLib
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {
-                if(!_connectThread.Join(20000))
+                if (!_connectThread.Join(20000))
                 {
                     try
                     {
@@ -559,7 +556,7 @@ namespace HomegearLib
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {
-                if(!_connectThread.Join(2000))
+                if (!_connectThread.Join(2000))
                 {
                     try
                     {
@@ -579,15 +576,15 @@ namespace HomegearLib
             if (_disposing) return;
             _version = "";
             _rpc.Clear();
-            if(_families != null) _families.Dispose();
+            if (_families != null) _families.Dispose();
             _families = new Families(_rpc, _rpc.Families);
-            if(_devices != null) _devices.Dispose();
+            if (_devices != null) _devices.Dispose();
             _devices = new Devices(_rpc, _rpc.Devices);
             foreach (KeyValuePair<Int32, Device> device in _devices)
             {
                 device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
             }
-            if(_interfaces != null) _interfaces.Dispose();
+            if (_interfaces != null) _interfaces.Dispose();
             _interfaces = null;
             if (_systemVariables != null) _systemVariables.Dispose();
             _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);

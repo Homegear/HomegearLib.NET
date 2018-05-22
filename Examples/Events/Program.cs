@@ -1,12 +1,8 @@
 ﻿using HomegearLib;
 using HomegearLib.RPC;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Authentication;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Events
 {
@@ -26,7 +22,7 @@ namespace Events
             Console.Write("Please enter the port number, the callback event server should listen on: ");
             string callbackPortString = Console.ReadLine();
             Int32 callbackPort = 0;
-            if(!Int32.TryParse(callbackPortString, out callbackPort))
+            if (!Int32.TryParse(callbackPortString, out callbackPort))
             {
                 Console.WriteLine("Could not parse port number.");
                 Environment.Exit(1);
@@ -99,7 +95,7 @@ namespace Events
             ConsoleKeyInfo key;
             do
             {
-                key = Console.ReadKey();                
+                key = Console.ReadKey();
             } while (key.KeyChar != 'q');
 
             homegear.Dispose();
@@ -148,6 +144,6 @@ namespace Events
             _connectedEvent.Set();
         }
 
-        
+
     }
 }

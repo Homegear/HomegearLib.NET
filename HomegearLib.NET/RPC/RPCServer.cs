@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
-using System.Net.Sockets;
 using System.Net.Security;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.IO;
 using System.Threading;
-using System.Security;
-using System.Runtime.InteropServices;
 
 namespace HomegearLib.RPC
 {
@@ -77,7 +75,7 @@ namespace HomegearLib.RPC
                 if (File.Exists(sslInfo.CertificatePath)) _serverCertificate = new X509Certificate2(sslInfo.CertificatePath, sslInfo.CertificatePassword);
                 else throw new HomegearRPCServerSSLException("Certificate file does not exist.");
             }
-            if(listenIP.Length > 0) _ipAddress = IPAddress.Parse(listenIP);
+            if (listenIP.Length > 0) _ipAddress = IPAddress.Parse(listenIP);
             _port = port;
             if (_ssl && sslInfo.Username.Length > 0) _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(sslInfo.Password)))));
         }
@@ -113,7 +111,7 @@ namespace HomegearLib.RPC
                 //Wait until the thread activates
                 while (!_listenThread.IsAlive) ;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _starting = false;
                 throw ex;
@@ -145,16 +143,16 @@ namespace HomegearLib.RPC
 
         void Listen()
         {
-            while(!_stopServer)
+            while (!_stopServer)
             {
                 _clientConnected.Reset();
                 _listener.BeginAcceptTcpClient(new AsyncCallback(AcceptTCPClientCallback), _listener);
-                while(!_stopServer)
+                while (!_stopServer)
                 {
                     if (_clientConnected.WaitOne(1000)) break;
                 }
                 if (_stopServer) break;
-                if(_client == null) continue;
+                if (_client == null) continue;
                 _sslStream = null;
                 lock (_streamLockKey)
                 {
@@ -180,7 +178,7 @@ namespace HomegearLib.RPC
 
                 if (_ssl) Connected(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
                 else Connected(this);
-                
+
                 ReadClient();
                 if (_stopServer) break;
 
@@ -279,7 +277,7 @@ namespace HomegearLib.RPC
                         bufferPos += dataSize + 8;
                     }
                 }
-                catch(TimeoutException)
+                catch (TimeoutException)
                 {
                     continue;
                 }
@@ -311,7 +309,7 @@ namespace HomegearLib.RPC
             List<RPCVariable> parameters = _rpcDecoder.DecodeRequest(packet, ref methodName);
             RPCVariable response = new RPCVariable(RPCVariableType.rpcVoid);
             if (methodName == "") response = RPCVariable.CreateError(-1, "Packet is not well formed: " + BitConverter.ToString(packet));
-            else if(methodName == "system.listMethods")
+            else if (methodName == "system.listMethods")
             {
                 response = new RPCVariable(RPCVariableType.rpcArray);
                 response.ArrayValue.Add(new RPCVariable("system.multicall"));
@@ -325,9 +323,9 @@ namespace HomegearLib.RPC
                 response.ArrayValue.Add(new RPCVariable("deleteEvent"));
                 response.ArrayValue.Add(new RPCVariable("updateEvent"));
             }
-            else if(methodName == "system.multicall" && parameters.Count() > 0)
+            else if (methodName == "system.multicall" && parameters.Count() > 0)
             {
-                foreach(RPCVariable method in parameters[0].ArrayValue)
+                foreach (RPCVariable method in parameters[0].ArrayValue)
                 {
                     if (method.Type != RPCVariableType.rpcStruct || method.StructValue.Count() != 2) continue;
                     if (method.StructValue["methodName"].StringValue != "event") continue;
@@ -336,11 +334,11 @@ namespace HomegearLib.RPC
                     if (RPCEvent != null) RPCEvent(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
                 }
             }
-            else if(methodName == "error" && parameters.Count() == 3 && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcString)
+            else if (methodName == "error" && parameters.Count() == 3 && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcString)
             {
                 if (HomegearError != null) HomegearError(this, parameters[1].IntegerValue, parameters[2].StringValue);
             }
-            else if(methodName == "listDevices")
+            else if (methodName == "listDevices")
             {
                 response = new RPCVariable(RPCVariableType.rpcArray);
                 if (_knownDevices != null)
@@ -353,24 +351,24 @@ namespace HomegearLib.RPC
                     }
                 }
             }
-            else if(methodName == "newDevices")
+            else if (methodName == "newDevices")
             {
                 if (NewDevices != null) NewDevices(this);
             }
-            else if(methodName == "deleteDevices")
+            else if (methodName == "deleteDevices")
             {
                 if (DevicesDeleted != null) DevicesDeleted(this);
             }
-            else if(methodName == "updateDevice")
+            else if (methodName == "updateDevice")
             {
                 if (parameters.Count == 4 && parameters[0].Type == RPCVariableType.rpcString && parameters[1].Type == RPCVariableType.rpcInteger && parameters[2].Type == RPCVariableType.rpcInteger && parameters[3].Type == RPCVariableType.rpcInteger)
                 {
                     if (UpdateDevice != null) UpdateDevice(this, parameters[1].IntegerValue, parameters[2].IntegerValue, parameters[3].IntegerValue);
                 }
             }
-            else if(methodName == "newEvent")
+            else if (methodName == "newEvent")
             {
-                if(parameters.Count == 2 && parameters[1].Type == RPCVariableType.rpcStruct)
+                if (parameters.Count == 2 && parameters[1].Type == RPCVariableType.rpcStruct)
                 {
                     String id = "";
                     Int32 type = -1;
@@ -385,14 +383,14 @@ namespace HomegearLib.RPC
                     if (NewEvent != null) NewEvent(this, id, type, peerId, channel, variable);
                 }
             }
-            else if(methodName == "deleteEvent")
+            else if (methodName == "deleteEvent")
             {
-                if(parameters.Count == 6)
+                if (parameters.Count == 6)
                 {
                     if (EventDeleted != null) EventDeleted(this, parameters[1].StringValue, parameters[2].IntegerValue, parameters[3].IntegerValue, parameters[4].IntegerValue, parameters[5].StringValue);
                 }
             }
-            else if(methodName == "updateEvent")
+            else if (methodName == "updateEvent")
             {
                 if (parameters.Count == 6)
                 {
@@ -429,7 +427,7 @@ namespace HomegearLib.RPC
                     _clientConnected.Set();
                 }
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
 
             }

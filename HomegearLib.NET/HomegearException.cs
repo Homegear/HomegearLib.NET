@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomegearLib
 {
@@ -10,7 +6,7 @@ namespace HomegearLib
     {
         public HomegearException() : base()
         {
-            
+
         }
 
         public HomegearException(String message) : base(message)

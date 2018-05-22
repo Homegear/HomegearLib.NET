@@ -1,9 +1,6 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomegearLib.RPC;
 
 namespace HomegearLib
 {
@@ -53,7 +50,7 @@ namespace HomegearLib
 
         private Int32 _address = -1;
         public Int32 Address
-        { 
+        {
             get
             {
                 if (!_descriptionRequested)
@@ -62,7 +59,7 @@ namespace HomegearLib
                     _descriptionRequested = true;
                 }
                 return _address;
-            } 
+            }
             internal set { _address = value; }
         }
 
@@ -118,10 +115,10 @@ namespace HomegearLib
         {
             get
             {
-                if (!_infoRequested)
+                if (!_descriptionRequested)
                 {
-                    _rpc.GetDeviceInfo(this);
-                    _infoRequested = true;
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
                 }
                 return _name;
             }
@@ -234,7 +231,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _family = null;
-            if(_channels != null) _channels.Dispose();
+            if (_channels != null) _channels.Dispose();
         }
 
         public void Reload()
@@ -242,7 +239,7 @@ namespace HomegearLib
             _descriptionRequested = false;
             _infoRequested = false;
             _metadata = null;
-            foreach(KeyValuePair<Int32, Channel> channel in _channels)
+            foreach (KeyValuePair<Int32, Channel> channel in _channels)
             {
                 channel.Value.Reload();
             }
