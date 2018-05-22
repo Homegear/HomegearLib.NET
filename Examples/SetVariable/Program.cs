@@ -52,7 +52,7 @@ namespace SetVariable
             homegear.ConnectError += homegear_ConnectError;
             homegear.Reloaded += homegear_Reloaded;
 
-            Console.WriteLine("Connecting to Homegaer...");
+            Console.WriteLine("Connecting to Homegear...");
             _connectedEvent.WaitOne();
 
             if (!rpc.IsConnected)

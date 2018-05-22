@@ -78,7 +78,7 @@ namespace Events
             homegear.DeviceConfigParameterUpdated += homegear_DeviceConfigParameterUpdated;
             homegear.DeviceLinkConfigParameterUpdated += homegear_DeviceLinkConfigParameterUpdated;
 
-            Console.WriteLine("Connecting to Homegaer...");
+            Console.WriteLine("Connecting to Homegear...");
             _connectedEvent.WaitOne();
             _callbackConnectedEvent.WaitOne();
 
