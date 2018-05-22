@@ -1,11 +1,12 @@
 HomegearLib.NET
 ===============
 
-HomegearLib.NET is an API to easily communicate with Homegear.
+HomegearLib.NET is an API written for .NET Core 2.0 to easily communicate with Homegear.
 
 ## Requirements
 
-* Microsoft .NET-Framework 4.5
+* Microsoft .NET Core Framework 2.0
+* or Microsoft .NET Framework 4.6.1
 
 ## Small C# usage example
 
