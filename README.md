@@ -1,12 +1,19 @@
 HomegearLib.NET
 ===============
 
-HomegearLib.NET is an API written for .NET Core 2.0 to easily communicate with Homegear.
+HomegearLib.NET is an API written for .NET Standard 2.0 to easily communicate with Homegear.
 
 ## Requirements
 
-* Microsoft .NET Core Framework 2.0
-* or Microsoft .NET Framework 4.6.1
+One of
+
+* Microsoft .NET Core Framework 2.0 or later
+* Microsoft .NET Framework 4.6.1 or later
+* Mono 5.4 or later
+* Xamarin.iOS 10.14 or later
+* Xamarin.Mac 3.8 or later
+* Xamarin.Android 7.5 or later
+* Upcoming version of UWP
 
 ## Small C# usage example
 
