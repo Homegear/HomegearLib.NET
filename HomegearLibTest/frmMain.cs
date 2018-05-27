@@ -450,16 +450,11 @@ namespace HomegearLibTest
             chkSSL.Enabled = false;
 
             SSLClientInfo sslClientInfo = null;
-            SSLServerInfo sslServerInfo = null;
             if (chkSSL.Checked)
             {
                 sslClientInfo = new SSLClientInfo(txtCallbackHostname.Text, txtHomegearUsername.Text, txtHomegearPassword.Text, chkVerifyCertificate.Checked);
-                sslServerInfo = new SSLServerInfo(txtCertificatePath.Text, txtCertificatePassword.Text, txtCallbackUsername.Text, txtCallbackPassword.Text);
             }
-            Int32 homegearPort = 0;
-            Int32 listenPort = 0;
-            Int32.TryParse(txtHomegearPort.Text, out homegearPort);
-            Int32.TryParse(txtListenPort.Text, out listenPort);
+            Int32.TryParse(txtHomegearPort.Text, out Int32 homegearPort);
 
             Properties.Settings.Default.lastCallbackPassword = txtCallbackPassword.Text;
             Properties.Settings.Default.lastCallbackUsername = txtCallbackUsername.Text;
@@ -475,11 +470,9 @@ namespace HomegearLibTest
             Properties.Settings.Default.lastListenPort = txtListenPort.Text;
             Properties.Settings.Default.Save();
 
-            _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, txtCallbackHostname.Text, txtListenIP.Text, listenPort, sslClientInfo, sslServerInfo);
-            _rpc.ClientConnected += _rpc_ClientConnected;
-            _rpc.ClientDisconnected += _rpc_ClientDisconnected;
-            _rpc.ServerConnected += _rpc_ServerConnected;
-            _rpc.ServerDisconnected += _rpc_ServerDisconnected;
+            _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, sslClientInfo);
+            _rpc.Connected += _rpc_Connected;
+            _rpc.Disconnected += _rpc_Disconnected;
             _rpc.AsciiDeviceTypeIdString = true;
             _homegear = new Homegear(_rpc, true);
             _homegear.ConnectError += _homegear_OnConnectError;
@@ -585,26 +578,15 @@ namespace HomegearLibTest
             }
         }
 
-        void _rpc_ClientDisconnected(RPCClient sender)
+        void _rpc_Disconnected(RPCClient sender)
         {
             WriteLog("Disconnected from Homegear.");
         }
 
-        void _rpc_ClientConnected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        void _rpc_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
-            if (_rpc.Client.SSL) WriteLog("Connected to Homegear. Cipher Algorithm: " + cipherAlgorithm.ToString() + ", Cipher Strength: " + cipherStrength.ToString());
+            if (_rpc.Client.Ssl) WriteLog("Connected to Homegear. Cipher Algorithm: " + cipherAlgorithm.ToString() + ", Cipher Strength: " + cipherStrength.ToString());
             else WriteLog("Connected to Homegear.");
-        }
-
-        void _rpc_ServerDisconnected(RPCServer sender)
-        {
-            WriteLog("Incoming connection from Homegear closed.");
-        }
-
-        void _rpc_ServerConnected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
-        {
-            if (cipherAlgorithm != CipherAlgorithmType.Null) WriteLog("Incoming connection from Homegear. Cipher Algorithm: " + cipherAlgorithm.ToString() + ", Cipher Strength: " + cipherStrength.ToString());
-            else WriteLog("Incoming connection from Homegear.");
         }
 
         private void tvDevices_AfterSelect(object sender, TreeViewEventArgs e)

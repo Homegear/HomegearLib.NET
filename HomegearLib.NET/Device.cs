@@ -28,8 +28,8 @@ namespace HomegearLib
         private Family _family = null;
         public Family Family { get { return _family; } internal set { _family = value; } }
 
-        private Int32 _id = -1;
-        public Int32 ID
+        private int _id = -1;
+        public int ID
         {
             get { return _id; }
             set
@@ -43,13 +43,13 @@ namespace HomegearLib
         /// Sets the device id without calling any RPC functions
         /// </summary>
         /// <param name="value">The device id</param>
-        internal void SetIDNoRPC(Int32 value)
+        internal void SetIDNoRPC(int value)
         {
             _id = value;
         }
 
-        private Int32 _address = -1;
-        public Int32 Address
+        private int _address = -1;
+        public int Address
         {
             get
             {
@@ -63,14 +63,14 @@ namespace HomegearLib
             internal set { _address = value; }
         }
 
-        private String _serialNumber = "";
-        public String SerialNumber { get { return _serialNumber; } internal set { _serialNumber = value; } }
+        private string _serialNumber = "";
+        public string SerialNumber { get { return _serialNumber; } internal set { _serialNumber = value; } }
 
-        private Int32 _typeID = 0;
-        public Int32 TypeID { get { return _typeID; } internal set { _typeID = value; } }
+        private int _typeID = 0;
+        public int TypeID { get { return _typeID; } internal set { _typeID = value; } }
 
-        private String _typeString = "";
-        public String TypeString { get { return _typeString; } internal set { _typeString = value; } }
+        private string _typeString = "";
+        public string TypeString { get { return _typeString; } internal set { _typeString = value; } }
 
         private Channels _channels;
         public Channels Channels
@@ -79,7 +79,7 @@ namespace HomegearLib
             internal set
             {
                 _channels = value;
-                foreach (KeyValuePair<Int32, Channel> channel in _channels)
+                foreach (KeyValuePair<int, Channel> channel in _channels)
                 {
                     channel.Value.VariableReloadRequiredEvent += Channel_OnVariableReloadRequired;
                 }
@@ -110,8 +110,8 @@ namespace HomegearLib
             internal set { _events = value; }
         }
 
-        private String _name;
-        public String Name
+        private string _name;
+        public string Name
         {
             get
             {
@@ -133,7 +133,7 @@ namespace HomegearLib
         /// Sets the name without calling any RPC functions
         /// </summary>
         /// <param name="name">The name of the device</param>
-        internal void SetNameNoRPC(String name)
+        internal void SetNameNoRPC(string name)
         {
             _name = name;
         }
@@ -182,7 +182,7 @@ namespace HomegearLib
         {
             get
             {
-                foreach (KeyValuePair<Int32, Channel> channel in _channels)
+                foreach (KeyValuePair<int, Channel> channel in _channels)
                 {
                     if (channel.Value.Config.ContainsKey("AES_ACTIVE") && channel.Value.Config["AES_ACTIVE"].BooleanValue) return true;
                 }
@@ -191,8 +191,8 @@ namespace HomegearLib
             internal set { _aesActive = value; }
         }
 
-        private String _firmware;
-        public String Firmware
+        private string _firmware;
+        public string Firmware
         {
             get
             {
@@ -206,8 +206,8 @@ namespace HomegearLib
             internal set { _firmware = value; }
         }
 
-        private String _availableFirmware;
-        public String AvailableFirmware
+        private string _availableFirmware;
+        public string AvailableFirmware
         {
             get
             {
@@ -221,7 +221,7 @@ namespace HomegearLib
             internal set { _availableFirmware = value; }
         }
 
-        public Device(RPCController rpc, Family family, Int32 id)
+        public Device(RPCController rpc, Family family, int id)
         {
             _rpc = rpc;
             _family = family;
@@ -239,7 +239,7 @@ namespace HomegearLib
             _descriptionRequested = false;
             _infoRequested = false;
             _metadata = null;
-            foreach (KeyValuePair<Int32, Channel> channel in _channels)
+            foreach (KeyValuePair<int, Channel> channel in _channels)
             {
                 channel.Value.Reload();
             }

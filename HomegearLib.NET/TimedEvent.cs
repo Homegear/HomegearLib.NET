@@ -9,24 +9,24 @@ namespace HomegearLib
         protected DateTime _eventTime = DateTime.MinValue;
         public DateTime EventTime { get { return _eventTime; } internal set { _eventTime = value; } }
 
-        protected Int32 _recurEvery = 0;
-        public Int32 RecurEvery { get { return _recurEvery; } internal set { _recurEvery = value; } }
+        protected int _recurEvery = 0;
+        public int RecurEvery { get { return _recurEvery; } internal set { _recurEvery = value; } }
 
         protected DateTime _endTime = DateTime.MinValue;
         public DateTime EndTime { get { return _endTime; } internal set { _endTime = value; } }
 
-        internal TimedEvent(RPCController rpc, String id) : base(rpc, id)
+        internal TimedEvent(RPCController rpc, string id) : base(rpc, id)
         {
 
         }
 
-        public TimedEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, DateTime eventTime, Int32 recurEvery = 0) : base(id, enabled, eventMethod, eventMethodParams)
+        public TimedEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, DateTime eventTime, int recurEvery = 0) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _eventTime = eventTime;
             _recurEvery = recurEvery;
         }
 
-        public TimedEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, DateTime eventTime, Int32 recurEvery, DateTime endTime) : base(id, enabled, eventMethod, eventMethodParams)
+        public TimedEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, DateTime eventTime, int recurEvery, DateTime endTime) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _eventTime = eventTime;
             _recurEvery = recurEvery;

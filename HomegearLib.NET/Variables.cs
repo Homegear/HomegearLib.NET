@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class Variables : ReadOnlyDictionary<String, Variable>, IDisposable
+    public class Variables : ReadOnlyDictionary<string, Variable>, IDisposable
     {
         RPCController _rpc = null;
-        Int32 _peerId = 0;
-        Int32 _channel = -1;
+        int _peerId = 0;
+        int _channel = -1;
 
-        internal Variables(RPCController rpc, Int32 peerId, Int32 channel) : base()
+        internal Variables(RPCController rpc, int peerId, int channel) : base()
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -18,7 +18,7 @@ namespace HomegearLib
             Reload();
         }
 
-        public Variables(RPCController rpc, Int32 peerId, Int32 channel, Dictionary<String, Variable> variables) : base(variables)
+        public Variables(RPCController rpc, int peerId, int channel, Dictionary<string, Variable> variables) : base(variables)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -33,7 +33,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<String, Variable> variable in _dictionary)
+            foreach (KeyValuePair<string, Variable> variable in _dictionary)
             {
                 variable.Value.Dispose();
             }

@@ -21,14 +21,14 @@ namespace HomegearLib
 
         bool _descriptionRequested = false;
 
-        private Int32 _peerId = 0;
-        public Int32 PeerID { get { return _peerId; } }
+        private int _peerId = 0;
+        public int PeerID { get { return _peerId; } }
 
-        private Int32 _index = 0;
-        public Int32 Index { get { return _index; } }
+        private int _index = 0;
+        public int Index { get { return _index; } }
 
-        private String _name;
-        public String Name
+        private string _name;
+        public string Name
         {
             get
             {
@@ -50,7 +50,7 @@ namespace HomegearLib
         /// Sets the name without calling any RPC functions
         /// </summary>
         /// <param name="name">The name of the device</param>
-        internal void SetNameNoRPC(String name)
+        internal void SetNameNoRPC(string name)
         {
             _name = name;
         }
@@ -103,8 +103,8 @@ namespace HomegearLib
             }
         }
 
-        private String _typeString = "";
-        public String TypeString
+        private string _typeString = "";
+        public string TypeString
         {
             get
             {
@@ -148,8 +148,8 @@ namespace HomegearLib
             internal set { _direction = value; }
         }
 
-        private String[] _linkSourceRoles = new String[0];
-        public String[] LinkSourceRoles
+        private string[] _linkSourceRoles = new string[0];
+        public string[] LinkSourceRoles
         {
             get
             {
@@ -164,8 +164,8 @@ namespace HomegearLib
             internal set { _linkSourceRoles = value; }
         }
 
-        private String[] _linkTargetRoles = new String[0];
-        public String[] LinkTargetRoles
+        private string[] _linkTargetRoles = new string[0];
+        public string[] LinkTargetRoles
         {
             get
             {
@@ -180,8 +180,8 @@ namespace HomegearLib
             internal set { _linkTargetRoles = value; }
         }
 
-        private Int32 _groupedWith = -1;
-        public Int32 GroupedWith
+        private int _groupedWith = -1;
+        public int GroupedWith
         {
             get
             {
@@ -195,8 +195,8 @@ namespace HomegearLib
             internal set { _groupedWith = value; }
         }
 
-        private String _teamSerialNumber = "";
-        public String TeamSerialNumber
+        private string _teamSerialNumber = "";
+        public string TeamSerialNumber
         {
             get
             {
@@ -210,8 +210,8 @@ namespace HomegearLib
             internal set { _teamSerialNumber = value; }
         }
 
-        private Int32 _teamID = 0;
-        public Int32 TeamID
+        private int _teamID = 0;
+        public int TeamID
         {
             get
             {
@@ -225,8 +225,8 @@ namespace HomegearLib
             internal set { _teamID = value; }
         }
 
-        private Int32 _teamChannel = 0;
-        public Int32 TeamChannel
+        private int _teamChannel = 0;
+        public int TeamChannel
         {
             get
             {
@@ -245,13 +245,13 @@ namespace HomegearLib
             _rpc.SetTeam(this.PeerID, this.Index);
         }
 
-        public void SetTeam(Int32 teamID, Int32 teamChannel)
+        public void SetTeam(int teamID, int teamChannel)
         {
             _rpc.SetTeam(this.PeerID, this.Index, teamID, teamChannel);
         }
 
-        private String _teamTag = "";
-        public String TeamTag
+        private string _teamTag = "";
+        public string TeamTag
         {
             get
             {
@@ -265,8 +265,8 @@ namespace HomegearLib
             internal set { _teamTag = value; }
         }
 
-        private String[] _teamMembers = new String[0];
-        public String[] TeamMembers
+        private string[] _teamMembers = new string[0];
+        public string[] TeamMembers
         {
             get
             {
@@ -280,7 +280,7 @@ namespace HomegearLib
             internal set { _teamMembers = value; }
         }
 
-        public Channel(RPCController rpc, Int32 peerId, Int32 index)
+        public Channel(RPCController rpc, int peerId, int index)
         {
             _rpc = rpc;
             _peerId = peerId;

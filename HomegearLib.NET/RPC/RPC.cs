@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Authentication;
 
@@ -31,22 +32,20 @@ namespace HomegearLib.RPC
     {
         internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
         internal delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
-        internal delegate void PongEventHandler(RPCController sender, String id);
+        internal delegate void PongEventHandler(RPCController sender, string id);
         internal delegate void SystemVariableDeletedEventHandler(RPCController sender);
-        internal delegate void MetadataUpdatedEventHandler(RPCController sender, Int32 peerId, MetadataVariable value);
-        internal delegate void MetadataDeletedEventHandler(RPCController sender, Int32 peerId);
+        internal delegate void MetadataUpdatedEventHandler(RPCController sender, int peerId, MetadataVariable value);
+        internal delegate void MetadataDeletedEventHandler(RPCController sender, int peerId);
         internal delegate void NewDevicesEventHandler(RPCController sender);
         internal delegate void DevicesDeletedEventHandler(RPCController sender);
-        internal delegate void UpdateDeviceEventHandler(RPCController sender, Int32 peerId, Int32 channel, RPCUpdateDeviceFlags flags);
-        internal delegate void NewEventEventHandler(RPCController sender, String id, EventType type, Int32 peerId, Int32 channel, String variableName);
-        internal delegate void EventDeletedEventHandler(RPCController sender, String id, EventType type, Int32 peerId, Int32 channel, String variableName);
-        internal delegate void UpdateEventEventHandler(RPCController sender, String id, EventType type, Int32 peerId, Int32 channel, String variableName);
+        internal delegate void UpdateDeviceEventHandler(RPCController sender, int peerId, int channel, RPCUpdateDeviceFlags flags);
+        internal delegate void NewEventEventHandler(RPCController sender, string id, EventType type, int peerId, int channel, string variableName);
+        internal delegate void EventDeletedEventHandler(RPCController sender, string id, EventType type, int peerId, int channel, string variableName);
+        internal delegate void UpdateEventEventHandler(RPCController sender, string id, EventType type, int peerId, int channel, string variableName);
         internal delegate void InitCompletedEventHandler(RPCController sender);
-        internal delegate void HomegearErrorEventHandler(RPCController sender, Int32 level, String message);
-        public delegate void ClientConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
-        public delegate void ClientDisconnectedEventHandler(RPCClient sender);
-        public delegate void ServerConnectedEventHandler(RPCServer sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, Int32 cipherStrength = -1);
-        public delegate void ServerDisconnectedEventHandler(RPCServer sender);
+        internal delegate void HomegearErrorEventHandler(RPCController sender, int level, string message);
+        public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, int cipherStrength = -1);
+        public delegate void DisconnectedEventHandler(RPCClient sender);
 
         #region "Events"
         internal event DeviceVariableUpdatedEventHandler DeviceVariableUpdated;
@@ -65,27 +64,16 @@ namespace HomegearLib.RPC
         internal event HomegearErrorEventHandler HomegearError;
 
         /// <summary>
-        /// Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!  
-        /// </summary>
-        public event ClientConnectedEventHandler ClientConnected;
-
-        /// <summary>
-        /// Raised, when the connection to Homegear is closed. 
-        /// </summary>
-        public event ClientDisconnectedEventHandler ClientDisconnected;
-
-        /// <summary>
         /// Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
         /// </summary>
-        public event ServerConnectedEventHandler ServerConnected;
+        public event ConnectedEventHandler Connected;
 
         /// <summary>
         /// Raised, when the incoming connection to our event server is closed.
         /// </summary>
-        public event ServerDisconnectedEventHandler ServerDisconnected;
+        public event DisconnectedEventHandler Disconnected;
         #endregion
 
-        private String _callbackHostname = "";
 
         private volatile bool _disposing = false;
         private volatile bool _events = false;
@@ -95,8 +83,8 @@ namespace HomegearLib.RPC
         /// </summary>
         public bool IsConnected { get { return _client != null && _client.IsConnected; } }
 
-        private Dictionary<Int32, Family> _families = null;
-        internal Dictionary<Int32, Family> Families
+        private Dictionary<int, Family> _families = null;
+        internal Dictionary<int, Family> Families
         {
             get
             {
@@ -105,8 +93,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        private Dictionary<Int32, Device> _devices = null;
-        internal Dictionary<Int32, Device> Devices
+        private Dictionary<int, Device> _devices = null;
+        internal Dictionary<int, Device> Devices
         {
             get
             {
@@ -115,8 +103,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        private Dictionary<String, Interface> _interfaces = null;
-        internal Dictionary<String, Interface> Interfaces
+        private Dictionary<string, Interface> _interfaces = null;
+        internal Dictionary<string, Interface> Interfaces
         {
             get
             {
@@ -125,8 +113,8 @@ namespace HomegearLib.RPC
             }
         }
 
-        private Dictionary<String, SystemVariable> _systemVariables = null;
-        internal Dictionary<String, SystemVariable> SystemVariables
+        private Dictionary<string, SystemVariable> _systemVariables = null;
+        internal Dictionary<string, SystemVariable> SystemVariables
         {
             get
             {
@@ -141,11 +129,9 @@ namespace HomegearLib.RPC
 
         private SSLClientInfo _sslClientInfo;
 
+        private readonly string _clientId = System.Guid.NewGuid().ToString();
         private RPCClient _client = null;
         public RPCClient Client { get { return _client; } }
-
-        private RPCServer _server = null;
-        public RPCServer Server { get { return _server; } }
 
         private bool _asciiDeviceTypeIdString = false;
         public bool AsciiDeviceTypeIdString { get { return _asciiDeviceTypeIdString; } set { _asciiDeviceTypeIdString = value; } }
@@ -157,83 +143,63 @@ namespace HomegearLib.RPC
         /// </summary>
         /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
         /// <param name="homegearPort">The port Homegear is listening on.</param>
-        /// <param name="callbackHostname">The hostname of the the computer running this library. Needed by Homegear for certificate verification.</param>
-        /// <param name="callbackListenIP">The IP address to bind the callback server to. Not "0.0.0.0", "::", "127.0.0.1" or "::1" Homegear sends events to the callback server.</param>
-        /// <param name="callbackListenPort">The port of the callback server.</param>
         /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
-        /// <param name="SSLServerInfo">When a SSLServerInfo object is passed, the connection to the callback server will be SSL encrypted.</param>
-        public RPCController(String homegearHostname, int homegearPort, String callbackHostname, String callbackListenIP, int callbackListenPort, SSLClientInfo sslClientInfo = null, SSLServerInfo sslServerInfo = null)
+        public RPCController(string homegearHostname, int homegearPort, SSLClientInfo sslClientInfo = null)
         {
-            init(homegearHostname, homegearPort, callbackHostname, callbackListenIP, callbackListenPort, sslClientInfo, sslServerInfo);
+            init(homegearHostname, homegearPort, sslClientInfo);
         }
 
-        /// <summary>
-        /// Creates a new RPCController object without support for events.
-        /// </summary>
-        /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
-        /// <param name="homegearPort">The port Homegear is listening on.</param>
-        /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
-        /// <param name="SSLServerInfo">When a SSLServerInfo object is passed, the connection to the callback server will be SSL encrypted.</param>
-        public RPCController(String homegearHostname, int homegearPort, SSLClientInfo sslClientInfo = null, SSLServerInfo sslServerInfo = null)
+        void init(string homegearHostname, int homegearPort, SSLClientInfo sslClientInfo)
         {
-            init(homegearHostname, homegearPort, "", "", -1, sslClientInfo, sslServerInfo);
-        }
-
-        void init(String homegearHostname, int homegearPort, String callbackHostname, String callbackListenIP, int callbackListenPort, SSLClientInfo sslClientInfo, SSLServerInfo sslServerInfo)
-        {
-            _callbackHostname = callbackHostname;
             _sslClientInfo = sslClientInfo;
             _client = new RPCClient(homegearHostname, homegearPort, sslClientInfo);
             _client.Connected += _client_Connected;
             _client.Disconnected += _client_Disconnected;
-            _server = new RPCServer(callbackListenIP, callbackListenPort, sslServerInfo);
-            _server.Connected += _server_Connected;
-            _server.Disconnected += _server_Disconnected;
-            _server.HomegearError += _server_HomegearError;
-            _server.RPCEvent += _server_OnRPCEvent;
-            _server.NewDevices += _server_OnNewDevices;
-            _server.DevicesDeleted += _server_OnDevicesDeleted;
-            _server.UpdateDevice += _server_OnUpdateDevice;
-            _server.NewEvent += _server_OnNewEvent;
-            _server.EventDeleted += _server_OnEventDeleted;
-            _server.UpdateEvent += _server_OnUpdateEvent;
+            _client.HomegearError += _client_HomegearError;
+            _client.RPCEvent += _client_OnRPCEvent;
+            _client.NewDevices += _client_OnNewDevices;
+            _client.DevicesDeleted += _client_OnDevicesDeleted;
+            _client.UpdateDevice += _client_OnUpdateDevice;
+            _client.NewEvent += _client_OnNewEvent;
+            _client.EventDeleted += _client_OnEventDeleted;
+            _client.UpdateEvent += _client_OnUpdateEvent;
             _keepAliveTimer = new System.Timers.Timer(30000);
             _keepAliveTimer.Elapsed += _workerTimer_Elapsed;
         }
 
-        void _server_HomegearError(RPCServer sender, int level, string message)
+        void _client_HomegearError(RPCClient sender, int level, string message)
         {
-            if (HomegearError != null) HomegearError(this, level, message);
+            HomegearError?.Invoke(this, level, message);
         }
 
-        private void _server_OnUpdateDevice(RPCServer sender, int peerId, int channel, int flags)
+        private void _client_OnUpdateDevice(RPCClient sender, int peerId, int channel, int flags)
         {
-            if (UpdateDevice != null) UpdateDevice(this, peerId, channel, (RPCUpdateDeviceFlags)flags);
+            UpdateDevice?.Invoke(this, peerId, channel, (RPCUpdateDeviceFlags)flags);
         }
 
-        private void _server_OnDevicesDeleted(RPCServer sender)
+        private void _client_OnDevicesDeleted(RPCClient sender)
         {
-            if (DevicesDeleted != null) DevicesDeleted(this);
+            DevicesDeleted?.Invoke(this);
         }
 
-        private void _server_OnNewDevices(RPCServer sender)
+        private void _client_OnNewDevices(RPCClient sender)
         {
-            if (NewDevices != null) NewDevices(this);
+            NewDevices?.Invoke(this);
         }
 
-        private void _server_OnUpdateEvent(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variable)
+        private void _client_OnUpdateEvent(RPCClient sender, string id, int eventType, int peerId, int channel, string variable)
         {
-            if (UpdateEvent != null) UpdateEvent(this, id, (EventType)eventType, peerId, channel, variable);
+            UpdateEvent?.Invoke(this, id, (EventType)eventType, peerId, channel, variable);
         }
 
-        private void _server_OnEventDeleted(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variable)
+        private void _client_OnEventDeleted(RPCClient sender, string id, int eventType, int peerId, int channel, string variable)
         {
-            if (EventDeleted != null) EventDeleted(this, id, (EventType)eventType, peerId, channel, variable);
+            EventDeleted?.Invoke(this, id, (EventType)eventType, peerId, channel, variable);
         }
 
-        private void _server_OnNewEvent(RPCServer sender, String id, Int32 eventType, Int32 peerId, Int32 channel, String variable)
+        private void _client_OnNewEvent(RPCClient sender, string id, int eventType, int peerId, int channel, string variable)
         {
-            if (NewEvent != null) NewEvent(this, id, (EventType)eventType, peerId, channel, variable);
+            NewEvent?.Invoke(this, id, (EventType)eventType, peerId, channel, variable);
         }
 
         private void _workerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -243,7 +209,7 @@ namespace HomegearLib.RPC
                 _keepAliveTimer.Interval = 10000;
                 if (_events)
                 {
-                    if (!ClientServerInitialized("HomegearLib." + _callbackHostname + ":" + _server.ListenPort))
+                    if (!ClientServerInitialized("HomegearLib." + _clientId))
                     {
                         _client.Disconnect();
                     }
@@ -262,7 +228,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        private void _server_OnRPCEvent(RPCServer sender, Int32 peerId, Int32 channel, String parameterName, RPCVariable value)
+        private void _client_OnRPCEvent(RPCClient sender, int peerId, int channel, string parameterName, RPCVariable value)
         {
             if (peerId == 0)
             {
@@ -302,7 +268,6 @@ namespace HomegearLib.RPC
             {
                 _disposing = true;
                 _client.Disconnect();
-                _server.Stop();
             }
             catch (Exception)
             {
@@ -319,28 +284,18 @@ namespace HomegearLib.RPC
 
         private void _client_Disconnected(RPCClient sender)
         {
-            if (ClientDisconnected != null) ClientDisconnected(sender);
+            Disconnected?.Invoke(sender);
         }
 
-        private void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        private void _client_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, int cipherStrength)
         {
-            if (ClientConnected != null) ClientConnected(sender, cipherAlgorithm, cipherStrength);
+            Connected?.Invoke(sender, cipherAlgorithm, cipherStrength);
             if (_events)
             {
-                _server.KnownDevices = Devices;
-                Init("HomegearLib." + _callbackHostname + ":" + _server.ListenPort);
+                _client.KnownDevices = Devices;
+                Init("HomegearLib." + _clientId);
             }
             if (InitCompleted != null) InitCompleted(this);
-        }
-
-        private void _server_Disconnected(RPCServer sender)
-        {
-            if (ServerDisconnected != null) ServerDisconnected(sender);
-        }
-
-        private void _server_Connected(RPCServer sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
-        {
-            if (ServerConnected != null) ServerConnected(sender, cipherAlgorithm, cipherStrength);
         }
 
         /// <summary>
@@ -351,7 +306,6 @@ namespace HomegearLib.RPC
         {
             _events = events;
             if (_disposing) throw new ObjectDisposedException("RPC");
-            if (events) _server.Start();
             _client.Connect();
             _keepAliveTimer.Start();
         }
@@ -368,7 +322,6 @@ namespace HomegearLib.RPC
             }
             catch (Exception) { }
             _client.Disconnect();
-            _server.Stop();
         }
 
         private void ThrowError(string methodName, RPCVariable errorStruct)
@@ -378,14 +331,14 @@ namespace HomegearLib.RPC
         }
 
         #region "RPC methods"
-        public void AbortEventReset(String id)
+        public void AbortEventReset(string id)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("abortEventReset", new List<RPCVariable> { new RPCVariable(id) });
             if (response.ErrorStruct) ThrowError("abortEventReset", response);
         }
 
-        public bool AddDevice(String serialNumber)
+        public bool AddDevice(string serialNumber)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("addDevice", new List<RPCVariable> { new RPCVariable(serialNumber) });
@@ -422,7 +375,7 @@ namespace HomegearLib.RPC
                 eventDescription.StructValue.Add("PEERID", new RPCVariable(triggeredEvent.PeerID));
                 eventDescription.StructValue.Add("PEERCHANNEL", new RPCVariable(triggeredEvent.PeerChannel));
                 eventDescription.StructValue.Add("VARIABLE", new RPCVariable(triggeredEvent.VariableName));
-                eventDescription.StructValue.Add("TRIGGER", new RPCVariable((Int32)triggeredEvent.Trigger));
+                eventDescription.StructValue.Add("TRIGGER", new RPCVariable((int)triggeredEvent.Trigger));
                 eventDescription.StructValue.Add("TRIGGERVALUE", triggeredEvent.TriggerValue);
                 eventDescription.StructValue.Add("EVENTMETHOD", new RPCVariable(triggeredEvent.EventMethod));
                 eventDescription.StructValue.Add("EVENTMETHODPARAMS", new RPCVariable(triggeredEvent.EventMethodParams));
@@ -431,7 +384,7 @@ namespace HomegearLib.RPC
                     RPCVariable resetStruct = new RPCVariable(RPCVariableType.rpcStruct);
                     resetStruct.StructValue.Add("INITIALTIME", new RPCVariable(triggeredEvent.ResetAfterDynamic.InitialTime));
                     resetStruct.StructValue.Add("RESETAFTER", new RPCVariable(triggeredEvent.ResetAfterDynamic.ResetAfter));
-                    resetStruct.StructValue.Add("OPERATION", new RPCVariable((Int32)triggeredEvent.ResetAfterDynamic.Operation));
+                    resetStruct.StructValue.Add("OPERATION", new RPCVariable((int)triggeredEvent.ResetAfterDynamic.Operation));
                     resetStruct.StructValue.Add("FACTOR", new RPCVariable(triggeredEvent.ResetAfterDynamic.Factor));
                     resetStruct.StructValue.Add("LIMIT", new RPCVariable(triggeredEvent.ResetAfterDynamic.Limit));
                     eventDescription.StructValue.Add("RESETAFTER", resetStruct);
@@ -447,14 +400,14 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("addEvent", response);
         }
 
-        public void AddLink(Int32 senderID, Int32 senderChannel, Int32 receiverID, Int32 receiverChannel)
+        public void AddLink(int senderID, int senderChannel, int receiverID, int receiverChannel)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("addLink", new List<RPCVariable> { new RPCVariable(senderID), new RPCVariable(senderChannel), new RPCVariable(receiverID), new RPCVariable(receiverChannel) });
             if (response.ErrorStruct) ThrowError("addLink", response);
         }
 
-        public void AddLink(Int32 senderID, Int32 senderChannel, Int32 receiverID, Int32 receiverChannel, String name, String description)
+        public void AddLink(int senderID, int senderChannel, int receiverID, int receiverChannel, string name, string description)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("addLink", new List<RPCVariable> { new RPCVariable(senderID), new RPCVariable(senderChannel), new RPCVariable(receiverID), new RPCVariable(receiverChannel), new RPCVariable(name), new RPCVariable(description) });
@@ -469,7 +422,7 @@ namespace HomegearLib.RPC
             return response.BooleanValue;
         }
 
-        public Int32 CreateDevice(Family family, Int32 deviceType, String serialNumber, Int32 address, Int32 firmwareVersion)
+        public int CreateDevice(Family family, int deviceType, string serialNumber, int address, int firmwareVersion)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("createDevice", new List<RPCVariable> { new RPCVariable(family.ID), new RPCVariable(deviceType), new RPCVariable(serialNumber), new RPCVariable(address), new RPCVariable(firmwareVersion) });
@@ -477,14 +430,14 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public void DeleteDevice(Int32 peerId, RPCDeleteDeviceFlags flags)
+        public void DeleteDevice(int peerId, RPCDeleteDeviceFlags flags)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            RPCVariable response = _client.CallMethod("deleteDevice", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable((Int32)flags) });
+            RPCVariable response = _client.CallMethod("deleteDevice", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable((int)flags) });
             if (response.ErrorStruct) ThrowError("deleteDevice", response);
         }
 
-        public void DeleteMetadata(Int32 peerId)
+        public void DeleteMetadata(int peerId)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("deleteMetadata", new List<RPCVariable> { new RPCVariable(peerId) });
@@ -505,24 +458,24 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("deleteSystemVariable", response);
         }
 
-        public void EnableEvent(String id, Boolean enabled)
+        public void EnableEvent(string id, bool enabled)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("enableEvent", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(enabled) });
             if (response.ErrorStruct) ThrowError("enableEvent", response);
         }
 
-        public Dictionary<String, MetadataVariable> GetAllMetadata(Int32 peerId)
+        public Dictionary<string, MetadataVariable> GetAllMetadata(int peerId)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, MetadataVariable> metadataVariables = new Dictionary<String, MetadataVariable>();
+            Dictionary<string, MetadataVariable> metadataVariables = new Dictionary<string, MetadataVariable>();
             RPCVariable response = _client.CallMethod("getAllMetadata", new List<RPCVariable> { new RPCVariable(peerId) });
             if (response.ErrorStruct)
             {
                 if (response.StructValue["faultCode"].IntegerValue == -1) return metadataVariables;
                 else ThrowError("getAllMetadata", response);
             }
-            foreach (KeyValuePair<String, RPCVariable> element in response.StructValue)
+            foreach (KeyValuePair<string, RPCVariable> element in response.StructValue)
             {
                 MetadataVariable variable = new MetadataVariable(this, peerId, element.Key, element.Value);
                 metadataVariables.Add(element.Key, variable);
@@ -530,13 +483,13 @@ namespace HomegearLib.RPC
             return metadataVariables;
         }
 
-        public Dictionary<String, SystemVariable> GetAllSystemVariables()
+        public Dictionary<string, SystemVariable> GetAllSystemVariables()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, SystemVariable> systemVariables = new Dictionary<String, SystemVariable>();
+            Dictionary<string, SystemVariable> systemVariables = new Dictionary<string, SystemVariable>();
             RPCVariable response = _client.CallMethod("getAllSystemVariables", new List<RPCVariable>());
             if (response.ErrorStruct) ThrowError("getAllSystemVariables", response);
-            foreach (KeyValuePair<String, RPCVariable> element in response.StructValue)
+            foreach (KeyValuePair<string, RPCVariable> element in response.StructValue)
             {
                 SystemVariable variable = new SystemVariable(this, element.Key, element.Value);
                 systemVariables.Add(element.Key, variable);
@@ -544,30 +497,30 @@ namespace HomegearLib.RPC
             return systemVariables;
         }
 
-        public Dictionary<String, Variable> GetAllValues(Int32 peerId, Int32 channelIndex)
+        public Dictionary<string, Variable> GetAllValues(int peerId, int channelIndex)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getAllValues", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(true) });
             if (response.ErrorStruct) ThrowError("getAllValues", response);
-            Dictionary<Int32, Family> families = Families;
-            Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
+            Dictionary<int, Family> families = Families;
+            Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
             foreach (RPCVariable deviceStruct in response.ArrayValue)
             {
                 if (deviceStruct.StructValue.ContainsKey("CHANNELS"))
                 {
-                    Dictionary<Int32, Channel> channels = new Dictionary<Int32, Channel>();
+                    Dictionary<int, Channel> channels = new Dictionary<int, Channel>();
                     foreach (RPCVariable channelStruct in deviceStruct.StructValue["CHANNELS"].ArrayValue)
                     {
                         if (!channelStruct.StructValue.ContainsKey("INDEX") || !channelStruct.StructValue.ContainsKey("PARAMSET")) continue;
                         if (channelStruct.StructValue["INDEX"].IntegerValue != channelIndex) continue;
-                        Dictionary<String, RPCVariable> parameterSet = channelStruct.StructValue["PARAMSET"].StructValue;
-                        for (Int32 i = 0; i < parameterSet.Count; i++)
+                        Dictionary<string, RPCVariable> parameterSet = channelStruct.StructValue["PARAMSET"].StructValue;
+                        for (int i = 0; i < parameterSet.Count; i++)
                         {
                             if (parameterSet.ElementAt(i).Key.Length == 0) continue;
-                            Dictionary<String, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
+                            Dictionary<string, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
                             bool readable = true;
                             if (variableInfo.ContainsKey("READABLE")) readable = variableInfo["READABLE"].BooleanValue; ;
-                            String typeString = "";
+                            string typeString = "";
                             if (variableInfo.ContainsKey("TYPE")) typeString = variableInfo["TYPE"].StringValue;
                             RPCVariable value = null;
                             if (variableInfo.ContainsKey("VALUE")) value = variableInfo["VALUE"];
@@ -594,13 +547,13 @@ namespace HomegearLib.RPC
             return variables;
         }
 
-        public Dictionary<Int32, Device> GetAllValues()
+        public Dictionary<int, Device> GetAllValues()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<Int32, Device> devices = new Dictionary<Int32, Device>();
+            Dictionary<int, Device> devices = new Dictionary<int, Device>();
             RPCVariable response = _client.CallMethod("getAllValues", new List<RPCVariable> { new RPCVariable(true) });
             if (response.ErrorStruct) ThrowError("getAllValues", response);
-            Dictionary<Int32, Family> families = Families;
+            Dictionary<int, Family> families = Families;
             foreach (RPCVariable deviceStruct in response.ArrayValue)
             {
                 if (!deviceStruct.StructValue.ContainsKey("ID") || !deviceStruct.StructValue.ContainsKey("FAMILY")) continue;
@@ -620,21 +573,21 @@ namespace HomegearLib.RPC
                 if (deviceStruct.StructValue.ContainsKey("TYPE_ID")) device.TypeID = deviceStruct.StructValue["TYPE_ID"].IntegerValue;
                 if (deviceStruct.StructValue.ContainsKey("CHANNELS"))
                 {
-                    Dictionary<Int32, Channel> channels = new Dictionary<Int32, Channel>();
+                    Dictionary<int, Channel> channels = new Dictionary<int, Channel>();
                     foreach (RPCVariable channelStruct in deviceStruct.StructValue["CHANNELS"].ArrayValue)
                     {
                         if (!channelStruct.StructValue.ContainsKey("INDEX") || !channelStruct.StructValue.ContainsKey("PARAMSET")) continue;
-                        Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
-                        Dictionary<String, RPCVariable> parameterSet = channelStruct.StructValue["PARAMSET"].StructValue;
+                        Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
+                        Dictionary<string, RPCVariable> parameterSet = channelStruct.StructValue["PARAMSET"].StructValue;
                         Channel channel = new Channel(this, device.ID, channelStruct.StructValue["INDEX"].IntegerValue);
                         channels.Add(channel.Index, channel);
-                        for (Int32 i = 0; i < parameterSet.Count; i++)
+                        for (int i = 0; i < parameterSet.Count; i++)
                         {
                             if (parameterSet.ElementAt(i).Key.Length == 0) continue;
-                            Dictionary<String, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
+                            Dictionary<string, RPCVariable> variableInfo = parameterSet.ElementAt(i).Value.StructValue;
                             bool readable = true;
                             if (variableInfo.ContainsKey("READABLE")) readable = variableInfo["READABLE"].BooleanValue; ;
-                            String typeString = "";
+                            string typeString = "";
                             if (variableInfo.ContainsKey("TYPE")) typeString = variableInfo["TYPE"].StringValue;
                             RPCVariable value = null;
                             if (variableInfo.ContainsKey("VALUE")) value = variableInfo["VALUE"];
@@ -703,21 +656,21 @@ namespace HomegearLib.RPC
             if (response.StructValue.ContainsKey("DIRECTION")) channel.Direction = (ChannelDirection)response.StructValue["DIRECTION"].IntegerValue;
             if (response.StructValue.ContainsKey("LINK_SOURCE_ROLES"))
             {
-                String[] temp = response.StructValue["LINK_SOURCE_ROLES"].StringValue.Split(' ');
+                string[] temp = response.StructValue["LINK_SOURCE_ROLES"].StringValue.Split(' ');
                 if (temp.Length > 0 && temp[0] != "") channel.LinkSourceRoles = temp;
             }
             if (response.StructValue.ContainsKey("LINK_TARGET_ROLES"))
             {
-                String[] temp = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
+                string[] temp = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
                 if (temp.Length > 0 && temp[0] != "") channel.LinkTargetRoles = response.StructValue["LINK_TARGET_ROLES"].StringValue.Split(' ');
             }
             if (response.StructValue.ContainsKey("GROUP") && response.StructValue["GROUP"].StringValue.Length > 0)
             {
-                String[] temp = response.StructValue["GROUP"].StringValue.Split(':');
+                string[] temp = response.StructValue["GROUP"].StringValue.Split(':');
                 if (temp.Length == 2)
                 {
-                    Int32 groupChannel = -1;
-                    Int32.TryParse(temp[1], out groupChannel);
+                    int groupChannel = -1;
+                    int.TryParse(temp[1], out groupChannel);
                     channel.GroupedWith = groupChannel;
                 }
             }
@@ -728,8 +681,8 @@ namespace HomegearLib.RPC
             if (response.StructValue.ContainsKey("TEAM_CHANNELS"))
             {
                 List<RPCVariable> teamMemberArray = response.StructValue["TEAM_CHANNELS"].ArrayValue;
-                String[] teamMembers = new String[teamMemberArray.Count];
-                for (Int32 i = 0; i < teamMemberArray.Count; i++)
+                string[] teamMembers = new string[teamMemberArray.Count];
+                for (int i = 0; i < teamMemberArray.Count; i++)
                 {
                     teamMembers[i] = teamMemberArray[i].StringValue;
                 }
@@ -759,7 +712,7 @@ namespace HomegearLib.RPC
             ParseEvent(response, eventToUpdate);
         }
 
-        public Int32 GetInstallMode()
+        public int GetInstallMode()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getInstallMode", new List<RPCVariable>());
@@ -767,7 +720,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 GetInstallMode(Int32 familyID)
+        public int GetInstallMode(int familyID)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getInstallMode", new List<RPCVariable> { new RPCVariable(familyID) });
@@ -791,17 +744,17 @@ namespace HomegearLib.RPC
             return GetLinks(0, -1, 0);
         }
 
-        public List<Link> GetLinks(Int32 peerId)
+        public List<Link> GetLinks(int peerId)
         {
             return GetLinks(peerId, -1, 0);
         }
 
-        public List<Link> GetLinks(Int32 peerId, Int32 channel)
+        public List<Link> GetLinks(int peerId, int channel)
         {
             return GetLinks(peerId, channel, 0);
         }
 
-        public List<Link> GetLinks(Int32 peerId, Int32 channel, Int32 flags)
+        public List<Link> GetLinks(int peerId, int channel, int flags)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getLinks", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(channel), new RPCVariable(flags) });
@@ -810,8 +763,8 @@ namespace HomegearLib.RPC
             foreach (RPCVariable rpcLink in response.ArrayValue)
             {
                 if (!rpcLink.StructValue.ContainsKey("SENDER_ID") || !rpcLink.StructValue.ContainsKey("SENDER_CHANNEL") || !rpcLink.StructValue.ContainsKey("RECEIVER_ID") || !rpcLink.StructValue.ContainsKey("RECEIVER_CHANNEL")) continue;
-                Int32 remotePeerID = 0;
-                Int32 remoteChannel = -1;
+                int remotePeerID = 0;
+                int remoteChannel = -1;
                 bool isSender = true;
                 if (rpcLink.StructValue["SENDER_ID"].IntegerValue == peerId && rpcLink.StructValue["SENDER_CHANNEL"].IntegerValue == channel)
                 {
@@ -832,17 +785,17 @@ namespace HomegearLib.RPC
             return links;
         }
 
-        public List<ConfigParameter> GetParamset(Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, DeviceConfig parameters)
+        public List<ConfigParameter> GetParamset(int peerId, int channel, int remotePeerID, int remoteChannel, DeviceConfig parameters)
         {
             return GetParamset(peerId, channel, remotePeerID, remoteChannel, RPCParameterSetType.rpcLink, parameters);
         }
 
-        public List<ConfigParameter> GetParamset(Int32 peerId, Int32 channel, RPCParameterSetType type, DeviceConfig parameters)
+        public List<ConfigParameter> GetParamset(int peerId, int channel, RPCParameterSetType type, DeviceConfig parameters)
         {
             return GetParamset(peerId, channel, 0, -1, type, parameters);
         }
 
-        private List<ConfigParameter> GetParamset(Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, RPCParameterSetType type, DeviceConfig parameters)
+        private List<ConfigParameter> GetParamset(int peerId, int channel, int remotePeerID, int remoteChannel, RPCParameterSetType type, DeviceConfig parameters)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = null;
@@ -856,7 +809,7 @@ namespace HomegearLib.RPC
             }
             if (response.ErrorStruct) ThrowError("getParamset", response);
             List<ConfigParameter> changedParameters = new List<ConfigParameter>();
-            foreach (KeyValuePair<String, RPCVariable> value in response.StructValue)
+            foreach (KeyValuePair<string, RPCVariable> value in response.StructValue)
             {
                 if (!parameters.ContainsKey(value.Key)) continue;
                 if (parameters[value.Key].SetValue(value.Value)) changedParameters.Add(parameters[value.Key]);
@@ -864,15 +817,15 @@ namespace HomegearLib.RPC
             return changedParameters;
         }
 
-        public Dictionary<String, ConfigParameter> GetParamsetDescription(Int32 peerId, Int32 channel, RPCParameterSetType type)
+        public Dictionary<string, ConfigParameter> GetParamsetDescription(int peerId, int channel, RPCParameterSetType type)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, ConfigParameter> parameters = new Dictionary<String, ConfigParameter>();
-            String typeString = "MASTER";
+            Dictionary<string, ConfigParameter> parameters = new Dictionary<string, ConfigParameter>();
+            string typeString = "MASTER";
             if (type == RPCParameterSetType.rpcLink) typeString = "LINK";
             RPCVariable response = _client.CallMethod("getParamsetDescription", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(channel), new RPCVariable(typeString) });
             if (response.ErrorStruct) ThrowError("getParamsetDescription", response);
-            foreach (KeyValuePair<String, RPCVariable> parameterDescription in response.StructValue)
+            foreach (KeyValuePair<string, RPCVariable> parameterDescription in response.StructValue)
             {
                 if (parameterDescription.Key.Length == 0) continue;
                 if (!parameterDescription.Value.StructValue.ContainsKey("TYPE")) continue;
@@ -884,7 +837,7 @@ namespace HomegearLib.RPC
                 if (parameterDescription.Value.StructValue.ContainsKey("DEFAULT")) configParameter.SetDefault(parameterDescription.Value.StructValue["DEFAULT"]);
                 if (parameterDescription.Value.StructValue.ContainsKey("OPERATIONS"))
                 {
-                    Int32 operations = parameterDescription.Value.StructValue["OPERATIONS"].IntegerValue;
+                    int operations = parameterDescription.Value.StructValue["OPERATIONS"].IntegerValue;
                     if ((operations & 1) == 1 || (operations & 4) == 4) configParameter.Readable = true;
                     if ((operations & 2) == 2) configParameter.Writeable = true;
                 }
@@ -898,7 +851,7 @@ namespace HomegearLib.RPC
             return parameters;
         }
 
-        public MetadataVariable GetMetadata(Int32 peerId, String name)
+        public MetadataVariable GetMetadata(int peerId, string name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getMetadata", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(name) });
@@ -923,7 +876,7 @@ namespace HomegearLib.RPC
                 ServiceMessage message;
                 if(serviceMessageType == ServiceMessage.ServiceMessageType.global)
                 {
-                    Int32 value;
+                    int value;
                     if (element.StructValue["VALUE"].Type == RPCVariableType.rpcBoolean) value = element.StructValue["VALUE"].BooleanValue ? 1 : 0;
                     else value = element.StructValue["VALUE"].IntegerValue;
                     message = new ServiceMessage(HomegearHelpers.UnixTimeStampToDateTime(element.StructValue["TIMESTAMP"].IntegerValue), element.StructValue["MESSAGE_ID"].IntegerValue, element.StructValue["MESSAGE"].StringValue, element.StructValue["DATA"], value);
@@ -931,7 +884,7 @@ namespace HomegearLib.RPC
                 }
                 else if (serviceMessageType == ServiceMessage.ServiceMessageType.family)
                 {
-                    Int32 value;
+                    int value;
                     if (element.StructValue["VALUE"].Type == RPCVariableType.rpcBoolean) value = element.StructValue["VALUE"].BooleanValue ? 1 : 0;
                     else value = element.StructValue["VALUE"].IntegerValue;
                     message = new ServiceMessage(HomegearHelpers.UnixTimeStampToDateTime(element.StructValue["TIMESTAMP"].IntegerValue), element.StructValue["FAMILY_ID"].IntegerValue, element.StructValue["MESSAGE_ID"].IntegerValue, element.StructValue["MESSAGE"].StringValue, element.StructValue["DATA"], value);
@@ -939,9 +892,9 @@ namespace HomegearLib.RPC
                 }
                 else if (serviceMessageType == ServiceMessage.ServiceMessageType.device)
                 {
-                    Int32 channel = -1;
+                    int channel = -1;
                     if (element.StructValue.ContainsKey("CHANNEL")) channel = element.StructValue["CHANNEL"].IntegerValue;
-                    Int32 value;
+                    int value;
                     if (element.StructValue["VALUE"].Type == RPCVariableType.rpcBoolean) value = element.StructValue["VALUE"].BooleanValue ? 1 : 0;
                     else value = element.StructValue["VALUE"].IntegerValue;
                     message = new ServiceMessage(HomegearHelpers.UnixTimeStampToDateTime(element.StructValue["TIMESTAMP"].IntegerValue), element.StructValue["PEER_ID"].IntegerValue64, channel, element.StructValue["MESSAGE"].StringValue, value);
@@ -951,21 +904,21 @@ namespace HomegearLib.RPC
             return messages;
         }
 
-        public Dictionary<Int32, SniffedDeviceInfo> GetSniffedDevices(Family family)
+        public Dictionary<int, SniffedDeviceInfo> GetSniffedDevices(Family family)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<Int32, SniffedDeviceInfo> sniffedDevices = new Dictionary<Int32, SniffedDeviceInfo>();
+            Dictionary<int, SniffedDeviceInfo> sniffedDevices = new Dictionary<int, SniffedDeviceInfo>();
             RPCVariable response = _client.CallMethod("getSniffedDevices", new List<RPCVariable> { new RPCVariable(family.ID) });
             if (response.ErrorStruct) ThrowError("getSniffedDevices", response);
-            Dictionary<Int32, Family> families = Families;
+            Dictionary<int, Family> families = Families;
 
             foreach (RPCVariable deviceStruct in response.ArrayValue)
             {
                 if (!deviceStruct.StructValue.ContainsKey("PACKETS") || !deviceStruct.StructValue.ContainsKey("FAMILYID")) continue;
-                Int32 familyID = deviceStruct.StructValue["FAMILYID"].IntegerValue;
+                int familyID = deviceStruct.StructValue["FAMILYID"].IntegerValue;
                 if (!families.ContainsKey(familyID)) continue;
                 SniffedDeviceInfo deviceInfo = new SniffedDeviceInfo(families[familyID]);
-                foreach (KeyValuePair<String, RPCVariable> structElement in deviceStruct.StructValue)
+                foreach (KeyValuePair<string, RPCVariable> structElement in deviceStruct.StructValue)
                 {
                     switch (structElement.Key)
                     {
@@ -988,7 +941,7 @@ namespace HomegearLib.RPC
                 foreach (RPCVariable packetInfo in deviceStruct.StructValue["PACKETS"].ArrayValue)
                 {
                     if (!packetInfo.StructValue.ContainsKey("TIME_RECEIVED") || !packetInfo.StructValue.ContainsKey("PACKET")) continue;
-                    deviceInfo.Packets.Add(new SniffedDevicePacketInfo((UInt32)packetInfo.StructValue["TIME_RECEIVED"].IntegerValue64, packetInfo.StructValue["PACKET"].StringValue));
+                    deviceInfo.Packets.Add(new SniffedDevicePacketInfo((uint)packetInfo.StructValue["TIME_RECEIVED"].IntegerValue64, packetInfo.StructValue["PACKET"].StringValue));
                 }
 
                 sniffedDevices.Add(deviceInfo.Address, deviceInfo);
@@ -1002,21 +955,21 @@ namespace HomegearLib.RPC
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getUpdateStatus", null);
             if (response.ErrorStruct) ThrowError("getUpdateStatus", response);
-            Int32 currentDevice = -1;
-            Int32 currentDeviceProgress = -1;
-            Int32 deviceCount = -1;
-            Int32 currentUpdate = 0;
-            Dictionary<Int32, UpdateResult> results = new Dictionary<Int32, UpdateResult>();
+            int currentDevice = -1;
+            int currentDeviceProgress = -1;
+            int deviceCount = -1;
+            int currentUpdate = 0;
+            Dictionary<int, UpdateResult> results = new Dictionary<int, UpdateResult>();
             if (response.StructValue.ContainsKey("CURRENT_DEVICE")) currentDevice = response.StructValue["CURRENT_DEVICE"].IntegerValue;
             if (response.StructValue.ContainsKey("CURRENT_DEVICE_PROGRESS")) currentDeviceProgress = response.StructValue["CURRENT_DEVICE_PROGRESS"].IntegerValue;
             if (response.StructValue.ContainsKey("DEVICE_COUNT")) deviceCount = response.StructValue["DEVICE_COUNT"].IntegerValue;
             if (response.StructValue.ContainsKey("CURRENT_UPDATE")) currentUpdate = response.StructValue["CURRENT_UPDATE"].IntegerValue;
             if (response.StructValue.ContainsKey("RESULTS"))
             {
-                foreach (KeyValuePair<String, RPCVariable> devicePair in response.StructValue["RESULTS"].StructValue)
+                foreach (KeyValuePair<string, RPCVariable> devicePair in response.StructValue["RESULTS"].StructValue)
                 {
-                    Int32 peerId = 0;
-                    if (!Int32.TryParse(devicePair.Key, out peerId)) continue;
+                    int peerId = 0;
+                    if (!int.TryParse(devicePair.Key, out peerId)) continue;
                     if (!devicePair.Value.StructValue.ContainsKey("RESULT_CODE") || !devicePair.Value.StructValue.ContainsKey("RESULT_STRING")) continue;
                     UpdateResult result = new UpdateResult((UpdateResultCode)devicePair.Value.StructValue["RESULT_CODE"].IntegerValue, devicePair.Value.StructValue["RESULT_STRING"].StringValue);
                     results.Add(peerId, result);
@@ -1025,7 +978,7 @@ namespace HomegearLib.RPC
             return new UpdateStatus(currentDevice, currentDeviceProgress, deviceCount, currentUpdate, results);
         }
 
-        public String GetVersion()
+        public string GetVersion()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getVersion", new List<RPCVariable>());
@@ -1033,7 +986,7 @@ namespace HomegearLib.RPC
             return response.StringValue;
         }
 
-        public SystemVariable GetSystemVariable(String name)
+        public SystemVariable GetSystemVariable(string name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("getSystemVariable", new List<RPCVariable> { new RPCVariable(name) });
@@ -1045,9 +998,8 @@ namespace HomegearLib.RPC
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             string prefix;
-            if (_server.SSL) prefix = "binarys://";
-            else prefix = "binary://";
-            RPCVariable response = _client.CallMethod("init", new List<RPCVariable> { new RPCVariable(prefix + _callbackHostname + ":" + _server.ListenPort.ToString()), new RPCVariable(interfaceID), new RPCVariable(7) });
+            prefix = "binary://";
+            RPCVariable response = _client.CallMethod("init", new List<RPCVariable> { new RPCVariable(interfaceID), new RPCVariable(0x27) });
             if (response.ErrorStruct) ThrowError("init", response);
         }
 
@@ -1082,7 +1034,7 @@ namespace HomegearLib.RPC
                     if (eventStruct.StructValue["RESETAFTER"].Type == RPCVariableType.rpcInteger) element.ResetAfterStatic = eventStruct.StructValue["RESETAFTER"].IntegerValue;
                     else
                     {
-                        Dictionary<String, RPCVariable> resetStruct = eventStruct.StructValue["RESETAFTER"].StructValue;
+                        Dictionary<string, RPCVariable> resetStruct = eventStruct.StructValue["RESETAFTER"].StructValue;
                         element.ResetAfterDynamic = new DynamicResetTime();
                         if (resetStruct.ContainsKey("INITIALTIME")) element.ResetAfterDynamic.InitialTime = resetStruct["INITIALTIME"].IntegerValue;
                         if (resetStruct.ContainsKey("RESETAFTER")) element.ResetAfterDynamic.ResetAfter = resetStruct["RESETAFTER"].IntegerValue;
@@ -1101,11 +1053,11 @@ namespace HomegearLib.RPC
             }
         }
 
-        public Dictionary<String, Event> ListEvents(EventType type)
+        public Dictionary<string, Event> ListEvents(EventType type)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, Event> events = new Dictionary<String, Event>();
-            RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable((Int32)type) });
+            Dictionary<string, Event> events = new Dictionary<string, Event>();
+            RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable((int)type) });
             if (response.ErrorStruct) ThrowError("listEvents", response);
             foreach (RPCVariable eventStruct in response.ArrayValue)
             {
@@ -1115,15 +1067,15 @@ namespace HomegearLib.RPC
             return events;
         }
 
-        public Dictionary<String, Event> ListEvents(Int32 id)
+        public Dictionary<string, Event> ListEvents(int id)
         {
             return ListEvents(id, -1);
         }
 
-        public Dictionary<String, Event> ListEvents(Int32 id, Int32 channel)
+        public Dictionary<string, Event> ListEvents(int id, int channel)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, Event> events = new Dictionary<String, Event>();
+            Dictionary<string, Event> events = new Dictionary<string, Event>();
             RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(channel) });
             if (response.ErrorStruct) ThrowError("listEvents", response);
             foreach (RPCVariable eventStruct in response.ArrayValue)
@@ -1134,10 +1086,10 @@ namespace HomegearLib.RPC
             return events;
         }
 
-        public Dictionary<String, Event> ListEvents(Int32 id, Int32 channel, String variableName)
+        public Dictionary<string, Event> ListEvents(int id, int channel, string variableName)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, Event> events = new Dictionary<String, Event>();
+            Dictionary<string, Event> events = new Dictionary<string, Event>();
             RPCVariable response = _client.CallMethod("listEvents", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(channel), new RPCVariable(variableName) });
             if (response.ErrorStruct) ThrowError("listEvents", response);
             foreach (RPCVariable eventStruct in response.ArrayValue)
@@ -1148,10 +1100,10 @@ namespace HomegearLib.RPC
             return events;
         }
 
-        public Dictionary<Int32, Family> ListFamilies()
+        public Dictionary<int, Family> ListFamilies()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<Int32, Family> families = new Dictionary<Int32, Family>();
+            Dictionary<int, Family> families = new Dictionary<int, Family>();
             RPCVariable response = _client.CallMethod("listFamilies", null);
             if (response.ErrorStruct) ThrowError("listFamilies", response);
             foreach (RPCVariable familyStruct in response.ArrayValue)
@@ -1160,7 +1112,7 @@ namespace HomegearLib.RPC
                 Family family = new Family(familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue);
                 if (familyStruct.StructValue.ContainsKey("PAIRING_METHODS"))
                 {
-                    List<String> pairingMethods = new List<String>();
+                    List<string> pairingMethods = new List<string>();
                     foreach (RPCVariable pairingMethod in familyStruct.StructValue["PAIRING_METHODS"].ArrayValue)
                     {
                         if (pairingMethod.StringValue.Length > 0) pairingMethods.Add(pairingMethod.StringValue);
@@ -1172,17 +1124,17 @@ namespace HomegearLib.RPC
             return families;
         }
 
-        public Dictionary<String, Interface> ListInterfaces()
+        public Dictionary<string, Interface> ListInterfaces()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
-            Dictionary<String, Interface> interfaces = new Dictionary<String, Interface>();
+            Dictionary<string, Interface> interfaces = new Dictionary<string, Interface>();
             RPCVariable response = _client.CallMethod("listInterfaces", null);
             if (response.ErrorStruct) ThrowError("listInterfaces", response);
-            Dictionary<Int32, Family> families = Families;
+            Dictionary<int, Family> families = Families;
             foreach (RPCVariable interfaceStruct in response.ArrayValue)
             {
                 if (!interfaceStruct.StructValue.ContainsKey("ID") || !interfaceStruct.StructValue.ContainsKey("TYPE") || !interfaceStruct.StructValue.ContainsKey("FAMILYID")) continue;
-                Int32 familyID = interfaceStruct.StructValue["FAMILYID"].IntegerValue;
+                int familyID = interfaceStruct.StructValue["FAMILYID"].IntegerValue;
                 if (!families.ContainsKey(familyID)) continue;
                 Interface physicalInterface = new Interface(families[familyID], interfaceStruct.StructValue["ID"].StringValue, interfaceStruct.StructValue["TYPE"].StringValue);
                 if (interfaceStruct.StructValue.ContainsKey("CONNECTED")) physicalInterface.Connected = interfaceStruct.StructValue["CONNECTED"].BooleanValue;
@@ -1197,7 +1149,7 @@ namespace HomegearLib.RPC
             return interfaces;
         }
 
-        public Int32 LogLevel()
+        public int LogLevel()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("logLevel", new List<RPCVariable>());
@@ -1205,7 +1157,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 LogLevel(Int32 newLevel)
+        public int LogLevel(int newLevel)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("logLevel", new List<RPCVariable> { new RPCVariable(newLevel) });
@@ -1213,24 +1165,24 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public void PutParamset(Int32 peerId, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> parameters)
+        public void PutParamset(int peerId, int channel, RPCParameterSetType type, Dictionary<string, ConfigParameter> parameters)
         {
             PutParamset(peerId, channel, 0, -1, type, parameters);
         }
 
-        public void PutParamset(Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, Dictionary<String, ConfigParameter> parameters)
+        public void PutParamset(int peerId, int channel, int remotePeerID, int remoteChannel, Dictionary<string, ConfigParameter> parameters)
         {
             PutParamset(peerId, channel, remotePeerID, remoteChannel, RPCParameterSetType.rpcLink, parameters);
         }
 
-        private void PutParamset(Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, RPCParameterSetType type, Dictionary<String, ConfigParameter> parameters)
+        private void PutParamset(int peerId, int channel, int remotePeerID, int remoteChannel, RPCParameterSetType type, Dictionary<string, ConfigParameter> parameters)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             if (parameters.Count == 0) return;
-            String typeString = "MASTER";
+            string typeString = "MASTER";
             if (type == RPCParameterSetType.rpcValues) typeString = "VALUES";
             RPCVariable rpcParameters = new RPCVariable(RPCVariableType.rpcStruct);
-            foreach (KeyValuePair<String, ConfigParameter> parameter in parameters)
+            foreach (KeyValuePair<string, ConfigParameter> parameter in parameters)
             {
                 rpcParameters.StructValue.Add(parameter.Key, new RPCVariable(parameter.Value));
             }
@@ -1246,7 +1198,7 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("putParamset", response);
         }
 
-        public void RemoveEvent(String id)
+        public void RemoveEvent(string id)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("removeEvent", new List<RPCVariable> { new RPCVariable(id) });
@@ -1268,7 +1220,7 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("removeLink", response);
         }
 
-        public Int32 RunScript(String filename)
+        public int RunScript(string filename)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename) });
@@ -1276,7 +1228,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 RunScript(String filename, Boolean wait)
+        public int RunScript(string filename, bool wait)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(wait) });
@@ -1284,7 +1236,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 RunScript(String filename, String arguments)
+        public int RunScript(string filename, string arguments)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(arguments) });
@@ -1292,7 +1244,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 RunScript(String filename, String arguments, Boolean wait)
+        public int RunScript(string filename, string arguments, bool wait)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("runScript", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(arguments), new RPCVariable(wait) });
@@ -1300,7 +1252,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 SearchDevices()
+        public int SearchDevices()
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("searchDevices", new List<RPCVariable>());
@@ -1308,7 +1260,7 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public Int32 SearchDevices(Int32 familyID)
+        public int SearchDevices(int familyID)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("searchDevices", new List<RPCVariable> { new RPCVariable(familyID) });
@@ -1321,7 +1273,7 @@ namespace HomegearLib.RPC
             SetInstallMode(value, 60);
         }
 
-        public void SetInstallMode(bool value, Int32 duration)
+        public void SetInstallMode(bool value, int duration)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = null;
@@ -1330,26 +1282,26 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("setInstallMode", response);
         }
 
-        public void SetInstallMode(Int32 familyID, bool value)
+        public void SetInstallMode(int familyID, bool value)
         {
             SetInstallMode(familyID, value, 60);
         }
 
-        public void SetInstallMode(Int32 familyID, bool value, Int32 duration)
+        public void SetInstallMode(int familyID, bool value, int duration)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setInstallMode", new List<RPCVariable> { new RPCVariable(familyID), new RPCVariable(value), new RPCVariable(duration) });
             if (response.ErrorStruct) ThrowError("setInstallMode", response);
         }
 
-        public void SetId(Int32 currentPeerID, Int32 newPeerId)
+        public void SetId(int currentPeerID, int newPeerId)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setId", new List<RPCVariable> { new RPCVariable(currentPeerID), new RPCVariable(newPeerId) });
             if (response.ErrorStruct) ThrowError("setId", response);
         }
 
-        public void SetInterface(Int32 peerId, Interface physicalInterface)
+        public void SetInterface(int peerId, Interface physicalInterface)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response;
@@ -1358,14 +1310,14 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("setInterface", response);
         }
 
-        public void SetName(Int32 peerId, String name)
+        public void SetName(int peerId, string name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setName", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(name) });
             if (response.ErrorStruct) ThrowError("setName", response);
         }
 
-        public void SetName(Int32 peerId, Int32 channel, String name)
+        public void SetName(int peerId, int channel, string name)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setName", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(channel), new RPCVariable(name) });
@@ -1395,12 +1347,12 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("setSystemVariable", response);
         }
 
-        public void SetTeam(Int32 peerId, Int32 peerChannel)
+        public void SetTeam(int peerId, int peerChannel)
         {
             SetTeam(peerId, peerChannel, 0, -1);
         }
 
-        public void SetTeam(Int32 peerId, Int32 peerChannel, Int32 teamID, Int32 teamChannel)
+        public void SetTeam(int peerId, int peerChannel, int teamID, int teamChannel)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("setTeam", new List<RPCVariable> { new RPCVariable(peerId), new RPCVariable(peerChannel), new RPCVariable(teamID), new RPCVariable(teamChannel) });
@@ -1428,7 +1380,7 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct) ThrowError("stopSniffing", response);
         }
 
-        public void TriggerEvent(String id)
+        public void TriggerEvent(string id)
         {
             if (_disposing) throw new ObjectDisposedException("RPC");
             RPCVariable response = _client.CallMethod("triggerEvent", new List<RPCVariable> { new RPCVariable(id) });

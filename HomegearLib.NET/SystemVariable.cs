@@ -8,8 +8,8 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private String _name;
-        public String Name { get { return _name; } }
+        private string _name;
+        public string Name { get { return _name; } }
 
         public override RPCVariableType Type
         {
@@ -26,7 +26,7 @@ namespace HomegearLib
             }
         }
 
-        public override Int32 IntegerValue
+        public override int IntegerValue
         {
             get { return _integerValue; }
             set
@@ -36,7 +36,7 @@ namespace HomegearLib
             }
         }
 
-        public override Int64 IntegerValue64
+        public override long IntegerValue64
         {
             get { return _integerValue64; }
             set
@@ -76,7 +76,7 @@ namespace HomegearLib
             }
         }
 
-        public override Dictionary<String, RPCVariable> StructValue
+        public override Dictionary<string, RPCVariable> StructValue
         {
             get { return _structValue; }
             set
@@ -86,14 +86,14 @@ namespace HomegearLib
             }
         }
 
-        public SystemVariable(String name, RPCVariable variable)
+        public SystemVariable(string name, RPCVariable variable)
         {
             _name = name;
             Type = variable.Type;
             SetValue(variable);
         }
 
-        internal SystemVariable(RPCController rpc, String name, RPCVariable variable)
+        internal SystemVariable(RPCController rpc, string name, RPCVariable variable)
         {
             _rpc = rpc;
             _name = name;
@@ -101,62 +101,62 @@ namespace HomegearLib
             SetValue(variable);
         }
 
-        public SystemVariable(String name, RPCVariableType type)
+        public SystemVariable(string name, RPCVariableType type)
         {
             _name = name;
             _type = type;
         }
 
-        public SystemVariable(String name, Int32 value)
+        public SystemVariable(string name, int value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger;
             _integerValue = value;
         }
 
-        public SystemVariable(String name, UInt32 value)
+        public SystemVariable(string name, uint value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public SystemVariable(String name, Int64 value)
+        public SystemVariable(string name, long value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger64;
             _integerValue64 = value;
         }
 
-        public SystemVariable(String name, UInt64 value)
+        public SystemVariable(string name, ulong value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (Int32)value;
+            _integerValue64 = (int)value;
         }
 
-        public SystemVariable(String name, Byte value)
+        public SystemVariable(string name, byte value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public SystemVariable(String name, String value)
+        public SystemVariable(string name, string value)
         {
             _name = name;
             _type = RPCVariableType.rpcString;
             _stringValue = value;
         }
 
-        public SystemVariable(String name, bool value)
+        public SystemVariable(string name, bool value)
         {
             _name = name;
             _type = RPCVariableType.rpcBoolean;
             _booleanValue = value;
         }
 
-        public SystemVariable(String name, double value)
+        public SystemVariable(string name, double value)
         {
             _name = name;
             _type = RPCVariableType.rpcFloat;

@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class MetadataVariables : ReadOnlyDictionary<String, MetadataVariable>, IDisposable
+    public class MetadataVariables : ReadOnlyDictionary<string, MetadataVariable>, IDisposable
     {
         RPCController _rpc = null;
 
-        private Int32 _peerId;
-        public Int32 PeerID { get { return _peerId; } }
+        private int _peerId;
+        public int PeerID { get { return _peerId; } }
 
-        public MetadataVariables(RPCController rpc, Int32 peerId, Dictionary<String, MetadataVariable> metadataVariables) : base(metadataVariables)
+        public MetadataVariables(RPCController rpc, int peerId, Dictionary<string, MetadataVariable> metadataVariables) : base(metadataVariables)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -30,7 +30,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<String, MetadataVariable> metadataVariable in _dictionary)
+            foreach (KeyValuePair<string, MetadataVariable> metadataVariable in _dictionary)
             {
                 metadataVariable.Value.Dispose();
             }
@@ -38,11 +38,11 @@ namespace HomegearLib
 
         public List<MetadataVariable> Update(out bool variablesDeleted, out bool variablesAdded)
         {
-            Dictionary<String, MetadataVariable> variables = _rpc.GetAllMetadata(_peerId);
+            Dictionary<string, MetadataVariable> variables = _rpc.GetAllMetadata(_peerId);
             variablesDeleted = false;
             variablesAdded = false;
             List<MetadataVariable> changedVariables = new List<MetadataVariable>();
-            foreach (KeyValuePair<String, MetadataVariable> variablePair in variables)
+            foreach (KeyValuePair<string, MetadataVariable> variablePair in variables)
             {
                 if (!_dictionary.ContainsKey(variablePair.Key))
                 {
@@ -58,7 +58,7 @@ namespace HomegearLib
                 }
                 if (variable.SetValue(variablePair.Value)) changedVariables.Add(variable);
             }
-            foreach (KeyValuePair<String, MetadataVariable> variablePair in _dictionary)
+            foreach (KeyValuePair<string, MetadataVariable> variablePair in _dictionary)
             {
                 if (!variables.ContainsKey(variablePair.Key))
                 {

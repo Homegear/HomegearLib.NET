@@ -14,7 +14,7 @@ namespace HomegearLib.RPC.Encoding
             encodedData.Add((byte)(value & 0xFF));
         }
 
-        public void EncodeInteger64(List<byte> encodedData, Int64 value)
+        public void EncodeInteger64(List<byte> encodedData, long value)
         {
             encodedData.Add((byte)((value >> 56) & 0xFF));
             encodedData.Add((byte)((value >> 48) & 0xFF));

@@ -15,11 +15,11 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        protected String _id;
-        public String ID { get { return _id; } }
+        protected string _id;
+        public string ID { get { return _id; } }
 
-        protected Boolean _enabled;
-        public Boolean Enabled
+        protected bool _enabled;
+        public bool Enabled
         {
             get { return _enabled; }
             set
@@ -28,22 +28,22 @@ namespace HomegearLib
                 _rpc.EnableEvent(_id, value);
             }
         }
-        internal void SetEnabledNoRPC(Boolean enabled) { _enabled = enabled; }
+        internal void SetEnabledNoRPC(bool enabled) { _enabled = enabled; }
 
-        protected String _eventMethod = "";
-        public String EventMethod { get { return _eventMethod; } internal set { _eventMethod = value; } }
+        protected string _eventMethod = "";
+        public string EventMethod { get { return _eventMethod; } internal set { _eventMethod = value; } }
 
         protected List<RPCVariable> _eventMethodParams = new List<RPCVariable>();
         public IReadOnlyList<RPCVariable> EventMethodParams { get { return _eventMethodParams.AsReadOnly(); } }
         internal void SetEventMethodParams(List<RPCVariable> value) { _eventMethodParams = value; }
 
-        internal Event(RPCController rpc, String id)
+        internal Event(RPCController rpc, string id)
         {
             _rpc = rpc;
             _id = id;
         }
 
-        public Event(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams)
+        public Event(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams)
         {
             _id = id;
             _enabled = enabled;

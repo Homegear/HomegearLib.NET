@@ -41,18 +41,18 @@ namespace HomegearLib.RPC
             set { _stringValue = (value == null) ? "" : value; }
         }
 
-        protected Int32 _integerValue;
-        public virtual Int32 IntegerValue
+        protected int _integerValue;
+        public virtual int IntegerValue
         {
             get { return _integerValue; }
             set { _integerValue = value; _integerValue64 = value; }
         }
 
-        protected Int64 _integerValue64;
-        public virtual Int64 IntegerValue64
+        protected long _integerValue64;
+        public virtual long IntegerValue64
         {
             get { return _integerValue64; }
-            set { _integerValue64 = value; _integerValue = (Int32)value; }
+            set { _integerValue64 = value; _integerValue = (int)value; }
         }
 
         protected bool _booleanValue;
@@ -76,8 +76,8 @@ namespace HomegearLib.RPC
             set { _arrayValue = value; }
         }
 
-        protected Dictionary<String, RPCVariable> _structValue = new Dictionary<string, RPCVariable>();
-        public virtual Dictionary<String, RPCVariable> StructValue
+        protected Dictionary<string, RPCVariable> _structValue = new Dictionary<string, RPCVariable>();
+        public virtual Dictionary<string, RPCVariable> StructValue
         {
             get { return _structValue; }
             set { _structValue = value; }
@@ -92,37 +92,37 @@ namespace HomegearLib.RPC
             _type = type;
         }
 
-        public RPCVariable(Int32 value)
+        public RPCVariable(int value)
         {
             _type = RPCVariableType.rpcInteger;
             _integerValue = value;
         }
 
-        public RPCVariable(UInt32 value)
+        public RPCVariable(uint value)
         {
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public RPCVariable(Int64 value)
+        public RPCVariable(long value)
         {
             _type = RPCVariableType.rpcInteger64;
             _integerValue64 = value;
         }
 
-        public RPCVariable(UInt64 value)
+        public RPCVariable(ulong value)
         {
             _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (Int32)value;
+            _integerValue64 = (int)value;
         }
 
-        public RPCVariable(Byte value)
+        public RPCVariable(byte value)
         {
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public RPCVariable(String value)
+        public RPCVariable(string value)
         {
             _type = RPCVariableType.rpcString;
             if (value == null) return;
@@ -200,7 +200,7 @@ namespace HomegearLib.RPC
             return errorStruct;
         }
 
-        public static RPCVariable CreateFromTypeString(String type)
+        public static RPCVariable CreateFromTypeString(string type)
         {
             switch (type)
             {
@@ -222,7 +222,7 @@ namespace HomegearLib.RPC
             return new RPCVariable(RPCVariableType.rpcVoid);
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             switch (_type)
             {
@@ -262,7 +262,7 @@ namespace HomegearLib.RPC
                     if (_arrayValue.Count != variable.ArrayValue.Count) return false;
                     else
                     {
-                        for (Int32 i = 0; i < _arrayValue.Count; i++)
+                        for (int i = 0; i < _arrayValue.Count; i++)
                         {
                             if (!_arrayValue[i].Compare(variable.ArrayValue[i])) return false;
                         }
@@ -272,7 +272,7 @@ namespace HomegearLib.RPC
                     if (_structValue.Count != variable.StructValue.Count) return false;
                     else
                     {
-                        for (Int32 i = 0; i < _structValue.Count; i++)
+                        for (int i = 0; i < _structValue.Count; i++)
                         {
                             if (_structValue.Keys.ElementAt(i) != variable.StructValue.Keys.ElementAt(i)) return false;
                             if (!_structValue.Values.ElementAt(i).Compare(variable.StructValue.Values.ElementAt(i))) return false;

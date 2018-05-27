@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class SystemVariables : ReadOnlyDictionary<String, SystemVariable>, IDisposable
+    public class SystemVariables : ReadOnlyDictionary<string, SystemVariable>, IDisposable
     {
         RPCController _rpc = null;
 
-        public SystemVariables(RPCController rpc, Dictionary<String, SystemVariable> systemVariables) : base(systemVariables)
+        public SystemVariables(RPCController rpc, Dictionary<string, SystemVariable> systemVariables) : base(systemVariables)
         {
             _rpc = rpc;
         }
@@ -16,7 +16,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<String, SystemVariable> systemVariable in _dictionary)
+            foreach (KeyValuePair<string, SystemVariable> systemVariable in _dictionary)
             {
                 systemVariable.Value.Dispose();
             }
@@ -35,11 +35,11 @@ namespace HomegearLib
 
         public List<SystemVariable> Update(out bool variablesDeleted, out bool variablesAdded)
         {
-            Dictionary<String, SystemVariable> variables = _rpc.GetAllSystemVariables();
+            Dictionary<string, SystemVariable> variables = _rpc.GetAllSystemVariables();
             variablesDeleted = false;
             variablesAdded = false;
             List<SystemVariable> changedVariables = new List<SystemVariable>();
-            foreach (KeyValuePair<String, SystemVariable> variablePair in variables)
+            foreach (KeyValuePair<string, SystemVariable> variablePair in variables)
             {
                 if (!_dictionary.ContainsKey(variablePair.Key))
                 {
@@ -55,7 +55,7 @@ namespace HomegearLib
                 }
                 if (variable.SetValue(variablePair.Value)) changedVariables.Add(variable);
             }
-            foreach (KeyValuePair<String, SystemVariable> variablePair in _dictionary)
+            foreach (KeyValuePair<string, SystemVariable> variablePair in _dictionary)
             {
                 if (!variables.ContainsKey(variablePair.Key))
                 {

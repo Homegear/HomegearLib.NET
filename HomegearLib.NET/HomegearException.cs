@@ -9,7 +9,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearException(String message) : base(message)
+        public HomegearException(string message) : base(message)
         {
 
         }
@@ -22,7 +22,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearVariableException(String message) : base(message)
+        public HomegearVariableException(string message) : base(message)
         {
 
         }
@@ -35,7 +35,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearVariableTypeException(String message) : base(message)
+        public HomegearVariableTypeException(string message) : base(message)
         {
 
         }
@@ -48,7 +48,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearVariableReadOnlyException(String message) : base(message)
+        public HomegearVariableReadOnlyException(string message) : base(message)
         {
 
         }
@@ -61,7 +61,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearVariableValueOutOfBoundsException(String message) : base(message)
+        public HomegearVariableValueOutOfBoundsException(string message) : base(message)
         {
 
         }
@@ -74,7 +74,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearRPCServerException(String message) : base(message)
+        public HomegearRPCServerException(string message) : base(message)
         {
 
         }
@@ -87,7 +87,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearRPCServerSSLException(String message)
+        public HomegearRPCServerSSLException(string message)
             : base(message)
         {
 
@@ -101,7 +101,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearRPCClientException(String message)
+        public HomegearRPCClientException(string message)
             : base(message)
         {
 
@@ -115,7 +115,7 @@ namespace HomegearLib
 
         }
 
-        public HomegearRPCClientSSLException(String message) : base(message)
+        public HomegearRPCClientSSLException(string message) : base(message)
         {
 
         }

@@ -4,8 +4,8 @@ namespace HomegearLib.RPC.Encoding
 {
     internal class RPCHeader
     {
-        private String _authorization;
-        public String Authorization
+        private string _authorization;
+        public string Authorization
         {
             get { return _authorization; }
             set { _authorization = value; }

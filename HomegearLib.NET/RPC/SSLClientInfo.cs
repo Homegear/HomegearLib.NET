@@ -31,30 +31,30 @@ namespace HomegearLib.RPC
             _verifyCertificate = verifyCertificate;
         }
 
-        public SSLClientInfo(String callbackHostname, String username, String password)
+        public SSLClientInfo(string callbackHostname, string username, string password)
         {
             SetUsernameFromString(username);
             SetPasswordFromString(password);
         }
 
-        public SSLClientInfo(String callbackHostname, String username, String password, bool verifyCertificate)
+        public SSLClientInfo(string callbackHostname, string username, string password, bool verifyCertificate)
         {
             SetUsernameFromString(username);
             SetPasswordFromString(password);
             _verifyCertificate = verifyCertificate;
         }
 
-        public void SetUsernameFromString(String username)
+        public void SetUsernameFromString(string username)
         {
             _username = GetSecureString(username);
         }
 
-        public void SetPasswordFromString(String password)
+        public void SetPasswordFromString(string password)
         {
             _password = GetSecureString(password);
         }
 
-        unsafe SecureString GetSecureString(String value)
+        unsafe SecureString GetSecureString(string value)
         {
             char[] chars = value.ToCharArray();
 

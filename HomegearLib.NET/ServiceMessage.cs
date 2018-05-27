@@ -14,15 +14,15 @@ namespace HomegearLib
 
         public ServiceMessageType Type { get; internal set; }
         public DateTime Timestamp { get; internal set; } = DateTime.MinValue;
-        public Int32 FamilyID { get; internal set; } = -1;
-        public Int64 PeerID { get; internal set; } = 0;
-        public Int32 Channel { get; internal set; } = -1;
-        public Int32 MessageID { get; internal set; } = -1;
-        public String Message { get; internal set; }
+        public int FamilyID { get; internal set; } = -1;
+        public long PeerID { get; internal set; } = 0;
+        public int Channel { get; internal set; } = -1;
+        public int MessageID { get; internal set; } = -1;
+        public string Message { get; internal set; }
         public RPCVariable Data { get; internal set; } = new RPCVariable();
-        public Int32 Value { get; internal set; } = 0;
+        public int Value { get; internal set; } = 0;
 
-        public ServiceMessage(DateTime timestamp, Int32 messageID, String message, RPCVariable data, Int32 value)
+        public ServiceMessage(DateTime timestamp, int messageID, string message, RPCVariable data, int value)
         {
             Type = ServiceMessageType.global;
             Timestamp = timestamp;
@@ -32,7 +32,7 @@ namespace HomegearLib
             Value = value;
         }
 
-        public ServiceMessage(DateTime timestamp, Int32 familyId, Int32 messageID, String message, RPCVariable data, Int32 value)
+        public ServiceMessage(DateTime timestamp, int familyId, int messageID, string message, RPCVariable data, int value)
         {
             Type = ServiceMessageType.family;
             Timestamp = timestamp;
@@ -43,7 +43,7 @@ namespace HomegearLib
             Value = value;
         }
 
-        public ServiceMessage(DateTime timestamp, Int64 peerId, Int32 channel, String message, Int32 value)
+        public ServiceMessage(DateTime timestamp, long peerId, int channel, string message, int value)
         {
             Type = ServiceMessageType.device;
             Timestamp = timestamp;

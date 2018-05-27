@@ -55,10 +55,10 @@ namespace HomegearLib
         UpdateResultCode _code = UpdateResultCode.OK;
         public UpdateResultCode Code { get { return _code; } }
 
-        String _description = "";
-        public String Description { get { return _description; } }
+        string _description = "";
+        public string Description { get { return _description; } }
 
-        public UpdateResult(UpdateResultCode code, String description)
+        public UpdateResult(UpdateResultCode code, string description)
         {
             _code = code;
             _description = description;
@@ -70,28 +70,28 @@ namespace HomegearLib
     /// </summary>
     public class UpdateStatus
     {
-        Int32 _currentDevice = -1;
-        public Int32 CurrentDevice { get { return _currentDevice; } }
+        int _currentDevice = -1;
+        public int CurrentDevice { get { return _currentDevice; } }
 
-        Int32 _currentDeviceProgress = -1;
-        public Int32 CurrentDeviceProgress { get { return _currentDeviceProgress; } }
+        int _currentDeviceProgress = -1;
+        public int CurrentDeviceProgress { get { return _currentDeviceProgress; } }
 
-        Int32 _deviceCount = -1;
-        public Int32 DeviceCount { get { return _deviceCount; } }
+        int _deviceCount = -1;
+        public int DeviceCount { get { return _deviceCount; } }
 
-        Int32 _currentUpdate = 0;
-        public Int32 CurrentUpdate { get { return _currentUpdate; } }
+        int _currentUpdate = 0;
+        public int CurrentUpdate { get { return _currentUpdate; } }
 
-        ReadOnlyDictionary<Int32, UpdateResult> _results = new ReadOnlyDictionary<Int32, UpdateResult>();
-        public ReadOnlyDictionary<Int32, UpdateResult> Results { get { return _results; } }
+        ReadOnlyDictionary<int, UpdateResult> _results = new ReadOnlyDictionary<int, UpdateResult>();
+        public ReadOnlyDictionary<int, UpdateResult> Results { get { return _results; } }
 
-        public UpdateStatus(Int32 currentDevice, Int32 currentDeviceProgress, Int32 deviceCount, Int32 currentUpdate, Dictionary<Int32, UpdateResult> results)
+        public UpdateStatus(int currentDevice, int currentDeviceProgress, int deviceCount, int currentUpdate, Dictionary<int, UpdateResult> results)
         {
             _currentDevice = currentDevice;
             _currentDeviceProgress = currentDeviceProgress;
             _deviceCount = deviceCount;
             _currentUpdate = currentUpdate;
-            _results = new ReadOnlyDictionary<Int32, UpdateResult>(results);
+            _results = new ReadOnlyDictionary<int, UpdateResult>(results);
         }
     }
 
@@ -100,13 +100,13 @@ namespace HomegearLib
     /// </summary>
     public class Homegear : IDisposable
     {
-        public delegate void ConnectErrorEventHandler(Homegear sender, String message, String stackTrace);
+        public delegate void ConnectErrorEventHandler(Homegear sender, string message, string stackTrace);
         public delegate void ConnectedEventHandler(Homegear sender);
         public delegate void DisconnectedEventHandler(Homegear sender);
-        public delegate void HomegearErrorEventHandler(Homegear sender, Int32 level, String message);
+        public delegate void HomegearErrorEventHandler(Homegear sender, int level, string message);
         public delegate void DataReloadEventHandler(Homegear sender);
         public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
-        public delegate void PongEventHandler(Homegear sender, String id);
+        public delegate void PongEventHandler(Homegear sender, string id);
         public delegate void MetadataUpdatedEventHandler(Homegear sender, Device device, MetadataVariable variable);
         public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
@@ -232,11 +232,11 @@ namespace HomegearLib
             }
         }
 
-        private String _version = "";
+        private string _version = "";
         /// <summary>
         /// Returns the Homegear version. E. g.: "Homegear 0.5.5"
         /// </summary>
-        public String Version
+        public string Version
         {
             get
             {
@@ -248,7 +248,7 @@ namespace HomegearLib
         /// <summary>
         /// Gets or sets the log level of Homegear. Valid values are between 0 (no logging) and 5 (debug). Don't use a log level of 5 for production on slow systems!
         /// </summary>
-        public Int32 LogLevel { get { return _rpc.LogLevel(); } set { _rpc.LogLevel(value); } }
+        public int LogLevel { get { return _rpc.LogLevel(); } set { _rpc.LogLevel(value); } }
 
         /// <summary>
         /// Returns a list of all active service messages.
@@ -265,10 +265,10 @@ namespace HomegearLib
             if (rpc == null) throw new NullReferenceException("RPC object is null.");
             _rpc = rpc;
             _events = events;
-            _families = new Families(_rpc, new Dictionary<Int32, Family>());
-            _devices = new Devices(_rpc, new Dictionary<Int32, Device>());
-            _systemVariables = new SystemVariables(_rpc, new Dictionary<String, SystemVariable>());
-            _rpc.ClientDisconnected += _rpc_ClientDisconnected;
+            _families = new Families(_rpc, new Dictionary<int, Family>());
+            _devices = new Devices(_rpc, new Dictionary<int, Device>());
+            _systemVariables = new SystemVariables(_rpc, new Dictionary<string, SystemVariable>());
+            _rpc.Disconnected += _rpc_Disconnected;
             _rpc.InitCompleted += _rpc_InitCompleted;
             _rpc.HomegearError += _rpc_HomegearError;
             _rpc.DeviceVariableUpdated += _rpc_OnDeviceVariableUpdated;
@@ -294,7 +294,7 @@ namespace HomegearLib
             if (HomegearError != null) HomegearError(this, level, message);
         }
 
-        private void _rpc_OnNewEvent(RPCController sender, String id, EventType type, Int32 peerId, Int32 channelIndex, String variable)
+        private void _rpc_OnNewEvent(RPCController sender, string id, EventType type, int peerId, int channelIndex, string variable)
         {
             if (type == EventType.Timed)
             {
@@ -310,7 +310,7 @@ namespace HomegearLib
             }
         }
 
-        private void _rpc_OnUpdateEvent(RPCController sender, String id, EventType type, Int32 peerId, Int32 channelIndex, String variable)
+        private void _rpc_OnUpdateEvent(RPCController sender, string id, EventType type, int peerId, int channelIndex, string variable)
         {
             if (type == EventType.Timed)
             {
@@ -330,7 +330,7 @@ namespace HomegearLib
             }
         }
 
-        private void _rpc_OnEventDeleted(RPCController sender, String id, EventType type, Int32 peerId, Int32 channelIndex, String variable)
+        private void _rpc_OnEventDeleted(RPCController sender, string id, EventType type, int peerId, int channelIndex, string variable)
         {
             if (type == EventType.Timed)
             {
@@ -373,9 +373,9 @@ namespace HomegearLib
                 {
                     if (DeviceConfigParameterUpdated != null) DeviceConfigParameterUpdated(this, device, channel, parameter);
                 }
-                foreach (KeyValuePair<Int32, ReadOnlyDictionary<Int32, Link>> remotePeer in channel.Links)
+                foreach (KeyValuePair<int, ReadOnlyDictionary<int, Link>> remotePeer in channel.Links)
                 {
-                    foreach (KeyValuePair<Int32, Link> linkPair in remotePeer.Value)
+                    foreach (KeyValuePair<int, Link> linkPair in remotePeer.Value)
                     {
                         changedParameters = linkPair.Value.Config.Reload();
                         foreach (ConfigParameter parameter in changedParameters)
@@ -441,7 +441,7 @@ namespace HomegearLib
             if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
         }
 
-        private void _rpc_OnMetadataUpdated(RPCController sender, Int32 peerId, MetadataVariable value)
+        private void _rpc_OnMetadataUpdated(RPCController sender, int peerId, MetadataVariable value)
         {
             if (_disposing) return;
             if (!Devices.ContainsKey(peerId))
@@ -460,7 +460,7 @@ namespace HomegearLib
             if (MetadataUpdated != null) MetadataUpdated(this, device, variable);
         }
 
-        private void _rpc_OnMetadataDeleted(RPCController sender, Int32 peerId)
+        private void _rpc_OnMetadataDeleted(RPCController sender, int peerId)
         {
             if (_disposing) return;
             if (!Devices.ContainsKey(peerId)) return;
@@ -499,7 +499,7 @@ namespace HomegearLib
                         System.Diagnostics.Debug.Write("Position 3");
                         ReloadRequired(this, ReloadType.SystemVariables);
                     }
-                    foreach (KeyValuePair<Int32, Device> devicePair in Devices)
+                    foreach (KeyValuePair<int, Device> devicePair in Devices)
                     {
                         if (devicePair.Value.MetadataRequested)
                         {
@@ -540,7 +540,7 @@ namespace HomegearLib
         {
             if (_disposing) return;
             _disposing = true;
-            _rpc.ClientDisconnected -= _rpc_ClientDisconnected;
+            _rpc.Disconnected -= _rpc_Disconnected;
             _rpc.InitCompleted -= _rpc_InitCompleted;
             _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
@@ -580,7 +580,7 @@ namespace HomegearLib
             _families = new Families(_rpc, _rpc.Families);
             if (_devices != null) _devices.Dispose();
             _devices = new Devices(_rpc, _rpc.Devices);
-            foreach (KeyValuePair<Int32, Device> device in _devices)
+            foreach (KeyValuePair<int, Device> device in _devices)
             {
                 device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
             }
@@ -619,9 +619,9 @@ namespace HomegearLib
             _connecting = false;
         }
 
-        public static List<Tuple<String, Int32>> FindInstances()
+        public static List<Tuple<string, int>> FindInstances()
         {
-            HashSet<Tuple<String, Int32>> result = SSDP.Search(1000);
+            HashSet<Tuple<string, int>> result = SSDP.Search(1000);
             result.UnionWith(SSDP.Search(1000));
             result.UnionWith(SSDP.Search(1000));
             result.UnionWith(SSDP.Search(1000));
@@ -629,7 +629,7 @@ namespace HomegearLib
             return result.ToList();
         }
 
-        private void _rpc_ClientDisconnected(RPCClient sender)
+        private void _rpc_Disconnected(RPCClient sender)
         {
             if (_disposing) return;
             _stopConnectThread = true;
@@ -663,7 +663,7 @@ namespace HomegearLib
         /// </summary>
         /// <param name="value">"true" to enable or "false" to disable the pairing mode.</param>
         /// <param name="duration">The duration the pairing mode should be enabled in seconds.</param>
-        public void EnablePairingMode(bool value, Int32 duration)
+        public void EnablePairingMode(bool value, int duration)
         {
             _rpc.SetInstallMode(value, duration);
         }
@@ -672,7 +672,7 @@ namespace HomegearLib
         /// Returns the time left in pairing mode in seconds.
         /// </summary>
         /// <returns>The time left in pairing mode in seconds.</returns>
-        public Int32 TimeLeftInPairingMode()
+        public int TimeLeftInPairingMode()
         {
             return _rpc.GetInstallMode();
         }
@@ -690,7 +690,7 @@ namespace HomegearLib
         /// Excecutes a script in Homegear's script directory.
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
-        public void RunScript(String filename)
+        public void RunScript(string filename)
         {
             _rpc.RunScript(filename);
         }
@@ -701,7 +701,7 @@ namespace HomegearLib
         /// <param name="filename">The filename of the script.</param>
         /// <param name="wait">When "true" this method waits for the script to finish and returns the exit code.</param>
         /// <returns>The exit code when "wait" is "true".</returns>
-        public Int32 RunScript(String filename, Boolean wait)
+        public int RunScript(string filename, bool wait)
         {
             return _rpc.RunScript(filename, wait);
         }
@@ -711,7 +711,7 @@ namespace HomegearLib
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
         /// <param name="arguments">Arguments to pass to the script.</param>
-        public void RunScript(String filename, String arguments)
+        public void RunScript(string filename, string arguments)
         {
             _rpc.RunScript(filename, arguments);
         }
@@ -723,7 +723,7 @@ namespace HomegearLib
         /// <param name="arguments">Arguments to pass to the script.</param>
         /// <param name="wait">When "true" this method waits for the script to finish and returns the exit code.</param>
         /// <returns>The exit code when "wait" is "true".</returns>
-        public Int32 RunScript(String filename, String arguments, Boolean wait)
+        public int RunScript(string filename, string arguments, bool wait)
         {
             return _rpc.RunScript(filename, arguments, wait);
         }

@@ -32,62 +32,62 @@ namespace HomegearLib
         protected VariableType _type = VariableType.tInteger;
         public VariableType Type { get { return _type; } internal set { _type = value; } }
 
-        protected Int32 _peerId = 0;
-        public Int32 PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected int _peerId = 0;
+        public int PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
-        protected Int32 _channel = -1;
-        public Int32 Channel { get { return _channel; } internal set { _channel = value; } }
+        protected int _channel = -1;
+        public int Channel { get { return _channel; } internal set { _channel = value; } }
 
-        protected String _name = "";
-        public String Name { get { return _name; } internal set { _name = value; } }
+        protected string _name = "";
+        public string Name { get { return _name; } internal set { _name = value; } }
 
-        protected String _unit = "";
-        public String Unit { get { return _unit; } internal set { _unit = value; } }
+        protected string _unit = "";
+        public string Unit { get { return _unit; } internal set { _unit = value; } }
 
-        protected Boolean _defaultBoolean = false;
-        public Boolean DefaultBoolean { get { return _defaultBoolean; } internal set { _defaultBoolean = value; } }
+        protected bool _defaultBoolean = false;
+        public bool DefaultBoolean { get { return _defaultBoolean; } internal set { _defaultBoolean = value; } }
 
-        protected Int64 _defaultInteger = 0;
-        public Int64 DefaultInteger { get { return _defaultInteger; } internal set { _defaultInteger = value; } }
+        protected long _defaultInteger = 0;
+        public long DefaultInteger { get { return _defaultInteger; } internal set { _defaultInteger = value; } }
 
-        protected Double _defaultDouble = 0;
-        public Double DefaultDouble { get { return _defaultDouble; } internal set { _defaultDouble = value; } }
+        protected double _defaultDouble = 0;
+        public double DefaultDouble { get { return _defaultDouble; } internal set { _defaultDouble = value; } }
 
-        protected String _defaultString = "";
-        public String DefaultString { get { return _defaultString; } internal set { _defaultString = value; } }
+        protected string _defaultString = "";
+        public string DefaultString { get { return _defaultString; } internal set { _defaultString = value; } }
 
-        protected Int64 _minInteger = 0;
-        public Int64 MinInteger { get { return _minInteger; } internal set { _minInteger = value; } }
+        protected long _minInteger = 0;
+        public long MinInteger { get { return _minInteger; } internal set { _minInteger = value; } }
 
-        protected Int64 _maxInteger = 0;
-        public Int64 MaxInteger { get { return _maxInteger; } internal set { _maxInteger = value; } }
+        protected long _maxInteger = 0;
+        public long MaxInteger { get { return _maxInteger; } internal set { _maxInteger = value; } }
 
-        protected Double _minDouble = 0;
-        public Double MinDouble { get { return _minDouble; } internal set { _minDouble = value; } }
+        protected double _minDouble = 0;
+        public double MinDouble { get { return _minDouble; } internal set { _minDouble = value; } }
 
-        protected Double _maxDouble = 0;
-        public Double MaxDouble { get { return _maxDouble; } internal set { _maxDouble = value; } }
+        protected double _maxDouble = 0;
+        public double MaxDouble { get { return _maxDouble; } internal set { _maxDouble = value; } }
 
         protected VariableUIFlags _uiFlags = VariableUIFlags.fNone;
         public VariableUIFlags UIFlags { get { return _uiFlags; } internal set { _uiFlags = value; } }
 
-        protected Boolean _readable = true;
-        public Boolean Readable { get { return _readable; } internal set { _readable = value; } }
+        protected bool _readable = true;
+        public bool Readable { get { return _readable; } internal set { _readable = value; } }
 
-        protected Boolean _writeable = true;
-        public Boolean Writeable { get { return _writeable; } internal set { _writeable = value; } }
+        protected bool _writeable = true;
+        public bool Writeable { get { return _writeable; } internal set { _writeable = value; } }
 
-        protected ReadOnlyDictionary<Int64, String> _specialIntegerValues = new ReadOnlyDictionary<Int64, String>();
-        public ReadOnlyDictionary<Int64, String> SpecialIntegerValues { get { return _specialIntegerValues; } }
+        protected ReadOnlyDictionary<long, string> _specialIntegerValues = new ReadOnlyDictionary<long, string>();
+        public ReadOnlyDictionary<long, string> SpecialIntegerValues { get { return _specialIntegerValues; } }
 
-        protected ReadOnlyDictionary<Double, String> _specialDoubleValues = new ReadOnlyDictionary<double, string>();
-        public ReadOnlyDictionary<Double, String> SpecialDoubleValues { get { return _specialDoubleValues; } }
+        protected ReadOnlyDictionary<double, string> _specialDoubleValues = new ReadOnlyDictionary<double, string>();
+        public ReadOnlyDictionary<double, string> SpecialDoubleValues { get { return _specialDoubleValues; } }
 
-        protected Boolean _setValueWait = false;
-        public Boolean SetValueWait { get { return _setValueWait; } set { _setValueWait = value; } }
+        protected bool _setValueWait = false;
+        public bool SetValueWait { get { return _setValueWait; } set { _setValueWait = value; } }
 
-        protected Boolean _booleanValue = false;
-        public virtual Boolean BooleanValue
+        protected bool _booleanValue = false;
+        public virtual bool BooleanValue
         {
             get
             {
@@ -103,8 +103,8 @@ namespace HomegearLib
             }
         }
 
-        protected Int32 _integerValue = 0;
-        public virtual Int32 IntegerValue
+        protected int _integerValue = 0;
+        public virtual int IntegerValue
         {
             get
             {
@@ -122,8 +122,8 @@ namespace HomegearLib
             }
         }
 
-        protected Int64 _integerValue64 = 0;
-        public virtual Int64 IntegerValue64
+        protected long _integerValue64 = 0;
+        public virtual long IntegerValue64
         {
             get
             {
@@ -136,13 +136,13 @@ namespace HomegearLib
                 if (_type != VariableType.tInteger64 && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Variable " + _name + " is not of type integer or enum.");
                 if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value of variable " + _name + " is out of bounds.");
                 _integerValue64 = value;
-                _integerValue = (Int32)value;
+                _integerValue = (int)value;
                 _rpc.SetValue(this);
             }
         }
 
-        protected Double _doubleValue = 0;
-        public virtual Double DoubleValue
+        protected double _doubleValue = 0;
+        public virtual double DoubleValue
         {
             get
             {
@@ -159,8 +159,8 @@ namespace HomegearLib
             }
         }
 
-        protected String _stringValue = "";
-        public virtual String StringValue
+        protected string _stringValue = "";
+        public virtual string StringValue
         {
             get
             {
@@ -180,11 +180,11 @@ namespace HomegearLib
         protected Dictionary<int, string> _valueList = new Dictionary<int, string>();
         public Dictionary<int, string> ValueList { get { return _valueList; } internal set { _valueList = value; } }
 
-        public Variable(Int32 peerId, Int32 channel, String name) : this(null, peerId, channel, name)
+        public Variable(int peerId, int channel, string name) : this(null, peerId, channel, name)
         {
         }
 
-        public Variable(RPCController rpc, Int32 peerId, Int32 channel, String name)
+        public Variable(RPCController rpc, int peerId, int channel, string name)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -192,22 +192,22 @@ namespace HomegearLib
             _name = name;
         }
 
-        internal Variable(Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
+        internal Variable(int peerId, int channel, string name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
         {
 
         }
 
-        internal Variable(Int32 peerId, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(null, peerId, channel, name, typeString, rpcVariable)
+        internal Variable(int peerId, int channel, string name, string typeString, RPCVariable rpcVariable) : this(null, peerId, channel, name, typeString, rpcVariable)
         {
 
         }
 
-        internal Variable(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
+        internal Variable(RPCController rpc, int peerId, int channel, string name, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
         {
             SetValue(rpcVariable);
         }
 
-        internal Variable(RPCController rpc, Int32 peerId, Int32 channel, String name, String typeString, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
+        internal Variable(RPCController rpc, int peerId, int channel, string name, string typeString, RPCVariable rpcVariable) : this(rpc, peerId, channel, name)
         {
             SetType(typeString);
             SetValue(rpcVariable);
@@ -279,7 +279,7 @@ namespace HomegearLib
             return changed;
         }
 
-        internal void SetType(String type)
+        internal void SetType(string type)
         {
             switch (type)
             {
@@ -357,8 +357,8 @@ namespace HomegearLib
 
         internal void SetSpecialValues(RPCVariable specialValues)
         {
-            Dictionary<Int64, String> specialIntegerValues = new Dictionary<Int64, string>();
-            Dictionary<Double, String> specialDoubleValues = new Dictionary<double, string>();
+            Dictionary<long, string> specialIntegerValues = new Dictionary<long, string>();
+            Dictionary<double, string> specialDoubleValues = new Dictionary<double, string>();
             foreach (RPCVariable specialValue in specialValues.ArrayValue)
             {
                 if (!specialValue.StructValue.ContainsKey("ID") || !specialValue.StructValue.ContainsKey("VALUE")) continue;
@@ -367,11 +367,11 @@ namespace HomegearLib
                 else if (value.Type == RPCVariableType.rpcInteger64) specialIntegerValues.Add(value.IntegerValue64, specialValue.StructValue["ID"].StringValue);
                 else if (value.Type == RPCVariableType.rpcFloat) specialDoubleValues.Add(value.FloatValue, specialValue.StructValue["ID"].StringValue);
             }
-            if (specialIntegerValues.Count > 0) _specialIntegerValues = new ReadOnlyDictionary<Int64, string>(specialIntegerValues);
+            if (specialIntegerValues.Count > 0) _specialIntegerValues = new ReadOnlyDictionary<long, string>(specialIntegerValues);
             if (specialDoubleValues.Count > 0) _specialDoubleValues = new ReadOnlyDictionary<double, string>(specialDoubleValues);
         }
 
-        public String DefaultToString()
+        public string DefaultToString()
         {
             switch (_type)
             {
@@ -393,7 +393,7 @@ namespace HomegearLib
             return "";
         }
 
-        public override String ToString()
+        public override string ToString()
         {
             switch (_type)
             {

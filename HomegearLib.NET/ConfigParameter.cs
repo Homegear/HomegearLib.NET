@@ -5,13 +5,13 @@ namespace HomegearLib
 {
     public class ConfigParameter : Variable
     {
-        protected Boolean _dataPending = false;
-        public Boolean DataPending { get { return _dataPending; } internal set { _dataPending = value; } }
+        protected bool _dataPending = false;
+        public bool DataPending { get { return _dataPending; } internal set { _dataPending = value; } }
 
         /// <summary>
         /// Sets the boolean value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override Boolean BooleanValue
+        public override bool BooleanValue
         {
             get
             {
@@ -30,7 +30,7 @@ namespace HomegearLib
         /// <summary>
         /// Sets the integer value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override Int32 IntegerValue
+        public override int IntegerValue
         {
             get
             {
@@ -50,7 +50,7 @@ namespace HomegearLib
         /// <summary>
         /// Sets the integer value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override Int64 IntegerValue64
+        public override long IntegerValue64
         {
             get
             {
@@ -70,7 +70,7 @@ namespace HomegearLib
         /// <summary>
         /// Sets the double value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override Double DoubleValue
+        public override double DoubleValue
         {
             get
             {
@@ -90,7 +90,7 @@ namespace HomegearLib
         /// <summary>
         /// Sets the string value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override String StringValue
+        public override string StringValue
         {
             get
             {
@@ -107,22 +107,22 @@ namespace HomegearLib
             }
         }
 
-        public ConfigParameter(Int32 peerId, Int32 channel, String name) : this(null, peerId, channel, name)
+        public ConfigParameter(int peerId, int channel, string name) : this(null, peerId, channel, name)
         {
 
         }
 
-        public ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name) : base(rpc, peerId, channel, name)
+        public ConfigParameter(RPCController rpc, int peerId, int channel, string name) : base(rpc, peerId, channel, name)
         {
 
         }
 
-        internal ConfigParameter(Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
+        internal ConfigParameter(int peerId, int channel, string name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
         {
 
         }
 
-        internal ConfigParameter(RPCController rpc, Int32 peerId, Int32 channel, String name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
+        internal ConfigParameter(RPCController rpc, int peerId, int channel, string name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
         {
 
         }

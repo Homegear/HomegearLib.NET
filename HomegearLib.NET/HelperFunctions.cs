@@ -4,16 +4,16 @@ namespace HomegearLib
 {
     public static class HomegearHelpers
     {
-        public static DateTime UnixTimeStampToDateTime(Int32 unixTimeStamp)
+        public static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
             System.DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             return epoch.AddSeconds(unixTimeStamp).ToLocalTime();
         }
 
-        public static Int32 DateTimeToUnixTimeStamp(DateTime time)
+        public static int DateTimeToUnixTimeStamp(DateTime time)
         {
             System.DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            return (Int32)time.ToUniversalTime().Subtract(epoch).TotalSeconds;
+            return (int)time.ToUniversalTime().Subtract(epoch).TotalSeconds;
         }
     }
 }

@@ -8,11 +8,11 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private Int32 _peerId;
-        public Int32 PeerID { get { return _peerId; } }
+        private int _peerId;
+        public int PeerID { get { return _peerId; } }
 
-        private String _name;
-        public String Name { get { return _name; } }
+        private string _name;
+        public string Name { get { return _name; } }
 
         public override RPCVariableType Type
         {
@@ -29,7 +29,7 @@ namespace HomegearLib
             }
         }
 
-        public override Int32 IntegerValue
+        public override int IntegerValue
         {
             get { return _integerValue; }
             set
@@ -39,7 +39,7 @@ namespace HomegearLib
             }
         }
 
-        public override Int64 IntegerValue64
+        public override long IntegerValue64
         {
             get { return _integerValue64; }
             set
@@ -79,7 +79,7 @@ namespace HomegearLib
             }
         }
 
-        public override Dictionary<String, RPCVariable> StructValue
+        public override Dictionary<string, RPCVariable> StructValue
         {
             get { return _structValue; }
             set
@@ -89,7 +89,7 @@ namespace HomegearLib
             }
         }
 
-        public MetadataVariable(Int32 peerId, String name, RPCVariable variable)
+        public MetadataVariable(int peerId, string name, RPCVariable variable)
         {
             _peerId = peerId;
             _name = name;
@@ -97,7 +97,7 @@ namespace HomegearLib
             SetValue(variable);
         }
 
-        internal MetadataVariable(RPCController rpc, Int32 peerId, String name, RPCVariable variable)
+        internal MetadataVariable(RPCController rpc, int peerId, string name, RPCVariable variable)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -106,14 +106,14 @@ namespace HomegearLib
             SetValue(variable);
         }
 
-        public MetadataVariable(Int32 peerId, String name, RPCVariableType type)
+        public MetadataVariable(int peerId, string name, RPCVariableType type)
         {
             _peerId = peerId;
             _name = name;
             _type = type;
         }
 
-        public MetadataVariable(Int32 peerId, String name, Int32 value)
+        public MetadataVariable(int peerId, string name, int value)
         {
             _peerId = peerId;
             _name = name;
@@ -121,15 +121,15 @@ namespace HomegearLib
             _integerValue = value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, UInt32 value)
+        public MetadataVariable(int peerId, string name, uint value)
         {
             _peerId = peerId;
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, Int64 value)
+        public MetadataVariable(int peerId, string name, long value)
         {
             _peerId = peerId;
             _name = name;
@@ -137,23 +137,23 @@ namespace HomegearLib
             _integerValue64 = value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, UInt64 value)
+        public MetadataVariable(int peerId, string name, ulong value)
         {
             _peerId = peerId;
             _name = name;
             _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (Int32)value;
+            _integerValue64 = (int)value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, Byte value)
+        public MetadataVariable(int peerId, string name, byte value)
         {
             _peerId = peerId;
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (Int32)value;
+            _integerValue = (int)value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, String value)
+        public MetadataVariable(int peerId, string name, string value)
         {
             _peerId = peerId;
             _name = name;
@@ -161,7 +161,7 @@ namespace HomegearLib
             _stringValue = value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, bool value)
+        public MetadataVariable(int peerId, string name, bool value)
         {
             _peerId = peerId;
             _name = name;
@@ -169,7 +169,7 @@ namespace HomegearLib
             _booleanValue = value;
         }
 
-        public MetadataVariable(Int32 peerId, String name, double value)
+        public MetadataVariable(int peerId, string name, double value)
         {
             _peerId = peerId;
             _name = name;

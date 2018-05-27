@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class DeviceConfig : ReadOnlyDictionary<String, ConfigParameter>, IDisposable
+    public class DeviceConfig : ReadOnlyDictionary<string, ConfigParameter>, IDisposable
     {
         private RPCController _rpc = null;
 
@@ -12,22 +12,22 @@ namespace HomegearLib
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
-        private Int32 _peerId = 0;
-        public Int32 PeerID { get { return _peerId; } }
+        private int _peerId = 0;
+        public int PeerID { get { return _peerId; } }
 
-        private Int32 _channel;
-        public Int32 Channel { get { return _channel; } }
+        private int _channel;
+        public int Channel { get { return _channel; } }
 
-        private Int32 _remotePeerID = 0;
-        public Int32 RemotePeerID { get { return _remotePeerID; } }
+        private int _remotePeerID = 0;
+        public int RemotePeerID { get { return _remotePeerID; } }
 
-        private Int32 _remoteChannel = -1;
-        public Int32 RemoteChannel { get { return _remoteChannel; } }
+        private int _remoteChannel = -1;
+        public int RemoteChannel { get { return _remoteChannel; } }
 
         private RPCParameterSetType _type;
         public RPCParameterSetType Type { get { return _type; } }
 
-        public DeviceConfig(RPCController rpc, Int32 peerId, Int32 channel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig) : base(deviceConfig)
+        public DeviceConfig(RPCController rpc, int peerId, int channel, RPCParameterSetType type, Dictionary<string, ConfigParameter> deviceConfig) : base(deviceConfig)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -35,7 +35,7 @@ namespace HomegearLib
             _type = type;
         }
 
-        public DeviceConfig(RPCController rpc, Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, RPCParameterSetType type, Dictionary<String, ConfigParameter> deviceConfig)
+        public DeviceConfig(RPCController rpc, int peerId, int channel, int remotePeerID, int remoteChannel, RPCParameterSetType type, Dictionary<string, ConfigParameter> deviceConfig)
             : base(deviceConfig)
         {
             _rpc = rpc;
@@ -59,8 +59,8 @@ namespace HomegearLib
 
         public void Put()
         {
-            Dictionary<String, ConfigParameter> changedParameters = new Dictionary<string, ConfigParameter>();
-            foreach (KeyValuePair<String, ConfigParameter> parameter in _dictionary)
+            Dictionary<string, ConfigParameter> changedParameters = new Dictionary<string, ConfigParameter>();
+            foreach (KeyValuePair<string, ConfigParameter> parameter in _dictionary)
             {
                 if (parameter.Value.DataPending) changedParameters.Add(parameter.Key, parameter.Value);
             }
@@ -68,7 +68,7 @@ namespace HomegearLib
             if (_type == RPCParameterSetType.rpcLink) _rpc.PutParamset(_peerId, _channel, _remotePeerID, _remoteChannel, changedParameters);
             else _rpc.PutParamset(_peerId, _channel, _type, changedParameters);
             bool reloadRequired = false;
-            foreach (KeyValuePair<String, ConfigParameter> parameter in changedParameters)
+            foreach (KeyValuePair<string, ConfigParameter> parameter in changedParameters)
             {
                 parameter.Value.DataPending = false;
                 if (parameter.Value.UIFlags == VariableUIFlags.fTransform) reloadRequired = true;

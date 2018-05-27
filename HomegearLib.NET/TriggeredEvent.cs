@@ -32,27 +32,27 @@ namespace HomegearLib
 
     public class DynamicResetTime
     {
-        private Int32 _initialTime = 30;
-        public Int32 InitialTime { get { return _initialTime; } internal set { _initialTime = value; } }
+        private int _initialTime = 30;
+        public int InitialTime { get { return _initialTime; } internal set { _initialTime = value; } }
 
-        private Int32 _resetAfter = 300;
-        public Int32 ResetAfter { get { return _resetAfter; } internal set { _resetAfter = value; } }
+        private int _resetAfter = 300;
+        public int ResetAfter { get { return _resetAfter; } internal set { _resetAfter = value; } }
 
         private DynamicResetTimeOperation _operation = DynamicResetTimeOperation.Multiplication;
         public DynamicResetTimeOperation Operation { get { return _operation; } internal set { _operation = value; } }
 
-        private Double _factor = 2;
-        public Double Factor { get { return _factor; } internal set { _factor = value; } }
+        private double _factor = 2;
+        public double Factor { get { return _factor; } internal set { _factor = value; } }
 
-        private Int32 _limit = 300;
-        public Int32 Limit { get { return _limit; } internal set { _limit = value; } }
+        private int _limit = 300;
+        public int Limit { get { return _limit; } internal set { _limit = value; } }
 
-        private Int32 _currentTime;
-        public Int32 CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
+        private int _currentTime;
+        public int CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
 
         internal DynamicResetTime() { }
 
-        public DynamicResetTime(Int32 initialTime, DynamicResetTimeOperation operation, Double factor, Int32 limit, Int32 resetAfter)
+        public DynamicResetTime(int initialTime, DynamicResetTimeOperation operation, double factor, int limit, int resetAfter)
         {
             _initialTime = initialTime;
             _operation = operation;
@@ -64,14 +64,14 @@ namespace HomegearLib
 
     public class TriggeredEvent : Event
     {
-        protected Int32 _peerId;
-        public Int32 PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected int _peerId;
+        public int PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
-        protected Int32 _peerChannel;
-        public Int32 PeerChannel { get { return _peerChannel; } internal set { _peerChannel = value; } }
+        protected int _peerChannel;
+        public int PeerChannel { get { return _peerChannel; } internal set { _peerChannel = value; } }
 
-        protected String _variableName;
-        public String VariableName { get { return _variableName; } internal set { _variableName = value; } }
+        protected string _variableName;
+        public string VariableName { get { return _variableName; } internal set { _variableName = value; } }
 
         protected EventTrigger _trigger;
         public EventTrigger Trigger { get { return _trigger; } internal set { _trigger = value; } }
@@ -79,14 +79,14 @@ namespace HomegearLib
         protected RPCVariable _triggerValue = null;
         public RPCVariable TriggerValue { get { return _triggerValue; } internal set { _triggerValue = value; } }
 
-        protected Int32 _resetAfterStatic = 0;
-        public Int32 ResetAfterStatic { get { return _resetAfterStatic; } internal set { _resetAfterStatic = value; } }
+        protected int _resetAfterStatic = 0;
+        public int ResetAfterStatic { get { return _resetAfterStatic; } internal set { _resetAfterStatic = value; } }
 
         protected DynamicResetTime _resetAfterDynamic = null;
         public DynamicResetTime ResetAfterDynamic { get { return _resetAfterDynamic; } internal set { _resetAfterDynamic = value; } }
 
-        protected String _resetMethod = "";
-        public String ResetMethod { get { return _resetMethod; } internal set { _resetMethod = value; } }
+        protected string _resetMethod = "";
+        public string ResetMethod { get { return _resetMethod; } internal set { _resetMethod = value; } }
 
         protected List<RPCVariable> _resetMethodParams = new List<RPCVariable>();
         public IReadOnlyList<RPCVariable> ResetMethodParams { get { return _resetMethodParams.AsReadOnly(); } }
@@ -101,12 +101,12 @@ namespace HomegearLib
         protected DateTime _lastReset;
         public DateTime LastReset { get { return _lastReset; } internal set { _lastReset = value; } }
 
-        internal TriggeredEvent(RPCController rpc, String id) : base(rpc, id)
+        internal TriggeredEvent(RPCController rpc, string id) : base(rpc, id)
         {
 
         }
 
-        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerId, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue = null) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue = null) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;
@@ -115,7 +115,7 @@ namespace HomegearLib
             _triggerValue = triggerValue;
         }
 
-        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerId, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue, Int32 resetAfter, String resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, int resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;
@@ -127,7 +127,7 @@ namespace HomegearLib
             _resetMethodParams = resetMethodParams;
         }
 
-        public TriggeredEvent(String id, Boolean enabled, String eventMethod, List<RPCVariable> eventMethodParams, Int32 peerId, Int32 peerChannel, String variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, String resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;

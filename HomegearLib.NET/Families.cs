@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class Families : ReadOnlyDictionary<Int32, Family>, IDisposable
+    public class Families : ReadOnlyDictionary<int, Family>, IDisposable
     {
         RPCController _rpc = null;
 
-        public Families(RPCController rpc, Dictionary<Int32, Family> families) : base(families)
+        public Families(RPCController rpc, Dictionary<int, Family> families) : base(families)
         {
             _rpc = rpc;
         }
@@ -16,7 +16,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<Int32, Family> family in _dictionary)
+            foreach (KeyValuePair<int, Family> family in _dictionary)
             {
                 family.Value.Dispose();
             }

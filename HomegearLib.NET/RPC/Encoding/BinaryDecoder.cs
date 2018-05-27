@@ -12,10 +12,10 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public Int64 DecodeInteger64(byte[] encodedData, ref uint position)
+        public long DecodeInteger64(byte[] encodedData, ref uint position)
         {
             if (position + 8 > encodedData.Length) return 0;
-            Int64 value = ((Int64)encodedData[position] << 56) + ((Int64)encodedData[position + 1] << 48) + ((Int64)encodedData[position + 2] << 40) + ((Int64)encodedData[position + 3] << 32) + ((Int64)encodedData[position + 4] << 24) + ((Int64)encodedData[position + 5] << 16) + ((Int64)encodedData[position + 6] << 8) + (Int64)encodedData[position + 7];
+            long value = ((long)encodedData[position] << 56) + ((long)encodedData[position + 1] << 48) + ((long)encodedData[position + 2] << 40) + ((long)encodedData[position + 3] << 32) + ((long)encodedData[position + 4] << 24) + ((long)encodedData[position + 5] << 16) + ((long)encodedData[position + 6] << 8) + (long)encodedData[position + 7];
             position += 8;
             return value;
         }
@@ -32,7 +32,7 @@ namespace HomegearLib.RPC.Encoding
         {
             int stringLength = DecodeInteger(encodedData, ref position);
             if (position + stringLength > encodedData.Length || stringLength == 0) return "";
-            String value = System.Text.UTF8Encoding.UTF8.GetString(encodedData, (int)position, stringLength);
+            string value = System.Text.UTF8Encoding.UTF8.GetString(encodedData, (int)position, stringLength);
             position += (uint)stringLength;
             return value;
         }
@@ -62,7 +62,7 @@ namespace HomegearLib.RPC.Encoding
             double result = (mantissa / (double)0x40000000) * Math.Pow(2, exponent);
             if (result != 0)
             {
-                Int32 digits = (Int32)Math.Floor(Math.Log10(Math.Abs(result)) + 1);
+                int digits = (int)Math.Floor(Math.Log10(Math.Abs(result)) + 1);
                 double factor = Math.Pow(10, 9 - digits);
                 result = Math.Floor(result * factor + 0.5) / factor;
             }

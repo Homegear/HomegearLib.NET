@@ -15,17 +15,17 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
-        protected Int32 _peerId = 0;
-        public Int32 PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected int _peerId = 0;
+        public int PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
-        protected Int32 _channel = -1;
-        public Int32 Channel { get { return _channel; } internal set { _channel = value; } }
+        protected int _channel = -1;
+        public int Channel { get { return _channel; } internal set { _channel = value; } }
 
-        protected Int32 _remotePeerID = 0;
-        public Int32 RemotePeerID { get { return _remotePeerID; } internal set { _remotePeerID = value; } }
+        protected int _remotePeerID = 0;
+        public int RemotePeerID { get { return _remotePeerID; } internal set { _remotePeerID = value; } }
 
-        protected Int32 _remoteChannel = -1;
-        public Int32 RemoteChannel { get { return _remoteChannel; } internal set { _remoteChannel = value; } }
+        protected int _remoteChannel = -1;
+        public int RemoteChannel { get { return _remoteChannel; } internal set { _remoteChannel = value; } }
 
         LinkFlags _flags = LinkFlags.fNone;
         public LinkFlags Flags { get { return _flags; } internal set { _flags = value; } }
@@ -33,8 +33,8 @@ namespace HomegearLib
         bool _isSender = false;
         public bool IsSender { get { return _isSender; } internal set { _isSender = value; } }
 
-        protected String _name = "";
-        public String Name
+        protected string _name = "";
+        public string Name
         {
             get { return _name; }
             set
@@ -48,13 +48,13 @@ namespace HomegearLib
         /// Sets the name of the link without calling any RPC functions
         /// </summary>
         /// <param name="name">The name of the link</param>
-        internal void SetNameNoRPC(String name)
+        internal void SetNameNoRPC(string name)
         {
             _name = name;
         }
 
-        protected String _description = "";
-        public String Description
+        protected string _description = "";
+        public string Description
         {
             get { return _description; }
             set
@@ -68,7 +68,7 @@ namespace HomegearLib
         /// Sets the description of the link without calling any RPC functions
         /// </summary>
         /// <param name="name">The description of the link</param>
-        internal void SetDescriptionNoRPC(String description)
+        internal void SetDescriptionNoRPC(string description)
         {
             _description = description;
         }
@@ -91,7 +91,7 @@ namespace HomegearLib
             }
         }
 
-        public Link(RPCController rpc, Int32 peerId, Int32 channel, Int32 remotePeerID, Int32 remoteChannel, bool isSender)
+        public Link(RPCController rpc, int peerId, int channel, int remotePeerID, int remoteChannel, bool isSender)
         {
             _rpc = rpc;
             _peerId = peerId;

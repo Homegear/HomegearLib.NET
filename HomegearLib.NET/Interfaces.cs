@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class Interfaces : ReadOnlyDictionary<String, Interface>, IDisposable
+    public class Interfaces : ReadOnlyDictionary<string, Interface>, IDisposable
     {
         RPCController _rpc = null;
 
-        public Interfaces(RPCController rpc, Dictionary<String, Interface> interfaces) : base(interfaces)
+        public Interfaces(RPCController rpc, Dictionary<string, Interface> interfaces) : base(interfaces)
         {
             _rpc = rpc;
         }
@@ -16,7 +16,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<String, Interface> physicalInterface in _dictionary)
+            foreach (KeyValuePair<string, Interface> physicalInterface in _dictionary)
             {
                 physicalInterface.Value.Dispose();
             }
@@ -26,8 +26,8 @@ namespace HomegearLib
         {
             interfacesRemoved = false;
             interfacesAdded = false;
-            Dictionary<String, Interface> interfaces = _rpc.ListInterfaces();
-            foreach (KeyValuePair<String, Interface> interfacePair in interfaces)
+            Dictionary<string, Interface> interfaces = _rpc.ListInterfaces();
+            foreach (KeyValuePair<string, Interface> interfacePair in interfaces)
             {
                 if (!_dictionary.ContainsKey(interfacePair.Key))
                 {
@@ -47,7 +47,7 @@ namespace HomegearLib
                 physicalInterface.LastPacketSent = interfacePair.Value.LastPacketSent;
                 physicalInterface.Connected = interfacePair.Value.Connected;
             }
-            foreach (KeyValuePair<String, Interface> interfacePair in _dictionary)
+            foreach (KeyValuePair<string, Interface> interfacePair in _dictionary)
             {
                 if (!interfaces.ContainsKey(interfacePair.Key))
                 {

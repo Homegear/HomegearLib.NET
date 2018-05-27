@@ -112,10 +112,10 @@ namespace HomegearLib.RPC.Encoding
             return rpcArray;
         }
 
-        Dictionary<String, RPCVariable> DecodeStruct(byte[] packet, ref uint position)
+        Dictionary<string, RPCVariable> DecodeStruct(byte[] packet, ref uint position)
         {
             int structLength = _decoder.DecodeInteger(packet, ref position);
-            Dictionary<String, RPCVariable> rpcStruct = new Dictionary<string, RPCVariable>();
+            Dictionary<string, RPCVariable> rpcStruct = new Dictionary<string, RPCVariable>();
             for (int i = 0; i < structLength; i++)
             {
                 string name = _decoder.DecodeString(packet, ref position);

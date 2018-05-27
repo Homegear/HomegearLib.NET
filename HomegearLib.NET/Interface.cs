@@ -7,11 +7,11 @@ namespace HomegearLib
         private Family _family = null;
         public Family Family { get { return _family; } internal set { _family = value; } }
 
-        private String _id = "";
-        public String ID { get { return _id; } internal set { _id = value; } }
+        private string _id = "";
+        public string ID { get { return _id; } internal set { _id = value; } }
 
-        private String _type = "";
-        public String Type { get { return _type; } internal set { _type = value; } }
+        private string _type = "";
+        public string Type { get { return _type; } internal set { _type = value; } }
 
         private bool _connected = false;
         public bool Connected { get { return _connected; } internal set { _connected = value; } }
@@ -19,22 +19,22 @@ namespace HomegearLib
         private bool _default = false;
         public bool Default { get { return _default; } internal set { _default = value; } }
 
-        private Int32 _physicalAddress = 0;
-        public Int32 PhysicalAddress { get { return _physicalAddress; } internal set { _physicalAddress = value; } }
+        private int _physicalAddress = 0;
+        public int PhysicalAddress { get { return _physicalAddress; } internal set { _physicalAddress = value; } }
 
-        private String _ipAddress = "";
-        public String IpAddress { get { return _ipAddress; } internal set { _ipAddress = value; } }
+        private string _ipAddress = "";
+        public string IpAddress { get { return _ipAddress; } internal set { _ipAddress = value; } }
 
-        private String _hostname = "";
-        public String Hostname { get { return _hostname; } internal set { _hostname = value; } }
+        private string _hostname = "";
+        public string Hostname { get { return _hostname; } internal set { _hostname = value; } }
 
-        private Int32 _lastPacketReceived = 0;
-        public Int32 LastPacketReceived { get { return _lastPacketReceived; } internal set { _lastPacketReceived = value; } }
+        private int _lastPacketReceived = 0;
+        public int LastPacketReceived { get { return _lastPacketReceived; } internal set { _lastPacketReceived = value; } }
 
-        private Int32 _lastPacketSent = 0;
-        public Int32 LastPacketSent { get { return _lastPacketSent; } internal set { _lastPacketSent = value; } }
+        private int _lastPacketSent = 0;
+        public int LastPacketSent { get { return _lastPacketSent; } internal set { _lastPacketSent = value; } }
 
-        public Interface(Family family, String id, String type)
+        public Interface(Family family, string id, string type)
         {
             _family = family;
             _id = id;
