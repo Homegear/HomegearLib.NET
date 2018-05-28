@@ -9,7 +9,6 @@ namespace Events
     class Program
     {
         static ManualResetEvent _connectedEvent = new ManualResetEvent(false);
-        static ManualResetEvent _callbackConnectedEvent = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
@@ -51,7 +50,6 @@ namespace Events
 
             Console.WriteLine("Connecting to Homegear...");
             _connectedEvent.WaitOne();
-            _callbackConnectedEvent.WaitOne();
 
             if (!rpc.IsConnected)
             {
