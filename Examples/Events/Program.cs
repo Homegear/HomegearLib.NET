@@ -16,21 +16,6 @@ namespace Events
             Console.Write("Please enter the hostname or IP address of your server running Homegear: ");
             string homegearHost = Console.ReadLine();
 
-            Console.Write("Please enter the hostname or IP address of the computer, this program runs on: ");
-            string callbackHost = Console.ReadLine();
-
-            Console.Write("Please enter the port number, the callback event server should listen on: ");
-            string callbackPortString = Console.ReadLine();
-            Int32 callbackPort = 0;
-            if (!Int32.TryParse(callbackPortString, out callbackPort))
-            {
-                Console.WriteLine("Could not parse port number.");
-                Environment.Exit(1);
-            }
-
-            Console.Write("Make sure, your firewall allows connections to the provided port.");
-            Console.ReadLine();
-
             #region Without SSL support
             RPCController rpc = new RPCController
                                 (
