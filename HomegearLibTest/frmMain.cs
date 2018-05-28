@@ -424,7 +424,7 @@ namespace HomegearLibTest
         private void frmHaupt_FormClosing(object sender, FormClosingEventArgs e)
         {
             _closing = true;
-            if (_homegear != null) _homegear.Dispose();
+            _homegear?.Dispose();
         }
 
         /*private void button1_Click(object sender, EventArgs e)

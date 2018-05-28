@@ -291,14 +291,14 @@ namespace HomegearLib
 
         void _rpc_HomegearError(RPCController sender, int level, string message)
         {
-            if (HomegearError != null) HomegearError(this, level, message);
+            HomegearError?.Invoke(this, level, message);
         }
 
         private void _rpc_OnNewEvent(RPCController sender, string id, EventType type, int peerId, int channelIndex, string variable)
         {
             if (type == EventType.Timed)
             {
-                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Events);
+                ReloadRequired?.Invoke(this, ReloadType.Events);
             }
             else
             {
@@ -306,7 +306,7 @@ namespace HomegearLib
                 Device device = Devices[peerId];
                 if (!device.Channels.ContainsKey(channelIndex)) return;
                 Channel channel = device.Channels[channelIndex];
-                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Events);
+                DeviceReloadRequired?.Invoke(this, device, channel, DeviceReloadType.Events);
             }
         }
 
@@ -317,7 +317,7 @@ namespace HomegearLib
                 if (!TimedEvents.ContainsKey(id)) return;
                 Event currentEvent = TimedEvents[id];
                 _rpc.GetEvent(currentEvent);
-                if (EventUpdated != null) EventUpdated(this, currentEvent);
+                EventUpdated?.Invoke(this, currentEvent);
             }
             else
             {
@@ -326,7 +326,7 @@ namespace HomegearLib
                 if (!device.Events.ContainsKey(id)) return;
                 Event currentEvent = device.Events[id];
                 _rpc.GetEvent(currentEvent);
-                if (EventUpdated != null) EventUpdated(this, currentEvent);
+                EventUpdated?.Invoke(this, currentEvent);
             }
         }
 
@@ -342,13 +342,13 @@ namespace HomegearLib
                 Device device = Devices[peerId];
                 if (!device.Channels.ContainsKey(channelIndex)) return;
                 Channel channel = device.Channels[channelIndex];
-                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Events);
+                DeviceReloadRequired?.Invoke(this, device, channel, DeviceReloadType.Events);
             }
         }
 
         private void _rpc_OnNewDevices(RPCController sender)
         {
-            if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
+            ReloadRequired?.Invoke(this, ReloadType.Full);
         }
 
         private void OnDevice_VariableReloadRequired(Device device, Channel channel, bool reloadDevice)
@@ -387,11 +387,11 @@ namespace HomegearLib
             }
             else if (flags == RPCUpdateDeviceFlags.rpcTeam)
             {
-                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Team);
+                DeviceReloadRequired?.Invoke(this, device, channel, DeviceReloadType.Team);
             }
             else
             {
-                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, channel, DeviceReloadType.Links);
+                DeviceReloadRequired?.Invoke(this, device, channel, DeviceReloadType.Links);
             }
         }
 
@@ -411,7 +411,7 @@ namespace HomegearLib
             if (!deviceChannel.Variables.ContainsKey(value.Name)) return;
             Variable variable = deviceChannel.Variables[value.Name];
             variable.SetValue(value);
-            if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, deviceChannel, variable);
+            DeviceVariableUpdated?.Invoke(this, device, deviceChannel, variable);
         }
 
         private void _rpc_OnSystemVariableUpdated(RPCController sender, SystemVariable value)
@@ -420,25 +420,25 @@ namespace HomegearLib
             if (!SystemVariables.ContainsKey(value.Name))
             {
                 System.Diagnostics.Debug.Write("Position 1");
-                if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
+                ReloadRequired?.Invoke(this, ReloadType.SystemVariables);
                 return;
             }
             SystemVariable variable = SystemVariables[value.Name];
             variable.SetValue(value);
-            if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
+            SystemVariableUpdated?.Invoke(this, variable);
         }
 
         private void _rpc_Pong(RPCController sender, string id)
         {
             if (_disposing) return;
-            if (Pong != null) Pong(this, id);
+            Pong?.Invoke(this, id);
         }
 
         private void _rpc_OnSystemVariableDeleted(RPCController sender)
         {
             if (_disposing) return;
             System.Diagnostics.Debug.Write("Position 2");
-            if (ReloadRequired != null) ReloadRequired(this, ReloadType.SystemVariables);
+            ReloadRequired?.Invoke(this, ReloadType.SystemVariables);
         }
 
         private void _rpc_OnMetadataUpdated(RPCController sender, int peerId, MetadataVariable value)
@@ -446,18 +446,18 @@ namespace HomegearLib
             if (_disposing) return;
             if (!Devices.ContainsKey(peerId))
             {
-                if (ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
+                ReloadRequired?.Invoke(this, ReloadType.Full);
                 return;
             }
             Device device = Devices[peerId];
             if (!device.Metadata.ContainsKey(value.Name))
             {
-                if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, null, DeviceReloadType.Metadata);
+                DeviceReloadRequired?.Invoke(this, device, null, DeviceReloadType.Metadata);
                 return;
             }
             MetadataVariable variable = device.Metadata[value.Name];
             variable.SetValue(value);
-            if (MetadataUpdated != null) MetadataUpdated(this, device, variable);
+            MetadataUpdated?.Invoke(this, device, variable);
         }
 
         private void _rpc_OnMetadataDeleted(RPCController sender, int peerId)
@@ -465,7 +465,7 @@ namespace HomegearLib
             if (_disposing) return;
             if (!Devices.ContainsKey(peerId)) return;
             Device device = Devices[peerId];
-            if (DeviceReloadRequired != null) DeviceReloadRequired(this, device, null, DeviceReloadType.Metadata);
+            DeviceReloadRequired?.Invoke(this, device, null, DeviceReloadType.Metadata);
         }
 
         private void _rpc_InitCompleted(RPCController sender)
@@ -482,14 +482,14 @@ namespace HomegearLib
                     if (!Devices.ContainsKey(variable.PeerID)) continue;
                     Device device = Devices[variable.PeerID];
                     if (!device.Channels.ContainsKey(variable.Channel)) continue;
-                    if (DeviceVariableUpdated != null) DeviceVariableUpdated(this, device, device.Channels[variable.Channel], variable);
+                    DeviceVariableUpdated?.Invoke(this, device, device.Channels[variable.Channel], variable);
                 }
                 bool systemVariablesAdded = false;
                 bool systemVariablesDeleted = false;
                 List<SystemVariable> updatedSystemVariables = SystemVariables.Update(out systemVariablesDeleted, out systemVariablesAdded);
                 foreach (SystemVariable variable in updatedSystemVariables)
                 {
-                    if (SystemVariableUpdated != null) SystemVariableUpdated(this, variable);
+                    SystemVariableUpdated?.Invoke(this, variable);
                 }
                 if ((devicesDeleted || newDevices) && ReloadRequired != null) ReloadRequired(this, ReloadType.Full);
                 else
@@ -508,9 +508,9 @@ namespace HomegearLib
                             List<MetadataVariable> updatedMetadata = devicePair.Value.Metadata.Update(out variablesDeleted, out variablesAdded);
                             foreach (MetadataVariable variable in updatedMetadata)
                             {
-                                if (MetadataUpdated != null) MetadataUpdated(this, devicePair.Value, variable);
+                                MetadataUpdated?.Invoke(this, devicePair.Value, variable);
                             }
-                            if ((variablesAdded || variablesDeleted) && DeviceReloadRequired != null) DeviceReloadRequired(this, devicePair.Value, null, DeviceReloadType.Metadata);
+                            if (variablesAdded || variablesDeleted) DeviceReloadRequired?.Invoke(this, devicePair.Value, null, DeviceReloadType.Metadata);
                         }
                     }
                 }
@@ -556,7 +556,7 @@ namespace HomegearLib
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {
-                if (!_connectThread.Join(2000))
+                if (!_connectThread.Join(100))
                 {
                     try
                     {
@@ -576,19 +576,20 @@ namespace HomegearLib
             if (_disposing) return;
             _version = "";
             _rpc.Clear();
-            if (_families != null) _families.Dispose();
+            _families?.Dispose();
             _families = new Families(_rpc, _rpc.Families);
-            if (_devices != null) _devices.Dispose();
+            _devices?.Dispose();
             _devices = new Devices(_rpc, _rpc.Devices);
             foreach (KeyValuePair<int, Device> device in _devices)
             {
                 device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
             }
-            if (_interfaces != null) _interfaces.Dispose();
+
+            _interfaces?.Dispose();
             _interfaces = null;
-            if (_systemVariables != null) _systemVariables.Dispose();
+            _systemVariables?.Dispose();
             _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
-            if (Reloaded != null) Reloaded(this);
+            Reloaded?.Invoke(this);
         }
 
         private void Connect()
@@ -606,7 +607,7 @@ namespace HomegearLib
                     }
                     catch (Exception ex)
                     {
-                        if (ConnectError != null) ConnectError(this, ex.Message, ex.StackTrace);
+                        ConnectError?.Invoke(this, ex.Message, ex.StackTrace);
                         Thread.Sleep(10000);
                     }
                 }
