@@ -19,7 +19,7 @@ namespace HomegearLibTest
         {
             _homegear = homegear;
             InitializeComponent();
-            foreach (KeyValuePair<Int32, Family> family in homegear.Families)
+            foreach (KeyValuePair<Int64, Family> family in homegear.Families)
             {
                 cbFamilies.Items.Add(family.Value);
             }
@@ -57,7 +57,11 @@ namespace HomegearLibTest
 
         private void bnStart_Click(object sender, EventArgs e)
         {
-            if(cbFamilies.SelectedItem == null) return;
+            if(cbFamilies.SelectedItem == null)
+            {
+                return;
+            }
+
             _homegear.Devices.StartSniffing((Family)cbFamilies.SelectedItem);
             timer.Start();
         }
@@ -70,9 +74,13 @@ namespace HomegearLibTest
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if(cbFamilies.SelectedItem == null) return;
-            Dictionary<Int32, SniffedDeviceInfo> sniffedDevices = _homegear.Devices.GetSniffedDevices((Family)cbFamilies.SelectedItem);
-            foreach(KeyValuePair<Int32, SniffedDeviceInfo> deviceInfo in sniffedDevices)
+            if(cbFamilies.SelectedItem == null)
+            {
+                return;
+            }
+
+            Dictionary<Int64, SniffedDeviceInfo> sniffedDevices = _homegear.Devices.GetSniffedDevices((Family)cbFamilies.SelectedItem);
+            foreach(KeyValuePair<Int64, SniffedDeviceInfo> deviceInfo in sniffedDevices)
             {
                 String address = deviceInfo.Key.ToString("X");
                 TreeNode node = null;
@@ -106,12 +114,20 @@ namespace HomegearLibTest
             try
             {
                 TreeNode node = tvDevices.SelectedNode;
-                if (node == null) return;
+                if (node == null)
+                {
+                    return;
+                }
+
                 frmCreateDevice dialog = new frmCreateDevice(_homegear, (Int32)node.Tag, (Family)cbFamilies.SelectedItem);
                 if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
-                    if (dialog.Family == null) return;
-                    Int32 peerId = _homegear.Devices.Create(dialog.Family, dialog.DeviceType, dialog.SerialNumber, dialog.Address, dialog.FirmwareVersion);
+                    if (dialog.Family == null)
+                    {
+                        return;
+                    }
+
+                    Int64 peerId = _homegear.Devices.Create(dialog.Family, dialog.DeviceType, dialog.SerialNumber, dialog.Address, dialog.FirmwareVersion);
                     MessageBox.Show(this, "Device created successfully.", "Device created. ID: " + peerId, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }

@@ -8,8 +8,8 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private int _peerId;
-        public int PeerID { get { return _peerId; } }
+        private long _peerId;
+        public long PeerID { get { return _peerId; } }
 
         private string _name;
         public string Name { get { return _name; } }
@@ -25,27 +25,23 @@ namespace HomegearLib
             set
             {
                 _stringValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
-        public override int IntegerValue
+        public override long IntegerValue
         {
             get { return _integerValue; }
             set
             {
                 _integerValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
-            }
-        }
-
-        public override long IntegerValue64
-        {
-            get { return _integerValue64; }
-            set
-            {
-                _integerValue64 = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
@@ -55,7 +51,10 @@ namespace HomegearLib
             set
             {
                 _booleanValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
@@ -65,7 +64,10 @@ namespace HomegearLib
             set
             {
                 _floatValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
@@ -75,7 +77,10 @@ namespace HomegearLib
             set
             {
                 _arrayValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
@@ -85,11 +90,14 @@ namespace HomegearLib
             set
             {
                 _structValue = value;
-                if (_rpc != null) _rpc.SetMetadata(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetMetadata(this);
+                }
             }
         }
 
-        public MetadataVariable(int peerId, string name, RPCVariable variable)
+        public MetadataVariable(long peerId, string name, RPCVariable variable)
         {
             _peerId = peerId;
             _name = name;
@@ -97,7 +105,7 @@ namespace HomegearLib
             SetValue(variable);
         }
 
-        internal MetadataVariable(RPCController rpc, int peerId, string name, RPCVariable variable)
+        internal MetadataVariable(RPCController rpc, long peerId, string name, RPCVariable variable)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -106,14 +114,14 @@ namespace HomegearLib
             SetValue(variable);
         }
 
-        public MetadataVariable(int peerId, string name, RPCVariableType type)
+        public MetadataVariable(long peerId, string name, RPCVariableType type)
         {
             _peerId = peerId;
             _name = name;
             _type = type;
         }
 
-        public MetadataVariable(int peerId, string name, int value)
+        public MetadataVariable(long peerId, string name, int value)
         {
             _peerId = peerId;
             _name = name;
@@ -121,7 +129,23 @@ namespace HomegearLib
             _integerValue = value;
         }
 
-        public MetadataVariable(int peerId, string name, uint value)
+        public MetadataVariable(long peerId, string name, uint value)
+        {
+            _peerId = peerId;
+            _name = name;
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = value;
+        }
+
+        public MetadataVariable(long peerId, string name, long value)
+        {
+            _peerId = peerId;
+            _name = name;
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = value;
+        }
+
+        public MetadataVariable(long peerId, string name, ulong value)
         {
             _peerId = peerId;
             _name = name;
@@ -129,31 +153,15 @@ namespace HomegearLib
             _integerValue = (int)value;
         }
 
-        public MetadataVariable(int peerId, string name, long value)
-        {
-            _peerId = peerId;
-            _name = name;
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = value;
-        }
-
-        public MetadataVariable(int peerId, string name, ulong value)
-        {
-            _peerId = peerId;
-            _name = name;
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (int)value;
-        }
-
-        public MetadataVariable(int peerId, string name, byte value)
+        public MetadataVariable(long peerId, string name, byte value)
         {
             _peerId = peerId;
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (int)value;
+            _integerValue = value;
         }
 
-        public MetadataVariable(int peerId, string name, string value)
+        public MetadataVariable(long peerId, string name, string value)
         {
             _peerId = peerId;
             _name = name;
@@ -161,7 +169,7 @@ namespace HomegearLib
             _stringValue = value;
         }
 
-        public MetadataVariable(int peerId, string name, bool value)
+        public MetadataVariable(long peerId, string name, bool value)
         {
             _peerId = peerId;
             _name = name;
@@ -169,7 +177,7 @@ namespace HomegearLib
             _booleanValue = value;
         }
 
-        public MetadataVariable(int peerId, string name, double value)
+        public MetadataVariable(long peerId, string name, double value)
         {
             _peerId = peerId;
             _name = name;

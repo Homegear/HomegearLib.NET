@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class Channels : ReadOnlyDictionary<int, Channel>, IDisposable
+    public class Channels : ReadOnlyDictionary<long, Channel>, IDisposable
     {
         RPCController _rpc = null;
 
-        public Channels(RPCController rpc, Dictionary<int, Channel> channels) : base(channels)
+        public Channels(RPCController rpc, Dictionary<long, Channel> channels) : base(channels)
         {
             _rpc = rpc;
         }
@@ -16,7 +16,7 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<int, Channel> channel in _dictionary)
+            foreach (KeyValuePair<long, Channel> channel in _dictionary)
             {
                 channel.Value.Dispose();
             }

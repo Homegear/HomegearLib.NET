@@ -17,14 +17,14 @@ namespace HomegearLib.RPC
     {
         public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, int cipherStrength = -1);
         public delegate void DisconnectedEventHandler(RPCClient sender);
-        public delegate void HomegearErrorEventHandler(RPCClient sender, int level, string message);
-        public delegate void RPCEventEventHandler(RPCClient sender, int peerId, int channel, string parameterName, RPCVariable value);
+        public delegate void HomegearErrorEventHandler(RPCClient sender, long level, string message);
+        public delegate void RPCEventEventHandler(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value);
         public delegate void NewDevicesEventHandler(RPCClient sender);
         public delegate void DevicesDeletedEventHandler(RPCClient sender);
-        public delegate void UpdateDeviceEventHandler(RPCClient sender, int peerId, int channel, int flags);
-        public delegate void NewEventEventHandler(RPCClient sender, string id, int eventType, int peerId, int channel, string variableName);
-        public delegate void EventDeletedEventHandler(RPCClient sender, string id, int eventType, int peerId, int channel, string variableName);
-        public delegate void UpdateEventEventHandler(RPCClient sender, string id, int eventType, int peerId, int channel, string variableName);
+        public delegate void UpdateDeviceEventHandler(RPCClient sender, long peerId, long channel, long flags);
+        public delegate void NewEventEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
+        public delegate void EventDeletedEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
+        public delegate void UpdateEventEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
 
         #region "Events"
         public event ConnectedEventHandler Connected;
@@ -57,16 +57,22 @@ namespace HomegearLib.RPC
 
         public bool Ssl { get; } = false;
 
-        public Dictionary<int, Device> KnownDevices { get; set; } = null;
-
         private SecureString _authString = null;
         private readonly Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private readonly Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
 
         public bool IsConnected => _client != null && _client.Connected;
 
-        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null) return _sslStream.CipherAlgorithm; else return CipherAlgorithmType.Null; } }
-        public int CipherStrength { get { if (_sslStream != null) return _sslStream.CipherStrength; else return -1; } }
+        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null) { return _sslStream.CipherAlgorithm;
+                }
+                else
+                {
+                    return CipherAlgorithmType.Null; } } }
+        public int CipherStrength { get { if (_sslStream != null) { return _sslStream.CipherStrength;
+                }
+                else
+                {
+                    return -1; } } }
         
         public RPCClient(string hostname, int port, SSLClientInfo sslInfo = null)
         {
@@ -103,14 +109,25 @@ namespace HomegearLib.RPC
         
         public bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (sslPolicyErrors == SslPolicyErrors.None) return true;
-            else if (!_sslInfo.VerifyCertificate && (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors || sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)) return true;
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
+                return true;
+            }
+            else if (!_sslInfo.VerifyCertificate && (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors || sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch))
+            {
+                return true;
+            }
+
             return false;
         }
 
         public void Connect()
         {
-            if (_connecting) return;
+            if (_connecting)
+            {
+                return;
+            }
+
             try
             {
                 _client?.Close();
@@ -202,21 +219,52 @@ namespace HomegearLib.RPC
             {
                 try
                 {
-                    if (_client == null || !_client.Connected || _stopThread) break;
-                    if (bytesReceived >= 8) bytesReceived = 0;
-                    if (Ssl) bytesReceived += _sslStream.Read(buffer, bytesReceived, buffer.Length - bytesReceived);
-                    else bytesReceived += _client.Client.Receive(buffer, bytesReceived, buffer.Length - bytesReceived, SocketFlags.None);
-                    if (bytesReceived < 8) continue;
+                    if (_client == null || !_client.Connected || _stopThread)
+                    {
+                        break;
+                    }
+
+                    if (bytesReceived >= 8)
+                    {
+                        bytesReceived = 0;
+                    }
+
+                    if (Ssl)
+                    {
+                        bytesReceived += _sslStream.Read(buffer, bytesReceived, buffer.Length - bytesReceived);
+                    }
+                    else
+                    {
+                        bytesReceived += _client.Client.Receive(buffer, bytesReceived, buffer.Length - bytesReceived, SocketFlags.None);
+                    }
+
+                    if (bytesReceived < 8)
+                    {
+                        continue;
+                    }
+
                     bufferPos = 0;
                     while (bufferPos == 0 || bufferPos + dataSize + 8 < bytesReceived)
                     {
                         if (packet == null && buffer[bufferPos] == 'B' && buffer[bufferPos + 1] == 'i' && buffer[bufferPos + 2] == 'n')
                         {
                             dataSize = (uint)((buffer[bufferPos + 4] << 24) + (buffer[bufferPos + 5] << 16) + (buffer[bufferPos + 6] << 8) + buffer[bufferPos + 7]);
-                            if (dataSize == 0) continue;
-                            if (dataSize > 104857600) continue;
+                            if (dataSize == 0)
+                            {
+                                continue;
+                            }
+
+                            if (dataSize > 104857600)
+                            {
+                                continue;
+                            }
+
                             packetLength = (uint)bytesReceived - 8;
-                            if (packetLength > dataSize) packetLength = dataSize;
+                            if (packetLength > dataSize)
+                            {
+                                packetLength = dataSize;
+                            }
+
                             packet = new byte[dataSize + 8];
                             Array.Copy(buffer, bufferPos, packet, 0, ((dataSize + 8) > bytesReceived) ? bytesReceived : (int)dataSize + 8);
                         }
@@ -254,7 +302,10 @@ namespace HomegearLib.RPC
                 }
                 catch (IOException ex)
                 {
-                    if (ex.HResult == -2146232800) continue;
+                    if (ex.HResult == -2146232800)
+                    {
+                        continue;
+                    }
                     else
                     {
                         System.Diagnostics.Debug.WriteLine(ex.Message);
@@ -270,7 +321,11 @@ namespace HomegearLib.RPC
             {
                 int bytesSent = 1024;
                 int bytesToSend = 0;
-                if (_client == null || !_client.Connected || _stopThread) return;
+                if (_client == null || !_client.Connected || _stopThread)
+                {
+                    return;
+                }
+
                 for (int i = 0; i < packet.Length; i += bytesSent)
                 {
                     bytesToSend = (i + 1024 >= packet.Length) ? packet.Length - i : 1024;
@@ -279,29 +334,37 @@ namespace HomegearLib.RPC
                         _sslStream.Write(packet, i, bytesToSend);
                         _sslStream.Flush();
                     }
-                    else bytesSent = _client.Client.Send(packet, i, bytesToSend, SocketFlags.None);
+                    else
+                    {
+                        bytesSent = _client.Client.Send(packet, i, bytesToSend, SocketFlags.None);
+                    }
                 }
             }
         }
         
         private void ProcessPacket(byte[] packet)
         {
-            if (packet == null || packet.Length < 8) return;
+            if (packet == null || packet.Length < 8)
+            {
+                return;
+            }
+
             if ((packet[3] & 1) != 1) //Request
             {
                 string methodName = "";
                 List<RPCVariable> parameters = _rpcDecoder.DecodeRequest(packet, ref methodName);
                 RPCVariable response = new RPCVariable(RPCVariableType.rpcVoid);
                 if (methodName == "")
+                {
                     response = RPCVariable.CreateError(-1,
                         "Packet is not well formed: " + BitConverter.ToString(packet));
+                }
                 else if (methodName == "system.listMethods")
                 {
                     response = new RPCVariable(RPCVariableType.rpcArray);
                     response.ArrayValue.Add(new RPCVariable("system.multicall"));
                     response.ArrayValue.Add(new RPCVariable("error"));
                     response.ArrayValue.Add(new RPCVariable("event"));
-                    response.ArrayValue.Add(new RPCVariable("listDevices"));
                     response.ArrayValue.Add(new RPCVariable("newDevices"));
                     response.ArrayValue.Add(new RPCVariable("updateDevice"));
                     response.ArrayValue.Add(new RPCVariable("deleteDevices"));
@@ -313,13 +376,25 @@ namespace HomegearLib.RPC
                 {
                     foreach (RPCVariable method in parameters[0].ArrayValue)
                     {
-                        if (method.Type != RPCVariableType.rpcStruct || method.StructValue.Count() != 2) continue;
-                        if (method.StructValue["methodName"].StringValue != "event") continue;
+                        if (method.Type != RPCVariableType.rpcStruct || method.StructValue.Count() != 2)
+                        {
+                            continue;
+                        }
+
+                        if (method.StructValue["methodName"].StringValue != "event")
+                        {
+                            continue;
+                        }
+
                         List<RPCVariable> eventParams = method.StructValue["params"].ArrayValue;
                         if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString ||
                             eventParams[1].Type != RPCVariableType.rpcInteger ||
                             eventParams[2].Type != RPCVariableType.rpcInteger ||
-                            eventParams[3].Type != RPCVariableType.rpcString) continue;
+                            eventParams[3].Type != RPCVariableType.rpcString)
+                        {
+                            continue;
+                        }
+
                         RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue,
                             eventParams[3].StringValue, eventParams[4]);
                     }
@@ -329,19 +404,6 @@ namespace HomegearLib.RPC
                          parameters[2].Type == RPCVariableType.rpcString)
                 {
                     HomegearError?.Invoke(this, parameters[1].IntegerValue, parameters[2].StringValue);
-                }
-                else if (methodName == "listDevices")
-                {
-                    response = new RPCVariable(RPCVariableType.rpcArray);
-                    if (KnownDevices != null)
-                    {
-                        foreach (int peerId in KnownDevices.Keys)
-                        {
-                            RPCVariable device = new RPCVariable(RPCVariableType.rpcStruct);
-                            device.StructValue.Add("ID", new RPCVariable(peerId));
-                            response.ArrayValue.Add(device);
-                        }
-                    }
                 }
                 else if (methodName == "newDevices")
                 {
@@ -367,20 +429,35 @@ namespace HomegearLib.RPC
                     if (parameters.Count == 2 && parameters[1].Type == RPCVariableType.rpcStruct)
                     {
                         string id = "";
-                        int type = -1;
-                        int peerId = 0;
-                        int channel = -1;
+                        long type = -1;
+                        long peerId = 0;
+                        long channel = -1;
                         string variable = "";
                         if (parameters[1].StructValue.ContainsKey("ID"))
+                        {
                             id = parameters[1].StructValue["ID"].StringValue;
+                        }
+
                         if (parameters[1].StructValue.ContainsKey("TYPE"))
+                        {
                             type = parameters[1].StructValue["TYPE"].IntegerValue;
+                        }
+
                         if (parameters[1].StructValue.ContainsKey("PEERID"))
+                        {
                             peerId = parameters[1].StructValue["PEERID"].IntegerValue;
+                        }
+
                         if (parameters[1].StructValue.ContainsKey("PEERCHANNEL"))
+                        {
                             channel = parameters[1].StructValue["PEERCHANNEL"].IntegerValue;
+                        }
+
                         if (parameters[1].StructValue.ContainsKey("VARIABLE"))
+                        {
                             variable = parameters[1].StructValue["VARIABLE"].StringValue;
+                        }
+
                         NewEvent?.Invoke(this, id, type, peerId, channel, variable);
                     }
                 }
@@ -422,8 +499,16 @@ namespace HomegearLib.RPC
                         {
                             try
                             {
-                                if (_client == null || !_client.Connected) Connect();
-                                if (Ssl && _sslStream == null) Connect();
+                                if (_client == null || !_client.Connected)
+                                {
+                                    Connect();
+                                }
+
+                                if (Ssl && _sslStream == null)
+                                {
+                                    Connect();
+                                }
+
                                 break;
                             }
                             catch (HomegearRPCClientSSLException ex)
@@ -432,7 +517,10 @@ namespace HomegearLib.RPC
                             }
                             catch (HomegearRPCClientException ex)
                             {
-                                if (i == 2) throw ex;
+                                if (i == 2)
+                                {
+                                    throw ex;
+                                }
                             }
                             Thread.Sleep(1000);
                         }
@@ -455,27 +543,42 @@ namespace HomegearLib.RPC
                         {
                             Disconnect();
                             if (j == _maxTries - 1)
+                            {
                                 throw new HomegearRPCClientException(
                                     "Error calling rpc method " + name + " on server " + _hostname + " and port " +
                                     _port.ToString() + ": " + ex.Message);
+                            }
+
                             continue;
                         }
                         catch (SocketException ex)
                         {
                             Disconnect();
                             if (j == _maxTries - 1)
+                            {
                                 throw new HomegearRPCClientException(
                                     "Error calling rpc method " + name + " on server " + _hostname + " and port " +
                                     _port.ToString() + ": " + ex.Message);
+                            }
+
                             continue;
                         }
 
-                        if (_responseReceived.WaitOne(15000) && _rpcResponse != null) break;
+                        if (_responseReceived.WaitOne(15000) && _rpcResponse != null)
+                        {
+                            break;
+                        }
                     }
                     
-                    if(_rpcResponse == null) return RPCVariable.CreateError(-32501, "No response received.");
-                    
-                    if (_rpcResponse.ErrorStruct && _rpcResponse.StructValue["faultCode"].IntegerValue == -32603) _client.Close(); //Unauthorized
+                    if(_rpcResponse == null)
+                    {
+                        return RPCVariable.CreateError(-32501, "No response received.");
+                    }
+
+                    if (_rpcResponse.ErrorStruct && _rpcResponse.StructValue["faultCode"].IntegerValue == -32603)
+                    {
+                        _client.Close(); //Unauthorized
+                    }
 
                     return _rpcResponse;
                 }
@@ -484,7 +587,6 @@ namespace HomegearLib.RPC
             {
                 throw ex;
             }
-            return RPCVariable.CreateError(-32500, "Unknown application error.");
         }
     }
 }

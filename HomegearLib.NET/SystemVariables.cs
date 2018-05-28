@@ -53,7 +53,10 @@ namespace HomegearLib
                     variablesDeleted = true;
                     continue;
                 }
-                if (variable.SetValue(variablePair.Value)) changedVariables.Add(variable);
+                if (variable.SetValue(variablePair.Value))
+                {
+                    changedVariables.Add(variable);
+                }
             }
             foreach (KeyValuePair<string, SystemVariable> variablePair in _dictionary)
             {

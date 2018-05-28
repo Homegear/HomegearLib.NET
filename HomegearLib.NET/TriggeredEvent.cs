@@ -32,11 +32,11 @@ namespace HomegearLib
 
     public class DynamicResetTime
     {
-        private int _initialTime = 30;
-        public int InitialTime { get { return _initialTime; } internal set { _initialTime = value; } }
+        private long _initialTime = 30;
+        public long InitialTime { get { return _initialTime; } internal set { _initialTime = value; } }
 
-        private int _resetAfter = 300;
-        public int ResetAfter { get { return _resetAfter; } internal set { _resetAfter = value; } }
+        private long _resetAfter = 300;
+        public long ResetAfter { get { return _resetAfter; } internal set { _resetAfter = value; } }
 
         private DynamicResetTimeOperation _operation = DynamicResetTimeOperation.Multiplication;
         public DynamicResetTimeOperation Operation { get { return _operation; } internal set { _operation = value; } }
@@ -44,15 +44,15 @@ namespace HomegearLib
         private double _factor = 2;
         public double Factor { get { return _factor; } internal set { _factor = value; } }
 
-        private int _limit = 300;
-        public int Limit { get { return _limit; } internal set { _limit = value; } }
+        private long _limit = 300;
+        public long Limit { get { return _limit; } internal set { _limit = value; } }
 
-        private int _currentTime;
-        public int CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
+        private long _currentTime;
+        public long CurrentTime { get { return _currentTime; } internal set { _currentTime = value; } }
 
         internal DynamicResetTime() { }
 
-        public DynamicResetTime(int initialTime, DynamicResetTimeOperation operation, double factor, int limit, int resetAfter)
+        public DynamicResetTime(long initialTime, DynamicResetTimeOperation operation, double factor, long limit, long resetAfter)
         {
             _initialTime = initialTime;
             _operation = operation;
@@ -64,11 +64,11 @@ namespace HomegearLib
 
     public class TriggeredEvent : Event
     {
-        protected int _peerId;
-        public int PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected long _peerId;
+        public long PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
-        protected int _peerChannel;
-        public int PeerChannel { get { return _peerChannel; } internal set { _peerChannel = value; } }
+        protected long _peerChannel;
+        public long PeerChannel { get { return _peerChannel; } internal set { _peerChannel = value; } }
 
         protected string _variableName;
         public string VariableName { get { return _variableName; } internal set { _variableName = value; } }
@@ -79,8 +79,8 @@ namespace HomegearLib
         protected RPCVariable _triggerValue = null;
         public RPCVariable TriggerValue { get { return _triggerValue; } internal set { _triggerValue = value; } }
 
-        protected int _resetAfterStatic = 0;
-        public int ResetAfterStatic { get { return _resetAfterStatic; } internal set { _resetAfterStatic = value; } }
+        protected long _resetAfterStatic = 0;
+        public long ResetAfterStatic { get { return _resetAfterStatic; } internal set { _resetAfterStatic = value; } }
 
         protected DynamicResetTime _resetAfterDynamic = null;
         public DynamicResetTime ResetAfterDynamic { get { return _resetAfterDynamic; } internal set { _resetAfterDynamic = value; } }
@@ -106,7 +106,7 @@ namespace HomegearLib
 
         }
 
-        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue = null) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, long peerId, long peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue = null) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;
@@ -115,7 +115,7 @@ namespace HomegearLib
             _triggerValue = triggerValue;
         }
 
-        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, int resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, long peerId, long peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, int resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;
@@ -127,7 +127,7 @@ namespace HomegearLib
             _resetMethodParams = resetMethodParams;
         }
 
-        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, int peerId, int peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
+        public TriggeredEvent(string id, bool enabled, string eventMethod, List<RPCVariable> eventMethodParams, long peerId, long peerChannel, string variableName, EventTrigger trigger, RPCVariable triggerValue, DynamicResetTime resetAfter, string resetMethod, List<RPCVariable> resetMethodParams) : base(id, enabled, eventMethod, eventMethodParams)
         {
             _peerId = peerId;
             _peerChannel = peerChannel;
@@ -141,7 +141,11 @@ namespace HomegearLib
 
         public override bool Update(Event value)
         {
-            if (!(value is TriggeredEvent)) return true;
+            if (!(value is TriggeredEvent))
+            {
+                return true;
+            }
+
             bool changed = false;
             TriggeredEvent e = (TriggeredEvent)value;
             base.Update(value);

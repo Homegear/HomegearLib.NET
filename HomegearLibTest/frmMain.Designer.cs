@@ -33,6 +33,36 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tvDevices = new System.Windows.Forms.TreeView();
+            this.pnChannel = new System.Windows.Forms.Panel();
+            this.txtChannelName = new System.Windows.Forms.TextBox();
+            this.label89 = new System.Windows.Forms.Label();
+            this.bnSetTeam = new System.Windows.Forms.Button();
+            this.txtChannelTeamChannel = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.txtChannelTeamID = new System.Windows.Forms.TextBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.txtChannelGroupedWith = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.txtChannelTeamMembers = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.txtChannelTeamTag = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.txtChannelTeam = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.txtChannelLinkTargetRoles = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txtChannelLinkSourceRoles = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtChannelDirection = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.txtChannelAESActive = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.txtChannelTypeString = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.txtChannelIndex = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.txtChannelPeerID = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
             this.pnInterface = new System.Windows.Forms.Panel();
             this.txtInterfaceHostname = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -176,54 +206,12 @@
             this.label74 = new System.Windows.Forms.Label();
             this.txtEventID = new System.Windows.Forms.TextBox();
             this.label76 = new System.Windows.Forms.Label();
-            this.pnChannel = new System.Windows.Forms.Panel();
-            this.bnSetTeam = new System.Windows.Forms.Button();
-            this.txtChannelTeamChannel = new System.Windows.Forms.TextBox();
-            this.label60 = new System.Windows.Forms.Label();
-            this.txtChannelTeamID = new System.Windows.Forms.TextBox();
-            this.label63 = new System.Windows.Forms.Label();
-            this.txtChannelGroupedWith = new System.Windows.Forms.TextBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.txtChannelTeamMembers = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
-            this.txtChannelTeamTag = new System.Windows.Forms.TextBox();
-            this.label37 = new System.Windows.Forms.Label();
-            this.txtChannelTeam = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.txtChannelLinkTargetRoles = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.txtChannelLinkSourceRoles = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.txtChannelDirection = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.txtChannelAESActive = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.txtChannelTypeString = new System.Windows.Forms.TextBox();
-            this.label39 = new System.Windows.Forms.Label();
-            this.txtChannelIndex = new System.Windows.Forms.TextBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.txtChannelPeerID = new System.Windows.Forms.TextBox();
-            this.label43 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtHomegearPort = new System.Windows.Forms.TextBox();
             this.chkSSL = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtCallbackHostname = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtListenIP = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtListenPort = new System.Windows.Forms.TextBox();
             this.gbSSL = new System.Windows.Forms.GroupBox();
             this.chkVerifyCertificate = new System.Windows.Forms.CheckBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.txtCertificatePassword = new System.Windows.Forms.TextBox();
-            this.txtCertificatePath = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.txtCallbackPassword = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtCallbackUsername = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtHomegearPassword = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -261,8 +249,6 @@
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
-            this.txtChannelName = new System.Windows.Forms.TextBox();
-            this.label89 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -271,6 +257,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnChannel.SuspendLayout();
             this.pnInterface.SuspendLayout();
             this.pnHomegear.SuspendLayout();
             this.pnMetadata.SuspendLayout();
@@ -279,7 +266,6 @@
             this.pnDevice.SuspendLayout();
             this.pnTriggeredEvent.SuspendLayout();
             this.pnTimedEvent.SuspendLayout();
-            this.pnChannel.SuspendLayout();
             this.gbSSL.SuspendLayout();
             this.cmDevices.SuspendLayout();
             this.cmDevice.SuspendLayout();
@@ -303,7 +289,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(1236, 168);
+            this.txtLog.Size = new System.Drawing.Size(1236, 193);
             this.txtLog.TabIndex = 0;
             // 
             // splitContainer1
@@ -311,7 +297,7 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(18, 249);
+            this.splitContainer1.Location = new System.Drawing.Point(18, 200);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -323,8 +309,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer1.Size = new System.Drawing.Size(1236, 816);
-            this.splitContainer1.SplitterDistance = 642;
+            this.splitContainer1.Size = new System.Drawing.Size(1236, 928);
+            this.splitContainer1.SplitterDistance = 729;
             this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -350,7 +336,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnTriggeredEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnTimedEvent);
-            this.splitContainer2.Size = new System.Drawing.Size(1236, 642);
+            this.splitContainer2.Size = new System.Drawing.Size(1236, 729);
             this.splitContainer2.SplitterDistance = 407;
             this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 0;
@@ -361,11 +347,329 @@
             this.tvDevices.Location = new System.Drawing.Point(0, 0);
             this.tvDevices.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tvDevices.Name = "tvDevices";
-            this.tvDevices.Size = new System.Drawing.Size(407, 642);
+            this.tvDevices.Size = new System.Drawing.Size(407, 729);
             this.tvDevices.TabIndex = 0;
             this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
             this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
             this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            // 
+            // pnChannel
+            // 
+            this.pnChannel.Controls.Add(this.txtChannelName);
+            this.pnChannel.Controls.Add(this.label89);
+            this.pnChannel.Controls.Add(this.bnSetTeam);
+            this.pnChannel.Controls.Add(this.txtChannelTeamChannel);
+            this.pnChannel.Controls.Add(this.label60);
+            this.pnChannel.Controls.Add(this.txtChannelTeamID);
+            this.pnChannel.Controls.Add(this.label63);
+            this.pnChannel.Controls.Add(this.txtChannelGroupedWith);
+            this.pnChannel.Controls.Add(this.label40);
+            this.pnChannel.Controls.Add(this.txtChannelTeamMembers);
+            this.pnChannel.Controls.Add(this.label38);
+            this.pnChannel.Controls.Add(this.txtChannelTeamTag);
+            this.pnChannel.Controls.Add(this.label37);
+            this.pnChannel.Controls.Add(this.txtChannelTeam);
+            this.pnChannel.Controls.Add(this.label36);
+            this.pnChannel.Controls.Add(this.txtChannelLinkTargetRoles);
+            this.pnChannel.Controls.Add(this.label35);
+            this.pnChannel.Controls.Add(this.txtChannelLinkSourceRoles);
+            this.pnChannel.Controls.Add(this.label34);
+            this.pnChannel.Controls.Add(this.txtChannelDirection);
+            this.pnChannel.Controls.Add(this.label33);
+            this.pnChannel.Controls.Add(this.txtChannelAESActive);
+            this.pnChannel.Controls.Add(this.label32);
+            this.pnChannel.Controls.Add(this.txtChannelTypeString);
+            this.pnChannel.Controls.Add(this.label39);
+            this.pnChannel.Controls.Add(this.txtChannelIndex);
+            this.pnChannel.Controls.Add(this.label42);
+            this.pnChannel.Controls.Add(this.txtChannelPeerID);
+            this.pnChannel.Controls.Add(this.label43);
+            this.pnChannel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnChannel.Location = new System.Drawing.Point(0, 0);
+            this.pnChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnChannel.Name = "pnChannel";
+            this.pnChannel.Size = new System.Drawing.Size(823, 729);
+            this.pnChannel.TabIndex = 2;
+            this.pnChannel.Visible = false;
+            // 
+            // txtChannelName
+            // 
+            this.txtChannelName.BackColor = System.Drawing.SystemColors.Window;
+            this.txtChannelName.Location = new System.Drawing.Point(99, 41);
+            this.txtChannelName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelName.Name = "txtChannelName";
+            this.txtChannelName.Size = new System.Drawing.Size(327, 26);
+            this.txtChannelName.TabIndex = 45;
+            this.txtChannelName.TextChanged += new System.EventHandler(this.txtChannelName_TextChanged);
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(4, 46);
+            this.label89.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(55, 20);
+            this.label89.TabIndex = 44;
+            this.label89.Text = "Name:";
+            // 
+            // bnSetTeam
+            // 
+            this.bnSetTeam.Location = new System.Drawing.Point(437, 431);
+            this.bnSetTeam.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.bnSetTeam.Name = "bnSetTeam";
+            this.bnSetTeam.Size = new System.Drawing.Size(94, 35);
+            this.bnSetTeam.TabIndex = 43;
+            this.bnSetTeam.Text = "Set Team";
+            this.bnSetTeam.UseVisualStyleBackColor = true;
+            this.bnSetTeam.Click += new System.EventHandler(this.bnSetTeam_Click);
+            // 
+            // txtChannelTeamChannel
+            // 
+            this.txtChannelTeamChannel.Location = new System.Drawing.Point(309, 394);
+            this.txtChannelTeamChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTeamChannel.Name = "txtChannelTeamChannel";
+            this.txtChannelTeamChannel.ReadOnly = true;
+            this.txtChannelTeamChannel.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelTeamChannel.TabIndex = 42;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(227, 399);
+            this.label60.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(81, 20);
+            this.label60.TabIndex = 41;
+            this.label60.Text = "Team Ch.:";
+            // 
+            // txtChannelTeamID
+            // 
+            this.txtChannelTeamID.Location = new System.Drawing.Point(99, 394);
+            this.txtChannelTeamID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTeamID.Name = "txtChannelTeamID";
+            this.txtChannelTeamID.ReadOnly = true;
+            this.txtChannelTeamID.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelTeamID.TabIndex = 40;
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(3, 399);
+            this.label63.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(74, 20);
+            this.label63.TabIndex = 39;
+            this.label63.Text = "Team ID:";
+            // 
+            // txtChannelGroupedWith
+            // 
+            this.txtChannelGroupedWith.Location = new System.Drawing.Point(99, 571);
+            this.txtChannelGroupedWith.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelGroupedWith.Name = "txtChannelGroupedWith";
+            this.txtChannelGroupedWith.ReadOnly = true;
+            this.txtChannelGroupedWith.Size = new System.Drawing.Size(326, 26);
+            this.txtChannelGroupedWith.TabIndex = 38;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(3, 576);
+            this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(95, 20);
+            this.label40.TabIndex = 37;
+            this.label40.Text = "Grouped w.:";
+            // 
+            // txtChannelTeamMembers
+            // 
+            this.txtChannelTeamMembers.Location = new System.Drawing.Point(99, 474);
+            this.txtChannelTeamMembers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTeamMembers.Multiline = true;
+            this.txtChannelTeamMembers.Name = "txtChannelTeamMembers";
+            this.txtChannelTeamMembers.ReadOnly = true;
+            this.txtChannelTeamMembers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChannelTeamMembers.Size = new System.Drawing.Size(326, 86);
+            this.txtChannelTeamMembers.TabIndex = 36;
+            // 
+            // label38
+            // 
+            this.label38.Location = new System.Drawing.Point(3, 474);
+            this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(96, 65);
+            this.label38.TabIndex = 35;
+            this.label38.Text = "Team Members:";
+            // 
+            // txtChannelTeamTag
+            // 
+            this.txtChannelTeamTag.Location = new System.Drawing.Point(99, 434);
+            this.txtChannelTeamTag.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTeamTag.Name = "txtChannelTeamTag";
+            this.txtChannelTeamTag.ReadOnly = true;
+            this.txtChannelTeamTag.Size = new System.Drawing.Size(326, 26);
+            this.txtChannelTeamTag.TabIndex = 34;
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(3, 439);
+            this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(84, 20);
+            this.label37.TabIndex = 33;
+            this.label37.Text = "Team Tag:";
+            // 
+            // txtChannelTeam
+            // 
+            this.txtChannelTeam.Location = new System.Drawing.Point(99, 354);
+            this.txtChannelTeam.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTeam.Name = "txtChannelTeam";
+            this.txtChannelTeam.ReadOnly = true;
+            this.txtChannelTeam.Size = new System.Drawing.Size(326, 26);
+            this.txtChannelTeam.TabIndex = 32;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(3, 359);
+            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(79, 20);
+            this.label36.TabIndex = 31;
+            this.label36.Text = "Team SN:";
+            // 
+            // txtChannelLinkTargetRoles
+            // 
+            this.txtChannelLinkTargetRoles.Location = new System.Drawing.Point(99, 258);
+            this.txtChannelLinkTargetRoles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelLinkTargetRoles.Multiline = true;
+            this.txtChannelLinkTargetRoles.Name = "txtChannelLinkTargetRoles";
+            this.txtChannelLinkTargetRoles.ReadOnly = true;
+            this.txtChannelLinkTargetRoles.Size = new System.Drawing.Size(326, 86);
+            this.txtChannelLinkTargetRoles.TabIndex = 30;
+            // 
+            // label35
+            // 
+            this.label35.Location = new System.Drawing.Point(3, 258);
+            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(96, 65);
+            this.label35.TabIndex = 29;
+            this.label35.Text = "Link Target Roles:";
+            // 
+            // txtChannelLinkSourceRoles
+            // 
+            this.txtChannelLinkSourceRoles.Location = new System.Drawing.Point(99, 161);
+            this.txtChannelLinkSourceRoles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelLinkSourceRoles.Multiline = true;
+            this.txtChannelLinkSourceRoles.Name = "txtChannelLinkSourceRoles";
+            this.txtChannelLinkSourceRoles.ReadOnly = true;
+            this.txtChannelLinkSourceRoles.Size = new System.Drawing.Size(326, 86);
+            this.txtChannelLinkSourceRoles.TabIndex = 28;
+            // 
+            // label34
+            // 
+            this.label34.Location = new System.Drawing.Point(3, 161);
+            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(96, 65);
+            this.label34.TabIndex = 27;
+            this.label34.Text = "Link Source Roles:";
+            // 
+            // txtChannelDirection
+            // 
+            this.txtChannelDirection.Location = new System.Drawing.Point(309, 121);
+            this.txtChannelDirection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelDirection.Name = "txtChannelDirection";
+            this.txtChannelDirection.ReadOnly = true;
+            this.txtChannelDirection.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelDirection.TabIndex = 19;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(227, 125);
+            this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(76, 20);
+            this.label33.TabIndex = 18;
+            this.label33.Text = "Direction:";
+            // 
+            // txtChannelAESActive
+            // 
+            this.txtChannelAESActive.Location = new System.Drawing.Point(99, 121);
+            this.txtChannelAESActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelAESActive.Name = "txtChannelAESActive";
+            this.txtChannelAESActive.ReadOnly = true;
+            this.txtChannelAESActive.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelAESActive.TabIndex = 17;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 125);
+            this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(93, 20);
+            this.label32.TabIndex = 16;
+            this.label32.Text = "AES Active:";
+            // 
+            // txtChannelTypeString
+            // 
+            this.txtChannelTypeString.Location = new System.Drawing.Point(99, 81);
+            this.txtChannelTypeString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelTypeString.Name = "txtChannelTypeString";
+            this.txtChannelTypeString.ReadOnly = true;
+            this.txtChannelTypeString.Size = new System.Drawing.Size(326, 26);
+            this.txtChannelTypeString.TabIndex = 15;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(3, 85);
+            this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(93, 20);
+            this.label39.TabIndex = 14;
+            this.label39.Text = "Type String:";
+            // 
+            // txtChannelIndex
+            // 
+            this.txtChannelIndex.Location = new System.Drawing.Point(310, 5);
+            this.txtChannelIndex.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelIndex.Name = "txtChannelIndex";
+            this.txtChannelIndex.ReadOnly = true;
+            this.txtChannelIndex.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelIndex.TabIndex = 9;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(228, 9);
+            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(52, 20);
+            this.label42.TabIndex = 8;
+            this.label42.Text = "Index:";
+            // 
+            // txtChannelPeerID
+            // 
+            this.txtChannelPeerID.Location = new System.Drawing.Point(100, 5);
+            this.txtChannelPeerID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtChannelPeerID.Name = "txtChannelPeerID";
+            this.txtChannelPeerID.ReadOnly = true;
+            this.txtChannelPeerID.Size = new System.Drawing.Size(116, 26);
+            this.txtChannelPeerID.TabIndex = 7;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(4, 9);
+            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(82, 20);
+            this.label43.TabIndex = 6;
+            this.label43.Text = "Device ID:";
             // 
             // pnInterface
             // 
@@ -393,7 +697,7 @@
             this.pnInterface.Location = new System.Drawing.Point(0, 0);
             this.pnInterface.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnInterface.Name = "pnInterface";
-            this.pnInterface.Size = new System.Drawing.Size(823, 642);
+            this.pnInterface.Size = new System.Drawing.Size(823, 729);
             this.pnInterface.TabIndex = 31;
             this.pnInterface.Visible = false;
             // 
@@ -599,7 +903,7 @@
             this.pnHomegear.Location = new System.Drawing.Point(0, 0);
             this.pnHomegear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnHomegear.Name = "pnHomegear";
-            this.pnHomegear.Size = new System.Drawing.Size(823, 642);
+            this.pnHomegear.Size = new System.Drawing.Size(823, 729);
             this.pnHomegear.TabIndex = 33;
             this.pnHomegear.Visible = false;
             // 
@@ -614,7 +918,7 @@
             this.txtServiceMessages.Name = "txtServiceMessages";
             this.txtServiceMessages.ReadOnly = true;
             this.txtServiceMessages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtServiceMessages.Size = new System.Drawing.Size(800, 521);
+            this.txtServiceMessages.Size = new System.Drawing.Size(800, 608);
             this.txtServiceMessages.TabIndex = 7;
             // 
             // label59
@@ -678,7 +982,7 @@
             this.pnMetadata.Location = new System.Drawing.Point(0, 0);
             this.pnMetadata.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnMetadata.Name = "pnMetadata";
-            this.pnMetadata.Size = new System.Drawing.Size(823, 642);
+            this.pnMetadata.Size = new System.Drawing.Size(823, 729);
             this.pnMetadata.TabIndex = 32;
             this.pnMetadata.Visible = false;
             // 
@@ -763,7 +1067,7 @@
             this.pnSystemVariable.Location = new System.Drawing.Point(0, 0);
             this.pnSystemVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnSystemVariable.Name = "pnSystemVariable";
-            this.pnSystemVariable.Size = new System.Drawing.Size(823, 642);
+            this.pnSystemVariable.Size = new System.Drawing.Size(823, 729);
             this.pnSystemVariable.TabIndex = 31;
             this.pnSystemVariable.Visible = false;
             // 
@@ -869,7 +1173,7 @@
             this.pnVariable.Location = new System.Drawing.Point(0, 0);
             this.pnVariable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnVariable.Name = "pnVariable";
-            this.pnVariable.Size = new System.Drawing.Size(823, 642);
+            this.pnVariable.Size = new System.Drawing.Size(823, 729);
             this.pnVariable.TabIndex = 0;
             this.pnVariable.Visible = false;
             // 
@@ -1186,7 +1490,7 @@
             this.pnDevice.Location = new System.Drawing.Point(0, 0);
             this.pnDevice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnDevice.Name = "pnDevice";
-            this.pnDevice.Size = new System.Drawing.Size(823, 642);
+            this.pnDevice.Size = new System.Drawing.Size(823, 729);
             this.pnDevice.TabIndex = 1;
             this.pnDevice.Visible = false;
             // 
@@ -1455,7 +1759,7 @@
             this.pnTriggeredEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTriggeredEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTriggeredEvent.Name = "pnTriggeredEvent";
-            this.pnTriggeredEvent.Size = new System.Drawing.Size(823, 642);
+            this.pnTriggeredEvent.Size = new System.Drawing.Size(823, 729);
             this.pnTriggeredEvent.TabIndex = 45;
             this.pnTriggeredEvent.Visible = false;
             // 
@@ -1761,7 +2065,7 @@
             this.pnTimedEvent.Location = new System.Drawing.Point(0, 0);
             this.pnTimedEvent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnTimedEvent.Name = "pnTimedEvent";
-            this.pnTimedEvent.Size = new System.Drawing.Size(823, 642);
+            this.pnTimedEvent.Size = new System.Drawing.Size(823, 729);
             this.pnTimedEvent.TabIndex = 44;
             this.pnTimedEvent.Visible = false;
             // 
@@ -1902,308 +2206,10 @@
             this.label76.TabIndex = 6;
             this.label76.Text = "Event ID:";
             // 
-            // pnChannel
-            // 
-            this.pnChannel.Controls.Add(this.txtChannelName);
-            this.pnChannel.Controls.Add(this.label89);
-            this.pnChannel.Controls.Add(this.bnSetTeam);
-            this.pnChannel.Controls.Add(this.txtChannelTeamChannel);
-            this.pnChannel.Controls.Add(this.label60);
-            this.pnChannel.Controls.Add(this.txtChannelTeamID);
-            this.pnChannel.Controls.Add(this.label63);
-            this.pnChannel.Controls.Add(this.txtChannelGroupedWith);
-            this.pnChannel.Controls.Add(this.label40);
-            this.pnChannel.Controls.Add(this.txtChannelTeamMembers);
-            this.pnChannel.Controls.Add(this.label38);
-            this.pnChannel.Controls.Add(this.txtChannelTeamTag);
-            this.pnChannel.Controls.Add(this.label37);
-            this.pnChannel.Controls.Add(this.txtChannelTeam);
-            this.pnChannel.Controls.Add(this.label36);
-            this.pnChannel.Controls.Add(this.txtChannelLinkTargetRoles);
-            this.pnChannel.Controls.Add(this.label35);
-            this.pnChannel.Controls.Add(this.txtChannelLinkSourceRoles);
-            this.pnChannel.Controls.Add(this.label34);
-            this.pnChannel.Controls.Add(this.txtChannelDirection);
-            this.pnChannel.Controls.Add(this.label33);
-            this.pnChannel.Controls.Add(this.txtChannelAESActive);
-            this.pnChannel.Controls.Add(this.label32);
-            this.pnChannel.Controls.Add(this.txtChannelTypeString);
-            this.pnChannel.Controls.Add(this.label39);
-            this.pnChannel.Controls.Add(this.txtChannelIndex);
-            this.pnChannel.Controls.Add(this.label42);
-            this.pnChannel.Controls.Add(this.txtChannelPeerID);
-            this.pnChannel.Controls.Add(this.label43);
-            this.pnChannel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnChannel.Location = new System.Drawing.Point(0, 0);
-            this.pnChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pnChannel.Name = "pnChannel";
-            this.pnChannel.Size = new System.Drawing.Size(823, 642);
-            this.pnChannel.TabIndex = 2;
-            this.pnChannel.Visible = false;
-            // 
-            // bnSetTeam
-            // 
-            this.bnSetTeam.Location = new System.Drawing.Point(437, 431);
-            this.bnSetTeam.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.bnSetTeam.Name = "bnSetTeam";
-            this.bnSetTeam.Size = new System.Drawing.Size(94, 35);
-            this.bnSetTeam.TabIndex = 43;
-            this.bnSetTeam.Text = "Set Team";
-            this.bnSetTeam.UseVisualStyleBackColor = true;
-            this.bnSetTeam.Click += new System.EventHandler(this.bnSetTeam_Click);
-            // 
-            // txtChannelTeamChannel
-            // 
-            this.txtChannelTeamChannel.Location = new System.Drawing.Point(309, 394);
-            this.txtChannelTeamChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTeamChannel.Name = "txtChannelTeamChannel";
-            this.txtChannelTeamChannel.ReadOnly = true;
-            this.txtChannelTeamChannel.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelTeamChannel.TabIndex = 42;
-            // 
-            // label60
-            // 
-            this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(227, 399);
-            this.label60.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(81, 20);
-            this.label60.TabIndex = 41;
-            this.label60.Text = "Team Ch.:";
-            // 
-            // txtChannelTeamID
-            // 
-            this.txtChannelTeamID.Location = new System.Drawing.Point(99, 394);
-            this.txtChannelTeamID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTeamID.Name = "txtChannelTeamID";
-            this.txtChannelTeamID.ReadOnly = true;
-            this.txtChannelTeamID.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelTeamID.TabIndex = 40;
-            // 
-            // label63
-            // 
-            this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(3, 399);
-            this.label63.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(74, 20);
-            this.label63.TabIndex = 39;
-            this.label63.Text = "Team ID:";
-            // 
-            // txtChannelGroupedWith
-            // 
-            this.txtChannelGroupedWith.Location = new System.Drawing.Point(99, 571);
-            this.txtChannelGroupedWith.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelGroupedWith.Name = "txtChannelGroupedWith";
-            this.txtChannelGroupedWith.ReadOnly = true;
-            this.txtChannelGroupedWith.Size = new System.Drawing.Size(326, 26);
-            this.txtChannelGroupedWith.TabIndex = 38;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(3, 576);
-            this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(95, 20);
-            this.label40.TabIndex = 37;
-            this.label40.Text = "Grouped w.:";
-            // 
-            // txtChannelTeamMembers
-            // 
-            this.txtChannelTeamMembers.Location = new System.Drawing.Point(99, 474);
-            this.txtChannelTeamMembers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTeamMembers.Multiline = true;
-            this.txtChannelTeamMembers.Name = "txtChannelTeamMembers";
-            this.txtChannelTeamMembers.ReadOnly = true;
-            this.txtChannelTeamMembers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChannelTeamMembers.Size = new System.Drawing.Size(326, 86);
-            this.txtChannelTeamMembers.TabIndex = 36;
-            // 
-            // label38
-            // 
-            this.label38.Location = new System.Drawing.Point(3, 474);
-            this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(96, 65);
-            this.label38.TabIndex = 35;
-            this.label38.Text = "Team Members:";
-            // 
-            // txtChannelTeamTag
-            // 
-            this.txtChannelTeamTag.Location = new System.Drawing.Point(99, 434);
-            this.txtChannelTeamTag.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTeamTag.Name = "txtChannelTeamTag";
-            this.txtChannelTeamTag.ReadOnly = true;
-            this.txtChannelTeamTag.Size = new System.Drawing.Size(326, 26);
-            this.txtChannelTeamTag.TabIndex = 34;
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 439);
-            this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(84, 20);
-            this.label37.TabIndex = 33;
-            this.label37.Text = "Team Tag:";
-            // 
-            // txtChannelTeam
-            // 
-            this.txtChannelTeam.Location = new System.Drawing.Point(99, 354);
-            this.txtChannelTeam.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTeam.Name = "txtChannelTeam";
-            this.txtChannelTeam.ReadOnly = true;
-            this.txtChannelTeam.Size = new System.Drawing.Size(326, 26);
-            this.txtChannelTeam.TabIndex = 32;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(3, 359);
-            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(79, 20);
-            this.label36.TabIndex = 31;
-            this.label36.Text = "Team SN:";
-            // 
-            // txtChannelLinkTargetRoles
-            // 
-            this.txtChannelLinkTargetRoles.Location = new System.Drawing.Point(99, 258);
-            this.txtChannelLinkTargetRoles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelLinkTargetRoles.Multiline = true;
-            this.txtChannelLinkTargetRoles.Name = "txtChannelLinkTargetRoles";
-            this.txtChannelLinkTargetRoles.ReadOnly = true;
-            this.txtChannelLinkTargetRoles.Size = new System.Drawing.Size(326, 86);
-            this.txtChannelLinkTargetRoles.TabIndex = 30;
-            // 
-            // label35
-            // 
-            this.label35.Location = new System.Drawing.Point(3, 258);
-            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(96, 65);
-            this.label35.TabIndex = 29;
-            this.label35.Text = "Link Target Roles:";
-            // 
-            // txtChannelLinkSourceRoles
-            // 
-            this.txtChannelLinkSourceRoles.Location = new System.Drawing.Point(99, 161);
-            this.txtChannelLinkSourceRoles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelLinkSourceRoles.Multiline = true;
-            this.txtChannelLinkSourceRoles.Name = "txtChannelLinkSourceRoles";
-            this.txtChannelLinkSourceRoles.ReadOnly = true;
-            this.txtChannelLinkSourceRoles.Size = new System.Drawing.Size(326, 86);
-            this.txtChannelLinkSourceRoles.TabIndex = 28;
-            // 
-            // label34
-            // 
-            this.label34.Location = new System.Drawing.Point(3, 161);
-            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(96, 65);
-            this.label34.TabIndex = 27;
-            this.label34.Text = "Link Source Roles:";
-            // 
-            // txtChannelDirection
-            // 
-            this.txtChannelDirection.Location = new System.Drawing.Point(309, 121);
-            this.txtChannelDirection.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelDirection.Name = "txtChannelDirection";
-            this.txtChannelDirection.ReadOnly = true;
-            this.txtChannelDirection.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelDirection.TabIndex = 19;
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(227, 125);
-            this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(76, 20);
-            this.label33.TabIndex = 18;
-            this.label33.Text = "Direction:";
-            // 
-            // txtChannelAESActive
-            // 
-            this.txtChannelAESActive.Location = new System.Drawing.Point(99, 121);
-            this.txtChannelAESActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelAESActive.Name = "txtChannelAESActive";
-            this.txtChannelAESActive.ReadOnly = true;
-            this.txtChannelAESActive.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelAESActive.TabIndex = 17;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 125);
-            this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(93, 20);
-            this.label32.TabIndex = 16;
-            this.label32.Text = "AES Active:";
-            // 
-            // txtChannelTypeString
-            // 
-            this.txtChannelTypeString.Location = new System.Drawing.Point(99, 81);
-            this.txtChannelTypeString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelTypeString.Name = "txtChannelTypeString";
-            this.txtChannelTypeString.ReadOnly = true;
-            this.txtChannelTypeString.Size = new System.Drawing.Size(326, 26);
-            this.txtChannelTypeString.TabIndex = 15;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(3, 85);
-            this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(93, 20);
-            this.label39.TabIndex = 14;
-            this.label39.Text = "Type String:";
-            // 
-            // txtChannelIndex
-            // 
-            this.txtChannelIndex.Location = new System.Drawing.Point(310, 5);
-            this.txtChannelIndex.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelIndex.Name = "txtChannelIndex";
-            this.txtChannelIndex.ReadOnly = true;
-            this.txtChannelIndex.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelIndex.TabIndex = 9;
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(228, 9);
-            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(52, 20);
-            this.label42.TabIndex = 8;
-            this.label42.Text = "Index:";
-            // 
-            // txtChannelPeerID
-            // 
-            this.txtChannelPeerID.Location = new System.Drawing.Point(100, 5);
-            this.txtChannelPeerID.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelPeerID.Name = "txtChannelPeerID";
-            this.txtChannelPeerID.ReadOnly = true;
-            this.txtChannelPeerID.Size = new System.Drawing.Size(116, 26);
-            this.txtChannelPeerID.TabIndex = 7;
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(4, 9);
-            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(82, 20);
-            this.label43.TabIndex = 6;
-            this.label43.Text = "Device ID:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 14);
+            this.label1.Location = new System.Drawing.Point(14, 23);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(248, 20);
@@ -2213,7 +2219,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(432, 14);
+            this.label2.Location = new System.Drawing.Point(428, 23);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(121, 20);
@@ -2222,7 +2228,7 @@
             // 
             // txtHomegearPort
             // 
-            this.txtHomegearPort.Location = new System.Drawing.Point(562, 9);
+            this.txtHomegearPort.Location = new System.Drawing.Point(558, 18);
             this.txtHomegearPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHomegearPort.Name = "txtHomegearPort";
             this.txtHomegearPort.Size = new System.Drawing.Size(66, 26);
@@ -2234,7 +2240,7 @@
             // 
             this.chkSSL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkSSL.AutoSize = true;
-            this.chkSSL.Location = new System.Drawing.Point(986, 34);
+            this.chkSSL.Location = new System.Drawing.Point(651, 22);
             this.chkSSL.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkSSL.Name = "chkSSL";
             this.chkSSL.Size = new System.Drawing.Size(120, 24);
@@ -2243,89 +2249,21 @@
             this.chkSSL.UseVisualStyleBackColor = true;
             this.chkSSL.CheckedChanged += new System.EventHandler(this.chkSSL_CheckedChanged);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(432, 54);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(201, 20);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Callback Server Hostname:";
-            // 
-            // txtCallbackHostname
-            // 
-            this.txtCallbackHostname.Location = new System.Drawing.Point(645, 49);
-            this.txtCallbackHostname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCallbackHostname.Name = "txtCallbackHostname";
-            this.txtCallbackHostname.Size = new System.Drawing.Size(139, 26);
-            this.txtCallbackHostname.TabIndex = 9;
-            this.txtCallbackHostname.Text = "buero";
-            this.txtCallbackHostname.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 54);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(252, 20);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Callback Server Listen IP Address:";
-            // 
-            // txtListenIP
-            // 
-            this.txtListenIP.Location = new System.Drawing.Point(282, 49);
-            this.txtListenIP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtListenIP.Name = "txtListenIP";
-            this.txtListenIP.Size = new System.Drawing.Size(139, 26);
-            this.txtListenIP.TabIndex = 11;
-            this.txtListenIP.Text = "0.0.0.0";
-            this.txtListenIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(639, 14);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(156, 20);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Callback Server Port:";
-            // 
-            // txtListenPort
-            // 
-            this.txtListenPort.Location = new System.Drawing.Point(808, 9);
-            this.txtListenPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtListenPort.Name = "txtListenPort";
-            this.txtListenPort.Size = new System.Drawing.Size(66, 26);
-            this.txtListenPort.TabIndex = 13;
-            this.txtListenPort.Text = "9877";
-            this.txtListenPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // gbSSL
             // 
             this.gbSSL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSSL.Controls.Add(this.chkVerifyCertificate);
-            this.gbSSL.Controls.Add(this.label11);
-            this.gbSSL.Controls.Add(this.txtCertificatePassword);
-            this.gbSSL.Controls.Add(this.txtCertificatePath);
-            this.gbSSL.Controls.Add(this.label10);
-            this.gbSSL.Controls.Add(this.label9);
-            this.gbSSL.Controls.Add(this.txtCallbackPassword);
-            this.gbSSL.Controls.Add(this.label8);
-            this.gbSSL.Controls.Add(this.txtCallbackUsername);
             this.gbSSL.Controls.Add(this.label7);
             this.gbSSL.Controls.Add(this.txtHomegearPassword);
             this.gbSSL.Controls.Add(this.label6);
             this.gbSSL.Controls.Add(this.txtHomegearUsername);
             this.gbSSL.Enabled = false;
-            this.gbSSL.Location = new System.Drawing.Point(18, 89);
+            this.gbSSL.Location = new System.Drawing.Point(18, 62);
             this.gbSSL.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbSSL.Name = "gbSSL";
             this.gbSSL.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbSSL.Size = new System.Drawing.Size(1236, 151);
+            this.gbSSL.Size = new System.Drawing.Size(1236, 128);
             this.gbSSL.TabIndex = 14;
             this.gbSSL.TabStop = false;
             this.gbSSL.Text = "SSL Options";
@@ -2335,7 +2273,7 @@
             this.chkVerifyCertificate.AutoSize = true;
             this.chkVerifyCertificate.Checked = true;
             this.chkVerifyCertificate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkVerifyCertificate.Location = new System.Drawing.Point(736, 32);
+            this.chkVerifyCertificate.Location = new System.Drawing.Point(665, 31);
             this.chkVerifyCertificate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkVerifyCertificate.Name = "chkVerifyCertificate";
             this.chkVerifyCertificate.Size = new System.Drawing.Size(151, 24);
@@ -2343,92 +2281,10 @@
             this.chkVerifyCertificate.Text = "Verify Certificate";
             this.chkVerifyCertificate.UseVisualStyleBackColor = true;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(543, 112);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(158, 20);
-            this.label11.TabIndex = 20;
-            this.label11.Text = "Certificate Password:";
-            // 
-            // txtCertificatePassword
-            // 
-            this.txtCertificatePassword.Location = new System.Drawing.Point(711, 108);
-            this.txtCertificatePassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCertificatePassword.Name = "txtCertificatePassword";
-            this.txtCertificatePassword.PasswordChar = '•';
-            this.txtCertificatePassword.Size = new System.Drawing.Size(139, 26);
-            this.txtCertificatePassword.TabIndex = 21;
-            this.txtCertificatePassword.Text = "weltzeit";
-            this.txtCertificatePassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtCertificatePath
-            // 
-            this.txtCertificatePath.Location = new System.Drawing.Point(258, 108);
-            this.txtCertificatePath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCertificatePath.Name = "txtCertificatePath";
-            this.txtCertificatePath.Size = new System.Drawing.Size(274, 26);
-            this.txtCertificatePath.TabIndex = 19;
-            this.txtCertificatePath.Text = "homegearlib.pfx";
-            this.txtCertificatePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 112);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(236, 20);
-            this.label10.TabIndex = 18;
-            this.label10.Text = "Callback Server Certificate Path:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(372, 72);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(196, 20);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "Callback Server Password:";
-            // 
-            // txtCallbackPassword
-            // 
-            this.txtCallbackPassword.Location = new System.Drawing.Point(582, 68);
-            this.txtCallbackPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCallbackPassword.Name = "txtCallbackPassword";
-            this.txtCallbackPassword.PasswordChar = '•';
-            this.txtCallbackPassword.Size = new System.Drawing.Size(139, 26);
-            this.txtCallbackPassword.TabIndex = 17;
-            this.txtCallbackPassword.Text = "ݕݘݓݘݓݐ";
-            this.txtCallbackPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(9, 72);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(201, 20);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "Callback Server Username:";
-            // 
-            // txtCallbackUsername
-            // 
-            this.txtCallbackUsername.Location = new System.Drawing.Point(222, 68);
-            this.txtCallbackUsername.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCallbackUsername.Name = "txtCallbackUsername";
-            this.txtCallbackUsername.Size = new System.Drawing.Size(139, 26);
-            this.txtCallbackUsername.TabIndex = 15;
-            this.txtCallbackUsername.Text = "homegear";
-            this.txtCallbackUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(372, 32);
+            this.label7.Location = new System.Drawing.Point(330, 33);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 20);
@@ -2437,7 +2293,7 @@
             // 
             // txtHomegearPassword
             // 
-            this.txtHomegearPassword.Location = new System.Drawing.Point(582, 28);
+            this.txtHomegearPassword.Location = new System.Drawing.Point(499, 30);
             this.txtHomegearPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHomegearPassword.Name = "txtHomegearPassword";
             this.txtHomegearPassword.PasswordChar = '•';
@@ -2458,7 +2314,7 @@
             // 
             // txtHomegearUsername
             // 
-            this.txtHomegearUsername.Location = new System.Drawing.Point(222, 28);
+            this.txtHomegearUsername.Location = new System.Drawing.Point(183, 30);
             this.txtHomegearUsername.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHomegearUsername.Name = "txtHomegearUsername";
             this.txtHomegearUsername.Size = new System.Drawing.Size(139, 26);
@@ -2469,10 +2325,10 @@
             // bnConnect
             // 
             this.bnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnConnect.Location = new System.Drawing.Point(1115, 18);
+            this.bnConnect.Location = new System.Drawing.Point(1119, 14);
             this.bnConnect.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bnConnect.Name = "bnConnect";
-            this.bnConnect.Size = new System.Drawing.Size(140, 54);
+            this.bnConnect.Size = new System.Drawing.Size(140, 38);
             this.bnConnect.TabIndex = 15;
             this.bnConnect.Text = "Connect";
             this.bnConnect.UseVisualStyleBackColor = true;
@@ -2717,50 +2573,24 @@
             // cbHomegearHostname
             // 
             this.cbHomegearHostname.FormattingEnabled = true;
-            this.cbHomegearHostname.Location = new System.Drawing.Point(282, 11);
+            this.cbHomegearHostname.Location = new System.Drawing.Point(278, 20);
             this.cbHomegearHostname.Name = "cbHomegearHostname";
             this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
             this.cbHomegearHostname.TabIndex = 16;
-            // 
-            // txtChannelName
-            // 
-            this.txtChannelName.BackColor = System.Drawing.SystemColors.Window;
-            this.txtChannelName.Location = new System.Drawing.Point(99, 41);
-            this.txtChannelName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtChannelName.Name = "txtChannelName";
-            this.txtChannelName.Size = new System.Drawing.Size(327, 26);
-            this.txtChannelName.TabIndex = 45;
-            this.txtChannelName.TextChanged += new System.EventHandler(this.txtChannelName_TextChanged);
-            // 
-            // label89
-            // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(4, 46);
-            this.label89.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(55, 20);
-            this.label89.TabIndex = 44;
-            this.label89.Text = "Name:";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1272, 1083);
+            this.ClientSize = new System.Drawing.Size(1272, 1146);
             this.Controls.Add(this.cbHomegearHostname);
             this.Controls.Add(this.bnConnect);
             this.Controls.Add(this.gbSSL);
-            this.Controls.Add(this.txtListenPort);
             this.Controls.Add(this.chkSSL);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.txtListenIP);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.txtHomegearPort);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.txtCallbackHostname);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(1186, 730);
             this.Name = "frmMain";
@@ -2775,6 +2605,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnChannel.ResumeLayout(false);
+            this.pnChannel.PerformLayout();
             this.pnInterface.ResumeLayout(false);
             this.pnInterface.PerformLayout();
             this.pnHomegear.ResumeLayout(false);
@@ -2791,8 +2623,6 @@
             this.pnTriggeredEvent.PerformLayout();
             this.pnTimedEvent.ResumeLayout(false);
             this.pnTimedEvent.PerformLayout();
-            this.pnChannel.ResumeLayout(false);
-            this.pnChannel.PerformLayout();
             this.gbSSL.ResumeLayout(false);
             this.gbSSL.PerformLayout();
             this.cmDevices.ResumeLayout(false);
@@ -2822,26 +2652,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtHomegearPort;
         private System.Windows.Forms.CheckBox chkSSL;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtCallbackHostname;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtListenIP;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtListenPort;
         private System.Windows.Forms.GroupBox gbSSL;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtHomegearUsername;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtCallbackPassword;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txtCallbackUsername;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtHomegearPassword;
         private System.Windows.Forms.Button bnConnect;
-        private System.Windows.Forms.TextBox txtCertificatePath;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox txtCertificatePassword;
         private System.Windows.Forms.CheckBox chkVerifyCertificate;
         private System.Windows.Forms.Panel pnDevice;
         private System.Windows.Forms.Panel pnVariable;

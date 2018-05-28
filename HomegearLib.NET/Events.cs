@@ -11,8 +11,8 @@ namespace HomegearLib
         EventType _type;
         public EventType Type { get { return _type; } }
 
-        int _peerId;
-        public int PeerID { get { return _peerId; } }
+        long _peerId;
+        public long PeerID { get { return _peerId; } }
 
         public Events(RPCController rpc, Dictionary<string, Event> events, EventType type) : base(events)
         {
@@ -20,7 +20,7 @@ namespace HomegearLib
             _type = type;
         }
 
-        public Events(RPCController rpc, Dictionary<string, Event> events, int peerId) : base(events)
+        public Events(RPCController rpc, Dictionary<string, Event> events, long peerId) : base(events)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -43,8 +43,14 @@ namespace HomegearLib
 
         public void Reload()
         {
-            if (_type == EventType.Timed) _dictionary = _rpc.ListEvents(_type);
-            else _dictionary = _rpc.ListEvents(_peerId);
+            if (_type == EventType.Timed)
+            {
+                _dictionary = _rpc.ListEvents(_type);
+            }
+            else
+            {
+                _dictionary = _rpc.ListEvents(_peerId);
+            }
         }
 
         public List<Event> Update(out bool eventsDeleted, out bool eventsAdded)
@@ -61,7 +67,10 @@ namespace HomegearLib
                     continue;
                 }
                 Event currentEvent = _dictionary[eventPair.Key];
-                if (currentEvent.Update(eventPair.Value)) changedEvents.Add(currentEvent);
+                if (currentEvent.Update(eventPair.Value))
+                {
+                    changedEvents.Add(currentEvent);
+                }
             }
             foreach (KeyValuePair<string, Event> eventPair in _dictionary)
             {

@@ -33,10 +33,14 @@ namespace HomegearLibTest
 
             try
             {
-                foreach (KeyValuePair<Int32, Device> devicePair in homegear.Devices)
+                foreach (KeyValuePair<Int64, Device> devicePair in homegear.Devices)
                 {
-                    if (devicePair.Key < 0x40000000) continue;
-                    foreach(KeyValuePair<Int32, Channel> channelPair in devicePair.Value.Channels)
+                    if (devicePair.Key < 0x40000000)
+                    {
+                        continue;
+                    }
+
+                    foreach (KeyValuePair<Int64, Channel> channelPair in devicePair.Value.Channels)
                     {
                         if(channelPair.Value.TeamTag == channel.TeamTag)
                         {

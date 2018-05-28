@@ -31,13 +31,13 @@ namespace HomegearLib.RPC
             _verifyCertificate = verifyCertificate;
         }
 
-        public SSLClientInfo(string callbackHostname, string username, string password)
+        public SSLClientInfo(string username, string password)
         {
             SetUsernameFromString(username);
             SetPasswordFromString(password);
         }
 
-        public SSLClientInfo(string callbackHostname, string username, string password, bool verifyCertificate)
+        public SSLClientInfo(string username, string password, bool verifyCertificate)
         {
             SetUsernameFromString(username);
             SetPasswordFromString(password);

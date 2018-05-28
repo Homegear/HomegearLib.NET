@@ -35,10 +35,7 @@ namespace Events
             RPCController rpc = new RPCController
                                 (
                                     homegearHost,   //Hostname of your server running Homegear
-                                    2001,           //Port Homegear listens on
-                                    callbackHost,   //The hostname or ip address of the computer your program runs on
-                                    "0.0.0.0",      //The ip address the callback event server listens on
-                                    callbackPort    //The port the callback event server listens on
+                                    2001           //Port Homegear listens on
                                 );
             #endregion
 
@@ -52,18 +49,8 @@ namespace Events
                                                 "secret",
                                                 true            //Enable certificate verification
                                             );
-            //You can create the certificate file with: openssl pkcs12 -export -inkey YourPrivateKey.key -in YourCA.pem -in YourPublicCert.pem -out MyCertificate.pfx
-            SSLServerInfo sslServerInfo = new SSLServerInfo
-                                            (
-                                                "MyCertificate.pfx",    //Path to the certificate the callback server
-                //will use.
-                                                "secret",               //Certificate password
-                                                "localUser",            //The username Homegear needs to use to connect
-                //to our callback server
-                                                "localSecret"           //The password Homegear needs to use to connect
-                //to our callback server
-                                            );
-            RPCController rpc = new RPCController(homegearHost, 2003, callbackHost, "0.0.0.0", callbackPort, sslClientInfo, sslServerInfo);
+
+            RPCController rpc = new RPCController(homegearHost, 2003, sslClientInfo);
             */
             #endregion
 
@@ -71,7 +58,6 @@ namespace Events
 
             homegear.ConnectError += homegear_ConnectError;
             homegear.Reloaded += homegear_Reloaded;
-            rpc.ServerConnected += rpc_ServerConnected;
             homegear.SystemVariableUpdated += homegear_SystemVariableUpdated;
             homegear.DeviceVariableUpdated += homegear_DeviceVariableUpdated;
             homegear.MetadataUpdated += homegear_MetadataUpdated;
@@ -130,12 +116,6 @@ namespace Events
         {
             Console.WriteLine("Error connecting to Homegear: " + message);
             _connectedEvent.Set();
-        }
-
-        static void rpc_ServerConnected(RPCServer sender, System.Security.Authentication.CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, int cipherStrength = -1)
-        {
-            Console.WriteLine("Homegear successfully connected to callback event server.");
-            _callbackConnectedEvent.Set();
         }
 
         static void homegear_Reloaded(Homegear sender)

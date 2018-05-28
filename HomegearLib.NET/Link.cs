@@ -15,17 +15,17 @@ namespace HomegearLib
     {
         private RPCController _rpc = null;
 
-        protected int _peerId = 0;
-        public int PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected long _peerId = 0;
+        public long PeerID { get { return _peerId; } internal set { _peerId = value; } }
 
-        protected int _channel = -1;
-        public int Channel { get { return _channel; } internal set { _channel = value; } }
+        protected long _channel = -1;
+        public long Channel { get { return _channel; } internal set { _channel = value; } }
 
-        protected int _remotePeerID = 0;
-        public int RemotePeerID { get { return _remotePeerID; } internal set { _remotePeerID = value; } }
+        protected long _remotePeerID = 0;
+        public long RemotePeerID { get { return _remotePeerID; } internal set { _remotePeerID = value; } }
 
-        protected int _remoteChannel = -1;
-        public int RemoteChannel { get { return _remoteChannel; } internal set { _remoteChannel = value; } }
+        protected long _remoteChannel = -1;
+        public long RemoteChannel { get { return _remoteChannel; } internal set { _remoteChannel = value; } }
 
         LinkFlags _flags = LinkFlags.fNone;
         public LinkFlags Flags { get { return _flags; } internal set { _flags = value; } }
@@ -91,7 +91,7 @@ namespace HomegearLib
             }
         }
 
-        public Link(RPCController rpc, int peerId, int channel, int remotePeerID, int remoteChannel, bool isSender)
+        public Link(RPCController rpc, long peerId, long channel, long remotePeerID, long remoteChannel, bool isSender)
         {
             _rpc = rpc;
             _peerId = peerId;

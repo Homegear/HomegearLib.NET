@@ -19,9 +19,21 @@ namespace HomegearLib
             }
             set
             {
-                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tBoolean) throw new HomegearVariableTypeException("Config parameter is not of type boolean.");
+                if (_rpc == null)
+                {
+                    throw new HomegearVariableException("No RPC controller specified.");
+                }
+
+                if (!_writeable)
+                {
+                    throw new HomegearVariableReadOnlyException("Config parameter is readonly");
+                }
+
+                if (_type != VariableType.tBoolean)
+                {
+                    throw new HomegearVariableTypeException("Config parameter is not of type boolean.");
+                }
+
                 _booleanValue = value;
                 _dataPending = true;
             }
@@ -30,7 +42,7 @@ namespace HomegearLib
         /// <summary>
         /// Sets the integer value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
         /// </summary>
-        public override int IntegerValue
+        public override long IntegerValue
         {
             get
             {
@@ -38,31 +50,27 @@ namespace HomegearLib
             }
             set
             {
-                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tInteger && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
-                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
-                _integerValue = value;
-                _dataPending = true;
-            }
-        }
+                if (_rpc == null)
+                {
+                    throw new HomegearVariableException("No RPC controller specified.");
+                }
 
-        /// <summary>
-        /// Sets the integer value of the configuration parameter. After setting all parameters of the parameter set, you need to call "put" to send the data to Homegear.
-        /// </summary>
-        public override long IntegerValue64
-        {
-            get
-            {
-                return _integerValue64;
-            }
-            set
-            {
-                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tInteger64 && _type != VariableType.tEnum) throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
-                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
-                _integerValue64 = value;
+                if (!_writeable)
+                {
+                    throw new HomegearVariableReadOnlyException("Config parameter is readonly");
+                }
+
+                if (_type != VariableType.tInteger && _type != VariableType.tEnum)
+                {
+                    throw new HomegearVariableTypeException("Config parameter is not of type integer or enum.");
+                }
+
+                if ((value > _maxInteger || value < _minInteger) && !_specialIntegerValues.ContainsKey(value))
+                {
+                    throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                }
+
+                _integerValue = value;
                 _dataPending = true;
             }
         }
@@ -78,10 +86,26 @@ namespace HomegearLib
             }
             set
             {
-                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tDouble) throw new HomegearVariableTypeException("Config parameter is not of type double.");
-                if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value)) throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                if (_rpc == null)
+                {
+                    throw new HomegearVariableException("No RPC controller specified.");
+                }
+
+                if (!_writeable)
+                {
+                    throw new HomegearVariableReadOnlyException("Config parameter is readonly");
+                }
+
+                if (_type != VariableType.tDouble)
+                {
+                    throw new HomegearVariableTypeException("Config parameter is not of type double.");
+                }
+
+                if ((value > _maxDouble || value < _minDouble) && !_specialDoubleValues.ContainsKey(value))
+                {
+                    throw new HomegearVariableValueOutOfBoundsException("Value is out of bounds.");
+                }
+
                 _doubleValue = value;
                 _dataPending = true;
             }
@@ -98,31 +122,50 @@ namespace HomegearLib
             }
             set
             {
-                if (_rpc == null) throw new HomegearVariableException("No RPC controller specified.");
-                if (!_writeable) throw new HomegearVariableReadOnlyException("Config parameter is readonly");
-                if (_type != VariableType.tString) throw new HomegearVariableTypeException("Config parameter is not of type string.");
-                if (value == null) _stringValue = "";
-                else _stringValue = value;
+                if (_rpc == null)
+                {
+                    throw new HomegearVariableException("No RPC controller specified.");
+                }
+
+                if (!_writeable)
+                {
+                    throw new HomegearVariableReadOnlyException("Config parameter is readonly");
+                }
+
+                if (_type != VariableType.tString)
+                {
+                    throw new HomegearVariableTypeException("Config parameter is not of type string.");
+                }
+
+                if (value == null)
+                {
+                    _stringValue = "";
+                }
+                else
+                {
+                    _stringValue = value;
+                }
+
                 _dataPending = true;
             }
         }
 
-        public ConfigParameter(int peerId, int channel, string name) : this(null, peerId, channel, name)
+        public ConfigParameter(long peerId, long channel, string name) : this(null, peerId, channel, name)
         {
 
         }
 
-        public ConfigParameter(RPCController rpc, int peerId, int channel, string name) : base(rpc, peerId, channel, name)
+        public ConfigParameter(RPCController rpc, long peerId, long channel, string name) : base(rpc, peerId, channel, name)
         {
 
         }
 
-        internal ConfigParameter(int peerId, int channel, string name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
+        internal ConfigParameter(long peerId, long channel, string name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
         {
 
         }
 
-        internal ConfigParameter(RPCController rpc, int peerId, int channel, string name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
+        internal ConfigParameter(RPCController rpc, long peerId, long channel, string name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
         {
 
         }

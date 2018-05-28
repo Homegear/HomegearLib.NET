@@ -6,7 +6,7 @@ namespace HomegearLib.RPC.Encoding
 {
     internal class BinaryEncoder
     {
-        public void EncodeInteger(List<byte> encodedData, int value)
+        public void EncodeInteger32(List<byte> encodedData, int value)
         {
             encodedData.Add((byte)((value >> 24) & 0xFF));
             encodedData.Add((byte)((value >> 16) & 0xFF));
@@ -35,19 +35,29 @@ namespace HomegearLib.RPC.Encoding
         {
             if (value == null)
             {
-                EncodeInteger(encodedData, 0);
+                EncodeInteger32(encodedData, 0);
                 return;
             }
             byte[] stringBytes = System.Text.UTF8Encoding.UTF8.GetBytes(value);
-            EncodeInteger(encodedData, stringBytes.Length);
-            if (value.Length == 0) return;
+            EncodeInteger32(encodedData, stringBytes.Length);
+            if (value.Length == 0)
+            {
+                return;
+            }
+
             encodedData.InsertRange(encodedData.Count(), stringBytes);
         }
 
         public void EncodeBoolean(List<byte> encodedData, bool value)
         {
-            if (value) encodedData.Add(1);
-            else encodedData.Add(0);
+            if (value)
+            {
+                encodedData.Add(1);
+            }
+            else
+            {
+                encodedData.Add(0);
+            }
         }
 
         public void EncodeFloat(List<byte> encodedData, double value)
@@ -70,10 +80,14 @@ namespace HomegearLib.RPC.Encoding
                     exponent++;
                 }
             }
-            if (value < 0) temp *= -1;
+            if (value < 0)
+            {
+                temp *= -1;
+            }
+
             int mantissa = (int)Math.Round(temp * (double)0x40000000);
-            EncodeInteger(encodedData, mantissa);
-            EncodeInteger(encodedData, exponent);
+            EncodeInteger32(encodedData, mantissa);
+            EncodeInteger32(encodedData, exponent);
         }
     }
 }

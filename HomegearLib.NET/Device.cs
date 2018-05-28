@@ -23,13 +23,12 @@ namespace HomegearLib
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
         bool _descriptionRequested = false;
-        bool _infoRequested = false;
 
         private Family _family = null;
         public Family Family { get { return _family; } internal set { _family = value; } }
 
-        private int _id = -1;
-        public int ID
+        private long _id = -1;
+        public long ID
         {
             get { return _id; }
             set
@@ -48,8 +47,8 @@ namespace HomegearLib
             _id = value;
         }
 
-        private int _address = -1;
-        public int Address
+        private long _address = -1;
+        public long Address
         {
             get
             {
@@ -66,8 +65,8 @@ namespace HomegearLib
         private string _serialNumber = "";
         public string SerialNumber { get { return _serialNumber; } internal set { _serialNumber = value; } }
 
-        private int _typeID = 0;
-        public int TypeID { get { return _typeID; } internal set { _typeID = value; } }
+        private long _typeID = 0;
+        public long TypeID { get { return _typeID; } internal set { _typeID = value; } }
 
         private string _typeString = "";
         public string TypeString { get { return _typeString; } internal set { _typeString = value; } }
@@ -79,7 +78,7 @@ namespace HomegearLib
             internal set
             {
                 _channels = value;
-                foreach (KeyValuePair<int, Channel> channel in _channels)
+                foreach (KeyValuePair<long, Channel> channel in _channels)
                 {
                     channel.Value.VariableReloadRequiredEvent += Channel_OnVariableReloadRequired;
                 }
@@ -93,7 +92,11 @@ namespace HomegearLib
         {
             get
             {
-                if (_metadata == null || _metadata.Count == 0) _metadata = new MetadataVariables(_rpc, _id, _rpc.GetAllMetadata(_id));
+                if (_metadata == null || _metadata.Count == 0)
+                {
+                    _metadata = new MetadataVariables(_rpc, _id, _rpc.GetAllMetadata(_id));
+                }
+
                 return _metadata;
             }
             internal set { _metadata = value; }
@@ -104,7 +107,11 @@ namespace HomegearLib
         {
             get
             {
-                if (_events == null || _events.Count == 0) _events = new Events(_rpc, _rpc.ListEvents(_id), _id);
+                if (_events == null || _events.Count == 0)
+                {
+                    _events = new Events(_rpc, _rpc.ListEvents(_id), _id);
+                }
+
                 return _events;
             }
             internal set { _events = value; }
@@ -182,9 +189,12 @@ namespace HomegearLib
         {
             get
             {
-                foreach (KeyValuePair<int, Channel> channel in _channels)
+                foreach (KeyValuePair<long, Channel> channel in _channels)
                 {
-                    if (channel.Value.Config.ContainsKey("AES_ACTIVE") && channel.Value.Config["AES_ACTIVE"].BooleanValue) return true;
+                    if (channel.Value.Config.ContainsKey("AES_ACTIVE") && channel.Value.Config["AES_ACTIVE"].BooleanValue)
+                    {
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -221,7 +231,7 @@ namespace HomegearLib
             internal set { _availableFirmware = value; }
         }
 
-        public Device(RPCController rpc, Family family, int id)
+        public Device(RPCController rpc, Family family, long id)
         {
             _rpc = rpc;
             _family = family;
@@ -231,15 +241,17 @@ namespace HomegearLib
         public void Dispose()
         {
             _family = null;
-            if (_channels != null) _channels.Dispose();
+            if (_channels != null)
+            {
+                _channels.Dispose();
+            }
         }
 
         public void Reload()
         {
             _descriptionRequested = false;
-            _infoRequested = false;
             _metadata = null;
-            foreach (KeyValuePair<int, Channel> channel in _channels)
+            foreach (KeyValuePair<long, Channel> channel in _channels)
             {
                 channel.Value.Reload();
             }
@@ -275,7 +287,10 @@ namespace HomegearLib
 
         private void Channel_OnVariableReloadRequired(Channel sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, sender, reloadDevice);
+            if (VariableReloadRequiredEvent != null)
+            {
+                VariableReloadRequiredEvent(this, sender, reloadDevice);
+            }
         }
     }
 }

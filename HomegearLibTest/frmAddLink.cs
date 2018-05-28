@@ -33,16 +33,20 @@ namespace HomegearLibTest
 
             try
             {
-                foreach (KeyValuePair<Int32, Device> devicePair in _homegear.Devices)
+                foreach (KeyValuePair<Int64, Device> devicePair in _homegear.Devices)
                 {
                     TreeNode deviceNode = new TreeNode("Device " + devicePair.Key + ((devicePair.Value.Name != "") ? " (" + devicePair.Value.Name + ")" : ""));
-                    foreach(KeyValuePair<Int32, Channel> channelPair in devicePair.Value.Channels)
+                    foreach(KeyValuePair<Int64, Channel> channelPair in devicePair.Value.Channels)
                     {
                         if(channel.LinkSourceRoles.Length > 0)
                         {
                             foreach(String role in channel.LinkSourceRoles)
                             {
-                                if (role.Length == 0) continue;
+                                if (role.Length == 0)
+                                {
+                                    continue;
+                                }
+
                                 if (channelPair.Value.LinkTargetRoles.Contains(role))
                                 {
                                     TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString());
@@ -56,7 +60,11 @@ namespace HomegearLibTest
                         {
                             foreach (String role in channel.LinkTargetRoles)
                             {
-                                if (role.Length == 0) continue;
+                                if (role.Length == 0)
+                                {
+                                    continue;
+                                }
+
                                 if (channelPair.Value.LinkSourceRoles.Contains(role))
                                 {
                                     TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString());
@@ -67,7 +75,10 @@ namespace HomegearLibTest
                             }
                         }
                     }
-                    if (deviceNode.Nodes.Count > 0) tvLinkTo.Nodes.Add(deviceNode);
+                    if (deviceNode.Nodes.Count > 0)
+                    {
+                        tvLinkTo.Nodes.Add(deviceNode);
+                    }
                 }
             }
             catch (Exception)

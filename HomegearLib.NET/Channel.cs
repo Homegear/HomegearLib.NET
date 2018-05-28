@@ -21,11 +21,11 @@ namespace HomegearLib
 
         bool _descriptionRequested = false;
 
-        private int _peerId = 0;
-        public int PeerID { get { return _peerId; } }
+        private long _peerId = 0;
+        public long PeerID { get { return _peerId; } }
 
-        private int _index = 0;
-        public int Index { get { return _index; } }
+        private long _index = 0;
+        public long Index { get { return _index; } }
 
         private string _name;
         public string Name
@@ -60,7 +60,11 @@ namespace HomegearLib
         {
             get
             {
-                if (_variables == null || _variables.Count == 0) _variables = new Variables(_rpc, _peerId, _index);
+                if (_variables == null || _variables.Count == 0)
+                {
+                    _variables = new Variables(_rpc, _peerId, _index);
+                }
+
                 return _variables;
             }
             internal set { _variables = value; }
@@ -180,8 +184,8 @@ namespace HomegearLib
             internal set { _linkTargetRoles = value; }
         }
 
-        private int _groupedWith = -1;
-        public int GroupedWith
+        private long _groupedWith = -1;
+        public long GroupedWith
         {
             get
             {
@@ -210,8 +214,8 @@ namespace HomegearLib
             internal set { _teamSerialNumber = value; }
         }
 
-        private int _teamID = 0;
-        public int TeamID
+        private long _teamID = 0;
+        public long TeamID
         {
             get
             {
@@ -225,8 +229,8 @@ namespace HomegearLib
             internal set { _teamID = value; }
         }
 
-        private int _teamChannel = 0;
-        public int TeamChannel
+        private long _teamChannel = 0;
+        public long TeamChannel
         {
             get
             {
@@ -245,7 +249,7 @@ namespace HomegearLib
             _rpc.SetTeam(this.PeerID, this.Index);
         }
 
-        public void SetTeam(int teamID, int teamChannel)
+        public void SetTeam(long teamID, long teamChannel)
         {
             _rpc.SetTeam(this.PeerID, this.Index, teamID, teamChannel);
         }
@@ -280,7 +284,7 @@ namespace HomegearLib
             internal set { _teamMembers = value; }
         }
 
-        public Channel(RPCController rpc, int peerId, int index)
+        public Channel(RPCController rpc, long peerId, long index)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -289,8 +293,16 @@ namespace HomegearLib
 
         public void Dispose()
         {
-            if (_config != null) _config.Dispose();
-            if (_links != null) _links.Dispose();
+            if (_config != null)
+            {
+                _config.Dispose();
+            }
+
+            if (_links != null)
+            {
+                _links.Dispose();
+            }
+
             _rpc = null;
         }
 
@@ -304,7 +316,10 @@ namespace HomegearLib
 
         void Config_OnVariableReloadRequired(DeviceConfig sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null) VariableReloadRequiredEvent(this, reloadDevice);
+            if (VariableReloadRequiredEvent != null)
+            {
+                VariableReloadRequiredEvent(this, reloadDevice);
+            }
         }
     }
 }

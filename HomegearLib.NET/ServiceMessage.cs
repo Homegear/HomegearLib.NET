@@ -14,15 +14,15 @@ namespace HomegearLib
 
         public ServiceMessageType Type { get; internal set; }
         public DateTime Timestamp { get; internal set; } = DateTime.MinValue;
-        public int FamilyID { get; internal set; } = -1;
+        public long FamilyID { get; internal set; } = -1;
         public long PeerID { get; internal set; } = 0;
-        public int Channel { get; internal set; } = -1;
-        public int MessageID { get; internal set; } = -1;
+        public long Channel { get; internal set; } = -1;
+        public long MessageID { get; internal set; } = -1;
         public string Message { get; internal set; }
         public RPCVariable Data { get; internal set; } = new RPCVariable();
-        public int Value { get; internal set; } = 0;
+        public long Value { get; internal set; } = 0;
 
-        public ServiceMessage(DateTime timestamp, int messageID, string message, RPCVariable data, int value)
+        public ServiceMessage(DateTime timestamp, long messageID, string message, RPCVariable data, long value)
         {
             Type = ServiceMessageType.global;
             Timestamp = timestamp;
@@ -32,7 +32,7 @@ namespace HomegearLib
             Value = value;
         }
 
-        public ServiceMessage(DateTime timestamp, int familyId, int messageID, string message, RPCVariable data, int value)
+        public ServiceMessage(DateTime timestamp, long familyId, long messageID, string message, RPCVariable data, long value)
         {
             Type = ServiceMessageType.family;
             Timestamp = timestamp;
@@ -43,7 +43,7 @@ namespace HomegearLib
             Value = value;
         }
 
-        public ServiceMessage(DateTime timestamp, long peerId, int channel, string message, int value)
+        public ServiceMessage(DateTime timestamp, long peerId, long channel, string message, long value)
         {
             Type = ServiceMessageType.device;
             Timestamp = timestamp;

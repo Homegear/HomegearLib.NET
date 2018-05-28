@@ -5,8 +5,8 @@ namespace HomegearLib
 {
     public class Family : IDisposable
     {
-        private int _id = -1;
-        public int ID { get { return _id; } set { _id = value; } }
+        private long _id = -1;
+        public long ID { get { return _id; } set { _id = value; } }
 
         private string _name = "";
         public string Name { get { return _name; } set { _name = value; } }
@@ -18,7 +18,7 @@ namespace HomegearLib
             _pairingMethods = pairingMethods;
         }
 
-        public Family(int id, string name)
+        public Family(long id, string name)
         {
             _id = id;
             _name = name;

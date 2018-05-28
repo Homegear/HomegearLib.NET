@@ -22,27 +22,23 @@ namespace HomegearLib
             set
             {
                 _stringValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
-        public override int IntegerValue
+        public override long IntegerValue
         {
             get { return _integerValue; }
             set
             {
                 _integerValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
-            }
-        }
-
-        public override long IntegerValue64
-        {
-            get { return _integerValue64; }
-            set
-            {
-                _integerValue64 = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
@@ -52,7 +48,10 @@ namespace HomegearLib
             set
             {
                 _booleanValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
@@ -62,7 +61,10 @@ namespace HomegearLib
             set
             {
                 _floatValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
@@ -72,7 +74,10 @@ namespace HomegearLib
             set
             {
                 _arrayValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
@@ -82,7 +87,10 @@ namespace HomegearLib
             set
             {
                 _structValue = value;
-                if (_rpc != null) _rpc.SetSystemVariable(this);
+                if (_rpc != null)
+                {
+                    _rpc.SetSystemVariable(this);
+                }
             }
         }
 
@@ -124,22 +132,22 @@ namespace HomegearLib
         public SystemVariable(string name, long value)
         {
             _name = name;
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = value;
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = value;
         }
 
         public SystemVariable(string name, ulong value)
         {
             _name = name;
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (int)value;
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = (int)value;
         }
 
         public SystemVariable(string name, byte value)
         {
             _name = name;
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (int)value;
+            _integerValue = value;
         }
 
         public SystemVariable(string name, string value)

@@ -24,17 +24,14 @@ First add HomegearLib.NET.dll as reference to your project. Now you can access t
 
 ### Create a new Homegear object
 
-We need to create a RPC controller object first. The RPC controller bundles a RPC client and RPC server. The RPC client connects to your server running Homegear and is used for all RPC requests. Homegear again will connect to the RPC controller's RPC server. This connection is used to notify your program immediately on for example variable changes.
+We need to create a RPC controller object first. The controller connects to your server running Homegear and is used for all RPC requests. Homegear will also send notifications immediately over this connection on for example variable changes.
 
 ```
 //Without SSL support:
 RPCController rpc = new RPCController
 					(
 						"homegear", 	//Hostname of your server running Homegear
-						2001,			//Port Homegear listens on
-						"MyComputer",	//The hostname or ip address of the computer your program runs on
-						"0.0.0.0",		//The ip address the callback event server listens on
-						9876			//The port the callback event server listens on
+						2001
 					);
 
 //With SSL support:
@@ -46,34 +43,22 @@ SSLClientInfo sslClientInfo = new SSLClientInfo
 									"secret",
 									true			//Enable certificate verification
 								);
-//You can create the certificate file with: openssl pkcs12 -export -inkey YourPrivateKey.key -in YourCA.pem -in YourPublicCert.pem -out MyCertificate.pfx
-SSLServerInfo sslServerInfo = new SSLServerInfo
-								(
-									"MyCertificate.pfx",	//Path to the certificate the callback server
-															//will use.
-									"secret",				//Certificate password
-									"localUser",			//The username Homegear needs to use to connect
-															//to our callback server
-									"localSecret"			//The password Homegear needs to use to connect
-															//to our callback server
-								);
-RPCController rpc = new RPCController("homegear", 2003, "MyComputer", "0.0.0.0", 9876, sslClientInfo, sslServerInfo);
+
+RPCController rpc = new RPCController("homegear", 2003, sslClientInfo);
 ```
 
-Now we can instantiate a new Homegear object. Upon creation the Homegear object will connect to Homegear. The second parameter defines, whether the library starts the event server or not. When set to "true" the event server is started and you will receive device state changes from Homegear immediately. As this is not always needed - i. e. when you only want to set values - it can be disabled by specifying "false" here.
+Now we can instantiate a new Homegear object. Upon creation the Homegear object will connect to Homegear. The second parameter defines, whether the library should receive notifications from Homegear. When set to "true" you will receive device state changes from Homegear immediately. As this is not always needed - i. e. when you only want to set values - it can be disabled by specifying "false" here to reduce the load on the Homegear system and the network load.
 
 ```
 Homegear homegear = new Homegear(rpc, true);
 ```
 
-The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are five events:
+The Homegear object automatically handles the connection to Homegear. It will reconnect automatically, when the connection is disrupted and also automatically tries to find all changes during the down time. There are no connection errors thrown. To still be able to find out, when there is no connection, there are three events:
 
 Event | Description
 --- | ---
-**RPCController.ClientConnected** | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
-**RPCController.ClientDisconnected** | Raised, when the connection to Homegear is closed.
-**RPCController.ServerConnected** | Raised, when there is a successful incoming connection from Homegear to the library's callback event server.
-**RPCController.ServerDisconnected** | Raised, when the incoming connection to our event server is closed.
+**RPCController.Connected** | Raised, when the Homegear object managed to successfully connect to Homegear. Important: The event is also raised, when user authentication is not successful!
+**RPCController.Disconnected** | Raised, when the connection to Homegear is closed.
 **Homegear.ConnectError** | Raised on all errors during the connection procedure.
 
 "**Homegear.ConnectError**" is the most important. Here's an example implementation of an event handler:

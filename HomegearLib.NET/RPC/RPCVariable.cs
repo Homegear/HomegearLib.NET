@@ -7,7 +7,7 @@ namespace HomegearLib.RPC
     public enum RPCVariableType
     {
         rpcVoid = 0,
-        rpcInteger = 1,
+        rpcInteger32 = 1,
         rpcBoolean = 2,
         rpcString = 3,
         rpcFloat = 4,
@@ -16,7 +16,7 @@ namespace HomegearLib.RPC
         rpcDate = 0x10,
         rpcBase64 = 0x11,
         rpcBinary = 0xD0,
-        rpcInteger64 = 0xD1,
+        rpcInteger = 0xD1,
         rpcVariant = 0x1111
     }
 
@@ -41,18 +41,11 @@ namespace HomegearLib.RPC
             set { _stringValue = (value == null) ? "" : value; }
         }
 
-        protected int _integerValue;
-        public virtual int IntegerValue
+        protected long _integerValue;
+        public virtual long IntegerValue
         {
             get { return _integerValue; }
-            set { _integerValue = value; _integerValue64 = value; }
-        }
-
-        protected long _integerValue64;
-        public virtual long IntegerValue64
-        {
-            get { return _integerValue64; }
-            set { _integerValue64 = value; _integerValue = (int)value; }
+            set { _integerValue = value; }
         }
 
         protected bool _booleanValue;
@@ -101,31 +94,35 @@ namespace HomegearLib.RPC
         public RPCVariable(uint value)
         {
             _type = RPCVariableType.rpcInteger;
-            _integerValue = (int)value;
+            _integerValue = value;
         }
 
         public RPCVariable(long value)
         {
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = value;
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = value;
         }
 
         public RPCVariable(ulong value)
-        {
-            _type = RPCVariableType.rpcInteger64;
-            _integerValue64 = (int)value;
-        }
-
-        public RPCVariable(byte value)
         {
             _type = RPCVariableType.rpcInteger;
             _integerValue = (int)value;
         }
 
+        public RPCVariable(byte value)
+        {
+            _type = RPCVariableType.rpcInteger;
+            _integerValue = value;
+        }
+
         public RPCVariable(string value)
         {
             _type = RPCVariableType.rpcString;
-            if (value == null) return;
+            if (value == null)
+            {
+                return;
+            }
+
             _stringValue = value;
         }
 
@@ -173,10 +170,6 @@ namespace HomegearLib.RPC
                     _integerValue = variable.IntegerValue;
                     _type = RPCVariableType.rpcInteger;
                     break;
-                case VariableType.tInteger64:
-                    _integerValue64 = variable.IntegerValue64;
-                    _type = RPCVariableType.rpcInteger64;
-                    break;
                 case VariableType.tDouble:
                     _floatValue = variable.DoubleValue;
                     _type = RPCVariableType.rpcFloat;
@@ -213,7 +206,7 @@ namespace HomegearLib.RPC
                 case "INTEGER":
                     return new RPCVariable(RPCVariableType.rpcInteger);
                 case "INTEGER64":
-                    return new RPCVariable(RPCVariableType.rpcInteger64);
+                    return new RPCVariable(RPCVariableType.rpcInteger);
                 case "ENUM":
                     return new RPCVariable(RPCVariableType.rpcInteger);
                 case "FLOAT":
@@ -230,10 +223,10 @@ namespace HomegearLib.RPC
                     return "Void";
                 case RPCVariableType.rpcBoolean:
                     return _booleanValue.ToString();
+                case RPCVariableType.rpcInteger32:
+                    return _integerValue.ToString();
                 case RPCVariableType.rpcInteger:
                     return _integerValue.ToString();
-                case RPCVariableType.rpcInteger64:
-                    return _integerValue64.ToString();
                 case RPCVariableType.rpcString:
                     return _stringValue;
                 case RPCVariableType.rpcFloat:
@@ -252,47 +245,84 @@ namespace HomegearLib.RPC
 
         public bool Compare(RPCVariable variable)
         {
-            if (Type != variable.Type) return false;
+            if (Type != variable.Type)
+            {
+                return false;
+            }
+
             switch (_type)
             {
                 case RPCVariableType.rpcBoolean:
-                    if (_booleanValue != variable.BooleanValue) return false;
+                    if (_booleanValue != variable.BooleanValue)
+                    {
+                        return false;
+                    }
+
                     break;
                 case RPCVariableType.rpcArray:
-                    if (_arrayValue.Count != variable.ArrayValue.Count) return false;
+                    if (_arrayValue.Count != variable.ArrayValue.Count)
+                    {
+                        return false;
+                    }
                     else
                     {
                         for (int i = 0; i < _arrayValue.Count; i++)
                         {
-                            if (!_arrayValue[i].Compare(variable.ArrayValue[i])) return false;
+                            if (!_arrayValue[i].Compare(variable.ArrayValue[i]))
+                            {
+                                return false;
+                            }
                         }
                     }
                     break;
                 case RPCVariableType.rpcStruct:
-                    if (_structValue.Count != variable.StructValue.Count) return false;
+                    if (_structValue.Count != variable.StructValue.Count)
+                    {
+                        return false;
+                    }
                     else
                     {
                         for (int i = 0; i < _structValue.Count; i++)
                         {
-                            if (_structValue.Keys.ElementAt(i) != variable.StructValue.Keys.ElementAt(i)) return false;
-                            if (!_structValue.Values.ElementAt(i).Compare(variable.StructValue.Values.ElementAt(i))) return false;
+                            if (_structValue.Keys.ElementAt(i) != variable.StructValue.Keys.ElementAt(i))
+                            {
+                                return false;
+                            }
+
+                            if (!_structValue.Values.ElementAt(i).Compare(variable.StructValue.Values.ElementAt(i)))
+                            {
+                                return false;
+                            }
                         }
                     }
                     break;
                 case RPCVariableType.rpcInteger:
-                    if (_integerValue != variable.IntegerValue) return false;
-                    break;
-                case RPCVariableType.rpcInteger64:
-                    if (_integerValue64 != variable.IntegerValue64) return false;
+                    if (_integerValue != variable.IntegerValue)
+                    {
+                        return false;
+                    }
+
                     break;
                 case RPCVariableType.rpcString:
-                    if (_stringValue != variable.StringValue) return false;
+                    if (_stringValue != variable.StringValue)
+                    {
+                        return false;
+                    }
+
                     break;
                 case RPCVariableType.rpcBase64:
-                    if (_stringValue != variable.StringValue) return false;
+                    if (_stringValue != variable.StringValue)
+                    {
+                        return false;
+                    }
+
                     break;
                 case RPCVariableType.rpcFloat:
-                    if (_floatValue != variable.FloatValue) return false;
+                    if (_floatValue != variable.FloatValue)
+                    {
+                        return false;
+                    }
+
                     break;
             }
             return true;
@@ -301,7 +331,11 @@ namespace HomegearLib.RPC
         public bool SetValue(RPCVariable value)
         {
             bool valueChanged = !Compare(value);
-            if (!valueChanged) return false;
+            if (!valueChanged)
+            {
+                return false;
+            }
+
             switch (_type)
             {
                 case RPCVariableType.rpcBoolean:
@@ -313,11 +347,11 @@ namespace HomegearLib.RPC
                 case RPCVariableType.rpcStruct:
                     _structValue = value.StructValue;
                     break;
-                case RPCVariableType.rpcInteger:
+                case RPCVariableType.rpcInteger32:
                     _integerValue = value.IntegerValue;
                     break;
-                case RPCVariableType.rpcInteger64:
-                    _integerValue64 = value.IntegerValue64;
+                case RPCVariableType.rpcInteger:
+                    _integerValue = value.IntegerValue;
                     break;
                 case RPCVariableType.rpcString:
                     _stringValue = (value.StringValue == null) ? "" : value.StringValue;

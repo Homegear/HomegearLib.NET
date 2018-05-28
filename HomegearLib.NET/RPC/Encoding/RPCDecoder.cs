@@ -12,13 +12,29 @@ namespace HomegearLib.RPC.Encoding
             uint position = 4;
             uint headerSize = 0;
             List<RPCVariable> parameters = new List<RPCVariable>();
-            if (packet == null) return parameters;
-            if (packet.Length < 4) return parameters;
-            if (packet[3] == 0x40 || packet[3] == 0x41) headerSize = (uint)_decoder.DecodeInteger(packet, ref position) + 4;
+            if (packet == null)
+            {
+                return parameters;
+            }
+
+            if (packet.Length < 4)
+            {
+                return parameters;
+            }
+
+            if (packet[3] == 0x40 || packet[3] == 0x41)
+            {
+                headerSize = (uint)_decoder.DecodeInteger32(packet, ref position) + 4;
+            }
+
             position = 8 + headerSize;
             methodName = _decoder.DecodeString(packet, ref position);
-            int parameterCount = _decoder.DecodeInteger(packet, ref position);
-            if (parameterCount > 100) return parameters;
+            int parameterCount = _decoder.DecodeInteger32(packet, ref position);
+            if (parameterCount > 100)
+            {
+                return parameters;
+            }
+
             for (int i = 0; i < parameterCount; i++)
             {
                 parameters.Add(DecodeParameter(packet, ref position));
@@ -30,11 +46,22 @@ namespace HomegearLib.RPC.Encoding
         {
             uint position = offset + 8;
             RPCVariable response = DecodeParameter(packet, ref position);
-            if (packet.Length < 4) return response; //response is Void when packet is empty.
+            if (packet.Length < 4)
+            {
+                return response; //response is Void when packet is empty.
+            }
+
             if (packet[3] == 0xFF)
             {
-                if (!response.StructValue.ContainsKey("faultCode")) response.StructValue.Add("faultCode", new RPCVariable(-1));
-                if (!response.StructValue.ContainsKey("faultString")) response.StructValue.Add("faultString", new RPCVariable("undefined"));
+                if (!response.StructValue.ContainsKey("faultCode"))
+                {
+                    response.StructValue.Add("faultCode", new RPCVariable(-1));
+                }
+
+                if (!response.StructValue.ContainsKey("faultString"))
+                {
+                    response.StructValue.Add("faultString", new RPCVariable("undefined"));
+                }
             }
             return response;
         }
@@ -42,24 +69,35 @@ namespace HomegearLib.RPC.Encoding
         public RPCHeader DecodeHeader(byte[] packet)
         {
             RPCHeader header = new RPCHeader();
-            if (packet.Length < 12 || (packet[3] != 0x40 && packet[3] != 0x41)) return header;
+            if (packet.Length < 12 || (packet[3] != 0x40 && packet[3] != 0x41))
+            {
+                return header;
+            }
+
             uint position = 4;
             int headerSize = 0;
-            headerSize = _decoder.DecodeInteger(packet, ref position);
-            if (headerSize < 4) return header;
-            int parameterCount = _decoder.DecodeInteger(packet, ref position);
+            headerSize = _decoder.DecodeInteger32(packet, ref position);
+            if (headerSize < 4)
+            {
+                return header;
+            }
+
+            int parameterCount = _decoder.DecodeInteger32(packet, ref position);
             for (int i = 0; i < parameterCount; i++)
             {
                 string field = _decoder.DecodeString(packet, ref position).ToLower();
                 string value = _decoder.DecodeString(packet, ref position);
-                if (field == "authorization") header.Authorization = value;
+                if (field == "authorization")
+                {
+                    header.Authorization = value;
+                }
             }
             return header;
         }
 
         private RPCVariableType DecodeType(byte[] packet, ref uint position)
         {
-            return (RPCVariableType)_decoder.DecodeInteger(packet, ref position);
+            return (RPCVariableType)_decoder.DecodeInteger32(packet, ref position);
         }
 
         private RPCVariable DecodeParameter(byte[] packet, ref uint position)
@@ -74,13 +112,14 @@ namespace HomegearLib.RPC.Encoding
             {
                 _decoder.DecodeBinary(packet, ref position);
             }
+            else if (type == RPCVariableType.rpcInteger32)
+            {
+                variable.IntegerValue = _decoder.DecodeInteger32(packet, ref position);
+                variable.Type = RPCVariableType.rpcInteger;
+            }
             else if (type == RPCVariableType.rpcInteger)
             {
-                variable.IntegerValue = _decoder.DecodeInteger(packet, ref position);
-            }
-            else if (type == RPCVariableType.rpcInteger64)
-            {
-                variable.IntegerValue64 = _decoder.DecodeInteger64(packet, ref position);
+                variable.IntegerValue = _decoder.DecodeInteger64(packet, ref position);
             }
             else if (type == RPCVariableType.rpcFloat)
             {
@@ -103,7 +142,7 @@ namespace HomegearLib.RPC.Encoding
 
         List<RPCVariable> DecodeArray(byte[] packet, ref uint position)
         {
-            int arrayLength = _decoder.DecodeInteger(packet, ref position);
+            int arrayLength = _decoder.DecodeInteger32(packet, ref position);
             List<RPCVariable> rpcArray = new List<RPCVariable>();
             for (int i = 0; i < arrayLength; i++)
             {
@@ -114,7 +153,7 @@ namespace HomegearLib.RPC.Encoding
 
         Dictionary<string, RPCVariable> DecodeStruct(byte[] packet, ref uint position)
         {
-            int structLength = _decoder.DecodeInteger(packet, ref position);
+            int structLength = _decoder.DecodeInteger32(packet, ref position);
             Dictionary<string, RPCVariable> rpcStruct = new Dictionary<string, RPCVariable>();
             for (int i = 0; i < structLength; i++)
             {

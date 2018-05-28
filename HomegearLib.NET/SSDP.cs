@@ -39,9 +39,17 @@ namespace HomegearLib
                     {
                         System.Diagnostics.Debug.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
                     }
-                    if (receivedBytes > 0) responses.Add(Encoding.UTF8.GetString(buffer, 0, receivedBytes));
+                    if (receivedBytes > 0)
+                    {
+                        responses.Add(Encoding.UTF8.GetString(buffer, 0, receivedBytes));
+                    }
+
                     timeout = timeout - (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
-                    if (timeout < 0) break;
+                    if (timeout < 0)
+                    {
+                        break;
+                    }
+
                     socket.ReceiveTimeout = timeout;
                 }
 
@@ -61,7 +69,10 @@ namespace HomegearLib
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            if (line != "") lines.Add(line);
+                            if (line != "")
+                            {
+                                lines.Add(line);
+                            }
                         }
                         string host = lines.Where(lin => lin.ToLower().StartsWith("server:")).First();
                         string location = lines.Where(lin => lin.ToLower().StartsWith("location:")).First();
@@ -71,9 +82,17 @@ namespace HomegearLib
                             int endPos1 = location.LastIndexOf(':');
                             int startPos2 = endPos1 + 1;
                             int endPos2 = location.LastIndexOf('/');
-                            if (startPos1 == -1 || endPos1 == -1 || startPos2 == -1 || endPos2 == -1 || (startPos1 - 2) == endPos2) continue;
+                            if (startPos1 == -1 || endPos1 == -1 || startPos2 == -1 || endPos2 == -1 || (startPos1 - 2) == endPos2)
+                            {
+                                continue;
+                            }
+
                             int port = -1;
-                            if (!int.TryParse(location.Substring(startPos2, endPos2 - startPos2), out port)) continue;
+                            if (!int.TryParse(location.Substring(startPos2, endPos2 - startPos2), out port))
+                            {
+                                continue;
+                            }
+
                             devices.Add(new Tuple<string, int>(location.Substring(startPos1, endPos1 - startPos1), port));
                         }
                     }

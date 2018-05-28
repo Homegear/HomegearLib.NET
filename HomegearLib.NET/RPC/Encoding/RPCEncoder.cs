@@ -20,11 +20,21 @@ namespace HomegearLib.RPC.Encoding
             if (header != null)
             {
                 headerSize = EncodeHeader(packet, header) + 4;
-                if (headerSize > 0) packet[3] |= 0x40;
+                if (headerSize > 0)
+                {
+                    packet[3] |= 0x40;
+                }
             }
             _encoder.EncodeString(packet, methodName);
-            if (parameters == null) _encoder.EncodeInteger(packet, 0);
-            else _encoder.EncodeInteger(packet, parameters.Count());
+            if (parameters == null)
+            {
+                _encoder.EncodeInteger32(packet, 0);
+            }
+            else
+            {
+                _encoder.EncodeInteger32(packet, parameters.Count());
+            }
+
             if (parameters != null)
             {
                 foreach (RPCVariable parameter in parameters)
@@ -48,9 +58,19 @@ namespace HomegearLib.RPC.Encoding
         {
             //The "Bin", the type byte after that and the length itself are not part of the length
             List<byte> packet = new List<byte>();
-            if (variable == null) return packet;
-            if (variable.ErrorStruct) packet.InsertRange(0, _packetStartError);
-            else packet.InsertRange(0, _packetStartResponse);
+            if (variable == null)
+            {
+                return packet;
+            }
+
+            if (variable.ErrorStruct)
+            {
+                packet.InsertRange(0, _packetStartError);
+            }
+            else
+            {
+                packet.InsertRange(0, _packetStartResponse);
+            }
 
             EncodeVariable(packet, variable);
 
@@ -67,7 +87,11 @@ namespace HomegearLib.RPC.Encoding
 
         public void InsertHeader(List<byte> packet, RPCHeader header)
         {
-            if (packet.Count() < 4) return;
+            if (packet.Count() < 4)
+            {
+                return;
+            }
+
             List<byte> headerData = new List<byte>();
             uint headerSize = EncodeHeader(headerData, header);
             if (headerSize > 0)
@@ -87,7 +111,11 @@ namespace HomegearLib.RPC.Encoding
                 _encoder.EncodeString(packet, "Authorization");
                 _encoder.EncodeString(packet, header.Authorization);
             }
-            else return 0;
+            else
+            {
+                return 0;
+            }
+
             List<byte> parameterCountBytes = new List<byte>(4);
             parameterCountBytes.Add((byte)((parameterCount >> 24) & 0xFF));
             parameterCountBytes.Add((byte)((parameterCount >> 16) & 0xFF));
@@ -112,13 +140,13 @@ namespace HomegearLib.RPC.Encoding
             {
                 EncodeVoid(packet);
             }
-            else if (variable.Type == RPCVariableType.rpcInteger)
+            else if (variable.Type == RPCVariableType.rpcInteger32)
             {
                 EncodeInteger(packet, variable);
             }
-            else if (variable.Type == RPCVariableType.rpcInteger64)
+            else if (variable.Type == RPCVariableType.rpcInteger)
             {
-                EncodeInteger64(packet, variable);
+                EncodeInteger(packet, variable);
             }
             else if (variable.Type == RPCVariableType.rpcFloat)
             {
@@ -149,10 +177,14 @@ namespace HomegearLib.RPC.Encoding
         private void EncodeStruct(List<byte> packet, RPCVariable variable)
         {
             EncodeType(packet, RPCVariableType.rpcStruct);
-            _encoder.EncodeInteger(packet, variable.StructValue.Count());
+            _encoder.EncodeInteger32(packet, variable.StructValue.Count());
             for (int i = 0; i < variable.StructValue.Count(); i++)
             {
-                if (variable.StructValue.ElementAt(i).Value == null) continue;
+                if (variable.StructValue.ElementAt(i).Value == null)
+                {
+                    continue;
+                }
+
                 _encoder.EncodeString(packet, variable.StructValue.ElementAt(i).Key);
                 EncodeVariable(packet, variable.StructValue.ElementAt(i).Value);
             }
@@ -161,7 +193,7 @@ namespace HomegearLib.RPC.Encoding
         private void EncodeArray(List<byte> packet, RPCVariable variable)
         {
             EncodeType(packet, RPCVariableType.rpcArray);
-            _encoder.EncodeInteger(packet, variable.ArrayValue.Count());
+            _encoder.EncodeInteger32(packet, variable.ArrayValue.Count());
             foreach (RPCVariable element in variable.ArrayValue)
             {
                 EncodeVariable(packet, element);
@@ -170,19 +202,13 @@ namespace HomegearLib.RPC.Encoding
 
         private void EncodeType(List<byte> packet, RPCVariableType type)
         {
-            _encoder.EncodeInteger(packet, (int)type);
+            _encoder.EncodeInteger32(packet, (int)type);
         }
 
         private void EncodeInteger(List<byte> packet, RPCVariable variable)
         {
             EncodeType(packet, RPCVariableType.rpcInteger);
-            _encoder.EncodeInteger(packet, variable.IntegerValue);
-        }
-
-        private void EncodeInteger64(List<byte> packet, RPCVariable variable)
-        {
-            EncodeType(packet, RPCVariableType.rpcInteger64);
-            _encoder.EncodeInteger64(packet, variable.IntegerValue64);
+            _encoder.EncodeInteger64(packet, variable.IntegerValue);
         }
 
         private void EncodeFloat(List<byte> packet, RPCVariable variable)

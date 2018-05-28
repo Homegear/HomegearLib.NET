@@ -154,27 +154,43 @@ namespace SetVariable
                             {
                                 case VariableType.tAction:
                                     Boolean actionValue = false;
-                                    if (Boolean.TryParse(value, out actionValue)) variable.BooleanValue = actionValue;
+                                    if (Boolean.TryParse(value, out actionValue))
+                                    {
+                                        variable.BooleanValue = actionValue;
+                                    }
+
                                     break;
                                 case VariableType.tBoolean:
                                     Boolean booleanValue = false;
-                                    if (Boolean.TryParse(value, out booleanValue)) variable.BooleanValue = booleanValue;
+                                    if (Boolean.TryParse(value, out booleanValue))
+                                    {
+                                        variable.BooleanValue = booleanValue;
+                                    }
+
                                     break;
                                 case VariableType.tInteger:
                                     Int32 integerValue = 0;
-                                    if (Int32.TryParse(value, out integerValue)) variable.IntegerValue = integerValue;
-                                    break;
-                                case VariableType.tInteger64:
-                                    Int64 integerValue64 = 0;
-                                    if (Int64.TryParse(value, out integerValue64)) variable.IntegerValue64 = integerValue64;
+                                    if (Int32.TryParse(value, out integerValue))
+                                    {
+                                        variable.IntegerValue = integerValue;
+                                    }
+
                                     break;
                                 case VariableType.tEnum:
                                     Int32 enumValue = 0;
-                                    if (Int32.TryParse(value, out enumValue)) variable.IntegerValue = enumValue;
+                                    if (Int32.TryParse(value, out enumValue))
+                                    {
+                                        variable.IntegerValue = enumValue;
+                                    }
+
                                     break;
                                 case VariableType.tDouble:
                                     Double doubleValue = 0;
-                                    if (Double.TryParse(value, out doubleValue)) variable.DoubleValue = doubleValue;
+                                    if (Double.TryParse(value, out doubleValue))
+                                    {
+                                        variable.DoubleValue = doubleValue;
+                                    }
+
                                     break;
                                 case VariableType.tString:
                                     variable.StringValue = value;

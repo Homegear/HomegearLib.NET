@@ -27,11 +27,11 @@ namespace HomegearLib
         private Family _family = null;
         public Family Family { get { return _family; } internal set { _family = value; } }
 
-        private int _address;
-        public int Address { get { return _address; } internal set { _address = value; } }
+        private long _address;
+        public long Address { get { return _address; } internal set { _address = value; } }
 
-        private int _rssi;
-        public int Rssi { get { return _rssi; } internal set { _rssi = value; } }
+        private long _rssi;
+        public long Rssi { get { return _rssi; } internal set { _rssi = value; } }
 
         private Dictionary<string, string> _additionalData = new Dictionary<string, string>();
         public Dictionary<string, string> AdditionalData { get { return _additionalData; } }

@@ -74,8 +74,14 @@ namespace HomegearLibTest
 
         private void chkResetEvent_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkResetEvent.Checked) gbResetEvent.Enabled = true;
-            else gbResetEvent.Enabled = false;
+            if (chkResetEvent.Checked)
+            {
+                gbResetEvent.Enabled = true;
+            }
+            else
+            {
+                gbResetEvent.Enabled = false;
+            }
         }
     }
 }

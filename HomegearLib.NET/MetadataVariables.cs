@@ -8,10 +8,10 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private int _peerId;
-        public int PeerID { get { return _peerId; } }
+        private long _peerId;
+        public long PeerID { get { return _peerId; } }
 
-        public MetadataVariables(RPCController rpc, int peerId, Dictionary<string, MetadataVariable> metadataVariables) : base(metadataVariables)
+        public MetadataVariables(RPCController rpc, long peerId, Dictionary<string, MetadataVariable> metadataVariables) : base(metadataVariables)
         {
             _rpc = rpc;
             _peerId = peerId;
@@ -56,7 +56,10 @@ namespace HomegearLib
                     variablesDeleted = true;
                     continue;
                 }
-                if (variable.SetValue(variablePair.Value)) changedVariables.Add(variable);
+                if (variable.SetValue(variablePair.Value))
+                {
+                    changedVariables.Add(variable);
+                }
             }
             foreach (KeyValuePair<string, MetadataVariable> variablePair in _dictionary)
             {

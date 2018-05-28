@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace HomegearLib
 {
-    public class Devices : ReadOnlyDictionary<int, Device>, IDisposable
+    public class Devices : ReadOnlyDictionary<long, Device>, IDisposable
     {
         RPCController _rpc = null;
 
-        public Devices(RPCController rpc, Dictionary<int, Device> devices) : base(devices)
+        public Devices(RPCController rpc, Dictionary<long, Device> devices) : base(devices)
         {
             _rpc = rpc;
         }
@@ -16,18 +16,18 @@ namespace HomegearLib
         public void Dispose()
         {
             _rpc = null;
-            foreach (KeyValuePair<int, Device> device in _dictionary)
+            foreach (KeyValuePair<long, Device> device in _dictionary)
             {
                 device.Value.Dispose();
             }
         }
 
-        public List<Variable> UpdateVariables(Dictionary<int, Device> variables, out bool devicesDeleted, out bool newDevices)
+        public List<Variable> UpdateVariables(Dictionary<long, Device> variables, out bool devicesDeleted, out bool newDevices)
         {
             devicesDeleted = false;
             newDevices = false;
             List<Variable> changedVariables = new List<Variable>();
-            foreach (KeyValuePair<int, Device> devicePair in variables)
+            foreach (KeyValuePair<long, Device> devicePair in variables)
             {
                 if (!_dictionary.ContainsKey(devicePair.Key))
                 {
@@ -41,13 +41,21 @@ namespace HomegearLib
                     newDevices = true;
                     continue;
                 }
-                foreach (KeyValuePair<int, Channel> channelPair in devicePair.Value.Channels)
+                foreach (KeyValuePair<long, Channel> channelPair in devicePair.Value.Channels)
                 {
-                    if (!device.Channels.ContainsKey(channelPair.Key)) continue;
+                    if (!device.Channels.ContainsKey(channelPair.Key))
+                    {
+                        continue;
+                    }
+
                     Channel channel = device.Channels[channelPair.Key];
                     foreach (KeyValuePair<string, Variable> variablePair in channelPair.Value.Variables)
                     {
-                        if (!channel.Variables.ContainsKey(variablePair.Key)) continue;
+                        if (!channel.Variables.ContainsKey(variablePair.Key))
+                        {
+                            continue;
+                        }
+
                         Variable variable = channel.Variables[variablePair.Key];
                         if (!variable.Compare(variablePair.Value))
                         {
@@ -57,7 +65,7 @@ namespace HomegearLib
                     }
                 }
             }
-            foreach (KeyValuePair<int, Device> devicePair in _dictionary)
+            foreach (KeyValuePair<long, Device> devicePair in _dictionary)
             {
                 if (!variables.ContainsKey(devicePair.Key))
                 {
@@ -73,7 +81,7 @@ namespace HomegearLib
             return _rpc.AddDevice(serialNumber);
         }
 
-        public int Create(Family family, int deviceType, string serialNumber, int address, int firmwareVersion)
+        public long Create(Family family, long deviceType, string serialNumber, long address, long firmwareVersion)
         {
             return _rpc.CreateDevice(family, deviceType, serialNumber, address, firmwareVersion);
         }
@@ -82,7 +90,7 @@ namespace HomegearLib
         /// Searches for new devices on all supported device families and returns the number of newly found devices.
         /// </summary>
         /// <returns>The number of newly found devices.</returns>
-        public int Search()
+        public long Search()
         {
             return _rpc.SearchDevices();
         }
@@ -97,7 +105,7 @@ namespace HomegearLib
             _rpc.StopSniffing(family);
         }
 
-        public Dictionary<int, SniffedDeviceInfo> GetSniffedDevices(Family family)
+        public Dictionary<long, SniffedDeviceInfo> GetSniffedDevices(Family family)
         {
             return _rpc.GetSniffedDevices(family);
         }
