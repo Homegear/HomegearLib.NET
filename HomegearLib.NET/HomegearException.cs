@@ -67,55 +67,42 @@ namespace HomegearLib
         }
     }
 
-    public class HomegearRPCServerException : HomegearException
+    public class HomegearRpcClientException : HomegearException
     {
-        public HomegearRPCServerException() : base()
+        public HomegearRpcClientException() : base()
         {
 
         }
 
-        public HomegearRPCServerException(string message) : base(message)
-        {
-
-        }
-    }
-
-    public class HomegearRPCServerSSLException : HomegearRPCServerException
-    {
-        public HomegearRPCServerSSLException() : base()
-        {
-
-        }
-
-        public HomegearRPCServerSSLException(string message)
+        public HomegearRpcClientException(string message)
             : base(message)
         {
 
         }
     }
 
-    public class HomegearRPCClientException : HomegearException
+    public class HomegearRpcClientSSLException : HomegearRpcClientException
     {
-        public HomegearRPCClientException() : base()
+        public HomegearRpcClientSSLException() : base()
         {
 
         }
 
-        public HomegearRPCClientException(string message)
-            : base(message)
+        public HomegearRpcClientSSLException(string message) : base(message)
         {
 
         }
     }
 
-    public class HomegearRPCClientSSLException : HomegearRPCClientException
+    public class HomegearBinaryRpcException : HomegearException
     {
-        public HomegearRPCClientSSLException() : base()
+        public HomegearBinaryRpcException() : base()
         {
 
         }
 
-        public HomegearRPCClientSSLException(string message) : base(message)
+        public HomegearBinaryRpcException(string message)
+            : base(message)
         {
 
         }

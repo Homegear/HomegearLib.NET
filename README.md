@@ -3,6 +3,8 @@ HomegearLib.NET
 
 HomegearLib.NET is an API written for .NET Standard 2.0 to easily communicate with Homegear.
 
+[![NuGet](https://img.shields.io/nuget/v/HomegearLib.NET.svg?maxAge=2592000)](https://www.nuget.org/packages/HomegearLib.NET/)
+
 ## Requirements
 
 One of
@@ -205,10 +207,8 @@ Name | Description
 **HomegearVariableReadOnlyException**| Thrown when you try to set a read only variable.
 **HomegearVariableTypeException** | Thrown when the type of the value you try to set does not match the variable type.
 **HomegearVariableValueOutOfBoundsException** | Thrown when the value you try to set is not withing the range of valid values.
-**HomegearRPCServerException** | Thrown on all errors within the RPC server.
-**HomegearRPCServerSSLException** | Thrown on SSL specific errors within the RPC server.
-**HomegearRPCClientException** | Thrown on all errors withing the RPC client. **You should always catch this exception, as it can be thrown by pretty much all operations.**
-**HomegearRPCClientSSLException** | Thrown on SSL specific errors within the RPC client.
+**HomegearRpcClientException** | Thrown on all errors withing the RPC client. **You should always catch this exception, as it can be thrown by pretty much all operations.**
+**HomegearRpcClientSSLException** | Thrown on SSL specific errors within the RPC client.
 
 ### Disposing
 

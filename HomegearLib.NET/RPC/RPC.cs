@@ -374,7 +374,7 @@ namespace HomegearLib.RPC
                 return;
             }
 
-            throw new HomegearRPCClientException("Error calling RPC method \"" + methodName + "\". faultCode: " + errorStruct.StructValue["faultCode"].IntegerValue.ToString() + " faultString: " + errorStruct.StructValue["faultString"].StringValue);
+            throw new HomegearRpcClientException("Error calling RPC method \"" + methodName + "\". faultCode: " + errorStruct.StructValue["faultCode"].IntegerValue.ToString() + " faultString: " + errorStruct.StructValue["faultString"].StringValue);
         }
 
         #region "RPC methods"

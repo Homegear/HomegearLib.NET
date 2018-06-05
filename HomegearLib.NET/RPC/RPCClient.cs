@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomegearLib.RPC.Encoding;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,6 +48,7 @@ namespace HomegearLib.RPC
         private volatile bool _stopThread = false;
         private volatile TcpClient _client = null;
         private volatile SslStream _sslStream = null;
+        private volatile BinaryRpc _binaryRpc = new BinaryRpc();
         private object _sendLock = new object();
         private object _callMethodLock = new object();
         private volatile RPCVariable _rpcResponse = null;
@@ -63,17 +65,17 @@ namespace HomegearLib.RPC
 
         public bool IsConnected => _client != null && _client.Connected;
 
-        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null) { return _sslStream.CipherAlgorithm;
+        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null && Type.GetType("Mono.Runtime") == null) { return _sslStream.CipherAlgorithm;
                 }
                 else
                 {
                     return CipherAlgorithmType.Null; } } }
-        public int CipherStrength { get { if (_sslStream != null) { return _sslStream.CipherStrength;
+        public int CipherStrength { get { if (_sslStream != null && Type.GetType("Mono.Runtime") == null) { return _sslStream.CipherStrength;
                 }
                 else
                 {
                     return -1; } } }
-        
+
         public RPCClient(string hostname, int port, SSLClientInfo sslInfo = null)
         {
             _hostname = hostname;
@@ -138,7 +140,7 @@ namespace HomegearLib.RPC
                 catch (SocketException ex)
                 {
                     _connecting = false;
-                    throw new HomegearRPCClientException("Could not connect to server " + _hostname + " on port " + _port.ToString() + ": " + ex.Message);
+                    throw new HomegearRpcClientException("Could not connect to server " + _hostname + " on port " + _port.ToString() + ": " + ex.Message);
                 }
 
                 if (Ssl)
@@ -152,13 +154,13 @@ namespace HomegearLib.RPC
                     {
                         _client.Close();
                         _connecting = false;
-                        throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                        throw new HomegearRpcClientSSLException("Server authentication failed: " + ex.Message);
                     }
                     catch (System.IO.IOException ex)
                     {
                         _client.Close();
                         _connecting = false;
-                        throw new HomegearRPCClientSSLException("Server authentication failed: " + ex.Message);
+                        throw new HomegearRpcClientSSLException("Server authentication failed: " + ex.Message);
                     }
                 }
                 
@@ -211,10 +213,7 @@ namespace HomegearLib.RPC
         {
             byte[] buffer = new byte[2048];
             int bytesReceived = 0;
-            uint dataSize = 0;
-            uint packetLength = 0;
-            uint bufferPos = 0;
-            byte[] packet = null;
+            int processedBytes = 0;
             while (!_stopThread)
             {
                 try
@@ -224,74 +223,48 @@ namespace HomegearLib.RPC
                         break;
                     }
 
-                    if (bytesReceived >= 8)
-                    {
-                        bytesReceived = 0;
-                    }
-
                     if (Ssl)
                     {
-                        bytesReceived += _sslStream.Read(buffer, bytesReceived, buffer.Length - bytesReceived);
+                        bytesReceived = _sslStream.Read(buffer, 0, buffer.Length);
                     }
                     else
                     {
-                        bytesReceived += _client.Client.Receive(buffer, bytesReceived, buffer.Length - bytesReceived, SocketFlags.None);
+                        bytesReceived = _client.Client.Receive(buffer, 0, buffer.Length, SocketFlags.None);
                     }
 
-                    if (bytesReceived < 8)
+                    if (bytesReceived < 0) continue;
+
+                    try
                     {
-                        continue;
+                        processedBytes = 0;
+                        while (processedBytes < bytesReceived)
+                        {
+                            processedBytes += _binaryRpc.Process(buffer, processedBytes, bytesReceived - processedBytes);
+                            if (_binaryRpc.IsFinished)
+                            {
+                                byte[] packet = _binaryRpc.Data;
+                                _binaryRpc.Reset();
+                                System.Diagnostics.Debug.WriteLine("Packet received " + BitConverter.ToString(packet));
+                                ProcessPacket(packet);
+                            }
+                        }
                     }
-
-                    bufferPos = 0;
-                    while (bufferPos == 0 || bufferPos + dataSize + 8 < bytesReceived)
+                    catch(HomegearBinaryRpcException ex)
                     {
-                        if (packet == null && buffer[bufferPos] == 'B' && buffer[bufferPos + 1] == 'i' && buffer[bufferPos + 2] == 'n')
-                        {
-                            dataSize = (uint)((buffer[bufferPos + 4] << 24) + (buffer[bufferPos + 5] << 16) + (buffer[bufferPos + 6] << 8) + buffer[bufferPos + 7]);
-                            if (dataSize == 0)
-                            {
-                                continue;
-                            }
-
-                            if (dataSize > 104857600)
-                            {
-                                continue;
-                            }
-
-                            packetLength = (uint)bytesReceived - 8;
-                            if (packetLength > dataSize)
-                            {
-                                packetLength = dataSize;
-                            }
-
-                            packet = new byte[dataSize + 8];
-                            Array.Copy(buffer, bufferPos, packet, 0, ((dataSize + 8) > bytesReceived) ? bytesReceived : (int)dataSize + 8);
-                        }
-                        else if (packet != null)
-                        {
-                            Array.Copy(buffer, 0, packet, packetLength + 8, packetLength + bytesReceived > dataSize ? (int)(dataSize - packetLength) : bytesReceived);
-                            packetLength += (packetLength + bytesReceived > dataSize ? dataSize - packetLength : (uint)bytesReceived);
-                        }
-                        if (packet != null && packetLength == dataSize)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Packet received " + packet.ToString());
-                            ProcessPacket(packet);
-                            packet = null;
-                        }
-                        bufferPos += dataSize + 8;
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        _binaryRpc.Reset();
                     }
                 }
                 catch (TimeoutException)
                 {
+                    _binaryRpc.Reset();
                     continue;
                 }
                 catch (SocketException ex)
                 {
                     if (ex.SocketErrorCode == SocketError.TimedOut)
                     {
-                        bytesReceived = 0;
-                        packet = null;
+                        _binaryRpc.Reset();
                         continue;
                     }
                     else
@@ -304,6 +277,7 @@ namespace HomegearLib.RPC
                 {
                     if (ex.HResult == -2146232800)
                     {
+                        _binaryRpc.Reset();
                         continue;
                     }
                     else
@@ -511,11 +485,11 @@ namespace HomegearLib.RPC
 
                                 break;
                             }
-                            catch (HomegearRPCClientSSLException ex)
+                            catch (HomegearRpcClientSSLException ex)
                             {
                                 throw ex;
                             }
-                            catch (HomegearRPCClientException ex)
+                            catch (HomegearRpcClientException ex)
                             {
                                 if (i == 2)
                                 {
@@ -544,7 +518,7 @@ namespace HomegearLib.RPC
                             Disconnect();
                             if (j == _maxTries - 1)
                             {
-                                throw new HomegearRPCClientException(
+                                throw new HomegearRpcClientException(
                                     "Error calling rpc method " + name + " on server " + _hostname + " and port " +
                                     _port.ToString() + ": " + ex.Message);
                             }
@@ -556,7 +530,7 @@ namespace HomegearLib.RPC
                             Disconnect();
                             if (j == _maxTries - 1)
                             {
-                                throw new HomegearRPCClientException(
+                                throw new HomegearRpcClientException(
                                     "Error calling rpc method " + name + " on server " + _hostname + " and port " +
                                     _port.ToString() + ": " + ex.Message);
                             }
