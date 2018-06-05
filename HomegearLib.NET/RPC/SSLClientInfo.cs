@@ -8,11 +8,13 @@ namespace HomegearLib.RPC
         private bool _verifyCertificate = true;
         public bool VerifyCertificate { get { return _verifyCertificate; } set { _verifyCertificate = value; } }
 
-        private SecureString _username = new SecureString();
-        public SecureString Username { get { return _username; } set { _username = value; } }
+        public SecureString Username;
 
-        private SecureString _password = new SecureString();
-        public SecureString Password { get { return _password; } set { _password = value; } }
+        public SecureString Password;
+
+        public string ClientCertificateFile;
+
+        public SecureString CertificatePassword;
 
         public SSLClientInfo()
         {
@@ -20,14 +22,14 @@ namespace HomegearLib.RPC
 
         public SSLClientInfo(SecureString username, SecureString password)
         {
-            _username = username;
-            _password = password;
+            Username = username;
+            Password = password;
         }
 
         public SSLClientInfo(SecureString username, SecureString password, bool verifyCertificate)
         {
-            _username = username;
-            _password = password;
+            Username = username;
+            Password = password;
             _verifyCertificate = verifyCertificate;
         }
 
@@ -46,16 +48,23 @@ namespace HomegearLib.RPC
 
         public void SetUsernameFromString(string username)
         {
-            _username = GetSecureString(username);
+            Username = GetSecureString(username);
         }
 
         public void SetPasswordFromString(string password)
         {
-            _password = GetSecureString(password);
+            Password = GetSecureString(password);
+        }
+
+        public void SetCertificatePasswordFromString(string password)
+        {
+            CertificatePassword = GetSecureString(password);
         }
 
         unsafe SecureString GetSecureString(string value)
         {
+            if (value.Length == 0) return new SecureString();
+
             char[] chars = value.ToCharArray();
 
             SecureString secureString;

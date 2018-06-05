@@ -212,10 +212,6 @@
             this.chkSSL = new System.Windows.Forms.CheckBox();
             this.gbSSL = new System.Windows.Forms.GroupBox();
             this.chkVerifyCertificate = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtHomegearPassword = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtHomegearUsername = new System.Windows.Forms.TextBox();
             this.bnConnect = new System.Windows.Forms.Button();
             this.cmDevices = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsEnablePairingMode = new System.Windows.Forms.ToolStripMenuItem();
@@ -249,6 +245,16 @@
             this.cmTriggeredEvent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
+            this.openCertificate = new System.Windows.Forms.OpenFileDialog();
+            this.txtClientCertificate = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.bnSelectCert = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtHomegearPassword = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtHomegearUsername = new System.Windows.Forms.TextBox();
+            this.txtCertificatePassword = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -2253,17 +2259,18 @@
             // 
             this.gbSSL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbSSL.Controls.Add(this.txtCertificatePassword);
+            this.gbSSL.Controls.Add(this.label4);
+            this.gbSSL.Controls.Add(this.bnSelectCert);
+            this.gbSSL.Controls.Add(this.label3);
+            this.gbSSL.Controls.Add(this.txtClientCertificate);
             this.gbSSL.Controls.Add(this.chkVerifyCertificate);
-            this.gbSSL.Controls.Add(this.label7);
-            this.gbSSL.Controls.Add(this.txtHomegearPassword);
-            this.gbSSL.Controls.Add(this.label6);
-            this.gbSSL.Controls.Add(this.txtHomegearUsername);
             this.gbSSL.Enabled = false;
-            this.gbSSL.Location = new System.Drawing.Point(18, 62);
+            this.gbSSL.Location = new System.Drawing.Point(18, 91);
             this.gbSSL.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbSSL.Name = "gbSSL";
             this.gbSSL.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbSSL.Size = new System.Drawing.Size(1236, 128);
+            this.gbSSL.Size = new System.Drawing.Size(1236, 100);
             this.gbSSL.TabIndex = 14;
             this.gbSSL.TabStop = false;
             this.gbSSL.Text = "SSL Options";
@@ -2273,54 +2280,13 @@
             this.chkVerifyCertificate.AutoSize = true;
             this.chkVerifyCertificate.Checked = true;
             this.chkVerifyCertificate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkVerifyCertificate.Location = new System.Drawing.Point(665, 31);
+            this.chkVerifyCertificate.Location = new System.Drawing.Point(13, 29);
             this.chkVerifyCertificate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkVerifyCertificate.Name = "chkVerifyCertificate";
-            this.chkVerifyCertificate.Size = new System.Drawing.Size(151, 24);
+            this.chkVerifyCertificate.Size = new System.Drawing.Size(201, 24);
             this.chkVerifyCertificate.TabIndex = 22;
-            this.chkVerifyCertificate.Text = "Verify Certificate";
+            this.chkVerifyCertificate.Text = "Verify Server Certificate";
             this.chkVerifyCertificate.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(330, 33);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(161, 20);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Homegear Password:";
-            // 
-            // txtHomegearPassword
-            // 
-            this.txtHomegearPassword.Location = new System.Drawing.Point(499, 30);
-            this.txtHomegearPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtHomegearPassword.Name = "txtHomegearPassword";
-            this.txtHomegearPassword.PasswordChar = '•';
-            this.txtHomegearPassword.Size = new System.Drawing.Size(139, 26);
-            this.txtHomegearPassword.TabIndex = 13;
-            this.txtHomegearPassword.Text = "ݕݘݓݘݓݐ";
-            this.txtHomegearPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 32);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(166, 20);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Homegear Username:";
-            // 
-            // txtHomegearUsername
-            // 
-            this.txtHomegearUsername.Location = new System.Drawing.Point(183, 30);
-            this.txtHomegearUsername.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtHomegearUsername.Name = "txtHomegearUsername";
-            this.txtHomegearUsername.Size = new System.Drawing.Size(139, 26);
-            this.txtHomegearUsername.TabIndex = 11;
-            this.txtHomegearUsername.Text = "homegear";
-            this.txtHomegearUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // bnConnect
             // 
@@ -2578,11 +2544,109 @@
             this.cbHomegearHostname.Size = new System.Drawing.Size(139, 28);
             this.cbHomegearHostname.TabIndex = 16;
             // 
+            // openCertificate
+            // 
+            this.openCertificate.DefaultExt = "*.pfx";
+            this.openCertificate.Filter = "Certificate files|*.pfx|All files|*.*";
+            // 
+            // txtClientCertificate
+            // 
+            this.txtClientCertificate.Location = new System.Drawing.Point(145, 64);
+            this.txtClientCertificate.Name = "txtClientCertificate";
+            this.txtClientCertificate.Size = new System.Drawing.Size(339, 26);
+            this.txtClientCertificate.TabIndex = 23;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 67);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(129, 20);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Client Certificate:";
+            // 
+            // bnSelectCert
+            // 
+            this.bnSelectCert.Location = new System.Drawing.Point(488, 62);
+            this.bnSelectCert.Name = "bnSelectCert";
+            this.bnSelectCert.Size = new System.Drawing.Size(36, 30);
+            this.bnSelectCert.TabIndex = 25;
+            this.bnSelectCert.Text = "...";
+            this.bnSelectCert.UseVisualStyleBackColor = true;
+            this.bnSelectCert.Click += new System.EventHandler(this.bnSelectCert_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(532, 67);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(158, 20);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "Certificate Password:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(334, 59);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(161, 20);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "Homegear Password:";
+            // 
+            // txtHomegearPassword
+            // 
+            this.txtHomegearPassword.Location = new System.Drawing.Point(503, 56);
+            this.txtHomegearPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtHomegearPassword.Name = "txtHomegearPassword";
+            this.txtHomegearPassword.PasswordChar = '•';
+            this.txtHomegearPassword.Size = new System.Drawing.Size(139, 26);
+            this.txtHomegearPassword.TabIndex = 20;
+            this.txtHomegearPassword.Text = "ݕݘݓݘݓݐ";
+            this.txtHomegearPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 58);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(166, 20);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Homegear Username:";
+            // 
+            // txtHomegearUsername
+            // 
+            this.txtHomegearUsername.Location = new System.Drawing.Point(187, 56);
+            this.txtHomegearUsername.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtHomegearUsername.Name = "txtHomegearUsername";
+            this.txtHomegearUsername.Size = new System.Drawing.Size(139, 26);
+            this.txtHomegearUsername.TabIndex = 18;
+            this.txtHomegearUsername.Text = "homegear";
+            this.txtHomegearUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtCertificatePassword
+            // 
+            this.txtCertificatePassword.Location = new System.Drawing.Point(690, 64);
+            this.txtCertificatePassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCertificatePassword.Name = "txtCertificatePassword";
+            this.txtCertificatePassword.PasswordChar = '•';
+            this.txtCertificatePassword.Size = new System.Drawing.Size(139, 26);
+            this.txtCertificatePassword.TabIndex = 21;
+            this.txtCertificatePassword.Text = "ݕݘݓݘݓݐ";
+            this.txtCertificatePassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1272, 1146);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtHomegearPassword);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtHomegearUsername);
             this.Controls.Add(this.cbHomegearHostname);
             this.Controls.Add(this.bnConnect);
             this.Controls.Add(this.gbSSL);
@@ -2653,10 +2717,6 @@
         private System.Windows.Forms.TextBox txtHomegearPort;
         private System.Windows.Forms.CheckBox chkSSL;
         private System.Windows.Forms.GroupBox gbSSL;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtHomegearUsername;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtHomegearPassword;
         private System.Windows.Forms.Button bnConnect;
         private System.Windows.Forms.CheckBox chkVerifyCertificate;
         private System.Windows.Forms.Panel pnDevice;
@@ -2864,6 +2924,16 @@
         private System.Windows.Forms.ToolStripMenuItem tsSniffPackets;
         private System.Windows.Forms.TextBox txtChannelName;
         private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button bnSelectCert;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtClientCertificate;
+        private System.Windows.Forms.OpenFileDialog openCertificate;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtHomegearPassword;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtHomegearUsername;
+        private System.Windows.Forms.TextBox txtCertificatePassword;
     }
 }
 

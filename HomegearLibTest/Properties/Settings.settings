@@ -5,12 +5,6 @@
     <Setting Name="lastHomegearHostname" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="lastListenPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">9877</Value>
-    </Setting>
-    <Setting Name="lastChkSsl" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="lastHomegearUsername" Type="System.String" Scope="User">
       <Value Profile="(Default)">test2</Value>
     </Setting>
@@ -26,17 +20,11 @@
     <Setting Name="lastCertificatePassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="lastCallbackUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">temp</Value>
-    </Setting>
-    <Setting Name="lastCallbackPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="lastHomegearPort" Type="System.String" Scope="User">
       <Value Profile="(Default)">2001</Value>
     </Setting>
-    <Setting Name="lastListenIP" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0.0.0.0</Value>
+    <Setting Name="lastChkSsl" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

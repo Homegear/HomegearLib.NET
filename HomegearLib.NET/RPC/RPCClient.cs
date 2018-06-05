@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -54,6 +53,8 @@ namespace HomegearLib.RPC
         private volatile RPCVariable _rpcResponse = null;
         private volatile ManualResetEvent _responseReceived = new ManualResetEvent(false);
 
+        private Queue<byte[]> _eventQueue;
+
         private readonly string _hostname;
         private readonly int _port;
 
@@ -65,16 +66,35 @@ namespace HomegearLib.RPC
 
         public bool IsConnected => _client != null && _client.Connected;
 
-        public CipherAlgorithmType CipherAlgorithm { get { if (_sslStream != null && Type.GetType("Mono.Runtime") == null) { return _sslStream.CipherAlgorithm;
+        public CipherAlgorithmType CipherAlgorithm
+        {
+            get
+            {
+                if (_sslStream != null && Type.GetType("Mono.Runtime") == null)
+                {
+                    return _sslStream.CipherAlgorithm;
                 }
                 else
                 {
-                    return CipherAlgorithmType.Null; } } }
-        public int CipherStrength { get { if (_sslStream != null && Type.GetType("Mono.Runtime") == null) { return _sslStream.CipherStrength;
+                    return CipherAlgorithmType.Null;
+                }
+            }
+        }
+
+        public int CipherStrength
+        {
+            get
+            {
+                if (_sslStream != null && Type.GetType("Mono.Runtime") == null)
+                {
+                    return _sslStream.CipherStrength;
                 }
                 else
                 {
-                    return -1; } } }
+                    return -1;
+                }
+            }
+        }
 
         public RPCClient(string hostname, int port, SSLClientInfo sslInfo = null)
         {
@@ -82,7 +102,7 @@ namespace HomegearLib.RPC
             _port = port;
             Ssl = sslInfo != null;
             _sslInfo = sslInfo;
-            if (_sslInfo != null)
+            if (_sslInfo != null && _sslInfo.Username.Length > 0)
             {
                 _authString = GetSecureString("Basic " + Convert.ToBase64String(System.Text.UTF8Encoding.UTF8.GetBytes(Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Username)) + ":" + Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_sslInfo.Password)))));
             }
@@ -94,7 +114,7 @@ namespace HomegearLib.RPC
         
         public void Dispose()
         {
-            
+            _eventQueue?.Shutdown();
         }
 
         unsafe SecureString GetSecureString(string value)
@@ -115,7 +135,7 @@ namespace HomegearLib.RPC
             {
                 return true;
             }
-            else if (!_sslInfo.VerifyCertificate && (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors || sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch))
+            else if (!_sslInfo.VerifyCertificate && ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == SslPolicyErrors.RemoteCertificateChainErrors || (sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) == SslPolicyErrors.RemoteCertificateNameMismatch))
             {
                 return true;
             }
@@ -132,7 +152,9 @@ namespace HomegearLib.RPC
 
             try
             {
+                _connecting = true;
                 _client?.Close();
+
                 try
                 {
                     _client = new TcpClient(_hostname, _port) { ReceiveTimeout = 60000 };
@@ -148,7 +170,18 @@ namespace HomegearLib.RPC
                     _sslStream = new SslStream(_client.GetStream(), false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
                     try
                     {
-                        _sslStream.AuthenticateAsClient(_hostname);
+                        X509CertificateCollection certificates = new X509CertificateCollection();
+
+                        if (_sslInfo.ClientCertificateFile.Any())
+                        {
+                            if (!File.Exists(_sslInfo.ClientCertificateFile)) throw new HomegearRpcClientSSLException("The specified certificate file does not exist.");
+
+                            var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, _sslInfo.CertificatePassword);
+
+                            certificates.Add(certificate);
+                        }
+                        
+                        _sslStream.AuthenticateAsClient(_hostname, certificates, SslProtocols.Tls12, true);
                     }
                     catch (AuthenticationException ex)
                     {
@@ -167,6 +200,9 @@ namespace HomegearLib.RPC
                 _stopThread = false;
                 _readClientThread = new Thread(ReadClient);
                 _readClientThread.Start();
+
+                _eventQueue?.Shutdown();
+                _eventQueue = new Queue<byte[]>(10, consumeAction: packet => { ProcessPacket(packet); });
 
                 if (Ssl)
                 {
@@ -189,6 +225,8 @@ namespace HomegearLib.RPC
 
         public void Disconnect()
         {
+            _eventQueue?.Shutdown();
+            _eventQueue = null;
             _stopThread = true;
             _client?.Close(); //Don't lock _client here
             if (_readClientThread != null && _readClientThread.IsAlive)
@@ -245,7 +283,7 @@ namespace HomegearLib.RPC
                                 byte[] packet = _binaryRpc.Data;
                                 _binaryRpc.Reset();
                                 System.Diagnostics.Debug.WriteLine("Packet received " + BitConverter.ToString(packet));
-                                ProcessPacket(packet);
+                                _eventQueue.Enque(packet);
                             }
                         }
                     }
@@ -323,7 +361,7 @@ namespace HomegearLib.RPC
                 return;
             }
 
-            if ((packet[3] & 1) != 1) //Request
+            if ((packet[3] & 1) == 0) //Request
             {
                 string methodName = "";
                 List<RPCVariable> parameters = _rpcDecoder.DecodeRequest(packet, ref methodName);
@@ -369,8 +407,7 @@ namespace HomegearLib.RPC
                             continue;
                         }
 
-                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue,
-                            eventParams[3].StringValue, eventParams[4]);
+                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
                     }
                 }
                 else if (methodName == "error" && parameters.Count() == 3 &&
@@ -496,7 +533,10 @@ namespace HomegearLib.RPC
                                     throw ex;
                                 }
                             }
+
+                            if (_stopThread) break;
                             Thread.Sleep(1000);
+                            if (_stopThread) break;
                         }
 
                         _responseReceived.Reset();

@@ -49,11 +49,6 @@ namespace HomegearLibTest
             lblSystemVariableTimer.Text = "";
             lblMetadataTimer.Text = "";
 
-            //txtHomegearHostname.Text = "homegearpi";
-            //txtHomegearPort.Text = "2001";
-            //chkSSL.Checked = false;
-            //txtCertificatePath.Text = "homegearpi.pfx";
-
             if (Properties.Settings.Default.lastHomegearHostname != "")
             {
                 AddHomegearHost(Properties.Settings.Default.lastHomegearHostname);
@@ -65,6 +60,8 @@ namespace HomegearLibTest
             txtHomegearPassword.Text = Properties.Settings.Default.lastHomegearPassword;
             txtHomegearPort.Text = Properties.Settings.Default.lastHomegearPort;
             txtHomegearUsername.Text = Properties.Settings.Default.lastHomegearUsername;
+            txtClientCertificate.Text = Properties.Settings.Default.lastCertificatePath;
+            txtCertificatePassword.Text = Properties.Settings.Default.lastCertificatePassword;
 
             System.Threading.Thread thread = new System.Threading.Thread(() =>
             {
@@ -127,6 +124,11 @@ namespace HomegearLibTest
                     cbHomegearHostname.Text = text;
                 }
             }
+        }
+
+        private void bnSelectCert_Click(object sender, EventArgs e)
+        {
+            if (openCertificate.ShowDialog() == DialogResult.OK) txtClientCertificate.Text = openCertificate.FileName;
         }
 
         void _variableValueChangedTimer_Tick(object sender, EventArgs e)
@@ -503,6 +505,9 @@ namespace HomegearLibTest
             if (chkSSL.Checked)
             {
                 sslClientInfo = new SSLClientInfo(txtHomegearUsername.Text, txtHomegearPassword.Text, chkVerifyCertificate.Checked);
+                sslClientInfo.VerifyCertificate = chkVerifyCertificate.Checked;
+                sslClientInfo.ClientCertificateFile = txtClientCertificate.Text;
+                sslClientInfo.SetCertificatePasswordFromString(txtCertificatePassword.Text);
             }
             Int32.TryParse(txtHomegearPort.Text, out Int32 homegearPort);
 
@@ -512,6 +517,8 @@ namespace HomegearLibTest
             Properties.Settings.Default.lastHomegearPassword = txtHomegearPassword.Text;
             Properties.Settings.Default.lastHomegearPort = txtHomegearPort.Text;
             Properties.Settings.Default.lastHomegearUsername = txtHomegearUsername.Text;
+            Properties.Settings.Default.lastCertificatePath = txtClientCertificate.Text;
+            Properties.Settings.Default.lastCertificatePassword = txtCertificatePassword.Text;
             Properties.Settings.Default.Save();
 
             _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, sslClientInfo);

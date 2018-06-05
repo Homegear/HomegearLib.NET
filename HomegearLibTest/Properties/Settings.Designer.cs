@@ -37,30 +37,6 @@ namespace HomegearLibTest.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9877")]
-        public string lastListenPort {
-            get {
-                return ((string)(this["lastListenPort"]));
-            }
-            set {
-                this["lastListenPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool lastChkSsl {
-            get {
-                return ((bool)(this["lastChkSsl"]));
-            }
-            set {
-                this["lastChkSsl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("test2")]
         public string lastHomegearUsername {
             get {
@@ -121,30 +97,6 @@ namespace HomegearLibTest.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("temp")]
-        public string lastCallbackUsername {
-            get {
-                return ((string)(this["lastCallbackUsername"]));
-            }
-            set {
-                this["lastCallbackUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string lastCallbackPassword {
-            get {
-                return ((string)(this["lastCallbackPassword"]));
-            }
-            set {
-                this["lastCallbackPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2001")]
         public string lastHomegearPort {
             get {
@@ -157,13 +109,13 @@ namespace HomegearLibTest.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.0.0.0")]
-        public string lastListenIP {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool lastChkSsl {
             get {
-                return ((string)(this["lastListenIP"]));
+                return ((bool)(this["lastChkSsl"]));
             }
             set {
-                this["lastListenIP"] = value;
+                this["lastChkSsl"] = value;
             }
         }
     }
