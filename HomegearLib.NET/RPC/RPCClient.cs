@@ -41,7 +41,7 @@ namespace HomegearLib.RPC
         #endregion
 
         const int _maxTries = 3;
-        private readonly SSLClientInfo _sslInfo;
+        private readonly SslInfo _sslInfo;
         private volatile bool _connecting = false;
         private Thread _readClientThread = null;
         private volatile bool _stopThread = false;
@@ -96,7 +96,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        public RPCClient(string hostname, int port, SSLClientInfo sslInfo = null)
+        public RPCClient(string hostname, int port, SslInfo sslInfo = null)
         {
             _hostname = hostname;
             _port = port;

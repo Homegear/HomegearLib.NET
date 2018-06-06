@@ -501,10 +501,10 @@ namespace HomegearLibTest
             txtHomegearPort.ReadOnly = true;
             chkSSL.Enabled = false;
 
-            SSLClientInfo sslClientInfo = null;
+            SslInfo sslClientInfo = null;
             if (chkSSL.Checked)
             {
-                sslClientInfo = new SSLClientInfo(txtHomegearUsername.Text, txtHomegearPassword.Text, chkVerifyCertificate.Checked);
+                sslClientInfo = new SslInfo(txtHomegearUsername.Text, txtHomegearPassword.Text, chkVerifyCertificate.Checked);
                 sslClientInfo.VerifyCertificate = chkVerifyCertificate.Checked;
                 sslClientInfo.ClientCertificateFile = txtClientCertificate.Text;
                 sslClientInfo.SetCertificatePasswordFromString(txtCertificatePassword.Text);

@@ -143,7 +143,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        private SSLClientInfo _sslClientInfo;
+        private SslInfo _sslClientInfo;
 
         private readonly string _clientId = System.Guid.NewGuid().ToString();
         private RPCClient _client = null;
@@ -160,12 +160,12 @@ namespace HomegearLib.RPC
         /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
         /// <param name="homegearPort">The port Homegear is listening on.</param>
         /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
-        public RPCController(string homegearHostname, int homegearPort, SSLClientInfo sslClientInfo = null)
+        public RPCController(string homegearHostname, int homegearPort, SslInfo sslClientInfo = null)
         {
             init(homegearHostname, homegearPort, sslClientInfo);
         }
 
-        void init(string homegearHostname, int homegearPort, SSLClientInfo sslClientInfo)
+        void init(string homegearHostname, int homegearPort, SslInfo sslClientInfo)
         {
             _sslClientInfo = sslClientInfo;
             _client = new RPCClient(homegearHostname, homegearPort, sslClientInfo);
