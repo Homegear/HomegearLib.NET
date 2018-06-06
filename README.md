@@ -36,17 +36,29 @@ RPCController rpc = new RPCController
 						2001
 					);
 
-//With SSL support:
-SSLClientInfo sslClientInfo = new SSLClientInfo
+//With SSL support and no authentication:
+SslInfo sslInfo = new SslInfo();
+
+RPCController rpc = new RPCController("homegear", 2003, sslInfo);
+
+//With SSL support and username/password:
+SslInfo sslInfo = new SslInfo
 								(
-									"MyComputer",	//Hostname of the computer your program runs on.
-													//This hostname is used for certificate verification.
-									"user",
+									new Tuple<string, string>("user", "secret"),
+									true			//Enable certificate verification
+								);
+
+RPCController rpc = new RPCController("homegear", 2003, sslInfo);
+
+//With SSL support and client certificate authentication:
+SslInfo sslInfo = new SslInfo
+								(
+									"Path to PKCS #12 certificate file",
 									"secret",
 									true			//Enable certificate verification
 								);
 
-RPCController rpc = new RPCController("homegear", 2003, sslClientInfo);
+RPCController rpc = new RPCController("homegear", 2003, sslInfo);
 ```
 
 Now we can instantiate a new Homegear object. Upon creation the Homegear object will connect to Homegear. The second parameter defines, whether the library should receive notifications from Homegear. When set to "true" you will receive device state changes from Homegear immediately. As this is not always needed - i. e. when you only want to set values - it can be disabled by specifying "false" here to reduce the load on the Homegear system and the network load.
