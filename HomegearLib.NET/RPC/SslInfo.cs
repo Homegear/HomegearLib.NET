@@ -8,13 +8,13 @@ namespace HomegearLib.RPC
         private bool _verifyCertificate = true;
         public bool VerifyCertificate { get { return _verifyCertificate; } set { _verifyCertificate = value; } }
 
-        public SecureString Username;
+        public SecureString Username = new SecureString();
 
-        public SecureString Password;
+        public SecureString Password = new SecureString();
 
         public string ClientCertificateFile;
 
-        public SecureString CertificatePassword;
+        public SecureString CertificatePassword = new SecureString();
 
         public SslInfo()
         {

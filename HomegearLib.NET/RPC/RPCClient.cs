@@ -157,7 +157,7 @@ namespace HomegearLib.RPC
 
                 try
                 {
-                    _client = new TcpClient(_hostname, _port) { ReceiveTimeout = 60000 };
+                    _client = new TcpClient(_hostname, _port) { ReceiveTimeout = 10000 };
                 }
                 catch (SocketException ex)
                 {

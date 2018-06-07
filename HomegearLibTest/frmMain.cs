@@ -504,8 +504,7 @@ namespace HomegearLibTest
             SslInfo sslClientInfo = null;
             if (chkSSL.Checked)
             {
-                sslClientInfo = new SslInfo(txtHomegearUsername.Text, txtHomegearPassword.Text, chkVerifyCertificate.Checked);
-                sslClientInfo.VerifyCertificate = chkVerifyCertificate.Checked;
+                sslClientInfo = new SslInfo(new Tuple<string, string>(txtHomegearUsername.Text, txtHomegearPassword.Text), chkVerifyCertificate.Checked);
                 sslClientInfo.ClientCertificateFile = txtClientCertificate.Text;
                 sslClientInfo.SetCertificatePasswordFromString(txtCertificatePassword.Text);
             }
