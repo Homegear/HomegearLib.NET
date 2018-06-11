@@ -1655,6 +1655,16 @@ namespace HomegearLib.RPC
             }
         }
 
+        public RPCVariable invokeFamilyMethod(Family family, string method, List<RPCVariable> parameters)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            return _client.CallMethod("invokeFamilyMethod", new List<RPCVariable> { new RPCVariable(family.ID), new RPCVariable(method), new RPCVariable(parameters) });
+        }
+
         public Event ParseEvent(RPCVariable eventStruct, Event eventToUpdate = null)
         {
             if (!eventStruct.StructValue.ContainsKey("TYPE") || !eventStruct.StructValue.ContainsKey("ID"))
@@ -1912,7 +1922,7 @@ namespace HomegearLib.RPC
                     continue;
                 }
 
-                Family family = new Family(familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue);
+                Family family = new Family(this, familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue);
                 if (familyStruct.StructValue.ContainsKey("PAIRING_METHODS"))
                 {
                     List<string> pairingMethods = new List<string>();

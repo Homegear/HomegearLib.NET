@@ -1,10 +1,13 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
 
 namespace HomegearLib
 {
     public class Family : IDisposable
     {
+        RPCController _rpc = null;
+
         private long _id = -1;
         public long ID { get { return _id; } set { _id = value; } }
 
@@ -18,8 +21,9 @@ namespace HomegearLib
             _pairingMethods = pairingMethods;
         }
 
-        public Family(long id, string name)
+        public Family(RPCController rpc, long id, string name)
         {
+            _rpc = rpc;
             _id = id;
             _name = name;
         }
@@ -32,6 +36,11 @@ namespace HomegearLib
         public override string ToString()
         {
             return _name;
+        }
+
+        public RPCVariable invokeMethod(string method, List<RPCVariable> parameters)
+        {
+            return _rpc.invokeFamilyMethod(this, method, parameters);
         }
     }
 }
