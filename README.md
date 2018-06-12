@@ -30,11 +30,10 @@ We need to create a RPC controller object first. The controller connects to your
 
 ```
 //Without SSL support:
-RPCController rpc = new RPCController
-					(
-						"homegear", 	//Hostname of your server running Homegear
-						2001
-					);
+RPCController rpc = new RPCController(
+		"homegear", 	//Hostname of your server running Homegear
+		2001
+	);
 
 //With SSL support and no authentication:
 SslInfo sslInfo = new SslInfo();
@@ -42,21 +41,19 @@ SslInfo sslInfo = new SslInfo();
 RPCController rpc = new RPCController("homegear", 2003, sslInfo);
 
 //With SSL support and username/password:
-SslInfo sslInfo = new SslInfo
-								(
-									new Tuple<string, string>("user", "secret"),
-									true			//Enable certificate verification
-								);
+SslInfo sslInfo = new SslInfo(
+		new Tuple<string, string>("user", "secret"),
+		true			//Enable hostname verification
+	);
 
 RPCController rpc = new RPCController("homegear", 2003, sslInfo);
 
 //With SSL support and client certificate authentication:
-SslInfo sslInfo = new SslInfo
-								(
-									"Path to PKCS #12 certificate file",
-									"secret",
-									true			//Enable certificate verification
-								);
+SslInfo sslInfo = new SslInfo(
+		"Path to PKCS #12 certificate file",
+		"secret",
+		true			//Enable hostname verification
+	);
 
 RPCController rpc = new RPCController("homegear", 2003, sslInfo);
 ```

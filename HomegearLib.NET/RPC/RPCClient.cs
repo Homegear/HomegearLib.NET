@@ -134,7 +134,14 @@ namespace HomegearLib.RPC
             if(_sslInfo.CaCertificate.Any())
             {
                 var certificate2 = new X509Certificate2(certificate);
-                if (_sslInfo.VerifyHostname && certificate2.GetNameInfo(X509NameType.DnsName, false) != _hostname) return false;
+                if (_sslInfo.VerifyHostname)
+                {
+                    if (_sslInfo.ServerCertificateCommonName.Any())
+                    {
+                        if(certificate2.GetNameInfo(X509NameType.DnsName, false) != _sslInfo.ServerCertificateCommonName) return false;
+                    }
+                    else if (certificate2.GetNameInfo(X509NameType.DnsName, false) != _hostname) return false;
+                }
                 var validationChain = new X509Chain();
                 validationChain.ChainPolicy.ExtraStore.Add(new X509Certificate2(System.Text.Encoding.UTF8.GetBytes(_sslInfo.CaCertificate)));
                 validationChain.ChainPolicy.RevocationMode = _sslInfo.CheckCertificateRevocationStatus ? X509RevocationMode.Offline : X509RevocationMode.NoCheck;

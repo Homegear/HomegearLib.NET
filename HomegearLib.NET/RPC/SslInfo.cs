@@ -19,6 +19,11 @@ namespace HomegearLib.RPC
 
         public string CaCertificate { get; set; }
 
+        /// <summary>
+        /// When set, the library checks if the server certificate's common name equals the value specified here instead of comparing it with the hostname.
+        /// </summary>
+        public string ServerCertificateCommonName { get; set; }
+
         public SslInfo()
         {
         }
@@ -29,7 +34,7 @@ namespace HomegearLib.RPC
             Password = usernamePassword.Item2;
         }
 
-        public SslInfo(Tuple<SecureString, SecureString> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
+        public SslInfo(Tuple<SecureString, SecureString> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus = false)
         {
             Username = usernamePassword.Item1;
             Password = usernamePassword.Item2;
@@ -43,7 +48,7 @@ namespace HomegearLib.RPC
             SetPasswordFromString(usernamePassword.Item2);
         }
 
-        public SslInfo(Tuple<string, string> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
+        public SslInfo(Tuple<string, string> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus = false)
         {
             SetUsernameFromString(usernamePassword.Item1);
             SetPasswordFromString(usernamePassword.Item2);
@@ -57,7 +62,7 @@ namespace HomegearLib.RPC
             CertificatePassword = certificatePassword;
         }
 
-        public SslInfo(string clientCertificateFile, SecureString certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
+        public SslInfo(string clientCertificateFile, SecureString certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus = false)
         {
             ClientCertificateFile = clientCertificateFile;
             CertificatePassword = certificatePassword;
@@ -71,7 +76,7 @@ namespace HomegearLib.RPC
             SetCertificatePasswordFromString(certificatePassword);
         }
 
-        public SslInfo(string clientCertificateFile, string certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
+        public SslInfo(string clientCertificateFile, string certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus = false)
         {
             ClientCertificateFile = clientCertificateFile;
             SetCertificatePasswordFromString(certificatePassword);

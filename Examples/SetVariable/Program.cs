@@ -8,11 +8,44 @@ namespace SetVariable
     class Program
     {
         static ManualResetEvent _connectedEvent = new ManualResetEvent(false);
-        static string cloudmaticHostCom = "com.easy-smarthome.de";
 
         static void Main(string[] args)
         {
-            var rpc = new RPCController(cloudmaticHostCom, 4431);
+            Console.Write("Please enter the hostname or IP address of your server running Homegear: ");
+            string homegearHost = Console.ReadLine();
+
+            #region Without SSL support
+            RPCController rpc = new RPCController(
+                    homegearHost,   //Hostname of your server running Homegear
+                    2001           //Port Homegear listens on
+                );
+            #endregion
+
+            #region With SSL support and no authentication
+            /*
+            SslInfo sslInfo = new SslInfo();
+
+            RPCController rpc = new RPCController("homegear", 2003, sslInfo);
+
+            //With SSL support and username/password:
+            SslInfo sslInfo = new SslInfo(
+					new Tuple<string, string>("user", "secret"),
+					true			//Enable hostname verification
+				);
+
+            RPCController rpc = new RPCController("homegear", 2003, sslInfo);
+            */
+            #endregion
+
+            #region With SSL support and client certificate authentication
+            /*
+            SslInfo sslInfo = new SslInfo(
+					"Path to PKCS #12 certificate file",
+					"secret",
+					true			//Enable hostname verification
+				);
+            */
+            #endregion
 
             Homegear homegear = new Homegear(rpc, false);
 

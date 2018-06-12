@@ -184,6 +184,8 @@ namespace HomegearLib
         private volatile bool _stopConnectThread = false;
         private Thread _connectThread = null;
 
+        public RPCController Rpc { get { return _rpc; } }
+
         private Families _families = null;
         /// <summary>
         /// Dictionary to access all device families. The key is the family id, the value the family object. This property is currently only used to get the name of a device family.
