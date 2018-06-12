@@ -9,33 +9,20 @@ namespace Events
     class Program
     {
         static ManualResetEvent _connectedEvent = new ManualResetEvent(false);
+        static string cloudmaticHost = "34672.meine-homematic.de";
+        static string cloudmaticUsername = "easymate_eddy";
+        static string cloudmaticPassword = "19edsc89";
+
+        static string cloudmaticHostCom = "com.easy-smarthome.de";
 
         static void Main(string[] args)
         {
-            Console.Write("Please enter the hostname or IP address of your server running Homegear: ");
-            string homegearHost = Console.ReadLine();
-
-            #region Without SSL support
-            RPCController rpc = new RPCController
-                                (
-                                    homegearHost,   //Hostname of your server running Homegear
-                                    2001           //Port Homegear listens on
-                                );
-            #endregion
-
             #region With SSL support
-            /*
-            SSLClientInfo sslClientInfo = new SSLClientInfo
-                                            (
-                                                "MyComputer",   //Hostname of the computer your program runs on.
-                //This hostname is used for certificate verification.
-                                                "user",
-                                                "secret",
-                                                true            //Enable certificate verification
-                                            );
 
-            RPCController rpc = new RPCController(homegearHost, 2003, sslClientInfo);
-            */
+            var sslClientInfo = new SSLClientInfo(cloudmaticUsername, cloudmaticPassword);
+
+            var rpc = new RPCController(cloudmaticHostCom, 4431);
+
             #endregion
 
             Homegear homegear = new Homegear(rpc, true);
@@ -72,7 +59,7 @@ namespace Events
 
         static void homegear_DeviceConfigParameterUpdated(Homegear sender, Device device, Channel channel, ConfigParameter parameter)
         {
-            Console.WriteLine("Config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
+            System.Diagnostics.Debug.WriteLine("Config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
         }
 
         static void homegear_DeviceLinkConfigParameterUpdated(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter)

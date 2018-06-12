@@ -131,15 +131,24 @@ namespace HomegearLib.RPC
         
         public bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (sslPolicyErrors == SslPolicyErrors.None)
+            if(_sslInfo.CaCertificate.Any())
+            {
+                var certificate2 = new X509Certificate2(certificate);
+                if (_sslInfo.VerifyHostname && certificate2.GetNameInfo(X509NameType.DnsName, false) != _hostname) return false;
+                var validationChain = new X509Chain();
+                validationChain.ChainPolicy.ExtraStore.Add(new X509Certificate2(System.Text.Encoding.UTF8.GetBytes(_sslInfo.CaCertificate)));
+                validationChain.ChainPolicy.RevocationMode = _sslInfo.CheckCertificateRevocationStatus ? X509RevocationMode.Offline : X509RevocationMode.NoCheck;
+                validationChain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
+                if (validationChain.Build(certificate2)) return true;
+            }
+            else if (sslPolicyErrors == SslPolicyErrors.None)
             {
                 return true;
             }
-            else if (!_sslInfo.VerifyCertificate && ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == SslPolicyErrors.RemoteCertificateChainErrors || (sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) == SslPolicyErrors.RemoteCertificateNameMismatch))
+            else if (!_sslInfo.VerifyHostname && ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == SslPolicyErrors.RemoteCertificateChainErrors || (sslPolicyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) == SslPolicyErrors.RemoteCertificateNameMismatch))
             {
                 return true;
             }
-
             return false;
         }
 
@@ -181,7 +190,7 @@ namespace HomegearLib.RPC
                             certificates.Add(certificate);
                         }
                         
-                        _sslStream.AuthenticateAsClient(_hostname, certificates, SslProtocols.Tls12, true);
+                        _sslStream.AuthenticateAsClient(_hostname, certificates, SslProtocols.Tls12, _sslInfo.CheckCertificateRevocationStatus);
                     }
                     catch (AuthenticationException ex)
                     {

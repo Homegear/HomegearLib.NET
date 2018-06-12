@@ -5,8 +5,9 @@ namespace HomegearLib.RPC
 {
     public class SslInfo
     {
-        private bool _verifyCertificate = true;
-        public bool VerifyCertificate { get { return _verifyCertificate; } set { _verifyCertificate = value; } }
+        public bool VerifyHostname { get; set; } = true;
+
+        public bool CheckCertificateRevocationStatus { get; set; } = false;
 
         public SecureString Username = new SecureString();
 
@@ -15,6 +16,8 @@ namespace HomegearLib.RPC
         public string ClientCertificateFile;
 
         public SecureString CertificatePassword = new SecureString();
+
+        public string CaCertificate { get; set; }
 
         public SslInfo()
         {
@@ -26,11 +29,12 @@ namespace HomegearLib.RPC
             Password = usernamePassword.Item2;
         }
 
-        public SslInfo(Tuple<SecureString, SecureString> usernamePassword, bool verifyCertificate)
+        public SslInfo(Tuple<SecureString, SecureString> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
         {
             Username = usernamePassword.Item1;
             Password = usernamePassword.Item2;
-            _verifyCertificate = verifyCertificate;
+            VerifyHostname = verifyHostname;
+            CheckCertificateRevocationStatus = checkCertificateRevocationStatus;
         }
 
         public SslInfo(Tuple<string, string> usernamePassword)
@@ -39,11 +43,12 @@ namespace HomegearLib.RPC
             SetPasswordFromString(usernamePassword.Item2);
         }
 
-        public SslInfo(Tuple<string, string> usernamePassword, bool verifyCertificate)
+        public SslInfo(Tuple<string, string> usernamePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
         {
             SetUsernameFromString(usernamePassword.Item1);
             SetPasswordFromString(usernamePassword.Item2);
-            _verifyCertificate = verifyCertificate;
+            VerifyHostname = verifyHostname;
+            CheckCertificateRevocationStatus = checkCertificateRevocationStatus;
         }
 
         public SslInfo(string clientCertificateFile, SecureString certificatePassword)
@@ -52,11 +57,12 @@ namespace HomegearLib.RPC
             CertificatePassword = certificatePassword;
         }
 
-        public SslInfo(string clientCertificateFile, SecureString certificatePassword, bool verifyCertificate)
+        public SslInfo(string clientCertificateFile, SecureString certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
         {
             ClientCertificateFile = clientCertificateFile;
             CertificatePassword = certificatePassword;
-            _verifyCertificate = verifyCertificate;
+            VerifyHostname = verifyHostname;
+            CheckCertificateRevocationStatus = checkCertificateRevocationStatus;
         }
 
         public SslInfo(string clientCertificateFile, string certificatePassword)
@@ -65,11 +71,12 @@ namespace HomegearLib.RPC
             SetCertificatePasswordFromString(certificatePassword);
         }
 
-        public SslInfo(string clientCertificateFile, string certificatePassword, bool verifyCertificate)
+        public SslInfo(string clientCertificateFile, string certificatePassword, bool verifyHostname, bool checkCertificateRevocationStatus)
         {
             ClientCertificateFile = clientCertificateFile;
             SetCertificatePasswordFromString(certificatePassword);
-            _verifyCertificate = verifyCertificate;
+            VerifyHostname = verifyHostname;
+            CheckCertificateRevocationStatus = checkCertificateRevocationStatus;
         }
 
         public void SetUsernameFromString(string username)

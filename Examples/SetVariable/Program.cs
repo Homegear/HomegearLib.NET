@@ -8,44 +8,11 @@ namespace SetVariable
     class Program
     {
         static ManualResetEvent _connectedEvent = new ManualResetEvent(false);
+        static string cloudmaticHostCom = "com.easy-smarthome.de";
 
         static void Main(string[] args)
         {
-            Console.Write("Please enter the hostname or IP address of your server running Homegear: ");
-            string homegearHost = Console.ReadLine();
-
-            #region Without SSL support
-            RPCController rpc = new RPCController
-                                (
-                                    homegearHost,   //Hostname of your server running Homegear
-                                    2001            //Port Homegear listens on
-                                );
-            #endregion
-
-            #region With SSL support
-            /*
-            SSLClientInfo sslClientInfo = new SSLClientInfo
-                                            (
-                                                "MyComputer",   //Hostname of the computer your program runs on.
-                //This hostname is used for certificate verification.
-                                                "user",
-                                                "secret",
-                                                true            //Enable certificate verification
-                                            );
-            //You can create the certificate file with: openssl pkcs12 -export -inkey YourPrivateKey.key -in YourCA.pem -in YourPublicCert.pem -out MyCertificate.pfx
-            SSLServerInfo sslServerInfo = new SSLServerInfo
-                                            (
-                                                "MyCertificate.pfx",    //Path to the certificate the callback server
-                //will use.
-                                                "secret",               //Certificate password
-                                                "localUser",            //The username Homegear needs to use to connect
-                //to our callback server
-                                                "localSecret"           //The password Homegear needs to use to connect
-                //to our callback server
-                                            );
-            RPCController rpc = new RPCController(homegearHost, 2003, "", "", -1, sslClientInfo, sslServerInfo);
-            */
-            #endregion
+            var rpc = new RPCController(cloudmaticHostCom, 4431);
 
             Homegear homegear = new Homegear(rpc, false);
 
