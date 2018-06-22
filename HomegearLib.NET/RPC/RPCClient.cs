@@ -66,18 +66,16 @@ namespace HomegearLib.RPC
 
         public bool IsConnected => _client != null && _client.Connected;
 
+        public bool IsMono => Type.GetType("Mono.Runtime") != null;
+
         public CipherAlgorithmType CipherAlgorithm
         {
             get
             {
-                if (_sslStream != null && Type.GetType("Mono.Runtime") == null)
-                {
+                if (_sslStream != null && !IsMono)
                     return _sslStream.CipherAlgorithm;
-                }
-                else
-                {
-                    return CipherAlgorithmType.Null;
-                }
+
+                return CipherAlgorithmType.Null;
             }
         }
 
@@ -85,14 +83,10 @@ namespace HomegearLib.RPC
         {
             get
             {
-                if (_sslStream != null && Type.GetType("Mono.Runtime") == null)
-                {
+                if (_sslStream != null && !IsMono)
                     return _sslStream.CipherStrength;
-                }
-                else
-                {
-                    return -1;
-                }
+
+                return -1;
             }
         }
 
@@ -111,7 +105,7 @@ namespace HomegearLib.RPC
         ~RPCClient()
         {
         }
-        
+
         public void Dispose()
         {
             _eventQueue?.Shutdown();
@@ -128,24 +122,24 @@ namespace HomegearLib.RPC
             }
             return secureString;
         }
-        
+
         public bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if(_sslInfo.CaCertificate.Any())
+            if (_sslInfo.CaCertificate.Any())
             {
                 var certificate2 = new X509Certificate2(certificate);
                 if (_sslInfo.VerifyHostname)
                 {
                     if (_sslInfo.ServerCertificateCommonName.Any())
                     {
-                        if(certificate2.GetNameInfo(X509NameType.DnsName, false) != _sslInfo.ServerCertificateCommonName) return false;
+                        if (certificate2.GetNameInfo(X509NameType.DnsName, false) != _sslInfo.ServerCertificateCommonName) return false;
                     }
                     else if (certificate2.GetNameInfo(X509NameType.DnsName, false) != _hostname) return false;
                 }
                 var validationChain = new X509Chain();
                 validationChain.ChainPolicy.ExtraStore.Add(new X509Certificate2(System.Text.Encoding.UTF8.GetBytes(_sslInfo.CaCertificate)));
                 validationChain.ChainPolicy.RevocationMode = _sslInfo.CheckCertificateRevocationStatus ? X509RevocationMode.Offline : X509RevocationMode.NoCheck;
-                validationChain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
+                validationChain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag | X509VerificationFlags.AllowUnknownCertificateAuthority;
                 if (validationChain.Build(certificate2)) return true;
             }
             else if (sslPolicyErrors == SslPolicyErrors.None)
@@ -192,11 +186,21 @@ namespace HomegearLib.RPC
                         {
                             if (!File.Exists(_sslInfo.ClientCertificateFile)) throw new HomegearRpcClientSSLException("The specified certificate file does not exist.");
 
-                            var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, _sslInfo.CertificatePassword);
-
-                            certificates.Add(certificate);
+                            if (IsMono)
+                            {
+                                // [MonoTODO ("SecureString is incomplete")]
+                                // https://github.com/mono/mono/blob/master/mcs/class/System/System.Security.Cryptography.X509Certificates/X509Certificate2.cs#L227
+                                var pass = new System.Net.NetworkCredential(string.Empty, _sslInfo.CertificatePassword).Password;
+                                var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, pass);
+                                certificates.Add(certificate);
+                            }
+                            else
+                            {
+                                var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, _sslInfo.CertificatePassword);
+                                certificates.Add(certificate);
+                            }
                         }
-                        
+
                         _sslStream.AuthenticateAsClient(_hostname, certificates, SslProtocols.Tls12, _sslInfo.CheckCertificateRevocationStatus);
                     }
                     catch (AuthenticationException ex)
@@ -212,7 +216,7 @@ namespace HomegearLib.RPC
                         throw new HomegearRpcClientSSLException("Server authentication failed: " + ex.Message);
                     }
                 }
-                
+
                 _stopThread = false;
                 _readClientThread = new Thread(ReadClient);
                 _readClientThread.Start();
@@ -222,13 +226,14 @@ namespace HomegearLib.RPC
 
                 if (Ssl)
                 {
-                    Connected?.Invoke(this, _sslStream.CipherAlgorithm, _sslStream.CipherStrength);
+                    var cipherStrength = IsMono ? -1 : _sslStream.CipherStrength;
+                    Connected?.Invoke(this, _sslStream.CipherAlgorithm, cipherStrength);
                 }
                 else
                 {
                     Connected?.Invoke(this);
                 }
-                
+
                 _connecting = false;
             }
             catch (Exception ex)
@@ -303,7 +308,7 @@ namespace HomegearLib.RPC
                             }
                         }
                     }
-                    catch(HomegearBinaryRpcException ex)
+                    catch (HomegearBinaryRpcException ex)
                     {
                         System.Diagnostics.Debug.WriteLine(ex.Message);
                         _binaryRpc.Reset();
@@ -340,6 +345,14 @@ namespace HomegearLib.RPC
                         break;
                     }
                 }
+                catch (AggregateException aggregateEx)
+                {
+                    // this exceptions happens sporadically (not reproducible)
+                    System.Diagnostics.Debug.WriteLine($"AggregateException {aggregateEx}");
+                    // I am not sure if I should do the reset here, but it works
+                    _binaryRpc.Reset();
+                    continue;
+                }
             }
         }
 
@@ -369,7 +382,7 @@ namespace HomegearLib.RPC
                 }
             }
         }
-        
+
         private void ProcessPacket(byte[] packet)
         {
             if (packet == null || packet.Length < 8)
@@ -557,7 +570,7 @@ namespace HomegearLib.RPC
 
                         _responseReceived.Reset();
                         _rpcResponse = null;
-                        
+
                         Encoding.RPCHeader header = null;
                         if (Ssl && _authString != null && _authString.Length > 0)
                         {
@@ -599,8 +612,8 @@ namespace HomegearLib.RPC
                             break;
                         }
                     }
-                    
-                    if(_rpcResponse == null)
+
+                    if (_rpcResponse == null)
                     {
                         return RPCVariable.CreateError(-32501, "No response received.");
                     }
