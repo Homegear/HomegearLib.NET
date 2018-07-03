@@ -100,9 +100,9 @@ namespace Events
             Console.WriteLine("System variable updated: Value: " + variable.ToString());
         }
 
-        static void homegear_DeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable)
+        static void homegear_DeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable, string eventSource)
         {
-            Console.WriteLine("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + variable.ToString());
+            Console.WriteLine("Variable updated: Event source: " + eventSource + " Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + variable.ToString());
         }
 
         static void homegear_ConnectError(Homegear sender, string message, string stackTrace)

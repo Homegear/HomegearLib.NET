@@ -30,7 +30,7 @@ namespace HomegearLib.RPC
 
     public class RPCController : IDisposable
     {
-        internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
+        internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value, string eventSource);
         internal delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
         internal delegate void PongEventHandler(RPCController sender, string id);
         internal delegate void SystemVariableDeletedEventHandler(RPCController sender);
@@ -244,7 +244,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        private void _client_OnRPCEvent(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value)
+        private void _client_OnRPCEvent(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value, string eventSource)
         {
             if (peerId == 0)
             {
@@ -289,7 +289,7 @@ namespace HomegearLib.RPC
             }
             else if (DeviceVariableUpdated != null)
             {
-                DeviceVariableUpdated(this, new Variable(peerId, channel, parameterName, value));
+                DeviceVariableUpdated(this, new Variable(peerId, channel, parameterName, value), eventSource);
             }
         }
 
