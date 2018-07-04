@@ -334,7 +334,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable)
+        void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable, string eventSource)
         {
             string value = variable.ToString();
             if (value.Length > 200)
@@ -342,7 +342,7 @@ namespace HomegearLibTest
                 value = value.Substring(0, 200) + "...";
             }
 
-            WriteLog("Variable updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + value);
+            WriteLog("Variable updated: Event source: " + eventSource + " Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Variable Name: \"" + variable.Name + "\", Value: " + value);
             if(_selectedVariable == variable)
             {
                 SetVariableValue(variable.ToString());

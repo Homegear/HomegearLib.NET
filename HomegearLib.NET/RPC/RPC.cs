@@ -30,7 +30,7 @@ namespace HomegearLib.RPC
 
     public class RPCController : IDisposable
     {
-        internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value);
+        internal delegate void DeviceVariableUpdatedEventHandler(RPCController sender, Variable value, string eventSource);
         internal delegate void SystemVariableUpdatedEventHandler(RPCController sender, SystemVariable value);
         internal delegate void PongEventHandler(RPCController sender, string id);
         internal delegate void SystemVariableDeletedEventHandler(RPCController sender);
@@ -82,6 +82,11 @@ namespace HomegearLib.RPC
         /// Returns "true" when the RPC controller is connected to Homegear.
         /// </summary>
         public bool IsConnected { get { return _client != null && _client.IsConnected; } }
+
+        /// <summary>
+        /// When set to "true" events from Homegear caused by setting a value through the library are ignored.
+        /// </summary>
+        public bool IgnoreEventsFromMyself { get; set; } = false;
 
         private Dictionary<long, Family> _families = null;
         internal Dictionary<long, Family> Families
@@ -145,7 +150,8 @@ namespace HomegearLib.RPC
 
         private SslInfo _sslClientInfo;
 
-        private readonly string _clientId = System.Guid.NewGuid().ToString();
+        private readonly string _clientId = "HomegearLib." + System.Guid.NewGuid().ToString();
+
         private RPCClient _client = null;
         public RPCClient Client { get { return _client; } }
 
@@ -159,7 +165,7 @@ namespace HomegearLib.RPC
         /// </summary>
         /// <param name="homegearHostname">The hostname or IP address of the Homegear server to connect to.</param>
         /// <param name="homegearPort">The port Homegear is listening on.</param>
-        /// <param name="SSLClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
+        /// <param name="sslClientInfo">When a SSLClientInfo object is passed, the connection to Homegear will be SSL encrypted.</param>
         public RPCController(string homegearHostname, int homegearPort, SslInfo sslClientInfo = null)
         {
             init(homegearHostname, homegearPort, sslClientInfo);
@@ -225,7 +231,7 @@ namespace HomegearLib.RPC
                 _keepAliveTimer.Interval = 10000;
                 if (_events)
                 {
-                    if (!ClientServerInitialized("HomegearLib." + _clientId))
+                    if (!ClientServerInitialized(_clientId))
                     {
                         _client.Disconnect();
                     }
@@ -244,8 +250,10 @@ namespace HomegearLib.RPC
             }
         }
 
-        private void _client_OnRPCEvent(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value)
+        private void _client_OnRPCEvent(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value, string eventSource)
         {
+            if (IgnoreEventsFromMyself && eventSource == _clientId) return;
+
             if (peerId == 0)
             {
                 if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 0)
@@ -289,7 +297,7 @@ namespace HomegearLib.RPC
             }
             else if (DeviceVariableUpdated != null)
             {
-                DeviceVariableUpdated(this, new Variable(peerId, channel, parameterName, value));
+                DeviceVariableUpdated(this, new Variable(peerId, channel, parameterName, value), eventSource);
             }
         }
 
@@ -326,7 +334,7 @@ namespace HomegearLib.RPC
             Connected?.Invoke(sender, cipherAlgorithm, cipherStrength);
             if (_events)
             {
-                Init("HomegearLib." + _clientId);
+                Init(_clientId);
             }
             if (InitCompleted != null)
             {

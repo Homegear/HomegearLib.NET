@@ -18,7 +18,7 @@ namespace HomegearLib.RPC
         public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, int cipherStrength = -1);
         public delegate void DisconnectedEventHandler(RPCClient sender);
         public delegate void HomegearErrorEventHandler(RPCClient sender, long level, string message);
-        public delegate void RPCEventEventHandler(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value);
+        public delegate void RPCEventEventHandler(RPCClient sender, long peerId, long channel, string parameterName, RPCVariable value, string eventSource);
         public delegate void NewDevicesEventHandler(RPCClient sender);
         public delegate void DevicesDeletedEventHandler(RPCClient sender);
         public delegate void UpdateDeviceEventHandler(RPCClient sender, long peerId, long channel, long flags);
@@ -72,8 +72,7 @@ namespace HomegearLib.RPC
         {
             get
             {
-                if (_sslStream != null && !IsMono)
-                    return _sslStream.CipherAlgorithm;
+                if (_sslStream != null && !IsMono) return _sslStream.CipherAlgorithm;
 
                 return CipherAlgorithmType.Null;
             }
@@ -83,8 +82,7 @@ namespace HomegearLib.RPC
         {
             get
             {
-                if (_sslStream != null && !IsMono)
-                    return _sslStream.CipherStrength;
+                if (_sslStream != null && !IsMono) return _sslStream.CipherStrength;
 
                 return -1;
             }
@@ -190,8 +188,8 @@ namespace HomegearLib.RPC
                             {
                                 // [MonoTODO ("SecureString is incomplete")]
                                 // https://github.com/mono/mono/blob/master/mcs/class/System/System.Security.Cryptography.X509Certificates/X509Certificate2.cs#L227
-                                var pass = new System.Net.NetworkCredential(string.Empty, _sslInfo.CertificatePassword).Password;
-                                var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, pass);
+                                var password = new System.Net.NetworkCredential(string.Empty, _sslInfo.CertificatePassword).Password;
+                                var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, password);
                                 certificates.Add(certificate);
                             }
                             else
@@ -345,11 +343,10 @@ namespace HomegearLib.RPC
                         break;
                     }
                 }
-                catch (AggregateException aggregateEx)
+                catch (AggregateException ex)
                 {
-                    // this exceptions happens sporadically (not reproducible)
-                    System.Diagnostics.Debug.WriteLine($"AggregateException {aggregateEx}");
-                    // I am not sure if I should do the reset here, but it works
+                    // This exception occurs sporadically (not reproducible)
+                    System.Diagnostics.Debug.WriteLine($"AggregateException {ex}");
                     _binaryRpc.Reset();
                     continue;
                 }
@@ -428,15 +425,16 @@ namespace HomegearLib.RPC
                         }
 
                         List<RPCVariable> eventParams = method.StructValue["params"].ArrayValue;
-                        if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString ||
+                        if (eventParams.Count() != 6 || eventParams[0].Type != RPCVariableType.rpcString ||
                             eventParams[1].Type != RPCVariableType.rpcInteger ||
                             eventParams[2].Type != RPCVariableType.rpcInteger ||
-                            eventParams[3].Type != RPCVariableType.rpcString)
+                            eventParams[3].Type != RPCVariableType.rpcString ||
+                            eventParams[5].Type != RPCVariableType.rpcString)
                         {
                             continue;
                         }
 
-                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4]);
+                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4], eventParams[5].StringValue);
                     }
                 }
                 else if (methodName == "error" && parameters.Count() == 3 &&

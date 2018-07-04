@@ -108,7 +108,7 @@ namespace HomegearLib
         public delegate void SystemVariableUpdatedEventHandler(Homegear sender, SystemVariable variable);
         public delegate void PongEventHandler(Homegear sender, string id);
         public delegate void MetadataUpdatedEventHandler(Homegear sender, Device device, MetadataVariable variable);
-        public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable);
+        public delegate void DeviceVariableUpdatedEventHandler(Homegear sender, Device device, Channel channel, Variable variable, string eventSource);
         public delegate void DeviceConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, ConfigParameter parameter);
         public delegate void DeviceLinkConfigParameterUpdatedEventHandler(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter);
         public delegate void EventUpdatedEventHandler(Homegear sender, Event homegearEvent);
@@ -479,7 +479,7 @@ namespace HomegearLib
             }
         }
 
-        private void _rpc_OnDeviceVariableUpdated(RPCController sender, Variable value)
+        private void _rpc_OnDeviceVariableUpdated(RPCController sender, Variable value, string eventSource)
         {
             if (_disposing)
             {
@@ -510,7 +510,7 @@ namespace HomegearLib
 
             Variable variable = deviceChannel.Variables[value.Name];
             variable.SetValue(value);
-            DeviceVariableUpdated?.Invoke(this, device, deviceChannel, variable);
+            DeviceVariableUpdated?.Invoke(this, device, deviceChannel, variable, eventSource);
         }
 
         private void _rpc_OnSystemVariableUpdated(RPCController sender, SystemVariable value)
@@ -620,7 +620,7 @@ namespace HomegearLib
                         continue;
                     }
 
-                    DeviceVariableUpdated?.Invoke(this, device, device.Channels[variable.Channel], variable);
+                    DeviceVariableUpdated?.Invoke(this, device, device.Channels[variable.Channel], variable, "HomegearLib.NET");
                 }
                 bool systemVariablesAdded = false;
                 bool systemVariablesDeleted = false;
