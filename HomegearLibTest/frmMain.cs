@@ -524,6 +524,7 @@ namespace HomegearLibTest
             _rpc.Connected += _rpc_Connected;
             _rpc.Disconnected += _rpc_Disconnected;
             _rpc.AsciiDeviceTypeIdString = true;
+            _rpc.IgnoreEventsFromMyself = true;
             _homegear = new Homegear(_rpc, true);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;

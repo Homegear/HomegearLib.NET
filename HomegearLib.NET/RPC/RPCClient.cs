@@ -425,16 +425,15 @@ namespace HomegearLib.RPC
                         }
 
                         List<RPCVariable> eventParams = method.StructValue["params"].ArrayValue;
-                        if (eventParams.Count() != 6 || eventParams[0].Type != RPCVariableType.rpcString ||
+                        if (eventParams.Count() != 5 || eventParams[0].Type != RPCVariableType.rpcString ||
                             eventParams[1].Type != RPCVariableType.rpcInteger ||
                             eventParams[2].Type != RPCVariableType.rpcInteger ||
-                            eventParams[3].Type != RPCVariableType.rpcString ||
-                            eventParams[5].Type != RPCVariableType.rpcString)
+                            eventParams[3].Type != RPCVariableType.rpcString)
                         {
                             continue;
                         }
 
-                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4], eventParams[5].StringValue);
+                        RPCEvent?.Invoke(this, eventParams[1].IntegerValue, eventParams[2].IntegerValue, eventParams[3].StringValue, eventParams[4], eventParams[0].StringValue);
                     }
                 }
                 else if (methodName == "error" && parameters.Count() == 3 &&
