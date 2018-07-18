@@ -213,6 +213,15 @@ namespace HomegearLib.RPC
                         _connecting = false;
                         throw new HomegearRpcClientSSLException("Server authentication failed: " + ex.Message);
                     }
+                    catch (AggregateException aggrEx)
+                    {
+                        if(aggrEx.InnerException is AuthenticationException authEx)
+                        {
+                            _client.Close();
+                            _connecting = false;
+                            throw new HomegearRpcClientSSLException("Server authentication failed: " + authEx.Message);
+                        }
+                    }
                 }
 
                 _stopThread = false;
