@@ -13,16 +13,6 @@ namespace HomegearLib
         private Dictionary<string, string> _translations = null;
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
 
-        public int Level
-        {
-            get
-            {
-                if ((_id / 10000) * 10000 == _id) return 0;
-                else if ((_id / 100) * 100 == _id) return 1;
-                else return 2;
-            }
-        }
-
         public Room(ulong id, Dictionary<string, string> translations)
         {
             _id = id;

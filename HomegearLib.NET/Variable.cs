@@ -27,6 +27,20 @@ namespace HomegearLib
 
     public class Variable : IDisposable
     {
+        public enum RoleElementDirection
+        {
+            input = 0,
+            output = 1,
+            both = 2
+        }
+
+        public class RoleElement
+        {
+            public ulong ID { get; set; }
+            public RoleElementDirection Direction { get; set; }
+            public bool Invert { get; set; }
+        }
+
         protected RPCController _rpc = null;
 
         protected VariableType _type = VariableType.tInteger;
@@ -43,6 +57,9 @@ namespace HomegearLib
 
         protected ulong _roomID = 0;
         public ulong RoomID { get { return _roomID; } internal set { _roomID = value; } }
+
+        protected List<RoleElement> _roles = new List<RoleElement>();
+        public List<RoleElement> Roles { get { return _roles; } internal set { _roles = value; } }
 
         protected string _unit = "";
         public string Unit { get { return _unit; } internal set { _unit = value; } }
@@ -595,6 +612,35 @@ namespace HomegearLib
                     return _binaryValue == variable.BinaryValue;
             }
             return true;
+        }
+
+        public void SetRoom(Room room)
+        {
+            _rpc.AddVariableToRoom(this, room);
+        }
+
+        public void SetRoom(ulong roomID)
+        {
+            if (!_rpc.Rooms.ContainsKey(_roomID)) return;
+            _rpc.AddVariableToRoom(this, _rpc.Rooms[_roomID]);
+        }
+
+        public void ClearRoom()
+        {
+            if(!_rpc.Rooms.ContainsKey(_roomID)) return;
+            _rpc.RemoveVariableFromRoom(this, _rpc.Rooms[_roomID]);
+        }
+
+        public void AddRole(RoleElement role)
+        {
+            _rpc.AddRoleToVariable(this, role);
+            _roles.Add(role);
+        }
+
+        public void RemoveRole(RoleElement role)
+        {
+            _rpc.RemoveRoleFromVariable(this, role);
+            _roles.Remove(role);
         }
     }
 }

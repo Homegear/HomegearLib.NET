@@ -258,19 +258,9 @@ namespace HomegearLib.RPC
             try
             {
                 _keepAliveTimer.Interval = 10000;
-                if (_events)
+                if (_client.CallMethod("logLevel", new List<RPCVariable>()).ErrorStruct)
                 {
-                    if (!ClientServerInitialized(_clientId))
-                    {
-                        _client.Disconnect();
-                    }
-                }
-                else
-                {
-                    if (_client.CallMethod("logLevel", new List<RPCVariable>()).ErrorStruct)
-                    {
-                        _client.Disconnect();
-                    }
+                    _client.Disconnect();
                 }
             }
             catch (Exception)
@@ -779,6 +769,26 @@ namespace HomegearLib.RPC
                             if (variableInfo.ContainsKey("ROOM"))
                             {
                                 variable.RoomID = (ulong)variableInfo["ROOM"].IntegerValue;
+                            }
+
+                            if (variableInfo.ContainsKey("ROLES"))
+                            {
+                                var roles = new List<Variable.RoleElement>();
+                                var rolesArray = variableInfo["ROLES"].ArrayValue;
+                                foreach(var roleStruct in rolesArray)
+                                {
+                                    if (!roleStruct.StructValue.ContainsKey("id")) continue;
+                                    var roleElement = new Variable.RoleElement();
+                                    roleElement.ID = (ulong)roleStruct.StructValue["id"].IntegerValue;
+                                    long direction = 2;
+                                    if (roleStruct.StructValue.ContainsKey("direction")) direction = roleStruct.StructValue["direction"].IntegerValue;
+                                    if (direction == 0) roleElement.Direction = Variable.RoleElementDirection.input;
+                                    else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
+                                    else roleElement.Direction = Variable.RoleElementDirection.both;
+                                    if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
+                                    roles.Add(roleElement);
+                                }
+                                variable.Roles = roles;
                             }
 
                             if (variableInfo.ContainsKey("SPECIAL"))
@@ -2642,6 +2652,20 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Roles
+        public void AddRoleToVariable(Variable variable, Variable.RoleElement role)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addRoleToVariable", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(role.ID), new RPCVariable((long)role.Direction), new RPCVariable(role.Invert) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addRoleToVariable", response);
+            }
+        }
+
         public Dictionary<ulong, Role> GetRoles()
         {
             if (_disposing)
@@ -2674,6 +2698,20 @@ namespace HomegearLib.RPC
                 roles.Add(role.ID, role);
             }
             return roles;
+        }
+
+        public void RemoveRoleFromVariable(Variable variable, Variable.RoleElement role)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeRoleFromVariable", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(role.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeRoleFromVariable", response);
+            }
         }
         #endregion
 

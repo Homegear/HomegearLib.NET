@@ -76,9 +76,6 @@ namespace HomegearLibTest
                 }
             });
             thread.Start();
-
-            System.Net.IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
-            System.Net.IPAddress localNetwork = hostEntry.AddressList.Where(ia => (ia.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)).First();
         }
 
         void ClearHomegearHosts()
