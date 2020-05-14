@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HomegearLib.RPC.Encoding
 {
-    internal class RPCEncoder
+    public class RPCEncoder
     {
         private BinaryEncoder _encoder = new BinaryEncoder();
         private List<byte> _packetStartRequest = new List<byte> { 0x42, 0x69, 0x6E, 0 };

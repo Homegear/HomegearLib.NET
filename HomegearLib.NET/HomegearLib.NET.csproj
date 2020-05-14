@@ -4,18 +4,19 @@
     <RootNamespace>HomegearLib</RootNamespace>
     <AssemblyName>HomegearLib.NET</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>Copyright © Homegear GmbH 2015-2018</Copyright>
-    <AssemblyVersion>0.1.17.0</AssemblyVersion>
-    <FileVersion>0.1.17.0</FileVersion>
+    <Copyright>Copyright © Homegear GmbH 2015-2020</Copyright>
+    <AssemblyVersion>0.1.19.0</AssemblyVersion>
+    <FileVersion>0.1.19.0</FileVersion>
     <Description>.NET library to easily communicate with Homegear.</Description>
-    <PackageLicenseUrl>https://github.com/Homegear/HomegearLib.NET/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Homegear/HomegearLib.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://homegear.eu</PackageProjectUrl>
     <Company>Homegear GmbH</Company>
-    <Version>0.1.17.0</Version>
+    <Version>0.1.19.0</Version>
     <Authors>Sathya Laufer</Authors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
@@ -23,4 +24,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HomegearLib.RPC.Encoding
 {
-    internal class RPCDecoder
+    public class RPCDecoder
     {
         private BinaryDecoder _decoder = new BinaryDecoder();
 

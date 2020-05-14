@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Authentication;
 
 namespace HomegearLib.RPC
@@ -127,6 +128,20 @@ namespace HomegearLib.RPC
                 }
 
                 return _interfaces;
+            }
+        }
+
+        private Dictionary<ulong, Role> _roles = null;
+        internal Dictionary<ulong, Role> Roles
+        {
+            get
+            {
+                if (_roles == null || _roles.Count == 0)
+                {
+                    _roles = GetRoles();
+                }
+
+                return _roles;
             }
         }
 
@@ -364,14 +379,6 @@ namespace HomegearLib.RPC
         public void Disconnect()
         {
             _keepAliveTimer.Stop();
-            try
-            {
-                if (IsConnected && _events)
-                {
-                    Init("");
-                }
-            }
-            catch (Exception) { }
             _client.Disconnect();
         }
 
@@ -2478,6 +2485,58 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("updateFirmware", response);
+            }
+        }
+        #endregion
+
+        #region Roles
+        public Dictionary<ulong, Role> GetRoles()
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var roles = new Dictionary<ulong, Role>();
+            RPCVariable response = _client.CallMethod("getRoles", null);
+            if (response.ErrorStruct)
+            {
+                ThrowError("getRoles", response);
+            }
+
+            foreach (RPCVariable roleStruct in response.ArrayValue)
+            {
+                if (!roleStruct.StructValue.ContainsKey("ID") || !roleStruct.StructValue.ContainsKey("TRANSLATIONS"))
+                {
+                    continue;
+                }
+
+                var translations = new Dictionary<string, string>();
+                foreach(var element in roleStruct.StructValue["TRANSLATIONS"].StructValue)
+                {
+                    translations.Add(element.Key, element.Value.StringValue);
+                }
+
+                Role role = new Role((ulong)roleStruct.StructValue["ID"].IntegerValue, translations);
+
+                roles.Add(role.ID, role);
+            }
+            return roles;
+        }
+        #endregion
+
+        #region Management
+        public void ManagementUploadDeviceDescriptionFile(string filename, ref byte[] data)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("uploadDeviceDescriptionFile", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(ref data) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("uploadDeviceDescriptionFile", response);
             }
         }
         #endregion

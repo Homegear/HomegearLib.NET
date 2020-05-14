@@ -11,7 +11,8 @@ namespace HomegearLib
         tInteger,
         tDouble,
         tString,
-        tEnum
+        tEnum,
+        tBinary
     }
 
     public enum VariableUIFlags
@@ -214,6 +215,36 @@ namespace HomegearLib
                 {
                     _stringValue = value;
                 }
+
+                _rpc.SetValue(this);
+            }
+        }
+
+        protected byte[] _binaryValue = { };
+        public virtual byte[] BinaryValue
+        {
+            get
+            {
+                return _binaryValue;
+            }
+            set
+            {
+                if (_rpc == null)
+                {
+                    throw new HomegearVariableException("No RPC controller specified.");
+                }
+
+                if (!_writeable)
+                {
+                    throw new HomegearVariableReadOnlyException("Variable " + _name + " is readonly");
+                }
+
+                if (_type != VariableType.tBinary)
+                {
+                    throw new HomegearVariableTypeException("Variable " + _name + " is not of type binary.");
+                }
+                
+                _binaryValue = value;
 
                 _rpc.SetValue(this);
             }
@@ -557,6 +588,8 @@ namespace HomegearLib
                     return _stringValue == variable.StringValue;
                 case VariableType.tEnum:
                     return _integerValue == variable.IntegerValue;
+                case VariableType.tBinary:
+                    return _binaryValue == variable.BinaryValue;
             }
             return true;
         }

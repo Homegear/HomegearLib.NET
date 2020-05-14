@@ -418,6 +418,8 @@ namespace HomegearLib.RPC
                     response.ArrayValue.Add(new RPCVariable("newEvent"));
                     response.ArrayValue.Add(new RPCVariable("deleteEvent"));
                     response.ArrayValue.Add(new RPCVariable("updateEvent"));
+                    response.ArrayValue.Add(new RPCVariable("variableProfileStateChanged"));
+                    response.ArrayValue.Add(new RPCVariable("requestUiRefresh"));
                 }
                 else if (methodName == "system.multicall" && parameters.Any())
                 {
@@ -522,6 +524,14 @@ namespace HomegearLib.RPC
                         UpdateEvent?.Invoke(this, parameters[1].StringValue, parameters[2].IntegerValue,
                             parameters[3].IntegerValue, parameters[4].IntegerValue, parameters[5].StringValue);
                     }
+                }
+                else if (methodName == "variableProfileStateChanged")
+                {
+                    //Todo: Implement
+                }
+                else if (methodName == "requestUiRefresh")
+                {
+                    //Todo: Implement
                 }
                 byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();
                 SendPacket(responsePacket);

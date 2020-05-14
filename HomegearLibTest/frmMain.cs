@@ -212,6 +212,10 @@ namespace HomegearLibTest
                     interfacesNode.Nodes.Add("<loading...>");
                     tvDevices.Nodes.Add(interfacesNode);
 
+                    TreeNode rolesNode = new TreeNode("Roles");
+                    rolesNode.Nodes.Add("<loading...>");
+                    tvDevices.Nodes.Add(rolesNode);
+
                     TreeNode eventsNode = new TreeNode("Timed Events");
                     eventsNode.Nodes.Add("<loading...>");
                     eventsNode.ContextMenuStrip = cmTimedEvents;
@@ -799,6 +803,10 @@ namespace HomegearLibTest
                 {
                     AfterExpandInterface(e);
                 }
+                else if (e.Node.FullPath.StartsWith("Roles"))
+                {
+                    AfterExpandRole(e);
+                }
                 else if (e.Node.FullPath.StartsWith("System Variables"))
                 {
                     AfterExpandSystemVariables(e);
@@ -1039,6 +1047,52 @@ namespace HomegearLibTest
                 txtInterfaceSent.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketSent).ToLongTimeString();
                 txtInterfaceReceived.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketReceived).ToLongTimeString();
                 pnInterface.Visible = true;
+            }
+        }
+        #endregion
+
+        #region Roles
+        private void AfterExpandRole(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                TreeNode currentLevel0Node = null;
+                TreeNode currentLevel1Node = null;
+                foreach (var rolePair in _homegear.Roles)
+                {
+                    TreeNode roleNode = new TreeNode(rolePair.Key.ToString() + " (" + rolePair.Value.Name("en-US") + ")");
+                    roleNode.Tag = rolePair.Value;
+                    if (rolePair.Value.Level == 0)
+                    {
+                        currentLevel0Node = roleNode;
+                        currentLevel1Node = null;
+                        e.Node.Nodes.Add(roleNode);
+                    }
+                    else if(rolePair.Value.Level == 1)
+                    {
+                        currentLevel1Node = roleNode;
+                        currentLevel0Node.Nodes.Add(roleNode);
+                    }
+                    else
+                    {
+                        if (currentLevel1Node == null) currentLevel1Node = currentLevel0Node;
+                        currentLevel1Node.Nodes.Add(roleNode);
+                    }
+                }
+            }
+        }
+
+        private void RoleSelected(TreeViewEventArgs e)
+        {
+            if (_closing)
+            {
+                return;
+            }
+
+            if (e.Node.Level == 1)
+            {
+                //Todo: Implement
             }
         }
         #endregion

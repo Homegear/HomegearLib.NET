@@ -217,8 +217,8 @@ namespace HomegearLib
                     _interfaces = new Interfaces(_rpc, _rpc.Interfaces);
                 }
 
-                bool interfacesAdded = false;
-                bool interfacesRemoved = false;
+                bool interfacesAdded;
+                bool interfacesRemoved;
                 _interfaces.Update(out interfacesRemoved, out interfacesAdded);
                 if ((interfacesAdded || interfacesRemoved) && ReloadRequired != null)
                 {
@@ -226,6 +226,45 @@ namespace HomegearLib
                 }
 
                 return _interfaces;
+            }
+        }
+
+        private Roles _roles = null;
+        /// <summary>
+        /// Dictionary to access all of Homegear's roles. The key is the role id, the value the role object.
+        /// </summary>
+        public Roles Roles
+        {
+            get
+            {
+                if (_roles == null || _roles.Count == 0)
+                {
+                    _roles = new Roles(_rpc, _rpc.Roles);
+                }
+
+                bool rolesAdded;
+                bool rolesRemoved;
+                _roles.Update(out rolesRemoved, out rolesAdded);
+                if ((rolesAdded || rolesRemoved) && ReloadRequired != null)
+                {
+                    ReloadRequired(this, ReloadType.Full);
+                }
+
+                return _roles;
+            }
+        }
+
+        private Management _management = null;
+        public Management Management
+        {
+            get
+            {
+                if(_management == null)
+                {
+                    _management = new Management(_rpc);
+                }
+
+                return _management;
             }
         }
 
@@ -604,8 +643,8 @@ namespace HomegearLib
             }
             else
             {
-                bool devicesDeleted = false;
-                bool newDevices = false;
+                bool devicesDeleted;
+                bool newDevices;
                 List<Variable> updatedVariables = Devices.UpdateVariables(_rpc.GetAllValues(), out devicesDeleted, out newDevices);
                 foreach (Variable variable in updatedVariables)
                 {
@@ -622,8 +661,9 @@ namespace HomegearLib
 
                     DeviceVariableUpdated?.Invoke(this, device, device.Channels[variable.Channel], variable, "HomegearLib.NET");
                 }
-                bool systemVariablesAdded = false;
-                bool systemVariablesDeleted = false;
+
+                bool systemVariablesAdded;
+                bool systemVariablesDeleted;
                 List<SystemVariable> updatedSystemVariables = SystemVariables.Update(out systemVariablesDeleted, out systemVariablesAdded);
                 foreach (SystemVariable variable in updatedSystemVariables)
                 {
@@ -644,8 +684,8 @@ namespace HomegearLib
                     {
                         if (devicePair.Value.MetadataRequested)
                         {
-                            bool variablesAdded = false;
-                            bool variablesDeleted = false;
+                            bool variablesAdded;
+                            bool variablesDeleted;
                             List<MetadataVariable> updatedMetadata = devicePair.Value.Metadata.Update(out variablesDeleted, out variablesAdded);
                             foreach (MetadataVariable variable in updatedMetadata)
                             {

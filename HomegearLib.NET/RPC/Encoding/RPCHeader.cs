@@ -2,7 +2,7 @@
 
 namespace HomegearLib.RPC.Encoding
 {
-    internal class RPCHeader
+    public class RPCHeader
     {
         private string _authorization;
         public string Authorization

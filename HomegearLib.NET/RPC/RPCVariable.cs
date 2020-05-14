@@ -76,6 +76,13 @@ namespace HomegearLib.RPC
             set { _structValue = value; }
         }
 
+        protected byte[] _binaryValue;
+        public virtual byte[] BinaryValue
+        {
+            get { return _binaryValue; }
+            set { _binaryValue = value; }
+        }
+
         public RPCVariable()
         {
         }
@@ -154,6 +161,18 @@ namespace HomegearLib.RPC
             _arrayValue = value;
         }
 
+        public RPCVariable(byte[] value)
+        {
+            _type = RPCVariableType.rpcBinary;
+            _binaryValue = value;
+        }
+
+        public RPCVariable(ref byte[] value)
+        {
+            _type = RPCVariableType.rpcBinary;
+            _binaryValue = value;
+        }
+
         public RPCVariable(Variable variable)
         {
             switch (variable.Type)
@@ -181,6 +200,10 @@ namespace HomegearLib.RPC
                 case VariableType.tEnum:
                     _integerValue = variable.IntegerValue;
                     _type = RPCVariableType.rpcInteger;
+                    break;
+                case VariableType.tBinary:
+                    _binaryValue = variable.BinaryValue;
+                    _type = RPCVariableType.rpcBinary;
                     break;
             }
         }
@@ -324,6 +347,13 @@ namespace HomegearLib.RPC
                     }
 
                     break;
+                case RPCVariableType.rpcBinary:
+                    if (_binaryValue != variable.BinaryValue)
+                    {
+                        return false;
+                    }
+
+                    break;
             }
             return true;
         }
@@ -361,6 +391,9 @@ namespace HomegearLib.RPC
                     break;
                 case RPCVariableType.rpcFloat:
                     _floatValue = value.FloatValue;
+                    break;
+                case RPCVariableType.rpcBinary:
+                    _binaryValue = value.BinaryValue;
                     break;
             }
             return true;
