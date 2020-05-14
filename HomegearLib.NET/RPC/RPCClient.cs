@@ -184,7 +184,8 @@ namespace HomegearLib.RPC
                         {
                             if (!File.Exists(_sslInfo.ClientCertificateFile)) throw new HomegearRpcClientSSLException("The specified certificate file does not exist.");
 
-                            if (IsMono)
+                            //Todo: Remove if really implemented in Mono
+                            /*if (IsMono)
                             {
                                 // [MonoTODO ("SecureString is incomplete")]
                                 // https://github.com/mono/mono/blob/master/mcs/class/System/System.Security.Cryptography.X509Certificates/X509Certificate2.cs#L227
@@ -193,10 +194,10 @@ namespace HomegearLib.RPC
                                 certificates.Add(certificate);
                             }
                             else
-                            {
+                            {*/
                                 var certificate = new X509Certificate2(_sslInfo.ClientCertificateFile, _sslInfo.CertificatePassword);
                                 certificates.Add(certificate);
-                            }
+                            //}
                         }
 
                         _sslStream.AuthenticateAsClient(_hostname, certificates, SslProtocols.Tls12, _sslInfo.CheckCertificateRevocationStatus);

@@ -32,14 +32,17 @@ namespace HomegearLib
         protected VariableType _type = VariableType.tInteger;
         public VariableType Type { get { return _type; } internal set { _type = value; } }
 
-        protected long _peerId = 0;
-        public long PeerID { get { return _peerId; } internal set { _peerId = value; } }
+        protected long _peerID = 0;
+        public long PeerID { get { return _peerID; } internal set { _peerID = value; } }
 
         protected long _channel = -1;
         public long Channel { get { return _channel; } internal set { _channel = value; } }
 
         protected string _name = "";
         public string Name { get { return _name; } internal set { _name = value; } }
+
+        protected ulong _roomID = 0;
+        public ulong RoomID { get { return _roomID; } internal set { _roomID = value; } }
 
         protected string _unit = "";
         public string Unit { get { return _unit; } internal set { _unit = value; } }
@@ -260,7 +263,7 @@ namespace HomegearLib
         public Variable(RPCController rpc, long peerId, long channel, string name)
         {
             _rpc = rpc;
-            _peerId = peerId;
+            _peerID = peerId;
             _channel = channel;
             _name = name;
         }

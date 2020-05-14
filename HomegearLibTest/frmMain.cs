@@ -212,6 +212,10 @@ namespace HomegearLibTest
                     interfacesNode.Nodes.Add("<loading...>");
                     tvDevices.Nodes.Add(interfacesNode);
 
+                    TreeNode roomsNode = new TreeNode("Rooms");
+                    roomsNode.Nodes.Add("<loading...>");
+                    tvDevices.Nodes.Add(roomsNode);
+
                     TreeNode rolesNode = new TreeNode("Roles");
                     rolesNode.Nodes.Add("<loading...>");
                     tvDevices.Nodes.Add(rolesNode);
@@ -803,6 +807,10 @@ namespace HomegearLibTest
                 {
                     AfterExpandInterface(e);
                 }
+                else if (e.Node.FullPath.StartsWith("Rooms"))
+                {
+                    AfterExpandRoom(e);
+                }
                 else if (e.Node.FullPath.StartsWith("Roles"))
                 {
                     AfterExpandRole(e);
@@ -1047,6 +1055,35 @@ namespace HomegearLibTest
                 txtInterfaceSent.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketSent).ToLongTimeString();
                 txtInterfaceReceived.Text = HomegearHelpers.UnixTimeStampToDateTime(physicalInterface.LastPacketReceived).ToLongTimeString();
                 pnInterface.Visible = true;
+            }
+        }
+        #endregion
+
+        #region Rooms
+        private void AfterExpandRoom(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (var roomPair in _homegear.Rooms)
+                {
+                    TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
+                    roomNode.Tag = roomPair.Value;
+                    e.Node.Nodes.Add(roomNode);
+                }
+            }
+        }
+
+        private void RoomSelected(TreeViewEventArgs e)
+        {
+            if (_closing)
+            {
+                return;
+            }
+
+            if (e.Node.Level == 1)
+            {
+                //Todo: Implement
             }
         }
         #endregion

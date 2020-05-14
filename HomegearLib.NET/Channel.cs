@@ -55,6 +55,35 @@ namespace HomegearLib
             _name = name;
         }
 
+        private Room _room;
+        public Room Room
+        {
+            get
+            {
+                if (!_descriptionRequested)
+                {
+                    _rpc.GetDeviceDescription(this);
+                    _descriptionRequested = true;
+                }
+                return _room;
+            }
+            set
+            {
+                if (value == null && _room != null) _rpc.RemoveChannelFromRoom(this, _room);
+                else _rpc.AddChannelToRoom(this, value);
+                _room = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets the room without calling any RPC functions
+        /// </summary>
+        /// <param name="room">The room object</param>
+        internal void SetRoomNoRPC(Room room)
+        {
+            _room = room != null && room.ID == 0 ? null : room;
+        }
+
         private Variables _variables;
         public Variables Variables
         {

@@ -131,6 +131,20 @@ namespace HomegearLib.RPC
             }
         }
 
+        private Dictionary<ulong, Room> _rooms = null;
+        internal Dictionary<ulong, Room> Rooms
+        {
+            get
+            {
+                if (_rooms == null || _rooms.Count == 0)
+                {
+                    _rooms = GetRooms();
+                }
+
+                return _rooms;
+            }
+        }
+
         private Dictionary<ulong, Role> _roles = null;
         internal Dictionary<ulong, Role> Roles
         {
@@ -351,10 +365,7 @@ namespace HomegearLib.RPC
             {
                 Init(_clientId);
             }
-            if (InitCompleted != null)
-            {
-                InitCompleted(this);
-            }
+            InitCompleted?.Invoke(this);
         }
 
         /// <summary>
@@ -765,6 +776,11 @@ namespace HomegearLib.RPC
                                 variable.Unit = variableInfo["UNIT"].StringValue;
                             }
 
+                            if (variableInfo.ContainsKey("ROOM"))
+                            {
+                                variable.RoomID = (ulong)variableInfo["ROOM"].IntegerValue;
+                            }
+
                             if (variableInfo.ContainsKey("SPECIAL"))
                             {
                                 variable.SetSpecialValues(variableInfo["SPECIAL"]);
@@ -966,6 +982,14 @@ namespace HomegearLib.RPC
                 device.SetNameNoRPC(response.StructValue["NAME"].StringValue);
             }
 
+            if (response.StructValue.ContainsKey("ROOM"))
+            {
+                if (Rooms.ContainsKey((ulong)response.StructValue["ROOM"].IntegerValue))
+                {
+                    device.SetRoomNoRPC(Rooms[(ulong)response.StructValue["ROOM"].IntegerValue]);
+                }
+            }
+
             if (response.StructValue.ContainsKey("PHYSICAL_ADDRESS"))
             {
                 device.Address = response.StructValue["PHYSICAL_ADDRESS"].IntegerValue;
@@ -1012,6 +1036,14 @@ namespace HomegearLib.RPC
             if (response.StructValue.ContainsKey("NAME"))
             {
                 channel.SetNameNoRPC(response.StructValue["NAME"].StringValue);
+            }
+
+            if (response.StructValue.ContainsKey("ROOM"))
+            {
+                if (Rooms.ContainsKey((ulong)response.StructValue["ROOM"].IntegerValue))
+                {
+                    channel.SetRoomNoRPC(Rooms[(ulong)response.StructValue["ROOM"].IntegerValue]);
+                }
             }
 
             if (response.StructValue.ContainsKey("AES_ACTIVE"))
@@ -2485,6 +2517,126 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("updateFirmware", response);
+            }
+        }
+        #endregion
+
+        #region Rooms
+        public void AddChannelToRoom(Channel channel, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addChannelToRoom", new List<RPCVariable> { new RPCVariable(channel.PeerID), new RPCVariable(channel.Index), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addChannelToRoom", response);
+            }
+        }
+
+        public void AddDeviceToRoom(Device device, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addDeviceToRoom", new List<RPCVariable> { new RPCVariable(device.ID), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addDeviceToRoom", response);
+            }
+        }
+
+        public void AddVariableToRoom(Variable variable, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addVariableToRoom", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addVariableToRoom", response);
+            }
+        }
+
+        public Dictionary<ulong, Room> GetRooms()
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var rooms = new Dictionary<ulong, Room>();
+            RPCVariable response = _client.CallMethod("getRooms", null);
+            if (response.ErrorStruct)
+            {
+                ThrowError("getRooms", response);
+            }
+
+            foreach (RPCVariable roomStruct in response.ArrayValue)
+            {
+                if (!roomStruct.StructValue.ContainsKey("ID") || !roomStruct.StructValue.ContainsKey("TRANSLATIONS"))
+                {
+                    continue;
+                }
+
+                var translations = new Dictionary<string, string>();
+                foreach (var element in roomStruct.StructValue["TRANSLATIONS"].StructValue)
+                {
+                    translations.Add(element.Key, element.Value.StringValue);
+                }
+
+                Room room = new Room((ulong)roomStruct.StructValue["ID"].IntegerValue, translations);
+
+                rooms.Add(room.ID, room);
+            }
+            return rooms;
+        }
+
+        public void RemoveChannelFromRoom(Channel channel, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeChannelFromRoom", new List<RPCVariable> { new RPCVariable(channel.PeerID), new RPCVariable(channel.Index), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeChannelFromRoom", response);
+            }
+        }
+
+        public void RemoveDeviceFromRoom(Device device, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeDeviceFromRoom", new List<RPCVariable> { new RPCVariable(device.ID), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeDeviceFromRoom", response);
+            }
+        }
+
+        public void RemoveVariableFromRoom(Variable variable, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeVariableFromRoom", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeVariableFromRoom", response);
             }
         }
         #endregion

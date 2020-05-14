@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading;
 
 namespace HomegearLib
@@ -229,6 +230,31 @@ namespace HomegearLib
             }
         }
 
+        private Rooms _rooms = null;
+        /// <summary>
+        /// Dictionary to access all of Homegear's rooms. The key is the room id, the value the room object.
+        /// </summary>
+        public Rooms Rooms
+        {
+            get
+            {
+                if (_rooms == null || _rooms.Count == 0)
+                {
+                    _rooms = new Rooms(_rpc, _rpc.Rooms);
+                }
+
+                bool roomsAdded;
+                bool roomsRemoved;
+                _rooms.Update(out roomsRemoved, out roomsAdded);
+                if ((roomsAdded || roomsRemoved) && ReloadRequired != null)
+                {
+                    ReloadRequired(this, ReloadType.Full);
+                }
+
+                return _rooms;
+            }
+        }
+
         private Roles _roles = null;
         /// <summary>
         /// Dictionary to access all of Homegear's roles. The key is the role id, the value the role object.
@@ -349,7 +375,6 @@ namespace HomegearLib
             _connectThread.Start();
             while (!_connectThread.IsAlive)
             {
-                ;
             }
         }
 
@@ -561,7 +586,6 @@ namespace HomegearLib
 
             if (!SystemVariables.ContainsKey(value.Name))
             {
-                System.Diagnostics.Debug.Write("Position 1");
                 ReloadRequired?.Invoke(this, ReloadType.SystemVariables);
                 return;
             }
@@ -587,7 +611,6 @@ namespace HomegearLib
                 return;
             }
 
-            System.Diagnostics.Debug.Write("Position 2");
             ReloadRequired?.Invoke(this, ReloadType.SystemVariables);
         }
 
@@ -677,7 +700,6 @@ namespace HomegearLib
                 {
                     if ((systemVariablesAdded || systemVariablesDeleted) && ReloadRequired != null)
                     {
-                        System.Diagnostics.Debug.Write("Position 3");
                         ReloadRequired(this, ReloadType.SystemVariables);
                     }
                     foreach (KeyValuePair<long, Device> devicePair in Devices)
@@ -794,22 +816,27 @@ namespace HomegearLib
             _connecting = true;
             try
             {
+                int counter = 0;
                 while (!_stopConnectThread && !_disposing)
                 {
-                    try
+                    if ((counter & 0x7F) == 0)
                     {
-                        if (!_rpc.IsConnected)
+                        try
                         {
-                            _rpc.Connect(_events);
-                        }
+                            if (!_rpc.IsConnected)
+                            {
+                                _rpc.Connect(_events);
+                            }
 
-                        break;
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            ConnectError?.Invoke(this, ex.Message, ex.StackTrace);
+                            Thread.Sleep(10);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        ConnectError?.Invoke(this, ex.Message, ex.StackTrace);
-                        Thread.Sleep(10000);
-                    }
+                    counter++;
                 }
             }
             catch (Exception ex)
@@ -840,7 +867,7 @@ namespace HomegearLib
             _stopConnectThread = true;
             if (_connectThread.IsAlive)
             {
-                if (!_connectThread.Join(20000))
+                if (!_connectThread.Join(100))
                 {
                     try
                     {
