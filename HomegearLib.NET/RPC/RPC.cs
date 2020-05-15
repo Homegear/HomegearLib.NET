@@ -2732,17 +2732,17 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Management
-        public void ManagementUploadDeviceDescriptionFile(string filename, ref byte[] data)
+        public void ManagementUploadDeviceDescriptionFile(string filename, ref byte[] data, ulong familyID)
         {
             if (_disposing)
             {
                 throw new ObjectDisposedException("RPC");
             }
 
-            RPCVariable response = _client.CallMethod("uploadDeviceDescriptionFile", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(ref data) });
+            RPCVariable response = _client.CallMethod("managementUploadDeviceDescriptionFile", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(ref data), new RPCVariable(familyID) });
             if (response.ErrorStruct)
             {
-                ThrowError("uploadDeviceDescriptionFile", response);
+                ThrowError("managementUploadDeviceDescriptionFile", response);
             }
         }
         #endregion

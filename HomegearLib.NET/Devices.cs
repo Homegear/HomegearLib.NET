@@ -90,9 +90,9 @@ namespace HomegearLib
         /// Searches for new devices on all supported device families and returns the number of newly found devices.
         /// </summary>
         /// <returns>The number of newly found devices.</returns>
-        public long Search()
+        public long Search(long familyID = -1)
         {
-            return _rpc.SearchDevices();
+            return familyID == -1 ? _rpc.SearchDevices() : _rpc.SearchDevices(familyID);
         }
 
         public void StartSniffing(Family family)

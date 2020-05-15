@@ -19,9 +19,9 @@ namespace HomegearLib
             _rpc = null;
         }
 
-        public void UploadDeviceDescriptionFile(string filename, ref byte[] data)
+        public void UploadDeviceDescriptionFile(string filename, ref byte[] data, ulong familyID)
         {
-            _rpc.ManagementUploadDeviceDescriptionFile(filename, ref data);
+            _rpc.ManagementUploadDeviceDescriptionFile(filename, ref data, familyID);
         }
     }
 }
