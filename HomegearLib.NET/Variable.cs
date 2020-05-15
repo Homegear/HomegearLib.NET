@@ -39,6 +39,15 @@ namespace HomegearLib
             public ulong ID { get; set; }
             public RoleElementDirection Direction { get; set; }
             public bool Invert { get; set; }
+            public int Level
+            {
+                get
+                {
+                    if ((ID / 10000) * 10000 == ID) return 0;
+                    else if ((ID / 100) * 100 == ID) return 1;
+                    else return 2;
+                }
+            }
         }
 
         protected RPCController _rpc = null;
