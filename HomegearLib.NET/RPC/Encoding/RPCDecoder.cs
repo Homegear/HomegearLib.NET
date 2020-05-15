@@ -110,6 +110,10 @@ namespace HomegearLib.RPC.Encoding
             }
             else if (type == RPCVariableType.rpcBinary)
             {
+                variable.BinaryValue = _decoder.DecodeBinary(packet, ref position);
+            }
+            else if (type == RPCVariableType.rpcBinary)
+            {
                 _decoder.DecodeBinary(packet, ref position);
             }
             else if (type == RPCVariableType.rpcInteger32)

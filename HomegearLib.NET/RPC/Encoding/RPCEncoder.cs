@@ -160,6 +160,10 @@ namespace HomegearLib.RPC.Encoding
             {
                 EncodeString(packet, variable);
             }
+            else if (variable.Type == RPCVariableType.rpcBinary)
+            {
+                EncodeBinary(packet, variable);
+            }
             else if (variable.Type == RPCVariableType.rpcBase64)
             {
                 EncodeBase64(packet, variable);
@@ -233,6 +237,12 @@ namespace HomegearLib.RPC.Encoding
         {
             EncodeType(packet, RPCVariableType.rpcBase64);
             _encoder.EncodeString(packet, variable.StringValue);
+        }
+
+        private void EncodeBinary(List<byte> packet, RPCVariable variable)
+        {
+            EncodeType(packet, RPCVariableType.rpcBinary);
+            _encoder.EncodeBinary(packet, variable.BinaryValue);
         }
 
         private void EncodeVoid(List<byte> packet)

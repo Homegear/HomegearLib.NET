@@ -48,6 +48,22 @@ namespace HomegearLib.RPC.Encoding
             encodedData.InsertRange(encodedData.Count(), stringBytes);
         }
 
+        public void EncodeBinary(List<byte> encodedData, byte[] value)
+        {
+            if (value == null)
+            {
+                EncodeInteger32(encodedData, 0);
+                return;
+            }
+            EncodeInteger32(encodedData, value.Length);
+            if (value.Length == 0)
+            {
+                return;
+            }
+
+            encodedData.InsertRange(encodedData.Count(), value);
+        }
+
         public void EncodeBoolean(List<byte> encodedData, bool value)
         {
             if (value)
