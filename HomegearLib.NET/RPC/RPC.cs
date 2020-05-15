@@ -1666,6 +1666,22 @@ namespace HomegearLib.RPC
             return new UpdateStatus(currentDevice, currentDeviceProgress, deviceCount, currentUpdate, results);
         }
 
+        public void GetValue(Variable variable, bool requestFromDevice = false)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getValue", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(requestFromDevice) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("setValue", response);
+            }
+
+            variable.SetValue(response);
+        }
+
         public string GetVersion()
         {
             if (_disposing)

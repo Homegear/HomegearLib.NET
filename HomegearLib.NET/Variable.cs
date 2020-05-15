@@ -658,5 +658,18 @@ namespace HomegearLib
             _rpc.RemoveRoleFromVariable(this, _roles[roleID]);
             _roles.Remove(roleID);
         }
+
+        public bool ReadFromDevice()
+        {
+            try
+            {
+                _rpc.GetValue(this, true);
+                return true;
+            }
+            catch(HomegearException)
+            {
+            }
+            return false;
+        }
     }
 }
