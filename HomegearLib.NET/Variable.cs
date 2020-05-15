@@ -58,8 +58,8 @@ namespace HomegearLib
         protected ulong _roomID = 0;
         public ulong RoomID { get { return _roomID; } internal set { _roomID = value; } }
 
-        protected List<RoleElement> _roles = new List<RoleElement>();
-        public List<RoleElement> Roles { get { return _roles; } internal set { _roles = value; } }
+        protected Dictionary<ulong, RoleElement> _roles = new Dictionary<ulong, RoleElement>();
+        public Dictionary<ulong, RoleElement> Roles { get { return _roles; } internal set { _roles = value; } }
 
         protected string _unit = "";
         public string Unit { get { return _unit; } internal set { _unit = value; } }
@@ -634,13 +634,20 @@ namespace HomegearLib
         public void AddRole(RoleElement role)
         {
             _rpc.AddRoleToVariable(this, role);
-            _roles.Add(role);
+            _roles.Add(role.ID, role);
         }
 
         public void RemoveRole(RoleElement role)
         {
             _rpc.RemoveRoleFromVariable(this, role);
-            _roles.Remove(role);
+            _roles.Remove(role.ID);
+        }
+
+        public void RemoveRole(ulong roleID)
+        {
+            if (!_roles.ContainsKey(roleID)) return;
+            _rpc.RemoveRoleFromVariable(this, _roles[roleID]);
+            _roles.Remove(roleID);
         }
     }
 }

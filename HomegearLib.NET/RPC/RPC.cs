@@ -773,7 +773,7 @@ namespace HomegearLib.RPC
 
                             if (variableInfo.ContainsKey("ROLES"))
                             {
-                                var roles = new List<Variable.RoleElement>();
+                                var roles = new Dictionary<ulong, Variable.RoleElement>();
                                 var rolesArray = variableInfo["ROLES"].ArrayValue;
                                 foreach(var roleStruct in rolesArray)
                                 {
@@ -786,7 +786,7 @@ namespace HomegearLib.RPC
                                     else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
                                     else roleElement.Direction = Variable.RoleElementDirection.both;
                                     if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
-                                    roles.Add(roleElement);
+                                    roles.Add(roleElement.ID, roleElement);
                                 }
                                 variable.Roles = roles;
                             }
