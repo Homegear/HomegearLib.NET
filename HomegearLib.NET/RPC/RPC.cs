@@ -2739,7 +2739,7 @@ namespace HomegearLib.RPC
                 throw new ObjectDisposedException("RPC");
             }
 
-            RPCVariable response = _client.CallMethod("managementUploadDeviceDescriptionFile", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(ref data), new RPCVariable(familyID) });
+            RPCVariable response = _client.CallMethod("managementUploadDeviceDescriptionFile", new List<RPCVariable> { new RPCVariable(filename), new RPCVariable(ref data), new RPCVariable(familyID), new RPCVariable(false) });
             if (response.ErrorStruct)
             {
                 ThrowError("managementUploadDeviceDescriptionFile", response);
