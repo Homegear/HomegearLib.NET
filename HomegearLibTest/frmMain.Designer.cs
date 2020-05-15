@@ -211,6 +211,11 @@
             this.txtHomegearPort = new System.Windows.Forms.TextBox();
             this.chkSSL = new System.Windows.Forms.CheckBox();
             this.gbSSL = new System.Windows.Forms.GroupBox();
+            this.txtCertificatePassword = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.bnSelectCert = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtClientCertificate = new System.Windows.Forms.TextBox();
             this.chkVerifyCertificate = new System.Windows.Forms.CheckBox();
             this.bnConnect = new System.Windows.Forms.Button();
             this.cmDevices = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -246,15 +251,10 @@
             this.tsRemoveTriggeredEvent = new System.Windows.Forms.ToolStripMenuItem();
             this.cbHomegearHostname = new System.Windows.Forms.ComboBox();
             this.openCertificate = new System.Windows.Forms.OpenFileDialog();
-            this.txtClientCertificate = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.bnSelectCert = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtHomegearPassword = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtHomegearUsername = new System.Windows.Forms.TextBox();
-            this.txtCertificatePassword = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -333,15 +333,15 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
-            this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
-            this.splitContainer2.Panel2.Controls.Add(this.pnHomegear);
             this.splitContainer2.Panel2.Controls.Add(this.pnMetadata);
             this.splitContainer2.Panel2.Controls.Add(this.pnSystemVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnVariable);
             this.splitContainer2.Panel2.Controls.Add(this.pnDevice);
             this.splitContainer2.Panel2.Controls.Add(this.pnTriggeredEvent);
             this.splitContainer2.Panel2.Controls.Add(this.pnTimedEvent);
+            this.splitContainer2.Panel2.Controls.Add(this.pnChannel);
+            this.splitContainer2.Panel2.Controls.Add(this.pnInterface);
+            this.splitContainer2.Panel2.Controls.Add(this.pnHomegear);
             this.splitContainer2.Size = new System.Drawing.Size(1236, 729);
             this.splitContainer2.SplitterDistance = 407;
             this.splitContainer2.SplitterWidth = 6;
@@ -2275,6 +2275,54 @@
             this.gbSSL.TabStop = false;
             this.gbSSL.Text = "SSL Options";
             // 
+            // txtCertificatePassword
+            // 
+            this.txtCertificatePassword.Location = new System.Drawing.Point(690, 64);
+            this.txtCertificatePassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCertificatePassword.Name = "txtCertificatePassword";
+            this.txtCertificatePassword.PasswordChar = '•';
+            this.txtCertificatePassword.Size = new System.Drawing.Size(139, 26);
+            this.txtCertificatePassword.TabIndex = 21;
+            this.txtCertificatePassword.Text = "ݕݘݓݘݓݐ";
+            this.txtCertificatePassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(532, 67);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(158, 20);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "Certificate Password:";
+            // 
+            // bnSelectCert
+            // 
+            this.bnSelectCert.Location = new System.Drawing.Point(488, 62);
+            this.bnSelectCert.Name = "bnSelectCert";
+            this.bnSelectCert.Size = new System.Drawing.Size(36, 30);
+            this.bnSelectCert.TabIndex = 25;
+            this.bnSelectCert.Text = "...";
+            this.bnSelectCert.UseVisualStyleBackColor = true;
+            this.bnSelectCert.Click += new System.EventHandler(this.bnSelectCert_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 67);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(129, 20);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Client Certificate:";
+            // 
+            // txtClientCertificate
+            // 
+            this.txtClientCertificate.Location = new System.Drawing.Point(145, 64);
+            this.txtClientCertificate.Name = "txtClientCertificate";
+            this.txtClientCertificate.Size = new System.Drawing.Size(339, 26);
+            this.txtClientCertificate.TabIndex = 23;
+            // 
             // chkVerifyCertificate
             // 
             this.chkVerifyCertificate.AutoSize = true;
@@ -2311,47 +2359,47 @@
             this.tsCreateDevice,
             this.tsSniffPackets});
             this.cmDevices.Name = "cmDevices";
-            this.cmDevices.Size = new System.Drawing.Size(317, 184);
+            this.cmDevices.Size = new System.Drawing.Size(317, 196);
             // 
             // tsEnablePairingMode
             // 
             this.tsEnablePairingMode.Name = "tsEnablePairingMode";
-            this.tsEnablePairingMode.Size = new System.Drawing.Size(316, 30);
+            this.tsEnablePairingMode.Size = new System.Drawing.Size(316, 32);
             this.tsEnablePairingMode.Text = "Enable Pairing Mode";
             this.tsEnablePairingMode.Click += new System.EventHandler(this.tsEnablePairingMode_Click);
             // 
             // tsDisablePairingMode
             // 
             this.tsDisablePairingMode.Name = "tsDisablePairingMode";
-            this.tsDisablePairingMode.Size = new System.Drawing.Size(316, 30);
+            this.tsDisablePairingMode.Size = new System.Drawing.Size(316, 32);
             this.tsDisablePairingMode.Text = "Disable Pairing Mode";
             this.tsDisablePairingMode.Click += new System.EventHandler(this.tsDisablePairingMode_Click);
             // 
             // tsSearchDevices
             // 
             this.tsSearchDevices.Name = "tsSearchDevices";
-            this.tsSearchDevices.Size = new System.Drawing.Size(316, 30);
+            this.tsSearchDevices.Size = new System.Drawing.Size(316, 32);
             this.tsSearchDevices.Text = "Search Devices";
             this.tsSearchDevices.Click += new System.EventHandler(this.tsSearchDevices_Click);
             // 
             // tsAddDevice
             // 
             this.tsAddDevice.Name = "tsAddDevice";
-            this.tsAddDevice.Size = new System.Drawing.Size(316, 30);
+            this.tsAddDevice.Size = new System.Drawing.Size(316, 32);
             this.tsAddDevice.Text = "Add Device By Serial Number";
             this.tsAddDevice.Click += new System.EventHandler(this.tsAddDevice_Click);
             // 
             // tsCreateDevice
             // 
             this.tsCreateDevice.Name = "tsCreateDevice";
-            this.tsCreateDevice.Size = new System.Drawing.Size(316, 30);
+            this.tsCreateDevice.Size = new System.Drawing.Size(316, 32);
             this.tsCreateDevice.Text = "Create Device";
             this.tsCreateDevice.Click += new System.EventHandler(this.tsCreateDevice_Click);
             // 
             // tsSniffPackets
             // 
             this.tsSniffPackets.Name = "tsSniffPackets";
-            this.tsSniffPackets.Size = new System.Drawing.Size(316, 30);
+            this.tsSniffPackets.Size = new System.Drawing.Size(316, 32);
             this.tsSniffPackets.Text = "Sniff Packets";
             this.tsSniffPackets.Click += new System.EventHandler(this.tsSniffPackets_Click);
             // 
@@ -2363,26 +2411,26 @@
             this.tsReset,
             this.tsRemove});
             this.cmDevice.Name = "cmDevice";
-            this.cmDevice.Size = new System.Drawing.Size(149, 94);
+            this.cmDevice.Size = new System.Drawing.Size(149, 100);
             // 
             // tsUnpair
             // 
             this.tsUnpair.Name = "tsUnpair";
-            this.tsUnpair.Size = new System.Drawing.Size(148, 30);
+            this.tsUnpair.Size = new System.Drawing.Size(148, 32);
             this.tsUnpair.Text = "Unpair";
             this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
             // 
             // tsReset
             // 
             this.tsReset.Name = "tsReset";
-            this.tsReset.Size = new System.Drawing.Size(148, 30);
+            this.tsReset.Size = new System.Drawing.Size(148, 32);
             this.tsReset.Text = "Reset";
             this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
             // 
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
-            this.tsRemove.Size = new System.Drawing.Size(148, 30);
+            this.tsRemove.Size = new System.Drawing.Size(148, 32);
             this.tsRemove.Text = "Remove";
             this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
             // 
@@ -2392,12 +2440,12 @@
             this.cmSystemVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsDeleteSystemVariable});
             this.cmSystemVariable.Name = "cmDevice";
-            this.cmSystemVariable.Size = new System.Drawing.Size(149, 34);
+            this.cmSystemVariable.Size = new System.Drawing.Size(149, 36);
             // 
             // tsDeleteSystemVariable
             // 
             this.tsDeleteSystemVariable.Name = "tsDeleteSystemVariable";
-            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(148, 30);
+            this.tsDeleteSystemVariable.Size = new System.Drawing.Size(148, 32);
             this.tsDeleteSystemVariable.Text = "Remove";
             this.tsDeleteSystemVariable.Click += new System.EventHandler(this.tsDeleteSystemVariable_Click);
             // 
@@ -2407,12 +2455,12 @@
             this.cmSystemVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddSystemVariable});
             this.cmSystemVariables.Name = "cmDevice";
-            this.cmSystemVariables.Size = new System.Drawing.Size(119, 34);
+            this.cmSystemVariables.Size = new System.Drawing.Size(119, 36);
             // 
             // tsAddSystemVariable
             // 
             this.tsAddSystemVariable.Name = "tsAddSystemVariable";
-            this.tsAddSystemVariable.Size = new System.Drawing.Size(118, 30);
+            this.tsAddSystemVariable.Size = new System.Drawing.Size(118, 32);
             this.tsAddSystemVariable.Text = "Add";
             this.tsAddSystemVariable.Click += new System.EventHandler(this.tsAddSystemVariable_Click);
             // 
@@ -2422,12 +2470,12 @@
             this.cmMetadataVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddMetadata});
             this.cmMetadataVariables.Name = "cmDevice";
-            this.cmMetadataVariables.Size = new System.Drawing.Size(119, 34);
+            this.cmMetadataVariables.Size = new System.Drawing.Size(119, 36);
             // 
             // tsAddMetadata
             // 
             this.tsAddMetadata.Name = "tsAddMetadata";
-            this.tsAddMetadata.Size = new System.Drawing.Size(118, 30);
+            this.tsAddMetadata.Size = new System.Drawing.Size(118, 32);
             this.tsAddMetadata.Text = "Add";
             this.tsAddMetadata.Click += new System.EventHandler(this.tsAddMetadata_Click);
             // 
@@ -2437,12 +2485,12 @@
             this.cmMetadataVariable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveMetadata});
             this.cmMetadataVariable.Name = "cmDevice";
-            this.cmMetadataVariable.Size = new System.Drawing.Size(149, 34);
+            this.cmMetadataVariable.Size = new System.Drawing.Size(149, 36);
             // 
             // tsRemoveMetadata
             // 
             this.tsRemoveMetadata.Name = "tsRemoveMetadata";
-            this.tsRemoveMetadata.Size = new System.Drawing.Size(148, 30);
+            this.tsRemoveMetadata.Size = new System.Drawing.Size(148, 32);
             this.tsRemoveMetadata.Text = "Remove";
             this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
             // 
@@ -2452,12 +2500,12 @@
             this.cmLink.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveLink});
             this.cmLink.Name = "cmDevice";
-            this.cmLink.Size = new System.Drawing.Size(149, 34);
+            this.cmLink.Size = new System.Drawing.Size(149, 36);
             // 
             // tsRemoveLink
             // 
             this.tsRemoveLink.Name = "tsRemoveLink";
-            this.tsRemoveLink.Size = new System.Drawing.Size(148, 30);
+            this.tsRemoveLink.Size = new System.Drawing.Size(148, 32);
             this.tsRemoveLink.Text = "Remove";
             this.tsRemoveLink.Click += new System.EventHandler(this.tsRemoveLink_Click);
             // 
@@ -2467,12 +2515,12 @@
             this.cmLinks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddLink});
             this.cmLinks.Name = "cmDevice";
-            this.cmLinks.Size = new System.Drawing.Size(119, 34);
+            this.cmLinks.Size = new System.Drawing.Size(119, 36);
             // 
             // tsAddLink
             // 
             this.tsAddLink.Name = "tsAddLink";
-            this.tsAddLink.Size = new System.Drawing.Size(118, 30);
+            this.tsAddLink.Size = new System.Drawing.Size(118, 32);
             this.tsAddLink.Text = "Add";
             this.tsAddLink.Click += new System.EventHandler(this.tsAddLink_Click);
             // 
@@ -2482,12 +2530,12 @@
             this.cmTimedEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTimedEvent});
             this.cmTimedEvent.Name = "cmDevice";
-            this.cmTimedEvent.Size = new System.Drawing.Size(149, 34);
+            this.cmTimedEvent.Size = new System.Drawing.Size(149, 36);
             // 
             // tsRemoveTimedEvent
             // 
             this.tsRemoveTimedEvent.Name = "tsRemoveTimedEvent";
-            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(148, 30);
+            this.tsRemoveTimedEvent.Size = new System.Drawing.Size(148, 32);
             this.tsRemoveTimedEvent.Text = "Remove";
             this.tsRemoveTimedEvent.Click += new System.EventHandler(this.tsRemoveTimedEvent_Click);
             // 
@@ -2497,12 +2545,12 @@
             this.cmTimedEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddTimedEvent});
             this.cmTimedEvents.Name = "cmDevice";
-            this.cmTimedEvents.Size = new System.Drawing.Size(119, 34);
+            this.cmTimedEvents.Size = new System.Drawing.Size(119, 36);
             // 
             // tsAddTimedEvent
             // 
             this.tsAddTimedEvent.Name = "tsAddTimedEvent";
-            this.tsAddTimedEvent.Size = new System.Drawing.Size(118, 30);
+            this.tsAddTimedEvent.Size = new System.Drawing.Size(118, 32);
             this.tsAddTimedEvent.Text = "Add";
             this.tsAddTimedEvent.Click += new System.EventHandler(this.tsAddTimedEvent_Click);
             // 
@@ -2512,12 +2560,12 @@
             this.cmTriggeredEvents.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsAddTriggeredEvent});
             this.cmTriggeredEvents.Name = "cmDevice";
-            this.cmTriggeredEvents.Size = new System.Drawing.Size(119, 34);
+            this.cmTriggeredEvents.Size = new System.Drawing.Size(119, 36);
             // 
             // tsAddTriggeredEvent
             // 
             this.tsAddTriggeredEvent.Name = "tsAddTriggeredEvent";
-            this.tsAddTriggeredEvent.Size = new System.Drawing.Size(118, 30);
+            this.tsAddTriggeredEvent.Size = new System.Drawing.Size(118, 32);
             this.tsAddTriggeredEvent.Text = "Add";
             this.tsAddTriggeredEvent.Click += new System.EventHandler(this.tsAddTriggeredEvent_Click);
             // 
@@ -2527,12 +2575,12 @@
             this.cmTriggeredEvent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsRemoveTriggeredEvent});
             this.cmTriggeredEvent.Name = "cmDevice";
-            this.cmTriggeredEvent.Size = new System.Drawing.Size(149, 34);
+            this.cmTriggeredEvent.Size = new System.Drawing.Size(149, 36);
             // 
             // tsRemoveTriggeredEvent
             // 
             this.tsRemoveTriggeredEvent.Name = "tsRemoveTriggeredEvent";
-            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(148, 30);
+            this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(148, 32);
             this.tsRemoveTriggeredEvent.Text = "Remove";
             this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
             // 
@@ -2548,43 +2596,6 @@
             // 
             this.openCertificate.DefaultExt = "*.pfx";
             this.openCertificate.Filter = "Certificate files|*.pfx|All files|*.*";
-            // 
-            // txtClientCertificate
-            // 
-            this.txtClientCertificate.Location = new System.Drawing.Point(145, 64);
-            this.txtClientCertificate.Name = "txtClientCertificate";
-            this.txtClientCertificate.Size = new System.Drawing.Size(339, 26);
-            this.txtClientCertificate.TabIndex = 23;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 67);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 20);
-            this.label3.TabIndex = 24;
-            this.label3.Text = "Client Certificate:";
-            // 
-            // bnSelectCert
-            // 
-            this.bnSelectCert.Location = new System.Drawing.Point(488, 62);
-            this.bnSelectCert.Name = "bnSelectCert";
-            this.bnSelectCert.Size = new System.Drawing.Size(36, 30);
-            this.bnSelectCert.TabIndex = 25;
-            this.bnSelectCert.Text = "...";
-            this.bnSelectCert.UseVisualStyleBackColor = true;
-            this.bnSelectCert.Click += new System.EventHandler(this.bnSelectCert_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(532, 67);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(158, 20);
-            this.label4.TabIndex = 26;
-            this.label4.Text = "Certificate Password:";
             // 
             // label7
             // 
@@ -2626,17 +2637,6 @@
             this.txtHomegearUsername.TabIndex = 18;
             this.txtHomegearUsername.Text = "homegear";
             this.txtHomegearUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtCertificatePassword
-            // 
-            this.txtCertificatePassword.Location = new System.Drawing.Point(690, 64);
-            this.txtCertificatePassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCertificatePassword.Name = "txtCertificatePassword";
-            this.txtCertificatePassword.PasswordChar = '•';
-            this.txtCertificatePassword.Size = new System.Drawing.Size(139, 26);
-            this.txtCertificatePassword.TabIndex = 21;
-            this.txtCertificatePassword.Text = "ݕݘݓݘݓݐ";
-            this.txtCertificatePassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // frmMain
             // 
