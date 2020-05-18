@@ -14,7 +14,8 @@ namespace HomegearLib
     {
         Full = 1,
         SystemVariables = 2,
-        Events
+        Events = 3,
+        UI = 4
     }
 
     /// <summary>
@@ -370,6 +371,7 @@ namespace HomegearLib
             _rpc.NewEvent += _rpc_OnNewEvent;
             _rpc.EventDeleted += _rpc_OnEventDeleted;
             _rpc.UpdateEvent += _rpc_OnUpdateEvent;
+            _rpc.RequestUiRefreshEvent += _rpc_RequestUiRefreshEvent;
             _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
@@ -377,8 +379,7 @@ namespace HomegearLib
             {
             }
         }
-
-        void _rpc_HomegearError(RPCController sender, long level, string message)
+        private void _rpc_HomegearError(RPCController sender, long level, string message)
         {
             HomegearError?.Invoke(this, level, message);
         }
@@ -464,6 +465,11 @@ namespace HomegearLib
                 Channel channel = device.Channels[channelIndex];
                 DeviceReloadRequired?.Invoke(this, device, channel, DeviceReloadType.Events);
             }
+        }
+
+        private void _rpc_RequestUiRefreshEvent(RPCController sender, string id)
+        {
+            ReloadRequired?.Invoke(this, ReloadType.UI);
         }
 
         private void _rpc_OnNewDevices(RPCController sender)
@@ -877,6 +883,7 @@ namespace HomegearLib
                 }
             }
             _stopConnectThread = false;
+            _connecting = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
         }

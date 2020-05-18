@@ -106,6 +106,41 @@ namespace HomegearLib
         protected bool _writeable = true;
         public bool Writeable { get { return _writeable; } internal set { _writeable = value; } }
 
+        protected bool _uiPropertiesInitialized = false;
+        protected bool _visualizable = false;
+        public bool Visualizable
+        {
+            get 
+            {
+                if(!_uiPropertiesInitialized)
+                {
+                    var result = _rpc.CheckUiElementSimpleCreation(this);
+                    _visualizable = result.Visualizable;
+                    _visualized = result.Visualized;
+                    _uiPropertiesInitialized = true;
+                }
+
+                return _visualizable;
+            }
+        }
+
+        protected bool _visualized = false;
+        public bool Visualized
+        {
+            get
+            {
+                if (!_uiPropertiesInitialized)
+                {
+                    var result = _rpc.CheckUiElementSimpleCreation(this);
+                    _visualizable = result.Visualizable;
+                    _visualized = result.Visualized;
+                    _uiPropertiesInitialized = true;
+                }
+
+                return _visualized;
+            }
+        }
+
         protected ReadOnlyDictionary<long, string> _specialIntegerValues = new ReadOnlyDictionary<long, string>();
         public ReadOnlyDictionary<long, string> SpecialIntegerValues { get { return _specialIntegerValues; } }
 

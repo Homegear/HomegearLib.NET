@@ -25,6 +25,7 @@ namespace HomegearLib.RPC
         public delegate void NewEventEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
         public delegate void EventDeletedEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
         public delegate void UpdateEventEventHandler(RPCClient sender, string id, long eventType, long peerId, long channel, string variableName);
+        public delegate void RequestUiRefreshEventHandler(RPCClient sender, string id);
 
         #region "Events"
         public event ConnectedEventHandler Connected;
@@ -37,6 +38,7 @@ namespace HomegearLib.RPC
         public event NewEventEventHandler NewEvent;
         public event EventDeletedEventHandler EventDeleted;
         public event UpdateEventEventHandler UpdateEvent;
+        public event RequestUiRefreshEventHandler RequestUiRefreshEvent;
 
         #endregion
 
@@ -532,7 +534,7 @@ namespace HomegearLib.RPC
                 }
                 else if (methodName == "requestUiRefresh")
                 {
-                    //Todo: Implement
+                    RequestUiRefreshEvent?.Invoke(this, parameters.Count == 1 ? parameters[0].StringValue : "");
                 }
                 byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();
                 SendPacket(responsePacket);

@@ -43,6 +43,7 @@ namespace HomegearLib.RPC
         internal delegate void NewEventEventHandler(RPCController sender, string id, EventType type, long peerId, long channel, string variableName);
         internal delegate void EventDeletedEventHandler(RPCController sender, string id, EventType type, long peerId, long channel, string variableName);
         internal delegate void UpdateEventEventHandler(RPCController sender, string id, EventType type, long peerId, long channel, string variableName);
+        internal delegate void RequestUiRefreshEventHandler(RPCController sender, string id);
         internal delegate void InitCompletedEventHandler(RPCController sender);
         internal delegate void HomegearErrorEventHandler(RPCController sender, long level, string message);
         public delegate void ConnectedEventHandler(RPCClient sender, CipherAlgorithmType cipherAlgorithm = CipherAlgorithmType.Null, int cipherStrength = -1);
@@ -61,6 +62,7 @@ namespace HomegearLib.RPC
         internal event NewEventEventHandler NewEvent;
         internal event EventDeletedEventHandler EventDeleted;
         internal event UpdateEventEventHandler UpdateEvent;
+        internal event RequestUiRefreshEventHandler RequestUiRefreshEvent;
         internal event InitCompletedEventHandler InitCompleted;
         internal event HomegearErrorEventHandler HomegearError;
 
@@ -214,11 +216,12 @@ namespace HomegearLib.RPC
             _client.NewEvent += _client_OnNewEvent;
             _client.EventDeleted += _client_OnEventDeleted;
             _client.UpdateEvent += _client_OnUpdateEvent;
+            _client.RequestUiRefreshEvent += _client_RequestUiRefreshEvent;
             _keepAliveTimer = new System.Timers.Timer(30000);
             _keepAliveTimer.Elapsed += _workerTimer_Elapsed;
         }
 
-        void _client_HomegearError(RPCClient sender, long level, string message)
+        private void _client_HomegearError(RPCClient sender, long level, string message)
         {
             HomegearError?.Invoke(this, level, message);
         }
@@ -253,6 +256,11 @@ namespace HomegearLib.RPC
             NewEvent?.Invoke(this, id, (EventType)eventType, peerId, channel, variable);
         }
 
+        private void _client_RequestUiRefreshEvent(RPCClient sender, string id)
+        {
+            RequestUiRefreshEvent?.Invoke(this, id);
+        }
+
         private void _workerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
@@ -277,46 +285,31 @@ namespace HomegearLib.RPC
             {
                 if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 0)
                 {
-                    if (SystemVariableDeleted != null)
-                    {
-                        SystemVariableDeleted(this);
-                    }
+                    SystemVariableDeleted?.Invoke(this);
                 }
                 else if (parameterName == "PONG")
                 {
-                    if (Pong != null)
-                    {
-                        Pong(this, value.StringValue);
-                    }
+                    Pong?.Invoke(this, value.StringValue);
                 }
                 else
                 {
-                    if (SystemVariableUpdated != null)
-                    {
-                        SystemVariableUpdated(this, new SystemVariable(null, parameterName, value));
-                    }
+                    SystemVariableUpdated?.Invoke(this, new SystemVariable(null, parameterName, value));
                 }
             }
             else if (channel == -1)
             {
                 if (value.Type == RPCVariableType.rpcStruct && value.StructValue.Count == 2 && value.StructValue.ContainsKey("CODE") && value.StructValue["CODE"].IntegerValue == 1 && value.StructValue.ContainsKey("TYPE") && value.StructValue["TYPE"].IntegerValue == 1)
                 {
-                    if (MetadataDeleted != null)
-                    {
-                        MetadataDeleted(this, peerId);
-                    }
+                    MetadataDeleted?.Invoke(this, peerId);
                 }
                 else
                 {
-                    if (MetadataUpdated != null)
-                    {
-                        MetadataUpdated(this, peerId, new MetadataVariable(null, peerId, parameterName, value));
-                    }
+                    MetadataUpdated?.Invoke(this, peerId, new MetadataVariable(null, peerId, parameterName, value));
                 }
             }
-            else if (DeviceVariableUpdated != null)
+            else
             {
-                DeviceVariableUpdated(this, new Variable(peerId, channel, parameterName, value), eventSource);
+                DeviceVariableUpdated?.Invoke(this, new Variable(peerId, channel, parameterName, value), eventSource);
             }
         }
 
@@ -924,6 +917,36 @@ namespace HomegearLib.RPC
                             if (variableInfo.ContainsKey("MAX"))
                             {
                                 variable.SetMax(variableInfo["MAX"]);
+                            }
+
+                            if (variableInfo.ContainsKey("UNIT"))
+                            {
+                                variable.Unit = variableInfo["UNIT"].StringValue;
+                            }
+
+                            if (variableInfo.ContainsKey("ROOM"))
+                            {
+                                variable.RoomID = (ulong)variableInfo["ROOM"].IntegerValue;
+                            }
+
+                            if (variableInfo.ContainsKey("ROLES"))
+                            {
+                                var roles = new Dictionary<ulong, Variable.RoleElement>();
+                                var rolesArray = variableInfo["ROLES"].ArrayValue;
+                                foreach (var roleStruct in rolesArray)
+                                {
+                                    if (!roleStruct.StructValue.ContainsKey("id")) continue;
+                                    var roleElement = new Variable.RoleElement();
+                                    roleElement.ID = (ulong)roleStruct.StructValue["id"].IntegerValue;
+                                    long direction = 2;
+                                    if (roleStruct.StructValue.ContainsKey("direction")) direction = roleStruct.StructValue["direction"].IntegerValue;
+                                    if (direction == 0) roleElement.Direction = Variable.RoleElementDirection.input;
+                                    else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
+                                    else roleElement.Direction = Variable.RoleElementDirection.both;
+                                    if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
+                                    roles.Add(roleElement.ID, roleElement);
+                                }
+                                variable.Roles = roles;
                             }
 
                             if (variableInfo.ContainsKey("SPECIAL"))
@@ -2744,6 +2767,36 @@ namespace HomegearLib.RPC
             {
                 ThrowError("managementUploadDeviceDescriptionFile", response);
             }
+        }
+        #endregion
+
+        #region UI
+        public struct CheckUiElementSimpleCreationResult
+        {
+            public bool Visualizable;
+            public bool Visualized;
+        }
+
+        public CheckUiElementSimpleCreationResult CheckUiElementSimpleCreation(Variable variable)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("checkUiElementSimpleCreation", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("checkUiElementSimpleCreation", response);
+            }
+
+            CheckUiElementSimpleCreationResult result = new CheckUiElementSimpleCreationResult();
+            if (response.StructValue.ContainsKey("visualizable")) result.Visualizable = response.StructValue["visualizable"].BooleanValue;
+            else result.Visualizable = false;
+            if (response.StructValue.ContainsKey("visualized")) result.Visualized = response.StructValue["visualized"].BooleanValue;
+            else result.Visualizable = false;
+
+            return result;
         }
         #endregion
     }
