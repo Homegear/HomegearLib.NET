@@ -1162,10 +1162,8 @@ namespace HomegearLib.RPC
 
             if (response.StructValue.ContainsKey("INTERFACE"))
             {
-                if (Interfaces.ContainsKey(response.StructValue["INTERFACE"].StringValue))
-                {
-                    device.SetInterfaceNoRPC(Interfaces[response.StructValue["INTERFACE"].StringValue]);
-                }
+                if (!Interfaces.ContainsKey(response.StructValue["INTERFACE"].StringValue)) Interfaces.Add(response.StructValue["INTERFACE"].StringValue, new Interface(device.Family, response.StructValue["INTERFACE"].StringValue, "Unknown"));
+                device.SetInterfaceNoRPC(Interfaces[response.StructValue["INTERFACE"].StringValue]);
             }
         }
 
