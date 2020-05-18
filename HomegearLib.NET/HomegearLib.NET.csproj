@@ -5,15 +5,15 @@
     <AssemblyName>HomegearLib.NET</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright © Homegear GmbH 2015-2020</Copyright>
-    <AssemblyVersion>0.1.28.0</AssemblyVersion>
-    <FileVersion>0.1.28.0</FileVersion>
+    <AssemblyVersion>0.1.29.0</AssemblyVersion>
+    <FileVersion>0.1.29.0</FileVersion>
     <Description>.NET library to easily communicate with Homegear.</Description>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Homegear/HomegearLib.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://homegear.eu</PackageProjectUrl>
     <Company>Homegear GmbH</Company>
-    <Version>0.1.28.0</Version>
+    <Version>0.1.29.0</Version>
     <Authors>Dr. Sathya Laufer</Authors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

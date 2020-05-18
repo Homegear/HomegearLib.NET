@@ -726,23 +726,15 @@ namespace HomegearLib
                         }
                     }
                 }
+
+                Reloaded?.Invoke(this);
             }
         }
 
         ~Homegear()
         {
             _stopConnectThread = true;
-            if (_connectThread.IsAlive)
-            {
-                if (!_connectThread.Join(20000))
-                {
-                    try
-                    {
-                        _connectThread.Abort();
-                    }
-                    catch (Exception) { }
-                }
-            }
+            if (_connectThread.IsAlive) _connectThread.Join();
         }
 
         /// <summary>
@@ -770,17 +762,7 @@ namespace HomegearLib
             _rpc.EventDeleted -= _rpc_OnEventDeleted;
             _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
             _stopConnectThread = true;
-            if (_connectThread.IsAlive)
-            {
-                if (!_connectThread.Join(100))
-                {
-                    try
-                    {
-                        _connectThread.Abort();
-                    }
-                    catch (Exception) { }
-                }
-            }
+            if (_connectThread.IsAlive) _connectThread.Join();
             _rpc.Disconnect();
         }
 
@@ -871,19 +853,8 @@ namespace HomegearLib
             }
 
             _stopConnectThread = true;
-            if (_connectThread.IsAlive)
-            {
-                if (!_connectThread.Join(100))
-                {
-                    try
-                    {
-                        _connectThread.Abort();
-                    }
-                    catch (Exception) { }
-                }
-            }
+            if (_connectThread.IsAlive) _connectThread.Join();
             _stopConnectThread = false;
-            _connecting = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
         }
