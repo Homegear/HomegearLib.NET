@@ -233,6 +233,56 @@ namespace HomegearLib
             }
         }
 
+        private Buildings _buildings = null;
+        /// <summary>
+        /// Dictionary to access all of Homegear's buildings. The key is the building id, the value the building object.
+        /// </summary>
+        public Buildings Buildings
+        {
+            get
+            {
+                if (_buildings == null || _buildings.Count == 0)
+                {
+                    _buildings = new Buildings(_rpc, _rpc.Buildings);
+                }
+
+                bool buildingsAdded;
+                bool buildingsRemoved;
+                _buildings.Update(out buildingsRemoved, out buildingsAdded);
+                if ((buildingsAdded || buildingsRemoved) && ReloadRequired != null)
+                {
+                    ReloadRequired(this, ReloadType.Full);
+                }
+
+                return _buildings;
+            }
+        }
+
+        private Stories _stories = null;
+        /// <summary>
+        /// Dictionary to access all of Homegear's stories. The key is the story id, the value the story object.
+        /// </summary>
+        public Stories Stories
+        {
+            get
+            {
+                if (_stories == null || _stories.Count == 0)
+                {
+                    _stories = new Stories(_rpc, _rpc.Stories);
+                }
+
+                bool storiesAdded;
+                bool storiesRemoved;
+                _rooms.Update(out storiesRemoved, out storiesAdded);
+                if ((storiesAdded || storiesRemoved) && ReloadRequired != null)
+                {
+                    ReloadRequired(this, ReloadType.Full);
+                }
+
+                return _stories;
+            }
+        }
+
         private Rooms _rooms = null;
         /// <summary>
         /// Dictionary to access all of Homegear's rooms. The key is the room id, the value the room object.

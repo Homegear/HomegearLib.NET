@@ -8,12 +8,17 @@ namespace HomegearLib
     public class Room : IDisposable
     {
         private ulong _id = 0;
-        public ulong ID { get { return _id; } set { _id = value; } }
+        public ulong ID { get { return _id; } internal set { _id = value; } }
 
         private Dictionary<string, string> _translations = null;
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
 
-        public Room(ulong id, Dictionary<string, string> translations)
+        public Room(Dictionary<string, string> translations)
+        {
+            _translations = translations;
+        }
+
+        internal Room(ulong id, Dictionary<string, string> translations)
         {
             _id = id;
             _translations = translations;
@@ -22,6 +27,15 @@ namespace HomegearLib
         public void Dispose()
         {
 
+        }
+
+        public bool HasName(string name)
+        {
+            foreach(var translation in _translations)
+            {
+                if (translation.Value == name) return true;
+            }
+            return false;
         }
 
         public string Name(string languageCode)

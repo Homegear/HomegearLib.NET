@@ -133,6 +133,34 @@ namespace HomegearLib.RPC
             }
         }
 
+        private Dictionary<ulong, Building> _buildings = null;
+        internal Dictionary<ulong, Building> Buildings
+        {
+            get
+            {
+                if (_buildings == null || _buildings.Count == 0)
+                {
+                    _buildings = GetBuildings();
+                }
+
+                return _buildings;
+            }
+        }
+
+        private Dictionary<ulong, Story> _stories = null;
+        internal Dictionary<ulong, Story> Stories
+        {
+            get
+            {
+                if (_stories == null || _stories.Count == 0)
+                {
+                    _stories = GetStories();
+                }
+
+                return _stories;
+            }
+        }
+
         private Dictionary<ulong, Room> _rooms = null;
         internal Dictionary<ulong, Room> Rooms
         {
@@ -2568,6 +2596,118 @@ namespace HomegearLib.RPC
         }
         #endregion
 
+        #region Buildings
+        public void CreateBuilding(Building building)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var translations = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var translation in building.Translations)
+            {
+                translations.StructValue.Add(translation.Key, new RPCVariable(translation.Value));
+            }
+
+            RPCVariable response = _client.CallMethod("createBuilding", new List<RPCVariable> { translations });
+            if (response.ErrorStruct)
+            {
+                ThrowError("createBuilding", response);
+            }
+        }
+
+        public Dictionary<ulong, Building> GetBuildings()
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var buildings = new Dictionary<ulong, Building>();
+            RPCVariable response = _client.CallMethod("getBuildings", null);
+            if (response.ErrorStruct)
+            {
+                ThrowError("getBuildings", response);
+            }
+
+            foreach (RPCVariable buildingStruct in response.ArrayValue)
+            {
+                if (!buildingStruct.StructValue.ContainsKey("ID") || !buildingStruct.StructValue.ContainsKey("TRANSLATIONS"))
+                {
+                    continue;
+                }
+
+                var translations = new Dictionary<string, string>();
+                foreach (var element in buildingStruct.StructValue["TRANSLATIONS"].StructValue)
+                {
+                    translations.Add(element.Key, element.Value.StringValue);
+                }
+
+                Building building = new Building((ulong)buildingStruct.StructValue["ID"].IntegerValue, translations);
+
+                buildings.Add(building.ID, building);
+            }
+            return buildings;
+        }
+        #endregion
+
+        #region Stories
+        public void CreateStory(Story story)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var translations = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var translation in story.Translations)
+            {
+                translations.StructValue.Add(translation.Key, new RPCVariable(translation.Value));
+            }
+
+            RPCVariable response = _client.CallMethod("createStory", new List<RPCVariable> { translations });
+            if (response.ErrorStruct)
+            {
+                ThrowError("createStory", response);
+            }
+        }
+
+        public Dictionary<ulong, Story> GetStories()
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var stories = new Dictionary<ulong, Story>();
+            RPCVariable response = _client.CallMethod("getStories", null);
+            if (response.ErrorStruct)
+            {
+                ThrowError("getStories", response);
+            }
+
+            foreach (RPCVariable storyStruct in response.ArrayValue)
+            {
+                if (!storyStruct.StructValue.ContainsKey("ID") || !storyStruct.StructValue.ContainsKey("TRANSLATIONS"))
+                {
+                    continue;
+                }
+
+                var translations = new Dictionary<string, string>();
+                foreach (var element in storyStruct.StructValue["TRANSLATIONS"].StructValue)
+                {
+                    translations.Add(element.Key, element.Value.StringValue);
+                }
+
+                Story story = new Story((ulong)storyStruct.StructValue["ID"].IntegerValue, translations);
+
+                stories.Add(story.ID, story);
+            }
+            return stories;
+        }
+        #endregion
+
         #region Rooms
         public void AddChannelToRoom(Channel channel, Room room)
         {
@@ -2608,6 +2748,26 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("addVariableToRoom", response);
+            }
+        }
+
+        public void CreateRoom(Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var translations = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach(var translation in room.Translations)
+            {
+                translations.StructValue.Add(translation.Key, new RPCVariable(translation.Value));
+            }
+
+            RPCVariable response = _client.CallMethod("createRoom", new List<RPCVariable> { translations });
+            if (response.ErrorStruct)
+            {
+                ThrowError("createRoom", response);
             }
         }
 

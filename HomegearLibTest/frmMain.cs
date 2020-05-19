@@ -632,6 +632,10 @@ namespace HomegearLibTest
                 UpdateEvents();
                 EnableSplitContainer(true);
             }
+            else if (reloadType == ReloadType.UI)
+            {
+                WriteLog("Received UI reload required event.");
+            }
         }
 
         void _rpc_Disconnected(RPCClient sender)

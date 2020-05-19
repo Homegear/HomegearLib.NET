@@ -47,5 +47,19 @@ namespace HomegearLib
                 }
             }
         }
+
+        public void Create(Room room)
+        {
+            _rpc.CreateRoom(room);
+        }
+
+        public Room RoomByName(string name)
+        {
+            foreach(var room in _dictionary)
+            {
+                if (room.Value.HasName(name)) return room.Value;
+            }
+            return null;
+        }
     }
 }
