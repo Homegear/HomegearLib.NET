@@ -180,6 +180,8 @@ namespace HomegearLib
         #endregion
 
         private volatile bool _connecting = false;
+        private object _reloadingLock = new object();
+        private volatile bool _reloading = false;
         private RPCController _rpc = null;
         private volatile bool _events = false;
         private volatile bool _disposing = false;
@@ -776,22 +778,36 @@ namespace HomegearLib
                 return;
             }
 
-            _version = "";
-            _rpc.Clear();
-            _families?.Dispose();
-            _families = new Families(_rpc, _rpc.Families);
-            _devices?.Dispose();
-            _devices = new Devices(_rpc, _rpc.Devices);
-            foreach (KeyValuePair<long, Device> device in _devices)
+            lock (_reloadingLock)
             {
-                device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
-            }
+                try
+                {
+                    if (_reloading) return;
+                    _reloading = true;
+                    _version = "";
+                    _rpc.Clear();
+                    _families?.Dispose();
+                    _families = new Families(_rpc, _rpc.Families);
+                    _devices?.Dispose();
+                    _devices = new Devices(_rpc, _rpc.Devices);
+                    foreach (KeyValuePair<long, Device> device in _devices)
+                    {
+                        device.Value.VariableReloadRequiredEvent += OnDevice_VariableReloadRequired;
+                    }
 
-            _interfaces?.Dispose();
-            _interfaces = null;
-            _systemVariables?.Dispose();
-            _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
-            Reloaded?.Invoke(this);
+                    _interfaces?.Dispose();
+                    _interfaces = null;
+                    _systemVariables?.Dispose();
+                    _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
+                    Reloaded?.Invoke(this);
+                    _reloading = false;
+                }
+                catch(Exception ex)
+                {
+                    _reloading = false;
+                    throw ex;
+                }
+            }
         }
 
         private void Connect()

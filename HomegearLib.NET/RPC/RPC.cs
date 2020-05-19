@@ -2769,10 +2769,27 @@ namespace HomegearLib.RPC
         #endregion
 
         #region UI
+        public ulong AddUiElement(Variable variable, string label)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addUiElement", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(label) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addUiElement", response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
         public struct CheckUiElementSimpleCreationResult
         {
             public bool Visualizable;
             public bool Visualized;
+            public List<ulong> VisualizedByUiElements;
         }
 
         public CheckUiElementSimpleCreationResult CheckUiElementSimpleCreation(Variable variable)
@@ -2793,8 +2810,33 @@ namespace HomegearLib.RPC
             else result.Visualizable = false;
             if (response.StructValue.ContainsKey("visualized")) result.Visualized = response.StructValue["visualized"].BooleanValue;
             else result.Visualizable = false;
+            result.VisualizedByUiElements = new List<ulong>();
+            if (response.StructValue.ContainsKey("uiElements"))
+            {
+                foreach(var element in response.StructValue["uiElements"].ArrayValue)
+                {
+                    result.VisualizedByUiElements.Add((ulong)element.IntegerValue);
+                }
+            }
 
             return result;
+        }
+
+        public void RemoveUiElements(Variable variable)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            foreach (var id in variable.VisualizedByUiElements)
+            {
+                RPCVariable response = _client.CallMethod("removeUiElement", new List<RPCVariable> { new RPCVariable(id) });
+                if (response.ErrorStruct)
+                {
+                    ThrowError("removeUiElement", response);
+                }
+            }
         }
         #endregion
     }
