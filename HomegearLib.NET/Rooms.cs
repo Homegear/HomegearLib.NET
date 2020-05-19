@@ -53,7 +53,7 @@ namespace HomegearLib
             _rpc.CreateRoom(room);
         }
 
-        public Room RoomByName(string name)
+        public Room ByName(string name)
         {
             foreach(var room in _dictionary)
             {

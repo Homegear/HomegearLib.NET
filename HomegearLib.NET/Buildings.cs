@@ -53,7 +53,7 @@ namespace HomegearLib
             _rpc.CreateBuilding(building);
         }
 
-        public Building BuildingByName(string name)
+        public Building ByName(string name)
         {
             foreach (var building in _dictionary)
             {

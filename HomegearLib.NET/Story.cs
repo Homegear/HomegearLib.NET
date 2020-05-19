@@ -13,6 +13,9 @@ namespace HomegearLib
         private Dictionary<string, string> _translations = null;
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
 
+        public Rooms _rooms = null;
+        public Rooms Rooms { get { return _rooms; } internal set { _rooms = value; } }
+
         public Story(Dictionary<string, string> translations)
         {
             _translations = translations;

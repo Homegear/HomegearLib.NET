@@ -2597,7 +2597,7 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Buildings
-        public void CreateBuilding(Building building)
+        public ulong CreateBuilding(Building building)
         {
             if (_disposing)
             {
@@ -2615,6 +2615,8 @@ namespace HomegearLib.RPC
             {
                 ThrowError("createBuilding", response);
             }
+
+            return (ulong)response.IntegerValue;
         }
 
         public Dictionary<ulong, Building> GetBuildings()
@@ -2646,6 +2648,19 @@ namespace HomegearLib.RPC
 
                 Building building = new Building((ulong)buildingStruct.StructValue["ID"].IntegerValue, translations);
 
+                var stories = new Dictionary<ulong, Story>();
+                if (buildingStruct.StructValue.ContainsKey("STORIES"))
+                {
+                    foreach (var element in buildingStruct.StructValue["STORIES"].ArrayValue)
+                    {
+                        if(Stories.ContainsKey((ulong)element.IntegerValue))
+                        {
+                            stories.Add((ulong)element.IntegerValue, Stories[(ulong)element.IntegerValue]);
+                        }
+                    }
+                }
+                building.Stories = new Stories(this, stories);
+
                 buildings.Add(building.ID, building);
             }
             return buildings;
@@ -2653,7 +2668,7 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Stories
-        public void CreateStory(Story story)
+        public ulong CreateStory(Story story)
         {
             if (_disposing)
             {
@@ -2671,6 +2686,8 @@ namespace HomegearLib.RPC
             {
                 ThrowError("createStory", response);
             }
+
+            return (ulong)response.IntegerValue;
         }
 
         public Dictionary<ulong, Story> GetStories()
@@ -2701,6 +2718,19 @@ namespace HomegearLib.RPC
                 }
 
                 Story story = new Story((ulong)storyStruct.StructValue["ID"].IntegerValue, translations);
+
+                var rooms = new Dictionary<ulong, Room>();
+                if (storyStruct.StructValue.ContainsKey("ROOMS"))
+                {
+                    foreach (var element in storyStruct.StructValue["ROOMS"].ArrayValue)
+                    {
+                        if (Rooms.ContainsKey((ulong)element.IntegerValue))
+                        {
+                            rooms.Add((ulong)element.IntegerValue, Rooms[(ulong)element.IntegerValue]);
+                        }
+                    }
+                }
+                story.Rooms = new Rooms(this, rooms);
 
                 stories.Add(story.ID, story);
             }
@@ -2751,7 +2781,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        public void CreateRoom(Room room)
+        public ulong CreateRoom(Room room)
         {
             if (_disposing)
             {
@@ -2769,6 +2799,8 @@ namespace HomegearLib.RPC
             {
                 ThrowError("createRoom", response);
             }
+
+            return (ulong)response.IntegerValue;
         }
 
         public Dictionary<ulong, Room> GetRooms()

@@ -53,7 +53,7 @@ namespace HomegearLib
             _rpc.CreateStory(story);
         }
 
-        public Story StoryByName(string name)
+        public Story ByName(string name)
         {
             foreach (var story in _dictionary)
             {
