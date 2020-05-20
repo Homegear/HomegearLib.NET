@@ -2613,6 +2613,20 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Buildings
+        public void AddStoryToBuilding(Building building, Story story)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addStoryToBuilding", new List<RPCVariable> { new RPCVariable(building.ID), new RPCVariable(story.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addStoryToBuilding", response);
+            }
+        }
+
         public ulong CreateBuilding(Building building)
         {
             if (_disposing)
@@ -2662,7 +2676,7 @@ namespace HomegearLib.RPC
                     translations.Add(element.Key, element.Value.StringValue);
                 }
 
-                Building building = new Building((ulong)buildingStruct.StructValue["ID"].IntegerValue, translations);
+                Building building = new Building(this, (ulong)buildingStruct.StructValue["ID"].IntegerValue, translations);
 
                 var stories = new Dictionary<ulong, Story>();
                 if (buildingStruct.StructValue.ContainsKey("STORIES"))
@@ -2684,6 +2698,20 @@ namespace HomegearLib.RPC
         #endregion
 
         #region Stories
+        public void AddRoomToStory(Story story, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addRoomToStory", new List<RPCVariable> { new RPCVariable(story.ID), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addRoomToStory", response);
+            }
+        }
+
         public ulong CreateStory(Story story)
         {
             if (_disposing)
@@ -2733,7 +2761,7 @@ namespace HomegearLib.RPC
                     translations.Add(element.Key, element.Value.StringValue);
                 }
 
-                Story story = new Story((ulong)storyStruct.StructValue["ID"].IntegerValue, translations);
+                Story story = new Story(this, (ulong)storyStruct.StructValue["ID"].IntegerValue, translations);
 
                 var rooms = new Dictionary<ulong, Room>();
                 if (storyStruct.StructValue.ContainsKey("ROOMS"))

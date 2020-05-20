@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomegearLib.RPC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,8 @@ namespace HomegearLib
 {
     public class Building : IDisposable
     {
+        RPCController _rpc = null;
+
         private ulong _id = 0;
         public ulong ID { get { return _id; } internal set { _id = value; } }
 
@@ -21,8 +24,9 @@ namespace HomegearLib
             _translations = translations;
         }
 
-        internal Building(ulong id, Dictionary<string, string> translations)
+        internal Building(RPCController rpc, ulong id, Dictionary<string, string> translations)
         {
+            _rpc = rpc;
             _id = id;
             _translations = translations;
         }
@@ -30,6 +34,12 @@ namespace HomegearLib
         public void Dispose()
         {
 
+        }
+
+        public void AddStory(Story story)
+        {
+            if (story.ID == 0) return;
+            _rpc.AddStoryToBuilding(this, story);
         }
 
         public bool HasName(string name)
