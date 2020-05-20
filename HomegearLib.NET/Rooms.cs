@@ -31,7 +31,7 @@ namespace HomegearLib
 
         public void Create(Room room)
         {
-            _rpc.CreateRoom(room);
+            room.ID = _rpc.CreateRoom(room);
         }
 
         public Room ByName(string name)
