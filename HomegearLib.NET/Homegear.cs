@@ -221,14 +221,6 @@ namespace HomegearLib
                     _interfaces = new Interfaces(_rpc, _rpc.Interfaces);
                 }
 
-                bool interfacesAdded;
-                bool interfacesRemoved;
-                _interfaces.Update(out interfacesRemoved, out interfacesAdded);
-                if ((interfacesAdded || interfacesRemoved) && ReloadRequired != null)
-                {
-                    ReloadRequired(this, ReloadType.Full);
-                }
-
                 return _interfaces;
             }
         }
@@ -244,14 +236,6 @@ namespace HomegearLib
                 if (_buildings == null || _buildings.Count == 0)
                 {
                     _buildings = new Buildings(_rpc, _rpc.Buildings);
-                }
-
-                bool buildingsAdded;
-                bool buildingsRemoved;
-                _buildings.Update(out buildingsRemoved, out buildingsAdded);
-                if ((buildingsAdded || buildingsRemoved) && ReloadRequired != null)
-                {
-                    ReloadRequired(this, ReloadType.Full);
                 }
 
                 return _buildings;
@@ -271,14 +255,6 @@ namespace HomegearLib
                     _stories = new Stories(_rpc, _rpc.Stories);
                 }
 
-                bool storiesAdded;
-                bool storiesRemoved;
-                _rooms.Update(out storiesRemoved, out storiesAdded);
-                if ((storiesAdded || storiesRemoved) && ReloadRequired != null)
-                {
-                    ReloadRequired(this, ReloadType.Full);
-                }
-
                 return _stories;
             }
         }
@@ -296,14 +272,6 @@ namespace HomegearLib
                     _rooms = new Rooms(_rpc, _rpc.Rooms);
                 }
 
-                bool roomsAdded;
-                bool roomsRemoved;
-                _rooms.Update(out roomsRemoved, out roomsAdded);
-                if ((roomsAdded || roomsRemoved) && ReloadRequired != null)
-                {
-                    ReloadRequired(this, ReloadType.Full);
-                }
-
                 return _rooms;
             }
         }
@@ -319,14 +287,6 @@ namespace HomegearLib
                 if (_roles == null || _roles.Count == 0)
                 {
                     _roles = new Roles(_rpc, _rpc.Roles);
-                }
-
-                bool rolesAdded;
-                bool rolesRemoved;
-                _roles.Update(out rolesRemoved, out rolesAdded);
-                if ((rolesAdded || rolesRemoved) && ReloadRequired != null)
-                {
-                    ReloadRequired(this, ReloadType.Full);
                 }
 
                 return _roles;

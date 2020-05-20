@@ -23,29 +23,10 @@ namespace HomegearLib
             }
         }
 
-        public void Update(out bool buildingsRemoved, out bool buildingsAdded)
+        public void Reload()
         {
-            buildingsRemoved = false;
-            buildingsAdded = false;
-            Dictionary<ulong, Building> buildings = _rpc.GetBuildings();
-            foreach (KeyValuePair<ulong, Building> buildingPair in buildings)
-            {
-                if (!_dictionary.ContainsKey(buildingPair.Key))
-                {
-                    buildingsAdded = true;
-                    continue;
-                }
-                Building building = _dictionary[buildingPair.Value.ID];
-                building.Translations = buildingPair.Value.Translations;
-            }
-            foreach (KeyValuePair<ulong, Building> buildingPair in _dictionary)
-            {
-                if (!buildings.ContainsKey(buildingPair.Key))
-                {
-                    buildingsRemoved = true;
-                    break;
-                }
-            }
+            _rpc.Buildings = null;
+            _dictionary = _rpc.Buildings;
         }
 
         public void Create(Building building)

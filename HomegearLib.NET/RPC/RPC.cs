@@ -131,6 +131,10 @@ namespace HomegearLib.RPC
 
                 return _interfaces;
             }
+            set
+            {
+                _interfaces = value;
+            }
         }
 
         private Dictionary<ulong, Building> _buildings = null;
@@ -144,6 +148,10 @@ namespace HomegearLib.RPC
                 }
 
                 return _buildings;
+            }
+            set
+            {
+                _buildings = value;
             }
         }
 
@@ -159,6 +167,10 @@ namespace HomegearLib.RPC
 
                 return _stories;
             }
+            set
+            {
+                _stories = value;
+            }
         }
 
         private Dictionary<ulong, Room> _rooms = null;
@@ -172,6 +184,10 @@ namespace HomegearLib.RPC
                 }
 
                 return _rooms;
+            }
+            set
+            {
+                _rooms = value;
             }
         }
 

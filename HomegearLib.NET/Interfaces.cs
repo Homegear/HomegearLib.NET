@@ -22,39 +22,10 @@ namespace HomegearLib
             }
         }
 
-        public void Update(out bool interfacesRemoved, out bool interfacesAdded)
+        public void Reload()
         {
-            interfacesRemoved = false;
-            interfacesAdded = false;
-            Dictionary<string, Interface> interfaces = _rpc.ListInterfaces();
-            foreach (KeyValuePair<string, Interface> interfacePair in interfaces)
-            {
-                if (!_dictionary.ContainsKey(interfacePair.Key))
-                {
-                    interfacesAdded = true;
-                    continue;
-                }
-                Interface physicalInterface = _dictionary[interfacePair.Value.ID];
-                if (physicalInterface.Type != interfacePair.Value.Type || physicalInterface.Family.ID != interfacePair.Value.Family.ID)
-                {
-                    interfacesRemoved = true;
-                    interfacesAdded = true;
-                    continue;
-                }
-                physicalInterface.IpAddress = interfacePair.Value.IpAddress;
-                physicalInterface.Hostname = interfacePair.Value.Hostname;
-                physicalInterface.LastPacketReceived = interfacePair.Value.LastPacketReceived;
-                physicalInterface.LastPacketSent = interfacePair.Value.LastPacketSent;
-                physicalInterface.Connected = interfacePair.Value.Connected;
-            }
-            foreach (KeyValuePair<string, Interface> interfacePair in _dictionary)
-            {
-                if (!interfaces.ContainsKey(interfacePair.Key))
-                {
-                    interfacesRemoved = true;
-                    break;
-                }
-            }
+            _rpc.Interfaces = null;
+            _dictionary = _rpc.Interfaces;
         }
     }
 }
