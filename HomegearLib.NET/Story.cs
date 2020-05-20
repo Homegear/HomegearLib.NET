@@ -19,8 +19,9 @@ namespace HomegearLib
         public Rooms _rooms = null;
         public Rooms Rooms { get { return _rooms; } internal set { _rooms = value; } }
 
-        public Story(Dictionary<string, string> translations)
+        public Story(RPCController rpc, Dictionary<string, string> translations)
         {
+            _rpc = rpc;
             _translations = translations;
         }
 
