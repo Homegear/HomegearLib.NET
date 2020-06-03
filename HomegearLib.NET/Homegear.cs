@@ -762,9 +762,11 @@ namespace HomegearLib
             _disposing = true;
             _rpc.Disconnected -= _rpc_Disconnected;
             _rpc.InitCompleted -= _rpc_InitCompleted;
+            _rpc.HomegearError -= _rpc_HomegearError;
             _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
             _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
             _rpc.SystemVariableDeleted -= _rpc_OnSystemVariableDeleted;
+            _rpc.Pong -= _rpc_Pong;
             _rpc.MetadataUpdated -= _rpc_OnMetadataUpdated;
             _rpc.MetadataDeleted -= _rpc_OnMetadataDeleted;
             _rpc.NewDevices -= _rpc_OnNewDevices;
@@ -773,6 +775,8 @@ namespace HomegearLib
             _rpc.NewEvent -= _rpc_OnNewEvent;
             _rpc.EventDeleted -= _rpc_OnEventDeleted;
             _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
+            _rpc.RequestUiRefreshEvent -= _rpc_RequestUiRefreshEvent;
+
             _stopConnectThread = true;
             if (_connectThread.IsAlive) _connectThread.Join();
             _rpc.Disconnect();

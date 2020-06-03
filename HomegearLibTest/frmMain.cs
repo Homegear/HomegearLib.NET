@@ -547,7 +547,7 @@ namespace HomegearLibTest
 
         void _homegear_OnDeviceReloadRequired(Homegear sender, Device device, Channel channel, DeviceReloadType reloadType)
         {
-            if(reloadType == DeviceReloadType.Full)
+            if (reloadType == DeviceReloadType.Full)
             {
                 WriteLog("Reloading device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
@@ -555,7 +555,7 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
-            else if(reloadType == DeviceReloadType.Metadata)
+            else if (reloadType == DeviceReloadType.Metadata)
             {
                 WriteLog("Reloading metadata of device " + device.ID.ToString() + ".");
                 EnableSplitContainer(false);
@@ -580,7 +580,7 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
-            else if(reloadType == DeviceReloadType.Team)
+            else if (reloadType == DeviceReloadType.Team)
             {
                 WriteLog("Device team was updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString());
                 WriteLog("Reloading channel " + channel.Index + " of device " + device.ID.ToString() + ".");
@@ -589,7 +589,7 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
-            else if(reloadType == DeviceReloadType.Events)
+            else if (reloadType == DeviceReloadType.Events)
             {
                 WriteLog("Device events were updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString());
                 WriteLog("Reloading events of device " + device.ID.ToString() + ".");
@@ -605,6 +605,10 @@ namespace HomegearLibTest
                 channel.Variables.Reload();
                 UpdateTreeView();
                 EnableSplitContainer(true);
+            }
+            else if (reloadType == DeviceReloadType.UI)
+            {
+                WriteLog("Received UI element reload request.");
             }
         }
 
