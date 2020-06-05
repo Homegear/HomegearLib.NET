@@ -3026,6 +3026,7 @@ namespace HomegearLib.RPC
             public bool Visualizable;
             public bool Visualized;
             public List<ulong> VisualizedByUiElements;
+            public string VisualizationCheckError;
         }
 
         public CheckUiElementSimpleCreationResult CheckUiElementSimpleCreation(Variable variable)
@@ -3054,6 +3055,7 @@ namespace HomegearLib.RPC
                     result.VisualizedByUiElements.Add((ulong)element.IntegerValue);
                 }
             }
+            if (response.StructValue.ContainsKey("reason")) result.VisualizationCheckError = response.StructValue["reason"].StringValue;
 
             return result;
         }

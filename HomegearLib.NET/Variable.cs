@@ -118,10 +118,30 @@ namespace HomegearLib
                     _visualizable = result.Visualizable;
                     _visualized = result.Visualized;
                     _visualizedByUiElements = result.VisualizedByUiElements;
+                    _visualizationCheckError = result.VisualizationCheckError;
                     _uiPropertiesInitialized = true;
                 }
 
                 return _visualizable;
+            }
+        }
+
+        protected string _visualizationCheckError = "";
+        public string VisualizationCheckError
+        {
+            get
+            {
+                if (!_uiPropertiesInitialized)
+                {
+                    var result = _rpc.CheckUiElementSimpleCreation(this);
+                    _visualizable = result.Visualizable;
+                    _visualized = result.Visualized;
+                    _visualizedByUiElements = result.VisualizedByUiElements;
+                    _visualizationCheckError = result.VisualizationCheckError;
+                    _uiPropertiesInitialized = true;
+                }
+
+                return _visualizationCheckError;
             }
         }
 
@@ -136,6 +156,7 @@ namespace HomegearLib
                     _visualizable = result.Visualizable;
                     _visualized = result.Visualized;
                     _visualizedByUiElements = result.VisualizedByUiElements;
+                    _visualizationCheckError = result.VisualizationCheckError;
                     _uiPropertiesInitialized = true;
                 }
 
@@ -154,6 +175,7 @@ namespace HomegearLib
                     _visualizable = result.Visualizable;
                     _visualized = result.Visualized;
                     _visualizedByUiElements = result.VisualizedByUiElements;
+                    _visualizationCheckError = result.VisualizationCheckError;
                     _uiPropertiesInitialized = true;
                 }
 
