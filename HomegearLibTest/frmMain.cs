@@ -606,10 +606,10 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
-            else if (reloadType == DeviceReloadType.UI)
-            {
-                WriteLog("Received UI element reload request.");
-            }
+            //else if (reloadType == DeviceReloadType.UI)
+            //{
+            //    WriteLog("Received UI element reload request.");
+            //}
         }
 
         void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
