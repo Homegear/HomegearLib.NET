@@ -760,6 +760,7 @@ namespace HomegearLib
             }
 
             _disposing = true;
+
             _rpc.Disconnected -= _rpc_Disconnected;
             _rpc.InitCompleted -= _rpc_InitCompleted;
             _rpc.HomegearError -= _rpc_HomegearError;
@@ -850,8 +851,11 @@ namespace HomegearLib
                         }
                         catch (Exception ex)
                         {
-                            ConnectError?.Invoke(this, ex.Message, ex.StackTrace);
-                            Thread.Sleep(10);
+                            if (!_disposing)
+                            {
+                                ConnectError?.Invoke(this, ex.Message, ex.StackTrace);
+                                if (!_stopConnectThread) Thread.Sleep(10);
+                            }
                         }
                     }
                     counter++;
@@ -878,13 +882,15 @@ namespace HomegearLib
         private void _rpc_Disconnected(RPCClient sender)
         {
             if (_disposing)
-            {
                 return;
-            }
 
             _stopConnectThread = true;
             if (_connectThread.IsAlive) _connectThread.Join();
             _stopConnectThread = false;
+
+            if (_disposing)
+                return;
+
             _connectThread = new Thread(Connect);
             _connectThread.Start();
         }

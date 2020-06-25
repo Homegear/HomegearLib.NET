@@ -530,6 +530,7 @@ namespace HomegearLibTest
             _rpc.Disconnected += _rpc_Disconnected;
             _rpc.AsciiDeviceTypeIdString = true;
             _rpc.IgnoreEventsFromMyself = true;
+
             _homegear = new Homegear(_rpc, true);
             _homegear.ConnectError += _homegear_OnConnectError;
             _homegear.HomegearError += _homegear_HomegearError;
@@ -606,10 +607,6 @@ namespace HomegearLibTest
                 UpdateTreeView();
                 EnableSplitContainer(true);
             }
-            //else if (reloadType == DeviceReloadType.UI)
-            //{
-            //    WriteLog("Received UI element reload request.");
-            //}
         }
 
         void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
