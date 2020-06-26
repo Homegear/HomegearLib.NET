@@ -43,6 +43,8 @@ namespace HomegearLib.RPC
         #endregion
 
         const int _maxTries = 3;
+
+        private bool _disposing = false;
         private readonly SslInfo _sslInfo;
         private volatile bool _connecting = false;
         private Thread _readClientThread = null;
@@ -108,7 +110,7 @@ namespace HomegearLib.RPC
 
         public void Dispose()
         {
-            _eventQueue?.Shutdown();
+            Disconnect();
         }
 
         unsafe SecureString GetSecureString(string value)
@@ -158,6 +160,11 @@ namespace HomegearLib.RPC
             if (_connecting)
             {
                 return;
+            }
+
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("Connect");
             }
 
             try
@@ -227,6 +234,11 @@ namespace HomegearLib.RPC
                     }
                 }
 
+                if (_disposing)
+                {
+                    throw new ObjectDisposedException("RPC");
+                }
+
                 _stopThread = false;
                 _readClientThread = new Thread(ReadClient);
                 _readClientThread.Start();
@@ -275,7 +287,7 @@ namespace HomegearLib.RPC
             _client = null;
             _sslStream = null;
 
-            Disconnected?.Invoke(this);
+            if (!_disposing) Disconnected?.Invoke(this);
         }
 
         private void ReadClient()
@@ -548,6 +560,11 @@ namespace HomegearLib.RPC
 
         public RPCVariable CallMethod(string name, List<RPCVariable> parameters)
         {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
             try
             {
                 lock (_callMethodLock)

@@ -365,7 +365,23 @@ namespace HomegearLib.RPC
             try
             {
                 _disposing = true;
-                _client.Disconnect();
+
+                if (_client != null)
+                {
+                    _client.Connected -= _client_Connected;
+                    _client.Disconnected -= _client_Disconnected;
+                    _client.HomegearError -= _client_HomegearError;
+                    _client.RPCEvent -= _client_OnRPCEvent;
+                    _client.NewDevices -= _client_OnNewDevices;
+                    _client.DevicesDeleted -= _client_OnDevicesDeleted;
+                    _client.UpdateDevice -= _client_OnUpdateDevice;
+                    _client.NewEvent -= _client_OnNewEvent;
+                    _client.EventDeleted -= _client_OnEventDeleted;
+                    _client.UpdateEvent -= _client_OnUpdateEvent;
+                    _client.RequestUiRefreshEvent -= _client_RequestUiRefreshEvent;
+
+                    _client.Disconnect();
+                }
             }
             catch (Exception)
             {

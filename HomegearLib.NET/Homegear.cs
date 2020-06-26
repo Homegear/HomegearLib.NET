@@ -389,6 +389,7 @@ namespace HomegearLib
             _connectThread.Start();
             while (!_connectThread.IsAlive)
             {
+                Thread.Sleep(10);
             }
         }
         private void _rpc_HomegearError(RPCController sender, long level, string message)
