@@ -382,6 +382,9 @@ namespace HomegearLib.RPC
 
                     _client.Disconnect();
                 }
+
+                Disconnect();
+                Clear();
             }
             catch (Exception)
             {
@@ -432,8 +435,8 @@ namespace HomegearLib.RPC
         /// </summary>
         public void Disconnect()
         {
-            _keepAliveTimer.Stop();
-            _client.Disconnect();
+            _keepAliveTimer?.Stop();
+            _client?.Disconnect();
         }
 
         private void ThrowError(string methodName, RPCVariable errorStruct)

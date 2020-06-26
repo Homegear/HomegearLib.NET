@@ -110,6 +110,8 @@ namespace HomegearLib.RPC
 
         public void Dispose()
         {
+            _disposing = true;
+
             Disconnect();
         }
 

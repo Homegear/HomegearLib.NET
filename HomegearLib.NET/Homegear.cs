@@ -185,6 +185,7 @@ namespace HomegearLib
         private RPCController _rpc = null;
         private volatile bool _events = false;
         private volatile bool _disposing = false;
+        private bool _disposed = false;
         private volatile bool _stopConnectThread = false;
         private Thread _connectThread = null;
 
@@ -387,11 +388,13 @@ namespace HomegearLib
             _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
+            
             while (!_connectThread.IsAlive)
             {
                 Thread.Sleep(10);
-            }
+            }            
         }
+
         private void _rpc_HomegearError(RPCController sender, long level, string message)
         {
             HomegearError?.Invoke(this, level, message);
@@ -746,8 +749,7 @@ namespace HomegearLib
 
         ~Homegear()
         {
-            _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
+            Dispose(false);
         }
 
         /// <summary>
@@ -755,33 +757,47 @@ namespace HomegearLib
         /// </summary>
         public void Dispose()
         {
-            if (_disposing)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
             {
                 return;
             }
 
             _disposing = true;
 
-            _rpc.Disconnected -= _rpc_Disconnected;
-            _rpc.InitCompleted -= _rpc_InitCompleted;
-            _rpc.HomegearError -= _rpc_HomegearError;
-            _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
-            _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
-            _rpc.SystemVariableDeleted -= _rpc_OnSystemVariableDeleted;
-            _rpc.Pong -= _rpc_Pong;
-            _rpc.MetadataUpdated -= _rpc_OnMetadataUpdated;
-            _rpc.MetadataDeleted -= _rpc_OnMetadataDeleted;
-            _rpc.NewDevices -= _rpc_OnNewDevices;
-            _rpc.DevicesDeleted -= _rpc_OnDevicesDeleted;
-            _rpc.UpdateDevice -= _rpc_OnUpdateDevice;
-            _rpc.NewEvent -= _rpc_OnNewEvent;
-            _rpc.EventDeleted -= _rpc_OnEventDeleted;
-            _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
-            _rpc.RequestUiRefreshEvent -= _rpc_RequestUiRefreshEvent;
+            if (disposing)
+            {
+                _stopConnectThread = true;
 
-            _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
-            _rpc.Disconnect();
+                _rpc.Disconnected -= _rpc_Disconnected;
+                _rpc.InitCompleted -= _rpc_InitCompleted;
+                _rpc.HomegearError -= _rpc_HomegearError;
+                _rpc.DeviceVariableUpdated -= _rpc_OnDeviceVariableUpdated;
+                _rpc.SystemVariableUpdated -= _rpc_OnSystemVariableUpdated;
+                _rpc.SystemVariableDeleted -= _rpc_OnSystemVariableDeleted;
+                _rpc.Pong -= _rpc_Pong;
+                _rpc.MetadataUpdated -= _rpc_OnMetadataUpdated;
+                _rpc.MetadataDeleted -= _rpc_OnMetadataDeleted;
+                _rpc.NewDevices -= _rpc_OnNewDevices;
+                _rpc.DevicesDeleted -= _rpc_OnDevicesDeleted;
+                _rpc.UpdateDevice -= _rpc_OnUpdateDevice;
+                _rpc.NewEvent -= _rpc_OnNewEvent;
+                _rpc.EventDeleted -= _rpc_OnEventDeleted;
+                _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
+                _rpc.RequestUiRefreshEvent -= _rpc_RequestUiRefreshEvent;
+
+                if (_connectThread != null && _connectThread.IsAlive) _connectThread.Join();
+                _connectThread = null;
+
+                _rpc.Dispose();
+            }
+
+            _disposed = true;
         }
 
         /// <summary>
@@ -886,7 +902,7 @@ namespace HomegearLib
                 return;
 
             _stopConnectThread = true;
-            if (_connectThread.IsAlive) _connectThread.Join();
+            if (_connectThread != null && _connectThread.IsAlive) _connectThread.Join();
             _stopConnectThread = false;
 
             if (_disposing)
