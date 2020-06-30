@@ -124,7 +124,7 @@ namespace HomegearLib
         public event ConnectErrorEventHandler ConnectError;
 
         /// <summary>
-        /// Raised when an error occures within Homegear.
+        /// Raised when an error occurs within Homegear.
         /// </summary>
         public event HomegearErrorEventHandler HomegearError;
 

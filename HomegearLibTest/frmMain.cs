@@ -897,6 +897,8 @@ namespace HomegearLibTest
             if (e.Node.Level == 1)
             {
                 _selectedTimedEvent = (TimedEvent)e.Node.Tag;
+                if (_selectedTimedEvent == null) return;
+
                 txtEventID.Text = _selectedTimedEvent.ID;
                 chkEventEnabled.Checked = _selectedTimedEvent.Enabled;
                 txtEventTime.Text = _selectedTimedEvent.EventTime.ToShortDateString() + " " + _selectedTimedEvent.EventTime.ToLongTimeString();
