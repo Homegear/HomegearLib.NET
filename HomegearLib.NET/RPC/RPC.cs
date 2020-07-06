@@ -2670,18 +2670,12 @@ namespace HomegearLib.RPC
 
         public ulong DeleteBuilding(ulong id)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
+            return Delete("deleteBuilding", id);
+        }
 
-            RPCVariable response = _client.CallMethod("deleteBuilding", new List<RPCVariable> { new RPCVariable(id) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("deleteBuilding", response);
-            }
-
-            return (ulong)response.IntegerValue;
+        public ulong UpdateBuilding(ulong id, Dictionary<String, String> translations)
+        {
+            return Update("updateBuilding", id, translations);
         }
 
         public Dictionary<ulong, Building> GetBuildings()
@@ -2769,20 +2763,14 @@ namespace HomegearLib.RPC
             return (ulong)response.IntegerValue;
         }
 
+        public ulong UpdateStory(ulong id, Dictionary<String, String> translations)
+        {
+            return Update("updateStory", id, translations);
+        }
+
         public ulong DeleteStory(ulong id)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
-
-            RPCVariable response = _client.CallMethod("deleteStory", new List<RPCVariable> { new RPCVariable(id) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("deleteStory", response);
-            }
-
-            return (ulong)response.IntegerValue;
+            return Delete("deleteStory", id);
         }
 
         public Dictionary<ulong, Story> GetStories()
@@ -2898,20 +2886,15 @@ namespace HomegearLib.RPC
             return (ulong)response.IntegerValue;
         }
 
+        public ulong UpdateRoom(ulong id, Dictionary<String, String> translations)
+        {
+            return Update("updateRoom", id, translations);
+        }
+
+
         public ulong DeleteRoom(ulong id)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
-
-            RPCVariable response = _client.CallMethod("deleteRoom", new List<RPCVariable> { new RPCVariable(id) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("deleteRoom", response);
-            }
-
-            return (ulong)response.IntegerValue;
+            return Delete("deleteRoom", id);
         }
 
         public Dictionary<ulong, Room> GetRooms()
@@ -2989,6 +2972,49 @@ namespace HomegearLib.RPC
                 ThrowError("removeVariableFromRoom", response);
             }
         }
+        #endregion
+
+        #region Common
+
+        public ulong Update(String call, ulong id, Dictionary<String, String> translations)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var translationsStruct = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var translation in translations)
+            {
+                translationsStruct.StructValue.Add(translation.Key, new RPCVariable(translation.Value));
+            }
+
+            RPCVariable response = _client.CallMethod(call, new List<RPCVariable> { new RPCVariable(id), translationsStruct });
+            if (response.ErrorStruct)
+            {
+                ThrowError(call, response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
+
+        public ulong Delete(String call, ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod(call, new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError(call, response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
         #endregion
 
         #region Roles
