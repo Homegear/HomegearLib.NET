@@ -2668,6 +2668,22 @@ namespace HomegearLib.RPC
             return (ulong)response.IntegerValue;
         }
 
+        public ulong DeleteBuilding(ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("deleteBuilding", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("deleteBuilding", response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
         public Dictionary<ulong, Building> GetBuildings()
         {
             if (_disposing)
@@ -2748,6 +2764,22 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("createStory", response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
+        public ulong DeleteStory(ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("deleteStory", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("deleteStory", response);
             }
 
             return (ulong)response.IntegerValue;
@@ -2861,6 +2893,22 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("createRoom", response);
+            }
+
+            return (ulong)response.IntegerValue;
+        }
+
+        public ulong DeleteRoom(ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("deleteRoom", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("deleteRoom", response);
             }
 
             return (ulong)response.IntegerValue;
