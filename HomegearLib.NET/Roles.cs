@@ -47,5 +47,25 @@ namespace HomegearLib
                 }
             }
         }
+
+        public void Reload()
+        {
+            _rpc.Roles = null;
+            _dictionary = _rpc.Roles;
+        }
+
+        public void Create(Role role)
+        {
+            role.ID = _rpc.CreateRole(role);
+        }
+
+        public Role ByName(string name)
+        {
+            foreach (var role in _dictionary)
+            {
+                if (role.Value.HasName(name)) return role.Value;
+            }
+            return null;
+        }
     }
 }

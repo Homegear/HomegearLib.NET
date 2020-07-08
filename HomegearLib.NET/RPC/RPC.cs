@@ -203,6 +203,10 @@ namespace HomegearLib.RPC
 
                 return _roles;
             }
+            set
+            {
+                _roles = value;
+            }
         }
 
         private Dictionary<string, SystemVariable> _systemVariables = null;

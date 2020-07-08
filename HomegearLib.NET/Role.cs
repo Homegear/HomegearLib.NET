@@ -23,6 +23,11 @@ namespace HomegearLib
             }
         }
 
+        public Role(Dictionary<string, string> translations)
+        {
+            _translations = translations;
+        }
+
         public Role(ulong id, Dictionary<string, string> translations)
         {
             _id = id;
@@ -32,6 +37,15 @@ namespace HomegearLib
         public void Dispose()
         {
             
+        }
+
+        public bool HasName(string name)
+        {
+            foreach (var translation in _translations)
+            {
+                if (translation.Value == name) return true;
+            }
+            return false;
         }
 
         public string Name(string languageCode)
