@@ -209,6 +209,14 @@ namespace HomegearLibTest
                     interfacesNode.Nodes.Add("<loading...>");
                     tvDevices.Nodes.Add(interfacesNode);
 
+                    TreeNode buildingsNode = new TreeNode("Buildings");
+                    buildingsNode.Nodes.Add("<loading...>");
+                    tvDevices.Nodes.Add(buildingsNode);
+
+                    TreeNode storiesNode = new TreeNode("Stories");
+                    storiesNode.Nodes.Add("<loading...>");
+                    tvDevices.Nodes.Add(storiesNode);
+
                     TreeNode roomsNode = new TreeNode("Rooms");
                     roomsNode.Nodes.Add("<loading...>");
                     tvDevices.Nodes.Add(roomsNode);
@@ -809,6 +817,14 @@ namespace HomegearLibTest
                 {
                     AfterExpandInterface(e);
                 }
+                else if (e.Node.FullPath.StartsWith("Buildings"))
+                {
+                    AfterExpandBuildings(e);
+                }
+                else if (e.Node.FullPath.StartsWith("Stories"))
+                {
+                    AfterExpandStories(e);
+                }
                 else if (e.Node.FullPath.StartsWith("Rooms"))
                 {
                     AfterExpandRoom(e);
@@ -1062,6 +1078,66 @@ namespace HomegearLibTest
             }
         }
         #endregion
+
+
+        #region Buildings
+        private void AfterExpandBuildings(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (var buildingPair in _homegear.Buildings)
+                {
+                    TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
+                    buildingNode.Tag = buildingPair.Value;
+                    e.Node.Nodes.Add(buildingNode);
+                }
+            }
+        }
+
+        private void BuildingSelected(TreeViewEventArgs e)
+        {
+            if (_closing)
+            {
+                return;
+            }
+
+            if (e.Node.Level == 1)
+            {
+                //Todo: Implement
+            }
+        }
+        #endregion
+
+        #region Stories
+        private void AfterExpandStories(TreeViewEventArgs e)
+        {
+            if (e.Node.Level == 0)
+            {
+                e.Node.Nodes.Clear();
+                foreach (var storyPair in _homegear.Stories)
+                {
+                    TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
+                    storyNode.Tag = storyPair.Value;
+                    e.Node.Nodes.Add(storyNode);
+                }
+            }
+        }
+
+        private void StorySelected(TreeViewEventArgs e)
+        {
+            if (_closing)
+            {
+                return;
+            }
+
+            if (e.Node.Level == 1)
+            {
+                //Todo: Implement
+            }
+        }
+        #endregion
+
 
         #region Rooms
         private void AfterExpandRoom(TreeViewEventArgs e)
