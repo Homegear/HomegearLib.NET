@@ -62,6 +62,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmAddRoom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddRoom.Designer.cs">
+      <DependentUpon>frmAddRoom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddStory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddStory.Designer.cs">
+      <DependentUpon>frmAddStory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAddBuilding.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAddBuilding.Designer.cs">
+      <DependentUpon>frmAddBuilding.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSniffPackets.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +136,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmAddRoom.resx">
+      <DependentUpon>frmAddRoom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddStory.resx">
+      <DependentUpon>frmAddStory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAddBuilding.resx">
+      <DependentUpon>frmAddBuilding.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmSniffPackets.resx">
       <DependentUpon>frmSniffPackets.cs</DependentUpon>
     </EmbeddedResource>

@@ -26,6 +26,10 @@ namespace HomegearLibTest
         Channel _rightClickedChannel = null;
         MetadataVariable _rightClickedMetadata = null;
         Link _rightClickedLink = null;
+        Building _rightClickedBuilding = null;
+        Story _rightClickedStory = null;
+        Room _rightClickedRoom = null;
+
         Device _selectedDevice = null;
         Channel _selectedChannel = null;
         Link _selectedLink = null;
@@ -34,6 +38,10 @@ namespace HomegearLibTest
         Variable _selectedVariable = null;
         SystemVariable _selectedSystemVariable = null;
         MetadataVariable _selectedMetadata = null;
+        Building _selectedBuilding = null;
+        Story _selectedStory = null;
+        Room _selectedRoom = null;
+
         bool _nodeLoading = false;
         Int32 _variableTimerIndex = 5;
         Timer _variableValueChangedTimer = new Timer();
@@ -211,14 +219,17 @@ namespace HomegearLibTest
 
                     TreeNode buildingsNode = new TreeNode("Buildings");
                     buildingsNode.Nodes.Add("<loading...>");
+                    buildingsNode.ContextMenuStrip = cmBuildings;
                     tvDevices.Nodes.Add(buildingsNode);
 
                     TreeNode storiesNode = new TreeNode("Stories");
                     storiesNode.Nodes.Add("<loading...>");
+                    storiesNode.ContextMenuStrip = cmStories;
                     tvDevices.Nodes.Add(storiesNode);
 
                     TreeNode roomsNode = new TreeNode("Rooms");
                     roomsNode.Nodes.Add("<loading...>");
+                    roomsNode.ContextMenuStrip = cmRooms;
                     tvDevices.Nodes.Add(roomsNode);
 
                     TreeNode rolesNode = new TreeNode("Roles");
@@ -675,6 +686,9 @@ namespace HomegearLibTest
             _selectedMetadata = null;
             _selectedTimedEvent = null;
             _selectedTriggeredEvent = null;
+            _selectedBuilding = null;
+            _selectedStory = null;
+            _selectedRoom = null;
 
             pnTriggeredEvent.Visible = false;
             pnTimedEvent.Visible = false;
@@ -712,6 +726,18 @@ namespace HomegearLibTest
             {
                 TimedEventSelected(e);
             }
+            else if (e.Node.FullPath.StartsWith("Buildings"))
+            {
+                BuildingSelected(e);
+            }
+            else if (e.Node.FullPath.StartsWith("Stories"))
+            {
+                StorySelected(e);
+            }
+            else if (e.Node.FullPath.StartsWith("Rooms"))
+            {
+                RoomSelected(e);
+            }
 
             _nodeLoading = false;
         }
@@ -748,7 +774,11 @@ namespace HomegearLibTest
             _rightClickedSystemVariable = null;
             _rightClickedTimedEvent = null;
             _rightClickedTriggeredEvent = null;
-            if(e.Button == System.Windows.Forms.MouseButtons.Right)
+            _rightClickedBuilding = null;
+            _rightClickedStory = null;
+            _rightClickedRoom = null;
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 if(e.Node.FullPath.StartsWith("Devices"))
                 {
@@ -795,6 +825,27 @@ namespace HomegearLibTest
                     if (e.Node.Level == 1 && e.Node.Tag is TimedEvent)
                     {
                         _rightClickedTimedEvent = (TimedEvent)e.Node.Tag;
+                    }
+                }
+                else if (e.Node.FullPath.StartsWith("Buildings"))
+                {
+                    if (e.Node.Level == 1 && e.Node.Tag is Building)
+                    {
+                        _rightClickedBuilding = (Building)e.Node.Tag;
+                    }
+                }
+                else if (e.Node.FullPath.StartsWith("Stories"))
+                {
+                    if (e.Node.Level == 1 && e.Node.Tag is Story)
+                    {
+                        _rightClickedStory = (Story)e.Node.Tag;
+                    }
+                }
+                else if (e.Node.FullPath.StartsWith("Rooms"))
+                {
+                    if (e.Node.Level == 1 && e.Node.Tag is Room)
+                    {
+                        _rightClickedRoom = (Room)e.Node.Tag;
                     }
                 }
             }
@@ -1090,7 +1141,12 @@ namespace HomegearLibTest
                 {
                     TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
                     buildingNode.Tag = buildingPair.Value;
+                    buildingNode.ContextMenuStrip = cmBuilding;
                     e.Node.Nodes.Add(buildingNode);
+                }
+                if (e.Node.Nodes.Count == 0)
+                {
+                    e.Node.Nodes.Add("Empty");
                 }
             }
         }
@@ -1104,7 +1160,8 @@ namespace HomegearLibTest
 
             if (e.Node.Level == 1)
             {
-                //Todo: Implement
+                _selectedBuilding = (Building)e.Node.Tag;
+
             }
         }
         #endregion
@@ -1119,7 +1176,12 @@ namespace HomegearLibTest
                 {
                     TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
                     storyNode.Tag = storyPair.Value;
+                    storyNode.ContextMenuStrip = cmStory;
                     e.Node.Nodes.Add(storyNode);
+                }
+                if (e.Node.Nodes.Count == 0)
+                {
+                    e.Node.Nodes.Add("Empty");
                 }
             }
         }
@@ -1133,7 +1195,8 @@ namespace HomegearLibTest
 
             if (e.Node.Level == 1)
             {
-                //Todo: Implement
+                _selectedStory = (Story)e.Node.Tag;
+
             }
         }
         #endregion
@@ -1149,7 +1212,12 @@ namespace HomegearLibTest
                 {
                     TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
                     roomNode.Tag = roomPair.Value;
+                    roomNode.ContextMenuStrip = cmRoom;
                     e.Node.Nodes.Add(roomNode);
+                }
+                if (e.Node.Nodes.Count == 0)
+                {
+                    e.Node.Nodes.Add("Empty");
                 }
             }
         }
@@ -1163,7 +1231,8 @@ namespace HomegearLibTest
 
             if (e.Node.Level == 1)
             {
-                //Todo: Implement
+                _selectedRoom = (Room)e.Node.Tag;
+
             }
         }
         #endregion
@@ -2585,6 +2654,262 @@ namespace HomegearLibTest
             _rightClickedDevice.Remove();
             MessageBox.Show(this, "Removing device with ID " + _rightClickedDevice.ID.ToString(), "Removing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
         #endregion
-    }
+
+        private void tsAddBuildingVariable_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmAddBuilding dialog = new frmAddBuilding();
+                if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (dialog.txtName.Text.Length == 0)
+                    {
+                        return;
+                    }
+
+                    Building building = new Building(_homegear.Rpc, new Dictionary<string, string>() { {"en-US", dialog.txtName.Text } });
+                    var ID = _homegear.Rpc.CreateBuilding(building);
+                    if (ID >= 0)
+                    {
+                        _homegear.Buildings.Reload();
+
+                        MessageBox.Show(this, "Building added successfully.", "Building added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        foreach (var buildingPair in _homegear.Buildings)
+                        {
+                            if (buildingPair.Key != ID) continue;
+
+                            TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
+                            buildingNode.Tag = buildingPair.Value;
+
+                            foreach (TreeNode node in tvDevices.Nodes)
+                            {
+                                if (node.Text == "Buildings")
+                                {
+                                    //node.Collapse();
+                                    //node.Nodes.Clear();
+                                    //node.Nodes.Add("<loading...>");
+                                    node.Nodes.Add(buildingNode);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "Building not created.", "Building not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void tsAddStoryVariable_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmAddStory dialog = new frmAddStory();
+                if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (dialog.txtName.Text.Length == 0)
+                    {
+                        return;
+                    }
+
+                    Story story = new Story(_homegear.Rpc, new Dictionary<string, string>() { { "en-US", dialog.txtName.Text } });
+                    var ID = _homegear.Rpc.CreateStory(story);
+                    if (ID >= 0)
+                    {
+                        _homegear.Stories.Reload();
+
+                        MessageBox.Show(this, "Story added successfully.", "Story added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        foreach (var storyPair in _homegear.Stories)
+                        {
+                            if (storyPair.Key != ID) continue;
+
+                            TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
+                            storyNode.Tag = storyPair.Value;
+
+                            foreach (TreeNode node in tvDevices.Nodes)
+                            {
+                                if (node.Text == "Stories")
+                                {
+                                    //node.Collapse();
+                                    //node.Nodes.Clear();
+                                    //node.Nodes.Add("<loading...>");
+                                    node.Nodes.Add(storyNode);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "Story not created.", "Story not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void tsAddRoomVariable_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmAddRoom dialog = new frmAddRoom();
+                if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (dialog.txtName.Text.Length == 0)
+                    {
+                        return;
+                    }
+
+                    Room room = new Room(new Dictionary<string, string>() { { "en-US", dialog.txtName.Text } });
+                    var ID = _homegear.Rpc.CreateRoom(room);
+                    if (ID >= 0)
+                    {
+                        _homegear.Rooms.Reload();
+
+                        MessageBox.Show(this, "Room added successfully.", "Room added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        foreach (var roomPair in _homegear.Rooms)
+                        {
+                            if (roomPair.Key != ID) continue;
+
+                            TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
+                            roomNode.Tag = roomPair.Value;
+
+                            foreach (TreeNode node in tvDevices.Nodes)
+                            {
+                                if (node.Text == "Rooms")
+                                {
+                                    //node.Collapse();
+                                    //node.Nodes.Clear();
+                                    //node.Nodes.Add("<loading...>");
+                                    node.Nodes.Add(roomNode);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "Room not created.", "Room not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex.Message);
+            }
+        }
+
+        private void tsRemoveBuilding_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedBuilding == null)
+            {
+                return;
+            }
+
+            if (_homegear.Rpc.DeleteBuilding(_rightClickedBuilding.ID) < 0)
+            {
+                MessageBox.Show(this, "Building not deleted.", "Building not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                _homegear.Buildings.Reload();
+
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "Buildings")
+                    {
+                        foreach (TreeNode child in node.Nodes)
+                        {
+                            if (_rightClickedBuilding == (Building)child.Tag)
+                            {
+                                node.Nodes.Remove(child);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void tsRemoveStory_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedStory == null)
+            {
+                return;
+            }
+
+            if (_homegear.Rpc.DeleteStory(_rightClickedStory.ID) < 0)
+            {
+                MessageBox.Show(this, "Story not deleted.", "Story not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                _homegear.Stories.Reload();
+
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "Stories")
+                    {
+                        foreach (TreeNode child in node.Nodes)
+                        {
+                            if (_rightClickedStory == (Story)child.Tag)
+                            {
+                                node.Nodes.Remove(child);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void tsRemoveRoom_Click(object sender, EventArgs e)
+        {
+            if (_rightClickedRoom == null)
+            {
+                return;
+            }
+
+            if (_homegear.Rpc.DeleteRoom(_rightClickedRoom.ID) < 0)
+            {
+                MessageBox.Show(this, "Room not deleted.", "Room not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                _homegear.Rooms.Reload();
+
+                foreach (TreeNode node in tvDevices.Nodes)
+                {
+                    if (node.Text == "Rooms")
+                    {
+                        foreach (TreeNode child in node.Nodes)
+                        {
+                            if (_rightClickedRoom == (Room)child.Tag)
+                            {
+                                node.Nodes.Remove(child);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
 }
