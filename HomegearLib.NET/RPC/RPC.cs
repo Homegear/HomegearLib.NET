@@ -2650,19 +2650,33 @@ namespace HomegearLib.RPC
             }
         }
 
+        public void RemoveStoryFromBuilding(Building building, Story story)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeStoryFromBuilding", new List<RPCVariable> { new RPCVariable(building.ID), new RPCVariable(story.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeStoryFromBuilding", response);
+            }
+        }
+
         public ulong CreateBuilding(Building building)
         {
             return Create("createBuilding", building.Translations);
         }
 
-        public ulong DeleteBuilding(ulong id)
+        public ulong DeleteBuilding(Building building)
         {
-            return Delete("deleteBuilding", id);
+            return Delete("deleteBuilding", building.ID);
         }
 
-        public ulong UpdateBuilding(ulong id, Dictionary<String, String> translations)
+        public ulong UpdateBuilding(Building building)
         {
-            return Update("updateBuilding", id, translations);
+            return Update("updateBuilding", building.ID, building.Translations);
         }
 
         public Dictionary<ulong, Building> GetBuildings()
@@ -2728,19 +2742,33 @@ namespace HomegearLib.RPC
             }
         }
 
+        public void RemoveRoomFromStory(Story story, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeRoomFromStory", new List<RPCVariable> { new RPCVariable(story.ID), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeRoomFromStory", response);
+            }
+        }
+
         public ulong CreateStory(Story story)
         {
             return Create("createStory", story.Translations);
         }
 
-        public ulong UpdateStory(ulong id, Dictionary<String, String> translations)
+        public ulong UpdateStory(Story story)
         {
-            return Update("updateStory", id, translations);
+            return Update("updateStory", story.ID, story.Translations);
         }
 
-        public ulong DeleteStory(ulong id)
+        public ulong DeleteStory(Story story)
         {
-            return Delete("deleteStory", id);
+            return Delete("deleteStory", story.ID);
         }
 
         public Dictionary<ulong, Story> GetStories()
@@ -2839,15 +2867,15 @@ namespace HomegearLib.RPC
             return Create("createRoom", room.Translations);
         }
 
-        public ulong UpdateRoom(ulong id, Dictionary<String, String> translations)
+        public ulong UpdateRoom(Room room)
         {
-            return Update("updateRoom", id, translations);
+            return Update("updateRoom", room.ID, room.Translations);
         }
 
 
-        public ulong DeleteRoom(ulong id)
+        public ulong DeleteRoom(Room room)
         {
-            return Delete("deleteRoom", id);
+            return Delete("deleteRoom", room.ID);
         }
 
         public Dictionary<ulong, Room> GetRooms()
