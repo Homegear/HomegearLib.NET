@@ -32,6 +32,7 @@ namespace HomegearLib
         public void Create(Building building)
         {
             building.ID = _rpc.CreateBuilding(building);
+            _dictionary.Add(building.ID, building);
         }
 
         public Building ByName(string name)

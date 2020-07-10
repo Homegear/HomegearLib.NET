@@ -6,7 +6,7 @@ namespace HomegearLib
 {
     public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        protected IDictionary<TKey, TValue> _dictionary;
+        internal IDictionary<TKey, TValue> _dictionary;
 
         public ReadOnlyDictionary()
         {

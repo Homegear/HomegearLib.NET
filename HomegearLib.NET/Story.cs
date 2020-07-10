@@ -16,7 +16,7 @@ namespace HomegearLib
         private Dictionary<string, string> _translations = null;
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
 
-        public Rooms _rooms = null;
+        private Rooms _rooms = null;
         public Rooms Rooms { get { return _rooms; } internal set { _rooms = value; } }
 
         public Story(RPCController rpc, Dictionary<string, string> translations)
@@ -25,7 +25,7 @@ namespace HomegearLib
             _translations = translations;
         }
 
-        internal Story(RPCController rpc, ulong id, Dictionary<string, string> translations)
+        public Story(RPCController rpc, ulong id, Dictionary<string, string> translations)
         {
             _rpc = rpc;
             _id = id;
@@ -41,6 +41,14 @@ namespace HomegearLib
         {
             if (room.ID == 0) return;
             _rpc.AddRoomToStory(this, room);
+            _rooms._dictionary.Add(room.ID, room);
+        }
+
+        public void RemoveRoom(Room room)
+        {
+            if (room.ID == 0) return;
+            _rpc.RemoveRoomFromStory(this, room);
+            _rooms._dictionary.Remove(room.ID);
         }
 
         public bool HasName(string name)

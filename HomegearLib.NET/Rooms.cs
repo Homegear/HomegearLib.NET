@@ -32,6 +32,7 @@ namespace HomegearLib
         public void Create(Room room)
         {
             room.ID = _rpc.CreateRoom(room);
+            _dictionary.Add(room.ID, room);
         }
 
         public Room ByName(string name)

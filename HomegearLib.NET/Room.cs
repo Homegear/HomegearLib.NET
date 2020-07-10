@@ -18,7 +18,7 @@ namespace HomegearLib
             _translations = translations;
         }
 
-        internal Room(ulong id, Dictionary<string, string> translations)
+        public Room(ulong id, Dictionary<string, string> translations)
         {
             _id = id;
             _translations = translations;
