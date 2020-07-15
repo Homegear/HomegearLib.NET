@@ -32,6 +32,7 @@ namespace HomegearLib
         public void Create(Story story)
         {
             story.ID = _rpc.CreateStory(story);
+            if (story._rpc == null) story._rpc = _rpc;
             _dictionary.Add(story.ID, story);
         }
 

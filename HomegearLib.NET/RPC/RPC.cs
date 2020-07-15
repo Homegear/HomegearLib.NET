@@ -2725,6 +2725,42 @@ namespace HomegearLib.RPC
             }
             return buildings;
         }
+
+        public Dictionary<string, RPCVariable> GetBuildingMetadata(Building building)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getBuildingMetadata", new List<RPCVariable> { new RPCVariable(building.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getBuildingMetadata", response);
+            }
+
+            return response.StructValue;
+        }
+
+        public void SetBuildingMetadata(Building building, Dictionary<string, RPCVariable> metadata)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var metadataStruct = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var m in metadata)
+            {
+                metadataStruct.StructValue.Add(m.Key, m.Value);
+            }
+
+            RPCVariable response = _client.CallMethod("setBuildingMetadata", new List<RPCVariable> { new RPCVariable(building.ID), metadataStruct });
+            if (response.ErrorStruct)
+            {
+                ThrowError("setBuildingMetadata", response);
+            }
+        }
         #endregion
 
         #region Stories
@@ -2817,6 +2853,42 @@ namespace HomegearLib.RPC
             }
             return stories;
         }
+
+        public Dictionary<string, RPCVariable> GetStoryMetadata(Story story)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getStoryMetadata", new List<RPCVariable> { new RPCVariable(story.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getStoryMetadata", response);
+            }
+
+            return response.StructValue;
+        }
+
+        public void SetStoryMetadata(Story story, Dictionary<string, RPCVariable> metadata)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var metadataStruct = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var m in metadata)
+            {
+                metadataStruct.StructValue.Add(m.Key, m.Value);
+            }
+
+            RPCVariable response = _client.CallMethod("setStoryMetadata", new List<RPCVariable> { new RPCVariable(story.ID), metadataStruct });
+            if (response.ErrorStruct)
+            {
+                ThrowError("setStoryMetadata", response);
+            }
+        }
         #endregion
 
         #region Rooms
@@ -2905,7 +2977,7 @@ namespace HomegearLib.RPC
                     translations.Add(element.Key, element.Value.StringValue);
                 }
 
-                Room room = new Room((ulong)roomStruct.StructValue["ID"].IntegerValue, translations);
+                Room room = new Room(this, (ulong)roomStruct.StructValue["ID"].IntegerValue, translations);
 
                 rooms.Add(room.ID, room);
             }
@@ -2953,6 +3025,43 @@ namespace HomegearLib.RPC
                 ThrowError("removeVariableFromRoom", response);
             }
         }
+
+        public Dictionary<string, RPCVariable> GetRoomMetadata(Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getRoomMetadata", new List<RPCVariable> { new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getRoomMetadata", response);
+            }
+
+            return response.StructValue;
+        }
+
+        public void SetRoomMetadata(Room room, Dictionary<string, RPCVariable> metadata)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var metadataStruct = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var m in metadata)
+            {
+                metadataStruct.StructValue.Add(m.Key, m.Value);
+            }
+
+            RPCVariable response = _client.CallMethod("setRoomMetadata", new List<RPCVariable> { new RPCVariable(room.ID), metadataStruct });
+            if (response.ErrorStruct)
+            {
+                ThrowError("setRoomMetadata", response);
+            }
+        }
+
         #endregion
 
         #region Common
@@ -3040,14 +3149,14 @@ namespace HomegearLib.RPC
             return Create("createRole", role.Translations);
         }
 
-        public ulong UpdateRole(ulong id, Dictionary<String, String> translations)
+        public ulong UpdateRole(Role role)
         {
-            return Update("updateRole", id, translations);
+            return Update("updateRole", role.ID, role.Translations);
         }
 
-        public ulong DeleteRole(ulong id)
+        public ulong DeleteRole(Role role)
         {
-            return Delete("deleteRole", id);
+            return Delete("deleteRole", role.ID);
         }
 
         public Dictionary<ulong, Role> GetRoles()
@@ -3172,13 +3281,13 @@ namespace HomegearLib.RPC
             return result;
         }
 
-        public void RemoveUiElements(Variable variable)
+        public void RemoveUiElement(Variable variable)
         {
             if (_disposing)
             {
                 throw new ObjectDisposedException("RPC");
             }
-
+           
             foreach (var id in variable.VisualizedByUiElements)
             {
                 RPCVariable response = _client.CallMethod("removeUiElement", new List<RPCVariable> { new RPCVariable(id) });
@@ -3188,6 +3297,95 @@ namespace HomegearLib.RPC
                 }
             }
         }
+
+        public List<RPCVariable> GetAllUiElements(string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+           
+            RPCVariable response = _client.CallMethod("getAllUiElements", new List<RPCVariable> { new RPCVariable(language) } );
+            if (response.ErrorStruct)
+            {
+                ThrowError("getAllUiElements", response);
+            }
+
+            return response.ArrayValue;
+        }
+
+        public List<RPCVariable> GetAvailableUiElements(string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+
+            RPCVariable response = _client.CallMethod("getAvailableUiElements", new List<RPCVariable> { new RPCVariable(language) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getAvailableUiElements", response);
+            }
+
+            return response.ArrayValue;
+        }
+
+        public List<RPCVariable> GetRoomUiElements(Room room, string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+
+            RPCVariable response = _client.CallMethod("getRoomUiElements", new List<RPCVariable> { new RPCVariable(room.ID), new RPCVariable(language) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getRoomUiElements", response);
+            }
+
+            return response.ArrayValue;
+        }
+
+        public Dictionary<string, RPCVariable> GetUiElementMetadata(ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getUiElementMetadata", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUiElementMetadata", response);
+            }
+
+            return response.StructValue;
+        }
+
+        public void SetUiElementMetadata(ulong id, Dictionary<string, RPCVariable> metadata)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            var metadataStruct = new RPCVariable(RPCVariableType.rpcStruct);
+            foreach (var m in metadata)
+            {
+                metadataStruct.StructValue.Add(m.Key, m.Value);
+            }
+
+            RPCVariable response = _client.CallMethod("setUiElementMetadata", new List<RPCVariable> { new RPCVariable(id), metadataStruct });
+            if (response.ErrorStruct)
+            {
+                ThrowError("setUiElementMetadata", response);
+            }
+        }
+
+
         #endregion
     }
 }

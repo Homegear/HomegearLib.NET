@@ -756,7 +756,7 @@ namespace HomegearLib
 
         public void Unvisualize()
         {
-            if (Visualized) _rpc.RemoveUiElements(this);
+            if (Visualized) _rpc.RemoveUiElement(this);
         }
     }
 }

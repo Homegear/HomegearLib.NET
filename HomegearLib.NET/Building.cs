@@ -8,13 +8,34 @@ namespace HomegearLib
 {
     public class Building : IDisposable
     {
-        RPCController _rpc = null;
+        internal RPCController _rpc = null;
 
         private ulong _id = 0;
+
+        private Dictionary<string, RPCVariable> _metadata = null;
         public ulong ID { get { return _id; } internal set { _id = value; } }
 
         private Dictionary<string, string> _translations = null;
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
+
+        public Dictionary<string, RPCVariable> Metadata 
+        { 
+            get
+            {
+                if (_metadata == null)
+                {
+                    _metadata = _rpc?.GetBuildingMetadata(this);
+                }
+
+                return _metadata;
+            }
+
+            set
+            {
+                _rpc?.SetBuildingMetadata(this, value);
+                _metadata = value;
+            }
+        }
 
         private Stories _stories = null;
         public Stories Stories { get { return _stories; } internal set { _stories = value; } }
@@ -34,7 +55,7 @@ namespace HomegearLib
 
         public void Dispose()
         {
-
+            _rpc = null;
         }
 
         public void AddStory(Story story)

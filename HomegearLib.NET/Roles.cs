@@ -57,6 +57,7 @@ namespace HomegearLib
         public void Create(Role role)
         {
             role.ID = _rpc.CreateRole(role);
+            _dictionary.Add(role.ID, role);
         }
 
         public Role ByName(string name)

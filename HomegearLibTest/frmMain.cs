@@ -2670,16 +2670,16 @@ namespace HomegearLibTest
                     }
 
                     Building building = new Building(_homegear.Rpc, new Dictionary<string, string>() { {"en-US", dialog.txtName.Text } });
-                    var ID = _homegear.Rpc.CreateBuilding(building);
-                    if (ID >= 0)
+                    _homegear.Buildings.Create(building);
+                    if (building.ID > 0)
                     {
-                        _homegear.Buildings.Reload();
+                        //_homegear.Buildings.Reload();
 
                         MessageBox.Show(this, "Building added successfully.", "Building added", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         foreach (var buildingPair in _homegear.Buildings)
                         {
-                            if (buildingPair.Key != ID) continue;
+                            if (buildingPair.Key != building.ID) continue;
 
                             TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
                             buildingNode.Tag = buildingPair.Value;
@@ -2723,16 +2723,16 @@ namespace HomegearLibTest
                     }
 
                     Story story = new Story(_homegear.Rpc, new Dictionary<string, string>() { { "en-US", dialog.txtName.Text } });
-                    var ID = _homegear.Rpc.CreateStory(story);
-                    if (ID >= 0)
+                    _homegear.Stories.Create(story);
+                    if (story.ID > 0)
                     {
-                        _homegear.Stories.Reload();
+                        //_homegear.Stories.Reload();
 
                         MessageBox.Show(this, "Story added successfully.", "Story added", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         foreach (var storyPair in _homegear.Stories)
                         {
-                            if (storyPair.Key != ID) continue;
+                            if (storyPair.Key != story.ID) continue;
 
                             TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
                             storyNode.Tag = storyPair.Value;
@@ -2775,17 +2775,17 @@ namespace HomegearLibTest
                         return;
                     }
 
-                    Room room = new Room(new Dictionary<string, string>() { { "en-US", dialog.txtName.Text } });
-                    var ID = _homegear.Rpc.CreateRoom(room);
-                    if (ID >= 0)
+                    Room room = new Room(_homegear.Rpc, new Dictionary<string, string>() { { "en-US", dialog.txtName.Text } });
+                    _homegear.Rooms.Create(room);
+                    if (room.ID > 0)
                     {
-                        _homegear.Rooms.Reload();
+                        //_homegear.Rooms.Reload();
 
                         MessageBox.Show(this, "Room added successfully.", "Room added", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         foreach (var roomPair in _homegear.Rooms)
                         {
-                            if (roomPair.Key != ID) continue;
+                            if (roomPair.Key != room.ID) continue;
 
                             TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
                             roomNode.Tag = roomPair.Value;
@@ -2823,13 +2823,13 @@ namespace HomegearLibTest
                 return;
             }
 
-            if (_homegear.Rpc.DeleteBuilding(_rightClickedBuilding) < 0)
+            if (_homegear.Buildings.Remove(_rightClickedBuilding) < 0)
             {
                 MessageBox.Show(this, "Building not deleted.", "Building not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                _homegear.Buildings.Reload();
+                //_homegear.Buildings.Reload();
 
                 foreach (TreeNode node in tvDevices.Nodes)
                 {

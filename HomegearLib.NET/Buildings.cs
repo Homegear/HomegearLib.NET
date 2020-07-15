@@ -32,7 +32,16 @@ namespace HomegearLib
         public void Create(Building building)
         {
             building.ID = _rpc.CreateBuilding(building);
+            if (building._rpc == null) building._rpc = _rpc;
             _dictionary.Add(building.ID, building);
+        }
+
+        public ulong Remove(Building building)
+        {
+            ulong result = _rpc.DeleteBuilding(building);
+            if (result >= 0) _dictionary.Remove(building.ID);
+
+            return result;
         }
 
         public Building ByName(string name)
