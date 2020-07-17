@@ -736,6 +736,28 @@ namespace HomegearLib
             _roles.Remove(roleID);
         }
 
+        public void RemoveAllRoles()
+        {
+            List<ulong> removesList = new List<ulong>();
+            
+            foreach (var role in _roles)
+            {
+                try
+                {
+                    _rpc.RemoveRoleFromVariable(this, role.Value);
+                    removesList.Add(role.Key);
+                }
+                catch
+                {
+                }
+            }
+
+            foreach(ulong id in removesList)
+            {
+                _roles.Remove(id);
+            }                
+        }
+
         public bool ReadFromDevice()
         {
             try
