@@ -86,6 +86,14 @@ namespace HomegearLib
             return _rpc.CreateDevice(family, deviceType, serialNumber, address, firmwareVersion);
         }
 
+        public void Remove(Device device)
+        {
+            if (_dictionary.ContainsKey(device.ID))
+                _dictionary[device.ID].Remove();
+            _dictionary.Remove(device.ID);
+        }
+
+
         /// <summary>
         /// Searches for new devices on all supported device families and returns the number of newly found devices.
         /// </summary>
