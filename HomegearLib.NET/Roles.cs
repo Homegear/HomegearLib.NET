@@ -60,6 +60,12 @@ namespace HomegearLib
             _dictionary.Add(role.ID, role);
         }
 
+        public void Delete(Role role)
+        {
+            _rpc.DeleteRole(role);
+            _dictionary.Remove(role.ID);
+        }
+
         public Role ByName(string name)
         {
             foreach (var role in _dictionary)

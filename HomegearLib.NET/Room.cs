@@ -19,7 +19,15 @@ namespace HomegearLib
         public ulong ID { get { return _id; } internal set { _id = value; } }
 
         private Dictionary<string, string> _translations = null;
-        public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
+        public Dictionary<string, string> Translations { 
+            get { 
+                return _translations; 
+            } 
+            set { 
+                _translations = value;
+                _rpc?.UpdateRoom(this);
+            } 
+        }
 
         public Dictionary<string, RPCVariable> Metadata
         {
@@ -86,6 +94,75 @@ namespace HomegearLib
             }
 
             return _uiElements;
+        }
+
+        public void AddChannelToRoom(Channel channel)
+        {
+            _rpc?.AddChannelToRoom(channel, this);
+        }
+
+        public void AddDeviceToRoom(Device device)
+        {
+            _rpc?.AddDeviceToRoom(device, this);
+        }
+
+        public void AddVariableToRoom(Variable variable)
+        {
+            _rpc?.AddVariableToRoom(variable, this);
+        }
+        public void AddSystemVariableToRoom(string variable)
+        {
+            _rpc?.AddSystemVariableToRoom(variable, this);
+        }
+
+        public bool RemoveChannelFromRoom(Channel channel)
+        {
+            if (_rpc == null) return false;
+
+            return _rpc.RemoveChannelFromRoom(channel, this);
+        }
+
+        public bool RemoveDeviceFromRoom(Device device)
+        {
+            if (_rpc == null) return false;
+
+            return _rpc.RemoveDeviceFromRoom(device, this);
+        }
+
+        public bool RemoveVariableFromRoom(Variable variable)
+        {
+            if (_rpc == null) return false;
+
+            return _rpc.RemoveVariableFromRoom(variable, this);
+        }
+
+        public void RemoveSystemVariableFromRoom(string variable)
+        {
+            _rpc?.RemoveSystemVariableFromRoom(variable, this);
+        }
+
+
+        // TODO: maybe save them internally and add Reload functions?
+
+        public Dictionary<string, RPCVariable> GetChannelsInRoom()
+        {
+            return _rpc?.GetChannelsInRoom(this);
+        }
+
+        public Dictionary<string, RPCVariable> GetDevicesInRoom()
+        {
+            return _rpc?.GetDevicesInRoom(this);
+        }
+        public Dictionary<string, RPCVariable> GetVariablesInRoom()
+        {
+            return _rpc?.GetDevicesInRoom(this);
+        }
+
+        public List<RPCVariable> GetSystemVariablesInRoom()
+        {
+            List<RPCVariable> result = _rpc?.GetSystemVariablesInRoom(this);
+
+            return result;
         }
     }
 }

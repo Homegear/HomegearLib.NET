@@ -2728,18 +2728,7 @@ namespace HomegearLib.RPC
 
         public Dictionary<string, RPCVariable> GetBuildingMetadata(Building building)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
-
-            RPCVariable response = _client.CallMethod("getBuildingMetadata", new List<RPCVariable> { new RPCVariable(building.ID) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("getBuildingMetadata", response);
-            }
-
-            return response.StructValue;
+            return GetValuesIn("getBuildingMetadata", building.ID);
         }
 
         public void SetBuildingMetadata(Building building, Dictionary<string, RPCVariable> metadata)
@@ -2856,18 +2845,7 @@ namespace HomegearLib.RPC
 
         public Dictionary<string, RPCVariable> GetStoryMetadata(Story story)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
-
-            RPCVariable response = _client.CallMethod("getStoryMetadata", new List<RPCVariable> { new RPCVariable(story.ID) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("getStoryMetadata", response);
-            }
-
-            return response.StructValue;
+            return GetValuesIn("getStoryMetadata", story.ID);
         }
 
         public void SetStoryMetadata(Story story, Dictionary<string, RPCVariable> metadata)
@@ -2917,6 +2895,20 @@ namespace HomegearLib.RPC
             if (response.ErrorStruct)
             {
                 ThrowError("addDeviceToRoom", response);
+            }
+        }
+
+        public void AddSystemVariableToRoom(string variable, Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("addSystemVariableToRoom", new List<RPCVariable> { new RPCVariable(variable), new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("addSystemVariableToRoom", response);
             }
         }
 
@@ -2984,7 +2976,7 @@ namespace HomegearLib.RPC
             return rooms;
         }
 
-        public void RemoveChannelFromRoom(Channel channel, Room room)
+        public bool RemoveChannelFromRoom(Channel channel, Room room)
         {
             if (_disposing)
             {
@@ -2996,9 +2988,11 @@ namespace HomegearLib.RPC
             {
                 ThrowError("removeChannelFromRoom", response);
             }
+
+            return response.BooleanValue;
         }
 
-        public void RemoveDeviceFromRoom(Device device, Room room)
+        public bool RemoveDeviceFromRoom(Device device, Room room)
         {
             if (_disposing)
             {
@@ -3010,9 +3004,11 @@ namespace HomegearLib.RPC
             {
                 ThrowError("removeDeviceFromRoom", response);
             }
+
+            return response.BooleanValue;
         }
 
-        public void RemoveVariableFromRoom(Variable variable, Room room)
+        public bool RemoveVariableFromRoom(Variable variable, Room room)
         {
             if (_disposing)
             {
@@ -3024,22 +3020,27 @@ namespace HomegearLib.RPC
             {
                 ThrowError("removeVariableFromRoom", response);
             }
+
+            return response.BooleanValue;
         }
 
-        public Dictionary<string, RPCVariable> GetRoomMetadata(Room room)
+        public void RemoveSystemVariableFromRoom(string variable, Room room)
         {
             if (_disposing)
             {
                 throw new ObjectDisposedException("RPC");
             }
 
-            RPCVariable response = _client.CallMethod("getRoomMetadata", new List<RPCVariable> { new RPCVariable(room.ID) });
+            RPCVariable response = _client.CallMethod("removeSystemVariableFromRoom", new List<RPCVariable> { new RPCVariable(variable), new RPCVariable(room.ID) });
             if (response.ErrorStruct)
             {
-                ThrowError("getRoomMetadata", response);
+                ThrowError("removeSystemVariableFromRoom", response);
             }
+        }
 
-            return response.StructValue;
+        public Dictionary<string, RPCVariable> GetRoomMetadata(Room room)
+        {
+            return GetValuesIn("getRoomMetadata", room.ID);
         }
 
         public void SetRoomMetadata(Room room, Dictionary<string, RPCVariable> metadata)
@@ -3060,6 +3061,36 @@ namespace HomegearLib.RPC
             {
                 ThrowError("setRoomMetadata", response);
             }
+        }
+
+        public Dictionary<string, RPCVariable> GetChannelsInRoom(Room room)
+        {
+            return GetValuesIn("getChannelsInRoom", room.ID);
+        }
+        public Dictionary<string, RPCVariable> GetDevicesInRoom(Room room)
+        {
+            return GetValuesIn("getDevicesInRoom", room.ID);
+        }
+
+        public Dictionary<string, RPCVariable> GetVariablesInRoom(Room room)
+        {
+            return GetValuesIn("getVariablesInRoom", room.ID);
+        }
+
+        public List<RPCVariable> GetSystemVariablesInRoom(Room room)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getSystemVariablesInRoom", new List<RPCVariable> { new RPCVariable(room.ID) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getSystemVariablesInRoom", response);
+            }
+
+            return response.ArrayValue;
         }
 
         #endregion
@@ -3127,10 +3158,26 @@ namespace HomegearLib.RPC
             return (ulong)response.IntegerValue;
         }
 
+        public Dictionary<string, RPCVariable> GetValuesIn(String call, ulong id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod(call, new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError(call, response);
+            }
+
+            return response.StructValue;
+        }
+
         #endregion
 
         #region Roles
-        public void AddRoleToVariable(Variable variable, Variable.RoleElement role)
+        public bool AddRoleToVariable(Variable variable, Variable.RoleElement role)
         {
             if (_disposing)
             {
@@ -3142,6 +3189,8 @@ namespace HomegearLib.RPC
             {
                 ThrowError("addRoleToVariable", response);
             }
+
+            return response.BooleanValue;
         }
 
         public ulong CreateRole(Role role)
@@ -3186,25 +3235,46 @@ namespace HomegearLib.RPC
                     translations.Add(element.Key, element.Value.StringValue);
                 }
 
-                Role role = new Role((ulong)roleStruct.StructValue["ID"].IntegerValue, translations);
+                Role role = new Role(this, (ulong)roleStruct.StructValue["ID"].IntegerValue, translations);
 
                 roles.Add(role.ID, role);
             }
             return roles;
         }
 
-        public void RemoveRoleFromVariable(Variable variable, Variable.RoleElement role)
+        public bool RemoveRoleFromVariable(Variable variable, Variable.RoleElement role)
+        {
+            if (role == null || variable == null) return false;
+
+            return RemoveRoleFromVariable(variable, role.ID);
+        }
+
+        public bool RemoveRoleFromVariable(Variable variable, Role role)
+        {
+            if (role == null || variable == null) return false;
+
+            return RemoveRoleFromVariable(variable, role.ID);
+        }
+
+        private bool RemoveRoleFromVariable(Variable variable, ulong roleID)
         {
             if (_disposing)
             {
                 throw new ObjectDisposedException("RPC");
             }
 
-            RPCVariable response = _client.CallMethod("removeRoleFromVariable", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(role.ID) });
+            RPCVariable response = _client.CallMethod("removeRoleFromVariable", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name), new RPCVariable(roleID) });
             if (response.ErrorStruct)
             {
                 ThrowError("removeRoleFromVariable", response);
             }
+
+            return response.BooleanValue;
+        }
+
+        public Dictionary<string, RPCVariable> GetVariablesInRole(Role role)
+        {
+            return GetValuesIn("getVariablesInRole", role.ID);
         }
 
         #endregion
@@ -3351,18 +3421,7 @@ namespace HomegearLib.RPC
 
         public Dictionary<string, RPCVariable> GetUiElementMetadata(ulong id)
         {
-            if (_disposing)
-            {
-                throw new ObjectDisposedException("RPC");
-            }
-
-            RPCVariable response = _client.CallMethod("getUiElementMetadata", new List<RPCVariable> { new RPCVariable(id) });
-            if (response.ErrorStruct)
-            {
-                ThrowError("getUiElementMetadata", response);
-            }
-
-            return response.StructValue;
+            return GetValuesIn("getUiElementMetadata", id);
         }
 
         public void SetUiElementMetadata(ulong id, Dictionary<string, RPCVariable> metadata)
