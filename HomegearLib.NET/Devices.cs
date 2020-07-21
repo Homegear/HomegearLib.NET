@@ -89,8 +89,10 @@ namespace HomegearLib
         public void Remove(Device device)
         {
             if (_dictionary.ContainsKey(device.ID))
+            {
                 _dictionary[device.ID].Remove();
-            _dictionary.Remove(device.ID);
+                _dictionary.Remove(device.ID);
+            }
         }
 
 
