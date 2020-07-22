@@ -2823,7 +2823,7 @@ namespace HomegearLibTest
                 return;
             }
 
-            if (_homegear.Buildings.Remove(_rightClickedBuilding) <= 0)
+            if (_homegear.Buildings.Remove(_rightClickedBuilding) < 0)
             {
                 MessageBox.Show(this, "Building not deleted.", "Building not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -2855,7 +2855,7 @@ namespace HomegearLibTest
                 return;
             }
 
-            if (_homegear.Rpc.DeleteStory(_rightClickedStory) <= 0)
+            if (_homegear.Rpc.DeleteStory(_rightClickedStory) < 0)
             {
                 MessageBox.Show(this, "Story not deleted.", "Story not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -2887,7 +2887,7 @@ namespace HomegearLibTest
                 return;
             }
 
-            if (_homegear.Rpc.DeleteRoom(_rightClickedRoom) <= 0)
+            if (_homegear.Rpc.DeleteRoom(_rightClickedRoom) < 0)
             {
                 MessageBox.Show(this, "Room not deleted.", "Room not found", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
