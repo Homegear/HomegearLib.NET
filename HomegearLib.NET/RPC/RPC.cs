@@ -401,6 +401,11 @@ namespace HomegearLib.RPC
             _devices = null;
             _interfaces = null;
             _systemVariables = null;
+
+            _buildings = null;
+            _stories = null;
+            _rooms = null;
+            _roles = null;
         }
 
         private void _client_Disconnected(RPCClient sender)

@@ -831,6 +831,13 @@ namespace HomegearLib
                     _interfaces = null;
                     _systemVariables?.Dispose();
                     _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
+
+                    _buildings = new Buildings(_rpc, _rpc.Buildings);
+                    _stories = new Stories(_rpc, _rpc.Stories);
+                    _rooms = new Rooms(_rpc, _rpc.Rooms);
+
+                    _roles = new Roles(_rpc, _rpc.Roles);
+
                     Reloaded?.Invoke(this);
                     _reloading = false;
                 }
