@@ -44,5 +44,17 @@ namespace HomegearLib
             }
             return null;
         }
+
+        // This will need reloading things that contain rooms, directly or indirectly
+        // the room won't be removed from all collections just by calling this
+        // use it carefully
+        public void Delete(Room room)
+        {
+            if (_dictionary.ContainsKey(room.ID))
+            {
+                _rpc.DeleteRoom(room);
+                _dictionary.Remove(room.ID);
+            }
+        }
     }
 }

@@ -44,5 +44,17 @@ namespace HomegearLib
             }
             return null;
         }
+
+        // This will need reloading things that contain stories, directly or indirectly
+        // the story won't be removed from all collections just by calling this
+        // use it carefully
+        public void Delete(Story story)
+        {
+            if (_dictionary.ContainsKey(story.ID))
+            {
+                _rpc?.DeleteStory(story);
+                _dictionary.Remove(story.ID);
+            }
+        }
     }
 }

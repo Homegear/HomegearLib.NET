@@ -52,5 +52,14 @@ namespace HomegearLib
             }
             return null;
         }
+
+        public void Delete(Building building)
+        {
+            if (_dictionary.ContainsKey(building.ID))
+            {
+                _rpc?.DeleteBuilding(building);
+                _dictionary.Remove(building.ID);
+            }
+        }
     }
 }
