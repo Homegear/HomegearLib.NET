@@ -3301,6 +3301,24 @@ namespace HomegearLib.RPC
         #endregion
 
         #region UI
+
+        public List<RPCVariable> GetUiElementsWithVariable(Variable variable)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+
+            RPCVariable response = _client.CallMethod("getUiElementsWithVariable", new List<RPCVariable> { new RPCVariable(variable.PeerID), new RPCVariable(variable.Channel), new RPCVariable(variable.Name) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUiElementsWithVariable", response);
+            }
+
+            return response.ArrayValue;
+        }
+
         public ulong AddUiElement(Variable variable, string label)
         {
             if (_disposing)
@@ -3379,7 +3397,6 @@ namespace HomegearLib.RPC
             {
                 throw new ObjectDisposedException("RPC");
             }
-
            
             RPCVariable response = _client.CallMethod("getAllUiElements", new List<RPCVariable> { new RPCVariable(language) } );
             if (response.ErrorStruct)
@@ -3389,6 +3406,23 @@ namespace HomegearLib.RPC
 
             return response.ArrayValue;
         }
+
+        public Dictionary<string, RPCVariable> GetUiElement(ulong id, string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getUiElement", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(language) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUiElement", response);
+            }
+
+            return response.StructValue;
+        }
+
 
         public List<RPCVariable> GetAvailableUiElements(string language = "en-US")
         {

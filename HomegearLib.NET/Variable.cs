@@ -780,5 +780,10 @@ namespace HomegearLib
         {
             if (Visualized) _rpc.RemoveUiElement(this);
         }
+
+        public List<RPCVariable> GetUiElements()
+        {
+            return _rpc.GetUiElementsWithVariable(this);
+        }
     }
 }
