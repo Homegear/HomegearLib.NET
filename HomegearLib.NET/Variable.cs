@@ -773,12 +773,21 @@ namespace HomegearLib
 
         public void Visualize(string label)
         {
-            if (!Visualized && Visualizable) _rpc.AddUiElement(this, label);
+            if (!Visualized && Visualizable)
+            {
+                _rpc.AddUiElement(this, label);
+                _uiPropertiesInitialized = false;
+            }
         }
 
         public void Unvisualize()
         {
-            if (Visualized) _rpc.RemoveUiElement(this);
+            if (Visualized)
+            {
+                _rpc.RemoveUiElement(this);
+                _uiPropertiesInitialized = false;
+            }
+
         }
 
         public List<RPCVariable> GetUiElements()
