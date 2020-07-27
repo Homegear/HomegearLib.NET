@@ -711,29 +711,46 @@ namespace HomegearLib
             _rpc.AddVariableToRoom(this, _rpc.Rooms[_roomID]);
         }
 
-        public void ClearRoom()
+        public bool ClearRoom()
         {
-            if(!_rpc.Rooms.ContainsKey(_roomID)) return;
-            _rpc.RemoveVariableFromRoom(this, _rpc.Rooms[_roomID]);
+            if(!_rpc.Rooms.ContainsKey(_roomID)) return false;
+            
+            return _rpc.RemoveVariableFromRoom(this, _rpc.Rooms[_roomID]);
         }
 
-        public void AddRole(RoleElement role)
+        public bool AddRole(RoleElement role)
         {
-            _rpc.AddRoleToVariable(this, role);
-            _roles.Add(role.ID, role);
+            if (_rpc.AddRoleToVariable(this, role))
+            {
+                _roles.Add(role.ID, role);
+                return true;
+            }
+
+            return false;
         }
 
-        public void RemoveRole(RoleElement role)
+        public bool RemoveRole(RoleElement role)
         {
-            _rpc.RemoveRoleFromVariable(this, role);
-            _roles.Remove(role.ID);
+            if (_rpc.RemoveRoleFromVariable(this, role))
+            {
+                _roles.Remove(role.ID);
+                return true;
+            }
+
+            return false;
         }
 
-        public void RemoveRole(ulong roleID)
+        public bool RemoveRole(ulong roleID)
         {
-            if (!_roles.ContainsKey(roleID)) return;
-            _rpc.RemoveRoleFromVariable(this, _roles[roleID]);
-            _roles.Remove(roleID);
+            if (!_roles.ContainsKey(roleID)) return false;
+
+            if (_rpc.RemoveRoleFromVariable(this, _roles[roleID]))
+            {
+                _roles.Remove(roleID);
+                return true;
+            }
+
+            return false;
         }
 
         public void RemoveAllRoles()
@@ -744,8 +761,8 @@ namespace HomegearLib
             {
                 try
                 {
-                    _rpc.RemoveRoleFromVariable(this, role.Value);
-                    removesList.Add(role.Key);
+                    if (_rpc.RemoveRoleFromVariable(this, role.Value))
+                        removesList.Add(role.Key);
                 }
                 catch
                 {
