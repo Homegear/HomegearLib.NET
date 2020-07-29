@@ -2207,6 +2207,22 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
+        public string GetUPnPUuid()
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getUPnPUuid", new List<RPCVariable>());
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUPnPUuid", response);
+            }
+
+            return response.StringValue;
+        }
+
         public void PutParamset(long peerId, long channel, RPCParameterSetType type, Dictionary<string, ConfigParameter> parameters)
         {
             PutParamset(peerId, channel, 0, -1, type, parameters);

@@ -957,7 +957,7 @@ namespace HomegearLib
         }
 
         /// <summary>
-        /// Excecutes a script in Homegear's script directory.
+        /// Executes a script in Homegear's script directory.
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
         public void RunScript(string filename)
@@ -966,7 +966,7 @@ namespace HomegearLib
         }
 
         /// <summary>
-        /// Excecutes a script in Homegear's script directory.
+        /// Executes a script in Homegear's script directory.
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
         /// <param name="wait">When "true" this method waits for the script to finish and returns the exit code.</param>
@@ -977,7 +977,7 @@ namespace HomegearLib
         }
 
         /// <summary>
-        /// Excecutes a script in Homegear's script directory.
+        /// Executes a script in Homegear's script directory.
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
         /// <param name="arguments">Arguments to pass to the script.</param>
@@ -987,7 +987,7 @@ namespace HomegearLib
         }
 
         /// <summary>
-        /// Excecutes a script in Homegear's script directory.
+        /// Executes a script in Homegear's script directory.
         /// </summary>
         /// <param name="filename">The filename of the script.</param>
         /// <param name="arguments">Arguments to pass to the script.</param>
@@ -996,6 +996,16 @@ namespace HomegearLib
         public long RunScript(string filename, string arguments, bool wait)
         {
             return _rpc.RunScript(filename, arguments, wait);
+        }
+
+
+        /// <summary>
+        /// Returns a string with the UPnP uuid for the homegear instance
+        /// </summary>
+        /// <returns>The uuid string, prefixed with "uuid:".</returns>
+        public string GetUPnPUuid()
+        {
+            return _rpc.GetUPnPUuid();
         }
     }
 }
