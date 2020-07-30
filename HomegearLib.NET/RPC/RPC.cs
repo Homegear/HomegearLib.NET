@@ -370,6 +370,14 @@ namespace HomegearLib.RPC
             {
                 _disposing = true;
 
+                if (_keepAliveTimer != null)
+                {
+                    _keepAliveTimer.Elapsed -= _workerTimer_Elapsed;
+                    _keepAliveTimer.Stop();
+                    _keepAliveTimer.Dispose();
+                    _keepAliveTimer = null;
+                }
+
                 if (_client != null)
                 {
                     _client.Connected -= _client_Connected;
@@ -384,10 +392,10 @@ namespace HomegearLib.RPC
                     _client.UpdateEvent -= _client_OnUpdateEvent;
                     _client.RequestUiRefreshEvent -= _client_RequestUiRefreshEvent;
 
-                    _client.Disconnect();
+                    _client.Dispose();
+                    _client = null;
                 }
 
-                Disconnect();
                 Clear();
             }
             catch (Exception)

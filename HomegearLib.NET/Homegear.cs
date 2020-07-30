@@ -185,7 +185,7 @@ namespace HomegearLib
         private RPCController _rpc = null;
         private volatile bool _events = false;
         private volatile bool _disposing = false;
-        private bool _disposed = false;
+        private volatile bool _disposed = false;
         private volatile bool _stopConnectThread = false;
         private Thread _connectThread = null;
 
@@ -791,10 +791,21 @@ namespace HomegearLib
                 _rpc.UpdateEvent -= _rpc_OnUpdateEvent;
                 _rpc.RequestUiRefreshEvent -= _rpc_RequestUiRefreshEvent;
 
-                if (_connectThread != null && _connectThread.IsAlive) _connectThread.Join();
+                if (_connectThread != null && _connectThread.IsAlive)
+                {
+                    if (!_connectThread.Join(1000))
+                    {
+                        try
+                        {
+                            _connectThread.Abort();
+                        }
+                        catch (Exception) { }
+                    }
+                }
                 _connectThread = null;
 
                 _rpc.Dispose();
+                _rpc = null;
             }
 
             _disposed = true;
@@ -910,11 +921,11 @@ namespace HomegearLib
 
             _stopConnectThread = true;
             if (_connectThread != null && _connectThread.IsAlive) _connectThread.Join();
-            _stopConnectThread = false;
 
             if (_disposing)
                 return;
 
+            _stopConnectThread = false;
             _connectThread = new Thread(Connect);
             _connectThread.Start();
         }
