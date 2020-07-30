@@ -1000,12 +1000,12 @@ namespace HomegearLib
 
 
         /// <summary>
-        /// Returns a string with the UPnP uuid for the homegear instance
+        /// Returns a string with an uuid for the homegear instance
         /// </summary>
-        /// <returns>The uuid string, prefixed with "uuid:".</returns>
-        public string GetUPnPUuid()
+        /// <returns>The uuid string.</returns>
+        public string GetInstanceId()
         {
-            return _rpc.GetUPnPUuid();
+            return _rpc.GetInstanceId();
         }
     }
 }

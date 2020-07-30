@@ -2207,17 +2207,17 @@ namespace HomegearLib.RPC
             return response.IntegerValue;
         }
 
-        public string GetUPnPUuid()
+        public string GetInstanceId()
         {
             if (_disposing)
             {
                 throw new ObjectDisposedException("RPC");
             }
 
-            RPCVariable response = _client.CallMethod("getUPnPUuid", new List<RPCVariable>());
+            RPCVariable response = _client.CallMethod("getInstanceId", new List<RPCVariable>());
             if (response.ErrorStruct)
             {
-                ThrowError("getUPnPUuid", response);
+                ThrowError("getInstanceId", response);
             }
 
             return response.StringValue;
