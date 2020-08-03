@@ -831,6 +831,16 @@ namespace HomegearLib
                     _rpc.Clear();
                     _families?.Dispose();
                     _families = new Families(_rpc, _rpc.Families);
+
+
+                    _buildings?.Dispose();
+                    _buildings = new Buildings(_rpc, _rpc.Buildings);
+                    _stories?.Dispose();
+                    _stories = new Stories(_rpc, _rpc.Stories);
+                    _rooms?.Dispose();
+                    _rooms = new Rooms(_rpc, _rpc.Rooms);
+
+
                     _devices?.Dispose();
                     _devices = new Devices(_rpc, _rpc.Devices);
                     foreach (KeyValuePair<long, Device> device in _devices)
@@ -843,10 +853,8 @@ namespace HomegearLib
                     _systemVariables?.Dispose();
                     _systemVariables = new SystemVariables(_rpc, _rpc.SystemVariables);
 
-                    _buildings = new Buildings(_rpc, _rpc.Buildings);
-                    _stories = new Stories(_rpc, _rpc.Stories);
-                    _rooms = new Rooms(_rpc, _rpc.Rooms);
 
+                    _roles?.Dispose();
                     _roles = new Roles(_rpc, _rpc.Roles);
 
                     Reloaded?.Invoke(this);
