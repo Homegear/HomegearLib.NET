@@ -3507,6 +3507,89 @@ namespace HomegearLib.RPC
             }
         }
 
+        public void RequestUiRefresh(string id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+
+            RPCVariable response = _client.CallMethod("requestUiRefresh", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("requestUiRefresh", response);
+            }
+        }
+
+        #endregion
+
+        #region UI notification
+
+        public void UiNotificationAction(long id, long buttonId)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("uiNotificationAction", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(buttonId) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("uiNotificationAction", response);
+            }
+        }
+
+
+        public void RemoveUiNotification(long id)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("removeUiNotification", new List<RPCVariable> { new RPCVariable(id) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("removeUiNotification", response);
+            }
+        }
+
+        public Dictionary<string, RPCVariable> GetUiNotification(ulong id, string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod("getUiNotification", new List<RPCVariable> { new RPCVariable(id), new RPCVariable(language) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUiNotification", response);
+            }
+
+            return response.StructValue;
+        }
+
+        public List<RPCVariable> GetUiNotifications(string language = "en-US")
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+
+            RPCVariable response = _client.CallMethod("getUiNotifications", new List<RPCVariable> { new RPCVariable(language) });
+            if (response.ErrorStruct)
+            {
+                ThrowError("getUiNotifications", response);
+            }
+
+            return response.ArrayValue;
+        }
+
+
+        // TODO: implement createUiNotification
 
         #endregion
     }

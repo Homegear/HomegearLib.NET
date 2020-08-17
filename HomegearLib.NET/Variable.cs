@@ -112,15 +112,7 @@ namespace HomegearLib
         {
             get 
             {
-                if(!_uiPropertiesInitialized)
-                {
-                    var result = _rpc.CheckUiElementSimpleCreation(this);
-                    _visualizable = result.Visualizable;
-                    _visualized = result.Visualized;
-                    _visualizedByUiElements = result.VisualizedByUiElements;
-                    _visualizationCheckError = result.VisualizationCheckError;
-                    _uiPropertiesInitialized = true;
-                }
+                CheckUiElementSimpleCreation();
 
                 return _visualizable;
             }
@@ -131,15 +123,7 @@ namespace HomegearLib
         {
             get
             {
-                if (!_uiPropertiesInitialized)
-                {
-                    var result = _rpc.CheckUiElementSimpleCreation(this);
-                    _visualizable = result.Visualizable;
-                    _visualized = result.Visualized;
-                    _visualizedByUiElements = result.VisualizedByUiElements;
-                    _visualizationCheckError = result.VisualizationCheckError;
-                    _uiPropertiesInitialized = true;
-                }
+                CheckUiElementSimpleCreation();
 
                 return _visualizationCheckError;
             }
@@ -150,15 +134,7 @@ namespace HomegearLib
         {
             get
             {
-                if (!_uiPropertiesInitialized)
-                {
-                    var result = _rpc.CheckUiElementSimpleCreation(this);
-                    _visualizable = result.Visualizable;
-                    _visualized = result.Visualized;
-                    _visualizedByUiElements = result.VisualizedByUiElements;
-                    _visualizationCheckError = result.VisualizationCheckError;
-                    _uiPropertiesInitialized = true;
-                }
+                CheckUiElementSimpleCreation();
 
                 return _visualized;
             }
@@ -169,17 +145,23 @@ namespace HomegearLib
         {
             get
             {
-                if (!_uiPropertiesInitialized)
-                {
-                    var result = _rpc.CheckUiElementSimpleCreation(this);
-                    _visualizable = result.Visualizable;
-                    _visualized = result.Visualized;
-                    _visualizedByUiElements = result.VisualizedByUiElements;
-                    _visualizationCheckError = result.VisualizationCheckError;
-                    _uiPropertiesInitialized = true;
-                }
+                CheckUiElementSimpleCreation();
 
                 return _visualizedByUiElements;
+            }
+        }
+
+
+        protected void CheckUiElementSimpleCreation()
+        {
+            if (!_uiPropertiesInitialized)
+            {
+                var result = _rpc.CheckUiElementSimpleCreation(this);
+                _visualizable = result.Visualizable;
+                _visualized = result.Visualized;
+                _visualizedByUiElements = result.VisualizedByUiElements;
+                _visualizationCheckError = result.VisualizationCheckError;
+                _uiPropertiesInitialized = true;
             }
         }
 
