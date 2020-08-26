@@ -142,8 +142,6 @@ namespace HomegearLib
         }
 
 
-        // TODO: maybe save them internally and add Reload functions?
-
         public Dictionary<string, RPCVariable> GetChannelsInRoom()
         {
             return _rpc?.GetChannelsInRoom(this);
@@ -160,9 +158,7 @@ namespace HomegearLib
 
         public List<RPCVariable> GetSystemVariablesInRoom()
         {
-            List<RPCVariable> result = _rpc?.GetSystemVariablesInRoom(this);
-
-            return result;
+            return _rpc?.GetSystemVariablesInRoom(this);
         }
     }
 }
