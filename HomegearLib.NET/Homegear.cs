@@ -1027,5 +1027,15 @@ namespace HomegearLib
         {
             return _rpc.GetInstanceId();
         }
+
+        /// <summary>
+        /// Generic method call.
+        /// </summary>
+        /// <returns>The result of the call.</returns>
+        public RPCVariable CallMethod(string name, List<RPCVariable> parameters)
+        {
+            return _rpc.CallMethod(name, parameters);
+        }
+    
     }
 }

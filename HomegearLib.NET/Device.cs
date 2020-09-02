@@ -171,7 +171,7 @@ namespace HomegearLib
         /// <param name="room">The room object</param>
         internal void SetRoomNoRPC(Room room)
         {
-            _room = room != null && room.ID == 0 ? null : room;
+            _room = (room != null && room.ID == 0) ? null : room;
         }
 
         private Interface _interface;

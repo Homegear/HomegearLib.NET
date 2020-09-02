@@ -3592,5 +3592,22 @@ namespace HomegearLib.RPC
         // TODO: implement createUiNotification
 
         #endregion
+
+
+        public RPCVariable CallMethod(string name, List<RPCVariable> parameters)
+        {
+            if (_disposing)
+            {
+                throw new ObjectDisposedException("RPC");
+            }
+
+            RPCVariable response = _client.CallMethod(name, parameters);
+            if (response.ErrorStruct)
+            {
+                ThrowError(name, response);
+            }
+
+            return response;
+        }
     }
 }
