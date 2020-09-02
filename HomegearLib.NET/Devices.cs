@@ -76,6 +76,7 @@ namespace HomegearLib
             return changedVariables;
         }
 
+
         public bool Add(string serialNumber)
         {
             return _rpc.AddDevice(serialNumber);
