@@ -17,6 +17,9 @@
     <Authors>Dr. Sathya Laufer</Authors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>StrongNameSignature.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
