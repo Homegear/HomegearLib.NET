@@ -38,7 +38,14 @@ namespace HomegearLib
         }
 
         private Stories _stories = null;
-        public Stories Stories { get { return _stories; } internal set { _stories = value; } }
+        public Stories Stories { 
+            get {
+                if (_stories == null)
+                    _stories = new Stories(_rpc, new Dictionary<ulong, Story>());
+                return _stories; 
+            } 
+            internal set { _stories = value; } 
+        }
 
         public Building(RPCController rpc, Dictionary<string, string> translations)
         {
@@ -62,6 +69,8 @@ namespace HomegearLib
         {
             if (story.ID == 0) return;
             _rpc.AddStoryToBuilding(this, story);
+            if (_stories == null)
+                _stories = new Stories(_rpc, new Dictionary<ulong, Story>());
             _stories._dictionary.Add(story.ID, story);
         }
 
@@ -69,7 +78,7 @@ namespace HomegearLib
         {
             if (story.ID == 0) return;
             _rpc.RemoveStoryFromBuilding(this, story);
-            _stories._dictionary.Remove(story.ID);
+            if (_stories != null) _stories._dictionary.Remove(story.ID);
         }
 
         public bool HasName(string name)

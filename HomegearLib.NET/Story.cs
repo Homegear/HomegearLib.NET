@@ -20,7 +20,14 @@ namespace HomegearLib
         public Dictionary<string, string> Translations { get { return _translations; } set { _translations = value; } }
 
         private Rooms _rooms = null;
-        public Rooms Rooms { get { return _rooms; } internal set { _rooms = value; } }
+        public Rooms Rooms { 
+            get {
+                if (_rooms == null)
+                    _rooms = new Rooms(_rpc, new Dictionary<ulong, Room>());
+                return _rooms; 
+            } 
+            internal set { _rooms = value; } 
+        }
 
         public Dictionary<string, RPCVariable> Metadata
         {
@@ -63,6 +70,8 @@ namespace HomegearLib
         {
             if (room.ID == 0) return;
             _rpc.AddRoomToStory(this, room);
+            if (_rooms == null)
+                _rooms = new Rooms(_rpc, new Dictionary<ulong, Room>());
             _rooms._dictionary.Add(room.ID, room);
         }
 
@@ -70,7 +79,7 @@ namespace HomegearLib
         {
             if (room.ID == 0) return;
             _rpc.RemoveRoomFromStory(this, room);
-            _rooms._dictionary.Remove(room.ID);
+            if (_rooms != null) _rooms._dictionary.Remove(room.ID);
         }
 
         public bool HasName(string name)
