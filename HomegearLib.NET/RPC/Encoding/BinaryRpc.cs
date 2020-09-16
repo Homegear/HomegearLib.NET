@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
+using System.Linq;
 
 namespace HomegearLib.RPC.Encoding
 {
@@ -35,6 +36,12 @@ namespace HomegearLib.RPC.Encoding
             _dataSize = 0;
         }
 
+
+        private static IEnumerable<byte> SubArray(byte[] buffer, int bufferPos, int bufferLength)
+        {
+            return buffer.Skip(bufferPos).Take(bufferLength);
+        }
+
         public int Process(byte[] buffer, int bufferPos, int bufferLength)
         {
             int initialBufferLength = bufferLength;
@@ -43,17 +50,13 @@ namespace HomegearLib.RPC.Encoding
             ProcessingStarted = true;
             if(_data.Count + bufferLength < 8)
             {
-                byte[] subArray = new byte[bufferLength];
-                Array.Copy(buffer, bufferPos, subArray, 0, bufferLength);
-                _data.AddRange(subArray);
+                _data.AddRange(SubArray(buffer, bufferPos, bufferLength));
                 return initialBufferLength;
             }
             else if(_data.Count < 8)
             {
                 sizeToInsert = 8 - _data.Count;
-                byte[] subArray = new byte[sizeToInsert];
-                Array.Copy(buffer, bufferPos, subArray, 0, sizeToInsert);
-                _data.AddRange(subArray);
+                _data.AddRange(SubArray(buffer, bufferPos, sizeToInsert));
                 bufferPos += sizeToInsert;
                 bufferLength -= sizeToInsert;
             }
@@ -84,17 +87,13 @@ namespace HomegearLib.RPC.Encoding
                 if (_data.Count + bufferLength < 8 + _headerSize + 4)
                 {
                     if (_headerSize + 8 + 100 > _data.Capacity) _data.Capacity = _headerSize + 8 + 1024;
-                    byte[] subArray = new byte[bufferLength];
-                    Array.Copy(buffer, bufferPos, subArray, 0, bufferLength);
-                    _data.AddRange(subArray);
+                    _data.AddRange(SubArray(buffer, bufferPos, bufferLength));
                     return initialBufferLength;
                 }
                 else
                 {
                     sizeToInsert = (8 + _headerSize + 4) - _data.Count;
-                    byte[] subArray = new byte[sizeToInsert];
-                    Array.Copy(buffer, bufferPos, subArray, 0, sizeToInsert);
-                    _data.AddRange(subArray);
+                    _data.AddRange(SubArray(buffer, bufferPos, sizeToInsert));
                     bufferPos += sizeToInsert;
                     bufferLength -= sizeToInsert;
                     _dataSize = (_data[8 + _headerSize] << 24) | (_data[8 + _headerSize] << 16) | (_data[8 + _headerSize] << 8) | _data[8 + _headerSize];
@@ -105,17 +104,13 @@ namespace HomegearLib.RPC.Encoding
             _data.Capacity = 8 + _dataSize;
             if (_data.Count + bufferLength < _dataSize + 8)
             {
-                byte[] subArray = new byte[bufferLength];
-                Array.Copy(buffer, bufferPos, subArray, 0, bufferLength);
-                _data.AddRange(subArray);
+                _data.AddRange(SubArray(buffer, bufferPos, bufferLength));
                 return initialBufferLength;
             }
             else
             {
                 sizeToInsert = (8 + _dataSize) - _data.Count;
-                byte[] subArray = new byte[sizeToInsert];
-                Array.Copy(buffer, bufferPos, subArray, 0, sizeToInsert);
-                _data.AddRange(subArray);
+                _data.AddRange(SubArray(buffer, bufferPos, sizeToInsert));
                 bufferLength -= sizeToInsert;
                 IsFinished = true;
                 return initialBufferLength - bufferLength;
