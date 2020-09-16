@@ -7,15 +7,15 @@ namespace HomegearLib.RPC.Encoding
     public class RPCEncoder
     {
         private BinaryEncoder _encoder = new BinaryEncoder();
-        private List<byte> _packetStartRequest = new List<byte> { 0x42, 0x69, 0x6E, 0 };
-        private List<byte> _packetStartResponse = new List<byte> { 0x42, 0x69, 0x6E, 1 };
-        private List<byte> _packetStartError = new List<byte> { 0x42, 0x69, 0x6E, 0xFF };
+        private static List<byte> _packetStartRequest = new List<byte> { 0x42, 0x69, 0x6E, 0 };
+        private static List<byte> _packetStartResponse = new List<byte> { 0x42, 0x69, 0x6E, 1 };
+        private static List<byte> _packetStartError = new List<byte> { 0x42, 0x69, 0x6E, 0xFF };
 
         public List<byte> EncodeRequest(string methodName, List<RPCVariable> parameters, RPCHeader header = null)
         {
             //The "Bin", the type byte after that and the length itself are not part of the length
             List<byte> packet = new List<byte>();
-            packet.InsertRange(0, _packetStartRequest);
+            packet.AddRange(_packetStartRequest);
             uint headerSize = 0;
             if (header != null)
             {
@@ -65,11 +65,11 @@ namespace HomegearLib.RPC.Encoding
 
             if (variable.ErrorStruct)
             {
-                packet.InsertRange(0, _packetStartError);
+                packet.AddRange(_packetStartError);
             }
             else
             {
-                packet.InsertRange(0, _packetStartResponse);
+                packet.AddRange(_packetStartResponse);
             }
 
             EncodeVariable(packet, variable);
@@ -104,10 +104,12 @@ namespace HomegearLib.RPC.Encoding
         private uint EncodeHeader(List<byte> packet, RPCHeader header)
         {
             uint oldPacketSize = (uint)packet.Count();
-            int parameterCount = 0;
             if (header.Authorization.Length > 0)
             {
-                parameterCount++;
+                packet.Add((byte)0x0);
+                packet.Add((byte)0x0);
+                packet.Add((byte)0x0);
+                packet.Add((byte)0x1);
                 _encoder.EncodeString(packet, "Authorization");
                 _encoder.EncodeString(packet, header.Authorization);
             }
@@ -115,13 +117,6 @@ namespace HomegearLib.RPC.Encoding
             {
                 return 0;
             }
-
-            List<byte> parameterCountBytes = new List<byte>(4);
-            parameterCountBytes.Add((byte)((parameterCount >> 24) & 0xFF));
-            parameterCountBytes.Add((byte)((parameterCount >> 16) & 0xFF));
-            parameterCountBytes.Add((byte)((parameterCount >> 8) & 0xFF));
-            parameterCountBytes.Add((byte)(parameterCount & 0xFF));
-            packet.InsertRange((int)oldPacketSize, parameterCountBytes);
 
             uint headerSize = (uint)packet.Count() - oldPacketSize;
             List<byte> sizeBytes = new List<byte>(4);

@@ -45,7 +45,7 @@ namespace HomegearLib.RPC.Encoding
                 return;
             }
 
-            encodedData.InsertRange(encodedData.Count(), stringBytes);
+            encodedData.AddRange(stringBytes);
         }
 
         public void EncodeBinary(List<byte> encodedData, byte[] value)
@@ -61,7 +61,7 @@ namespace HomegearLib.RPC.Encoding
                 return;
             }
 
-            encodedData.InsertRange(encodedData.Count(), value);
+            encodedData.AddRange(value);
         }
 
         public void EncodeBoolean(List<byte> encodedData, bool value)
