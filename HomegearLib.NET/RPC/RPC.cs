@@ -91,6 +91,11 @@ namespace HomegearLib.RPC
         /// </summary>
         public bool IgnoreEventsFromMyself { get; set; } = false;
 
+
+        private long _restrictToFamilyId = -1;
+
+        public long RestrictToFamilyId { get { return _restrictToFamilyId; } set { _restrictToFamilyId = value; } }
+
         private Dictionary<long, Family> _families = null;
         internal Dictionary<long, Family> Families
         {
@@ -746,6 +751,28 @@ namespace HomegearLib.RPC
             return systemVariables;
         }
 
+
+        private Dictionary<ulong, Variable.RoleElement> GetRoles(List<RPCVariable> rolesArray)
+        {
+            var roles = new Dictionary<ulong, Variable.RoleElement>();
+
+            foreach (var roleStruct in rolesArray)
+            {
+                if (!roleStruct.StructValue.ContainsKey("id")) continue;
+                var roleElement = new Variable.RoleElement();
+                roleElement.ID = (ulong)roleStruct.StructValue["id"].IntegerValue;
+                long direction = 2;
+                if (roleStruct.StructValue.ContainsKey("direction")) direction = roleStruct.StructValue["direction"].IntegerValue;
+                if (direction == 0) roleElement.Direction = Variable.RoleElementDirection.input;
+                else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
+                else roleElement.Direction = Variable.RoleElementDirection.both;
+                if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
+                roles.Add(roleElement.ID, roleElement);
+            }
+
+            return roles;
+        }
+
         public Dictionary<string, Variable> GetAllValues(long peerId, long channelIndex)
         {
             if (_disposing)
@@ -759,7 +786,6 @@ namespace HomegearLib.RPC
                 ThrowError("getAllValues", response);
             }
 
-            Dictionary<long, Family> families = Families;
             Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
             foreach (RPCVariable deviceStruct in response.ArrayValue)
             {
@@ -846,22 +872,7 @@ namespace HomegearLib.RPC
 
                             if (variableInfo.ContainsKey("ROLES"))
                             {
-                                var roles = new Dictionary<ulong, Variable.RoleElement>();
-                                var rolesArray = variableInfo["ROLES"].ArrayValue;
-                                foreach(var roleStruct in rolesArray)
-                                {
-                                    if (!roleStruct.StructValue.ContainsKey("id")) continue;
-                                    var roleElement = new Variable.RoleElement();
-                                    roleElement.ID = (ulong)roleStruct.StructValue["id"].IntegerValue;
-                                    long direction = 2;
-                                    if (roleStruct.StructValue.ContainsKey("direction")) direction = roleStruct.StructValue["direction"].IntegerValue;
-                                    if (direction == 0) roleElement.Direction = Variable.RoleElementDirection.input;
-                                    else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
-                                    else roleElement.Direction = Variable.RoleElementDirection.both;
-                                    if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
-                                    roles.Add(roleElement.ID, roleElement);
-                                }
-                                variable.Roles = roles;
+                                variable.Roles = GetRoles(variableInfo["ROLES"].ArrayValue);
                             }
 
                             if (variableInfo.ContainsKey("SPECIAL"))
@@ -904,12 +915,13 @@ namespace HomegearLib.RPC
                     continue;
                 }
 
-                if (!families.ContainsKey(deviceStruct.StructValue["FAMILY"].IntegerValue))
+                long familyID = deviceStruct.StructValue["FAMILY"].IntegerValue;
+                if (!families.ContainsKey(familyID))
                 {
                     continue;
                 }
 
-                Device device = new Device(this, families[deviceStruct.StructValue["FAMILY"].IntegerValue], deviceStruct.StructValue["ID"].IntegerValue);
+                Device device = new Device(this, families[familyID], deviceStruct.StructValue["ID"].IntegerValue);
                 if (deviceStruct.StructValue.ContainsKey("ADDRESS"))
                 {
                     device.SerialNumber = deviceStruct.StructValue["ADDRESS"].StringValue;
@@ -1011,22 +1023,7 @@ namespace HomegearLib.RPC
 
                             if (variableInfo.ContainsKey("ROLES"))
                             {
-                                var roles = new Dictionary<ulong, Variable.RoleElement>();
-                                var rolesArray = variableInfo["ROLES"].ArrayValue;
-                                foreach (var roleStruct in rolesArray)
-                                {
-                                    if (!roleStruct.StructValue.ContainsKey("id")) continue;
-                                    var roleElement = new Variable.RoleElement();
-                                    roleElement.ID = (ulong)roleStruct.StructValue["id"].IntegerValue;
-                                    long direction = 2;
-                                    if (roleStruct.StructValue.ContainsKey("direction")) direction = roleStruct.StructValue["direction"].IntegerValue;
-                                    if (direction == 0) roleElement.Direction = Variable.RoleElementDirection.input;
-                                    else if (direction == 1) roleElement.Direction = Variable.RoleElementDirection.output;
-                                    else roleElement.Direction = Variable.RoleElementDirection.both;
-                                    if (roleStruct.StructValue.ContainsKey("invert")) roleElement.Invert = roleStruct.StructValue["invert"].BooleanValue;
-                                    roles.Add(roleElement.ID, roleElement);
-                                }
-                                variable.Roles = roles;
+                                variable.Roles = GetRoles(variableInfo["ROLES"].ArrayValue);    
                             }
 
                             if (variableInfo.ContainsKey("SPECIAL"))
@@ -1613,8 +1610,12 @@ namespace HomegearLib.RPC
                         value = element.StructValue["VALUE"].IntegerValue;
                     }
 
-                    message = new ServiceMessage(HomegearHelpers.UnixTimeStampToDateTime(element.StructValue["TIMESTAMP"].IntegerValue), element.StructValue["FAMILY_ID"].IntegerValue, element.StructValue["MESSAGE_ID"].IntegerValue, element.StructValue["MESSAGE"].StringValue, element.StructValue["DATA"], value);
-                    messages.Add(message);
+                    long familyID = element.StructValue["FAMILY_ID"].IntegerValue;
+                    if (_restrictToFamilyId == -1 || _restrictToFamilyId == familyID)
+                    {
+                        message = new ServiceMessage(HomegearHelpers.UnixTimeStampToDateTime(element.StructValue["TIMESTAMP"].IntegerValue), familyID, element.StructValue["MESSAGE_ID"].IntegerValue, element.StructValue["MESSAGE"].StringValue, element.StructValue["DATA"], value);
+                        messages.Add(message);
+                    }
                 }
                 else if (serviceMessageType == ServiceMessage.ServiceMessageType.device)
                 {
@@ -2096,7 +2097,11 @@ namespace HomegearLib.RPC
                     continue;
                 }
 
-                Family family = new Family(this, familyStruct.StructValue["ID"].IntegerValue, familyStruct.StructValue["NAME"].StringValue);
+                long familyId = familyStruct.StructValue["ID"].IntegerValue;
+
+                if (_restrictToFamilyId != -1 && familyId != _restrictToFamilyId) continue;
+
+                Family family = new Family(this, familyId, familyStruct.StructValue["NAME"].StringValue);
                 if (familyStruct.StructValue.ContainsKey("PAIRING_METHODS"))
                 {
                     List<string> pairingMethods = new List<string>();

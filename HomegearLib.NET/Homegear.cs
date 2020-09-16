@@ -191,6 +191,10 @@ namespace HomegearLib
 
         public RPCController Rpc { get { return _rpc; } }
 
+
+        public long RestrictToFamilyId { get { return _rpc == null ? -1 : _rpc.RestrictToFamilyId; } }
+
+
         private Families _families = null;
         /// <summary>
         /// Dictionary to access all device families. The key is the family id, the value the family object. This property is currently only used to get the name of a device family.
@@ -357,7 +361,9 @@ namespace HomegearLib
         /// </summary>
         /// <param name="rpc">An initialized RPC controller object</param>
         /// <param name="events">When set to "true" the library starts an event server to receive events from Homegear.</param>
-        public Homegear(RPCController rpc, bool events)
+        /// <param name="restrictFamilyId">When set to a value that is not -1 the library will restrict to parsing and returning results only for that family ID (if available). 
+        /// For example, Families will contain only the specified family, getAllValues will return only devices with that family ID and so on.</param>
+        public Homegear(RPCController rpc, bool events, long restrictFamilyId = -1)
         {
             if (rpc == null)
             {
@@ -365,6 +371,9 @@ namespace HomegearLib
             }
 
             _rpc = rpc;
+            if (_rpc != null)
+                _rpc.RestrictToFamilyId = restrictFamilyId;
+
             _events = events;
             _families = new Families(_rpc, new Dictionary<long, Family>());
             _devices = new Devices(_rpc, new Dictionary<long, Device>());
