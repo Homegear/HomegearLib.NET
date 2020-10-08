@@ -6,7 +6,7 @@ namespace HomegearLib.RPC.Encoding
 {
     internal class BinaryEncoder
     {
-        public void EncodeInteger32(List<byte> encodedData, int value)
+        public static void EncodeInteger32(List<byte> encodedData, int value)
         {
             encodedData.Add((byte)((value >> 24) & 0xFF));
             encodedData.Add((byte)((value >> 16) & 0xFF));
@@ -14,7 +14,7 @@ namespace HomegearLib.RPC.Encoding
             encodedData.Add((byte)(value & 0xFF));
         }
 
-        public void EncodeInteger64(List<byte> encodedData, long value)
+        public static void EncodeInteger64(List<byte> encodedData, long value)
         {
             encodedData.Add((byte)((value >> 56) & 0xFF));
             encodedData.Add((byte)((value >> 48) & 0xFF));
@@ -26,12 +26,12 @@ namespace HomegearLib.RPC.Encoding
             encodedData.Add((byte)(value & 0xFF));
         }
 
-        public void EncodeByte(List<byte> encodedData, byte value)
+        public static void EncodeByte(List<byte> encodedData, byte value)
         {
             encodedData.Add(value);
         }
 
-        public void EncodeString(List<byte> encodedData, string value)
+        public static void EncodeString(List<byte> encodedData, string value)
         {
             if (value == null)
             {
@@ -48,7 +48,7 @@ namespace HomegearLib.RPC.Encoding
             encodedData.AddRange(stringBytes);
         }
 
-        public void EncodeBinary(List<byte> encodedData, byte[] value)
+        public static void EncodeBinary(List<byte> encodedData, byte[] value)
         {
             if (value == null)
             {
@@ -64,7 +64,7 @@ namespace HomegearLib.RPC.Encoding
             encodedData.AddRange(value);
         }
 
-        public void EncodeBoolean(List<byte> encodedData, bool value)
+        public static void EncodeBoolean(List<byte> encodedData, bool value)
         {
             if (value)
             {
@@ -76,7 +76,7 @@ namespace HomegearLib.RPC.Encoding
             }
         }
 
-        public void EncodeFloat(List<byte> encodedData, double value)
+        public static void EncodeFloat(List<byte> encodedData, double value)
         {
             double temp = Math.Abs(value);
             int exponent = 0;

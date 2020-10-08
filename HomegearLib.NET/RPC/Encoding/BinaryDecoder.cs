@@ -4,7 +4,7 @@ namespace HomegearLib.RPC.Encoding
 {
     internal class BinaryDecoder
     {
-        public int DecodeInteger32(byte[] encodedData, ref uint position)
+        public static int DecodeInteger32(byte[] encodedData, ref uint position)
         {
             if (position + 4 > encodedData.Length)
             {
@@ -16,7 +16,7 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public long DecodeInteger64(byte[] encodedData, ref uint position)
+        public static long DecodeInteger64(byte[] encodedData, ref uint position)
         {
             if (position + 8 > encodedData.Length)
             {
@@ -28,7 +28,7 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public byte DecodeByte(byte[] encodedData, ref uint position)
+        public static byte DecodeByte(byte[] encodedData, ref uint position)
         {
             if (position + 1 > encodedData.Length)
             {
@@ -40,7 +40,7 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public string DecodeString(byte[] encodedData, ref uint position)
+        public static string DecodeString(byte[] encodedData, ref uint position)
         {
             int stringLength = DecodeInteger32(encodedData, ref position);
             if (position + stringLength > encodedData.Length || stringLength == 0)
@@ -53,7 +53,7 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public byte[] DecodeBinary(byte[] encodedData, ref uint position)
+        public static byte[] DecodeBinary(byte[] encodedData, ref uint position)
         {
             int binaryLength = DecodeInteger32(encodedData, ref position);
             if (position + binaryLength > encodedData.Length || binaryLength == 0)
@@ -66,7 +66,7 @@ namespace HomegearLib.RPC.Encoding
             return result;
         }
 
-        public bool DecodeBoolean(byte[] encodedData, ref uint position)
+        public static bool DecodeBoolean(byte[] encodedData, ref uint position)
         {
             if (position + 1 > encodedData.Length)
             {
@@ -78,7 +78,7 @@ namespace HomegearLib.RPC.Encoding
             return value;
         }
 
-        public double DecodeFloat(byte[] encodedData, ref uint position)
+        public static double DecodeFloat(byte[] encodedData, ref uint position)
         {
             if (position + 8 > encodedData.Length)
             {

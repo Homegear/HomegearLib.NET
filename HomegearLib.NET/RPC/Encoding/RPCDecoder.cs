@@ -5,9 +5,7 @@ namespace HomegearLib.RPC.Encoding
 {
     public class RPCDecoder
     {
-        private BinaryDecoder _decoder = new BinaryDecoder();
-
-        public List<RPCVariable> DecodeRequest(byte[] packet, ref string methodName)
+        public static List<RPCVariable> DecodeRequest(byte[] packet, ref string methodName)
         {
             uint position = 4;
             uint headerSize = 0;
@@ -24,12 +22,12 @@ namespace HomegearLib.RPC.Encoding
 
             if (packet[3] == 0x40 || packet[3] == 0x41)
             {
-                headerSize = (uint)_decoder.DecodeInteger32(packet, ref position) + 4;
+                headerSize = (uint)BinaryDecoder.DecodeInteger32(packet, ref position) + 4;
             }
 
             position = 8 + headerSize;
-            methodName = _decoder.DecodeString(packet, ref position);
-            int parameterCount = _decoder.DecodeInteger32(packet, ref position);
+            methodName = BinaryDecoder.DecodeString(packet, ref position);
+            int parameterCount = BinaryDecoder.DecodeInteger32(packet, ref position);
             if (parameterCount > 100)
             {
                 return parameters;
@@ -42,7 +40,7 @@ namespace HomegearLib.RPC.Encoding
             return parameters;
         }
 
-        public RPCVariable DecodeResponse(byte[] packet, uint offset = 0)
+        public static RPCVariable DecodeResponse(byte[] packet, uint offset = 0)
         {
             uint position = offset + 8;
             RPCVariable response = DecodeParameter(packet, ref position);
@@ -66,7 +64,7 @@ namespace HomegearLib.RPC.Encoding
             return response;
         }
 
-        public RPCHeader DecodeHeader(byte[] packet)
+        public static RPCHeader DecodeHeader(byte[] packet)
         {
             RPCHeader header = new RPCHeader();
             if (packet.Length < 12 || (packet[3] != 0x40 && packet[3] != 0x41))
@@ -75,18 +73,17 @@ namespace HomegearLib.RPC.Encoding
             }
 
             uint position = 4;
-            int headerSize = 0;
-            headerSize = _decoder.DecodeInteger32(packet, ref position);
+            int headerSize = BinaryDecoder.DecodeInteger32(packet, ref position);
             if (headerSize < 4)
             {
                 return header;
             }
 
-            int parameterCount = _decoder.DecodeInteger32(packet, ref position);
+            int parameterCount = BinaryDecoder.DecodeInteger32(packet, ref position);
             for (int i = 0; i < parameterCount; i++)
             {
-                string field = _decoder.DecodeString(packet, ref position).ToLower();
-                string value = _decoder.DecodeString(packet, ref position);
+                string field = BinaryDecoder.DecodeString(packet, ref position).ToLower();
+                string value = BinaryDecoder.DecodeString(packet, ref position);
                 if (field == "authorization")
                 {
                     header.Authorization = value;
@@ -95,43 +92,43 @@ namespace HomegearLib.RPC.Encoding
             return header;
         }
 
-        private RPCVariableType DecodeType(byte[] packet, ref uint position)
+        private static RPCVariableType DecodeType(byte[] packet, ref uint position)
         {
-            return (RPCVariableType)_decoder.DecodeInteger32(packet, ref position);
+            return (RPCVariableType)BinaryDecoder.DecodeInteger32(packet, ref position);
         }
 
-        private RPCVariable DecodeParameter(byte[] packet, ref uint position)
+        private static RPCVariable DecodeParameter(byte[] packet, ref uint position)
         {
             RPCVariableType type = DecodeType(packet, ref position);
             RPCVariable variable = new RPCVariable(type);
             if (type == RPCVariableType.rpcString || type == RPCVariableType.rpcBase64)
             {
-                variable.StringValue = _decoder.DecodeString(packet, ref position);
+                variable.StringValue = BinaryDecoder.DecodeString(packet, ref position);
             }
             else if (type == RPCVariableType.rpcBinary)
             {
-                variable.BinaryValue = _decoder.DecodeBinary(packet, ref position);
+                variable.BinaryValue = BinaryDecoder.DecodeBinary(packet, ref position);
             }
             else if (type == RPCVariableType.rpcBinary)
             {
-                _decoder.DecodeBinary(packet, ref position);
+                BinaryDecoder.DecodeBinary(packet, ref position);
             }
             else if (type == RPCVariableType.rpcInteger32)
             {
-                variable.IntegerValue = _decoder.DecodeInteger32(packet, ref position);
+                variable.IntegerValue = BinaryDecoder.DecodeInteger32(packet, ref position);
                 variable.Type = RPCVariableType.rpcInteger;
             }
             else if (type == RPCVariableType.rpcInteger)
             {
-                variable.IntegerValue = _decoder.DecodeInteger64(packet, ref position);
+                variable.IntegerValue = BinaryDecoder.DecodeInteger64(packet, ref position);
             }
             else if (type == RPCVariableType.rpcFloat)
             {
-                variable.FloatValue = _decoder.DecodeFloat(packet, ref position);
+                variable.FloatValue = BinaryDecoder.DecodeFloat(packet, ref position);
             }
             else if (type == RPCVariableType.rpcBoolean)
             {
-                variable.BooleanValue = _decoder.DecodeBoolean(packet, ref position);
+                variable.BooleanValue = BinaryDecoder.DecodeBoolean(packet, ref position);
             }
             else if (type == RPCVariableType.rpcArray)
             {
@@ -144,9 +141,9 @@ namespace HomegearLib.RPC.Encoding
             return variable;
         }
 
-        List<RPCVariable> DecodeArray(byte[] packet, ref uint position)
+        private static List<RPCVariable> DecodeArray(byte[] packet, ref uint position)
         {
-            int arrayLength = _decoder.DecodeInteger32(packet, ref position);
+            int arrayLength = BinaryDecoder.DecodeInteger32(packet, ref position);
             List<RPCVariable> rpcArray = new List<RPCVariable>();
             for (int i = 0; i < arrayLength; i++)
             {
@@ -155,13 +152,13 @@ namespace HomegearLib.RPC.Encoding
             return rpcArray;
         }
 
-        Dictionary<string, RPCVariable> DecodeStruct(byte[] packet, ref uint position)
+        private static Dictionary<string, RPCVariable> DecodeStruct(byte[] packet, ref uint position)
         {
-            int structLength = _decoder.DecodeInteger32(packet, ref position);
+            int structLength = BinaryDecoder.DecodeInteger32(packet, ref position);
             Dictionary<string, RPCVariable> rpcStruct = new Dictionary<string, RPCVariable>();
             for (int i = 0; i < structLength; i++)
             {
-                string name = _decoder.DecodeString(packet, ref position);
+                string name = BinaryDecoder.DecodeString(packet, ref position);
                 rpcStruct.Add(name, DecodeParameter(packet, ref position));
             }
             return rpcStruct;

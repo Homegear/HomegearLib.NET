@@ -65,8 +65,6 @@ namespace HomegearLib.RPC
         public bool Ssl { get; } = false;
 
         private readonly SecureString _authString = null;
-        private readonly Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
-        private readonly Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
 
         public bool IsConnected => _client != null && _client.Connected;
 
@@ -416,7 +414,7 @@ namespace HomegearLib.RPC
             if ((packet[3] & 1) == 0) //Request
             {
                 string methodName = "";
-                List<RPCVariable> parameters = _rpcDecoder.DecodeRequest(packet, ref methodName);
+                List<RPCVariable> parameters = RPCDecoder.DecodeRequest(packet, ref methodName);
                 RPCVariable response = new RPCVariable(RPCVariableType.rpcVoid);
                 if (methodName == "")
                 {
@@ -550,12 +548,12 @@ namespace HomegearLib.RPC
                 {
                     RequestUiRefreshEvent?.Invoke(this, parameters.Count == 1 ? parameters[0].StringValue : "");
                 }
-                byte[] responsePacket = _rpcEncoder.EncodeResponse(response).ToArray();
+                byte[] responsePacket = RPCEncoder.EncodeResponse(response).ToArray();
                 SendPacket(responsePacket);
             }
             else //Response
             {
-                _rpcResponse = _rpcDecoder.DecodeResponse(packet);
+                _rpcResponse = RPCDecoder.DecodeResponse(packet);
                 _responseReceived.Set();
             }
         }
@@ -617,7 +615,7 @@ namespace HomegearLib.RPC
                                 Authorization = Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString))
                             };
                         }
-                        byte[] requestPacket = _rpcEncoder.EncodeRequest(name, parameters, header).ToArray();
+                        byte[] requestPacket = RPCEncoder.EncodeRequest(name, parameters, header).ToArray();
                         try
                         {
                             SendPacket(requestPacket);
