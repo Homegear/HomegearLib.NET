@@ -26,6 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
+    <NoWarn></NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

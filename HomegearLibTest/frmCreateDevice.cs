@@ -27,8 +27,7 @@ namespace HomegearLibTest
         {
             get
             {
-                Int32 deviceType = 0;
-                if (!Int32.TryParse(txtDeviceType.Text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out deviceType))
+                if (!Int32.TryParse(txtDeviceType.Text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out int deviceType))
                 {
                     deviceType = 0;
                 }

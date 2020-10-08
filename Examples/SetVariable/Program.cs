@@ -80,24 +80,22 @@ namespace SetVariable
 							Console.Write("Please enter variable name: ");
 							string variableName = Console.ReadLine();
 
-							// {{{ Convert Strings to numbers
-							Int32 peerId = 0;
-							if (!Int32.TryParse(peerIdString, out peerId))
-							{
-								Console.WriteLine("Peer ID was not a number.");
-								break;
-							}
+                            // {{{ Convert Strings to numbers
+                            if (!Int32.TryParse(peerIdString, out int peerId))
+                            {
+                                Console.WriteLine("Peer ID was not a number.");
+                                break;
+                            }
 
-							Int32 channel = 0;
-							if (!Int32.TryParse(channelString, out channel))
-							{
-								Console.WriteLine("Channel was not a number.");
-								break;
-							}
-							// }}}
+                            if (!Int32.TryParse(channelString, out int channel))
+                            {
+                                Console.WriteLine("Channel was not a number.");
+                                break;
+                            }
+                            // }}}
 
-							// {{{ Get and print value
-							Variable variable;
+                            // {{{ Get and print value
+                            Variable variable;
 							try
 							{
 								variable = homegear.Devices[peerId].Channels[channel].Variables[variableName];
@@ -122,24 +120,22 @@ namespace SetVariable
 							Console.Write("Please enter value: ");
 							string value = Console.ReadLine();
 
-							// {{{ Convert Strings to numbers
-							Int32 peerId = 0;
-							if (!Int32.TryParse(peerIdString, out peerId))
-							{
-								Console.WriteLine("Peer ID was not a number.");
-								break;
-							}
+                            // {{{ Convert Strings to numbers
+                            if (!Int32.TryParse(peerIdString, out int peerId))
+                            {
+                                Console.WriteLine("Peer ID was not a number.");
+                                break;
+                            }
 
-							Int32 channel = 0;
-							if (!Int32.TryParse(channelString, out channel))
-							{
-								Console.WriteLine("Channel was not a number.");
-								break;
-							}
-							// }}}
+                            if (!Int32.TryParse(channelString, out int channel))
+                            {
+                                Console.WriteLine("Channel was not a number.");
+                                break;
+                            }
+                            // }}}
 
-							// {{{ Set value
-							Variable variable;
+                            // {{{ Set value
+                            Variable variable;
 							try
 							{
 								variable = homegear.Devices[peerId].Channels[channel].Variables[variableName];

@@ -21,10 +21,10 @@ namespace HomegearLib
 
         bool _descriptionRequested = false;
 
-        private long _peerId = 0;
+        readonly private long _peerId = 0;
         public long PeerID { get { return _peerId; } }
 
-        private long _index = 0;
+        readonly private long _index = 0;
         public long Index { get { return _index; } }
 
         private string _name;
@@ -345,10 +345,7 @@ namespace HomegearLib
 
         void Config_OnVariableReloadRequired(DeviceConfig sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null)
-            {
-                VariableReloadRequiredEvent(this, reloadDevice);
-            }
+            VariableReloadRequiredEvent?.Invoke(this, reloadDevice);
         }
     }
 }

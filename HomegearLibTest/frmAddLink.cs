@@ -13,7 +13,7 @@ namespace HomegearLibTest
 {
     public partial class frmAddLink : Form
     {
-        Homegear _homegear = null;
+        readonly Homegear _homegear = null;
 
         public Channel LinkTo { get { return (tvLinkTo.SelectedNode != null && tvLinkTo.SelectedNode.Tag is Channel) ? (Channel)tvLinkTo.SelectedNode.Tag : null; } }
 
@@ -49,8 +49,10 @@ namespace HomegearLibTest
 
                                 if (channelPair.Value.LinkTargetRoles.Contains(role))
                                 {
-                                    TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString());
-                                    channelNode.Tag = channelPair.Value;
+                                    TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString())
+                                    {
+                                        Tag = channelPair.Value
+                                    };
                                     deviceNode.Nodes.Add(channelNode);
                                     break;
                                 }
@@ -67,8 +69,10 @@ namespace HomegearLibTest
 
                                 if (channelPair.Value.LinkSourceRoles.Contains(role))
                                 {
-                                    TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString());
-                                    channelNode.Tag = channelPair.Value;
+                                    TreeNode channelNode = new TreeNode("Channel " + channelPair.Key.ToString())
+                                    {
+                                        Tag = channelPair.Value
+                                    };
                                     deviceNode.Nodes.Add(channelNode);
                                     break;
                                 }

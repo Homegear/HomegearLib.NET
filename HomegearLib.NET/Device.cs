@@ -16,7 +16,7 @@ namespace HomegearLib
 
     public class Device : IDisposable
     {
-        RPCController _rpc = null;
+        readonly RPCController _rpc = null;
 
         internal delegate void VariableReloadRequiredEventHandler(Device device, Channel channel, bool reloadDevice);
 
@@ -213,7 +213,6 @@ namespace HomegearLib
             internal set { _rxMode = value; }
         }
 
-        private bool _aesActive = false;
         public bool AESActive
         {
             get
@@ -227,7 +226,6 @@ namespace HomegearLib
                 }
                 return false;
             }
-            internal set { _aesActive = value; }
         }
 
         private string _firmware;
@@ -316,10 +314,7 @@ namespace HomegearLib
 
         private void Channel_OnVariableReloadRequired(Channel sender, bool reloadDevice)
         {
-            if (VariableReloadRequiredEvent != null)
-            {
-                VariableReloadRequiredEvent(this, sender, reloadDevice);
-            }
+            VariableReloadRequiredEvent?.Invoke(this, sender, reloadDevice);
         }
     }
 }

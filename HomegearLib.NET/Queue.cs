@@ -92,8 +92,7 @@ namespace HomegearLib
             this.cancelationSource.Cancel();
             while (!this.workers.IsEmpty)
             {
-                Worker<T> w;
-                this.workers.TryTake(out w);
+                this.workers.TryTake(out Worker<T> w);
                 w?.Shutdown();
             }
         }

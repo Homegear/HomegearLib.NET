@@ -44,9 +44,11 @@ namespace HomegearLibTest
                     {
                         if(channelPair.Value.TeamTag == channel.TeamTag)
                         {
-                            TeamListEntry entry = new TeamListEntry();
-                            entry.Description = "Team: 0x" + devicePair.Key.ToString("X2") + " Channel: " + channelPair.Value.Index.ToString();
-                            entry.Channel = channelPair.Value;
+                            TeamListEntry entry = new TeamListEntry
+                            {
+                                Description = "Team: 0x" + devicePair.Key.ToString("X2") + " Channel: " + channelPair.Value.Index.ToString(),
+                                Channel = channelPair.Value
+                            };
                             lstTeams.Items.Add(entry);
                         }
                     }

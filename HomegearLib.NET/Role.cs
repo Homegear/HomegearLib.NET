@@ -80,10 +80,12 @@ namespace HomegearLib
         {
             if (_rpc == null) return false;
 
-            Variable.RoleElement roleElement = new Variable.RoleElement();
-            roleElement.ID = ID;
-            roleElement.Direction = direction;
-            roleElement.Invert = invert;
+            Variable.RoleElement roleElement = new Variable.RoleElement
+            {
+                ID = ID,
+                Direction = direction,
+                Invert = invert
+            };
 
             return _rpc.AddRoleToVariable(variable, roleElement);
         }

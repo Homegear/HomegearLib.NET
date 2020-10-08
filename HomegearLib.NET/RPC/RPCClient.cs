@@ -612,8 +612,10 @@ namespace HomegearLib.RPC
                         Encoding.RPCHeader header = null;
                         if (Ssl && _authString != null && _authString.Length > 0)
                         {
-                            header = new Encoding.RPCHeader();
-                            header.Authorization = Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString));
+                            header = new Encoding.RPCHeader
+                            {
+                                Authorization = Marshal.PtrToStringAuto(Marshal.SecureStringToBSTR(_authString))
+                            };
                         }
                         byte[] requestPacket = _rpcEncoder.EncodeRequest(name, parameters, header).ToArray();
                         try

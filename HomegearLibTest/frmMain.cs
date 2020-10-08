@@ -44,15 +44,15 @@ namespace HomegearLibTest
 
         bool _nodeLoading = false;
         Int32 _variableTimerIndex = 5;
-        Timer _variableValueChangedTimer = new Timer();
-        System.Threading.Mutex _treeViewMutex = new System.Threading.Mutex();
+        readonly Timer _variableValueChangedTimer = new Timer();
+        readonly System.Threading.Mutex _treeViewMutex = new System.Threading.Mutex();
 
         public frmMain()
         {
             InitializeComponent();
 
             _variableValueChangedTimer.Interval = 1000;
-            _variableValueChangedTimer.Tick += _variableValueChangedTimer_Tick;
+            _variableValueChangedTimer.Tick += VariableValueChangedTimer_Tick;
             lblVariableTimer.Text = "";
             lblSystemVariableTimer.Text = "";
             lblMetadataTimer.Text = "";
@@ -136,7 +136,7 @@ namespace HomegearLibTest
             if (openCertificate.ShowDialog() == DialogResult.OK) txtClientCertificate.Text = openCertificate.FileName;
         }
 
-        void _variableValueChangedTimer_Tick(object sender, EventArgs e)
+        private void VariableValueChangedTimer_Tick(object sender, EventArgs e)
         {
             _variableValueChangedTimer.Stop();
             if(_variableTimerIndex > 1)
@@ -241,13 +241,17 @@ namespace HomegearLibTest
                     eventsNode.ContextMenuStrip = cmTimedEvents;
                     tvDevices.Nodes.Add(eventsNode);
 
-                    TreeNode devicesNode = new TreeNode("Devices");
-                    devicesNode.ContextMenuStrip = cmDevices;
+                    TreeNode devicesNode = new TreeNode("Devices")
+                    {
+                        ContextMenuStrip = cmDevices
+                    };
                     foreach (KeyValuePair<Int64, Device> device in _homegear.Devices)
                     {
-                        TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()) + ((device.Value.Name != "") ? " (" + device.Value.Name + ")" : ""));
-                        deviceNode.Tag = device.Value;
-                        deviceNode.ContextMenuStrip = cmDevice;
+                        TreeNode deviceNode = new TreeNode("Device " + ((device.Key >= 0x40000000) ? "0x" + device.Key.ToString("X2") : device.Key.ToString()) + ((device.Value.Name != "") ? " (" + device.Value.Name + ")" : ""))
+                        {
+                            Tag = device.Value,
+                            ContextMenuStrip = cmDevice
+                        };
 
                         TreeNode metadataNode = new TreeNode("Metadata");
                         metadataNode.Nodes.Add("<loading...>");
@@ -263,26 +267,34 @@ namespace HomegearLibTest
                         {
                             foreach (KeyValuePair<Int64, Channel> channel in device.Value.Channels)
                             {
-                                TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + (channel.Value.Name.Length > 0 ? channel.Value.Name : channel.Value.TypeString) + ")");
-                                channelNode.Tag = channel.Value;
+                                TreeNode channelNode = new TreeNode("Channel " + channel.Key + " (" + (channel.Value.Name.Length > 0 ? channel.Value.Name : channel.Value.TypeString) + ")")
+                                {
+                                    Tag = channel.Value
+                                };
 
                                 TreeNode valuesNode = new TreeNode("Variables (" + channel.Value.Variables.Count + ")");
                                 foreach (KeyValuePair<String, Variable> variable in channel.Value.Variables)
                                 {
-                                    TreeNode variableNode = new TreeNode(variable.Key);
-                                    variableNode.Tag = variable.Value;
+                                    TreeNode variableNode = new TreeNode(variable.Key)
+                                    {
+                                        Tag = variable.Value
+                                    };
                                     valuesNode.Nodes.Add(variableNode);
                                 }
                                 channelNode.Nodes.Add(valuesNode);
 
-                                TreeNode configNode = new TreeNode("Config");
-                                configNode.Tag = channel.Value;
+                                TreeNode configNode = new TreeNode("Config")
+                                {
+                                    Tag = channel.Value
+                                };
                                 configNode.Nodes.Add("<loading...>");
                                 channelNode.Nodes.Add(configNode);
 
-                                TreeNode linksNode = new TreeNode("Links");
-                                linksNode.Tag = channel.Value;
-                                linksNode.ContextMenuStrip = cmLinks;
+                                TreeNode linksNode = new TreeNode("Links")
+                                {
+                                    Tag = channel.Value,
+                                    ContextMenuStrip = cmLinks
+                                };
                                 linksNode.Nodes.Add("<loading...>");
                                 channelNode.Nodes.Add(linksNode);
 
@@ -528,8 +540,10 @@ namespace HomegearLibTest
             SslInfo sslClientInfo = null;
             if (chkSSL.Checked)
             {
-                sslClientInfo = new SslInfo(new Tuple<string, string>(txtHomegearUsername.Text, txtHomegearPassword.Text), chkVerifyCertificate.Checked);
-                sslClientInfo.ClientCertificateFile = txtClientCertificate.Text;
+                sslClientInfo = new SslInfo(new Tuple<string, string>(txtHomegearUsername.Text, txtHomegearPassword.Text), chkVerifyCertificate.Checked)
+                {
+                    ClientCertificateFile = txtClientCertificate.Text
+                };
                 sslClientInfo.SetCertificatePasswordFromString(txtCertificatePassword.Text);
             }
             Int32.TryParse(txtHomegearPort.Text, out Int32 homegearPort);
@@ -906,8 +920,7 @@ namespace HomegearLibTest
                 return;
             }
 
-            Int32 integerValue = 0;
-            if(Int32.TryParse(txtLogLevel.Text, out integerValue))
+            if (Int32.TryParse(txtLogLevel.Text, out int integerValue))
             {
                 _homegear.LogLevel = integerValue;
             }
@@ -942,9 +955,11 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (KeyValuePair<String, Event> eventPair in _homegear.TimedEvents)
                 {
-                    TreeNode eventNode = new TreeNode(eventPair.Key);
-                    eventNode.Tag = eventPair.Value;
-                    eventNode.ContextMenuStrip = cmTimedEvent;
+                    TreeNode eventNode = new TreeNode(eventPair.Key)
+                    {
+                        Tag = eventPair.Value,
+                        ContextMenuStrip = cmTimedEvent
+                    };
                     e.Node.Nodes.Add(eventNode);
                 }
                 if (e.Node.Nodes.Count == 0)
@@ -1001,8 +1016,7 @@ namespace HomegearLibTest
                     return;
                 }
 
-                Int32 recurEvery = 0;
-                Int32.TryParse(dialog.RecurEvery, out recurEvery);
+                Int32.TryParse(dialog.RecurEvery, out int recurEvery);
                 List<RPCVariable> eventMethodParams = new List<RPCVariable>();
                 if (dialog.Type1.Length > 0 && dialog.Type1 != "(empty)")
                 {
@@ -1055,7 +1069,7 @@ namespace HomegearLibTest
             switch (type)
             {
                 case "Boolean":
-                    Boolean booleanValue = false;
+                    Boolean booleanValue;
                     if (Boolean.TryParse(value, out booleanValue))
                     {
                         return new RPCVariable(booleanValue);
@@ -1063,7 +1077,7 @@ namespace HomegearLibTest
 
                     break;
                 case "Integer":
-                    Int32 integerValue = 0;
+                    Int32 integerValue;
                     if (Int32.TryParse(value, out integerValue))
                     {
                         return new RPCVariable(integerValue);
@@ -1071,7 +1085,7 @@ namespace HomegearLibTest
 
                     break;
                 case "Double":
-                    Double doubleValue = 0;
+                    Double doubleValue;
                     if (Double.TryParse(value, out doubleValue))
                     {
                         return new RPCVariable(doubleValue);
@@ -1081,8 +1095,10 @@ namespace HomegearLibTest
                 case "String":
                     return new RPCVariable(value);
                 case "Base64":
-                    variable = new RPCVariable(value);
-                    variable.Type = RPCVariableType.rpcBase64;
+                    variable = new RPCVariable(value)
+                    {
+                        Type = RPCVariableType.rpcBase64
+                    };
                     return variable;
             }
             return variable;
@@ -1097,8 +1113,10 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (KeyValuePair<String, Interface> interfacePair in _homegear.Interfaces)
                 {
-                    TreeNode interfaceNode = new TreeNode(interfacePair.Key);
-                    interfaceNode.Tag = interfacePair.Value;
+                    TreeNode interfaceNode = new TreeNode(interfacePair.Key)
+                    {
+                        Tag = interfacePair.Value
+                    };
                     e.Node.Nodes.Add(interfaceNode);
                 }
             }
@@ -1139,9 +1157,11 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (var buildingPair in _homegear.Buildings)
                 {
-                    TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
-                    buildingNode.Tag = buildingPair.Value;
-                    buildingNode.ContextMenuStrip = cmBuilding;
+                    TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"))
+                    {
+                        Tag = buildingPair.Value,
+                        ContextMenuStrip = cmBuilding
+                    };
                     e.Node.Nodes.Add(buildingNode);
                 }
                 if (e.Node.Nodes.Count == 0)
@@ -1174,9 +1194,11 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (var storyPair in _homegear.Stories)
                 {
-                    TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
-                    storyNode.Tag = storyPair.Value;
-                    storyNode.ContextMenuStrip = cmStory;
+                    TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"))
+                    {
+                        Tag = storyPair.Value,
+                        ContextMenuStrip = cmStory
+                    };
                     e.Node.Nodes.Add(storyNode);
                 }
                 if (e.Node.Nodes.Count == 0)
@@ -1210,9 +1232,11 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (var roomPair in _homegear.Rooms)
                 {
-                    TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
-                    roomNode.Tag = roomPair.Value;
-                    roomNode.ContextMenuStrip = cmRoom;
+                    TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"))
+                    {
+                        Tag = roomPair.Value,
+                        ContextMenuStrip = cmRoom
+                    };
                     e.Node.Nodes.Add(roomNode);
                 }
                 if (e.Node.Nodes.Count == 0)
@@ -1247,8 +1271,10 @@ namespace HomegearLibTest
                 TreeNode currentLevel1Node = null;
                 foreach (var rolePair in _homegear.Roles)
                 {
-                    TreeNode roleNode = new TreeNode(rolePair.Key.ToString() + " (" + rolePair.Value.Name("en-US") + ")");
-                    roleNode.Tag = rolePair.Value;
+                    TreeNode roleNode = new TreeNode(rolePair.Key.ToString() + " (" + rolePair.Value.Name("en-US") + ")")
+                    {
+                        Tag = rolePair.Value
+                    };
                     if (rolePair.Value.Level == 0)
                     {
                         currentLevel0Node = roleNode;
@@ -1312,9 +1338,11 @@ namespace HomegearLibTest
                 e.Node.Nodes.Clear();
                 foreach (KeyValuePair<String, SystemVariable> variablePair in _homegear.SystemVariables)
                 {
-                    TreeNode variableNode = new TreeNode(variablePair.Key);
-                    variableNode.Tag = variablePair.Value;
-                    variableNode.ContextMenuStrip = cmSystemVariable;
+                    TreeNode variableNode = new TreeNode(variablePair.Key)
+                    {
+                        Tag = variablePair.Value,
+                        ContextMenuStrip = cmSystemVariable
+                    };
                     e.Node.Nodes.Add(variableNode);
                 }
             }
@@ -1386,7 +1414,7 @@ namespace HomegearLibTest
                     WriteLog("Setting system variable \"" + _selectedSystemVariable.Name + "\" to: " + txtSystemVariableValue.Text);
                     break;
                 case RPCVariableType.rpcInteger:
-                    Int32 integerValue = 0;
+                    Int32 integerValue;
                     if (Int32.TryParse(txtSystemVariableValue.Text, out integerValue))
                     {
                         txtSystemVariableValue.BackColor = Color.PaleGreen;
@@ -1400,7 +1428,7 @@ namespace HomegearLibTest
 
                     break;
                 case RPCVariableType.rpcBoolean:
-                    Boolean booleanValue = false;
+                    Boolean booleanValue;
                     if (Boolean.TryParse(txtSystemVariableValue.Text, out booleanValue))
                     {
                         txtSystemVariableValue.BackColor = Color.PaleGreen;
@@ -1414,7 +1442,7 @@ namespace HomegearLibTest
 
                     break;
                 case RPCVariableType.rpcFloat:
-                    Double floatValue = 0;
+                    Double floatValue;
                     if (Double.TryParse(txtSystemVariableValue.Text, out floatValue))
                     {
                         txtSystemVariableValue.BackColor = Color.PaleGreen;
@@ -1444,21 +1472,21 @@ namespace HomegearLibTest
                 switch(dialog.VariableType)
                 {
                     case "Boolean":
-                        Boolean booleanValue = false;
+                        Boolean booleanValue;
                         if(Boolean.TryParse(dialog.VariableValue, out booleanValue))
                         {
                             variable = new SystemVariable(dialog.VariableName, booleanValue);
                         }
                         break;
                     case "Integer":
-                        Int32 integerValue = 0;
+                        Int32 integerValue;
                         if (Int32.TryParse(dialog.VariableValue, out integerValue))
                         {
                             variable = new SystemVariable(dialog.VariableName, integerValue);
                         }
                         break;
                     case "Double":
-                        Double doubleValue = 0;
+                        Double doubleValue;
                         if (Double.TryParse(dialog.VariableValue, out doubleValue))
                         {
                             variable = new SystemVariable(dialog.VariableName, doubleValue);
@@ -1468,8 +1496,10 @@ namespace HomegearLibTest
                         variable = new SystemVariable(dialog.VariableName, dialog.VariableValue);
                         break;
                     case "Base64":
-                        variable = new SystemVariable(dialog.VariableName, RPCVariableType.rpcBase64);
-                        variable.StringValue = dialog.VariableValue;
+                        variable = new SystemVariable(dialog.VariableName, RPCVariableType.rpcBase64)
+                        {
+                            StringValue = dialog.VariableValue
+                        };
                         break;
                 }
                 if (variable != null)
@@ -1602,7 +1632,7 @@ namespace HomegearLibTest
                     WriteLog("Setting metadata \"" + _selectedMetadata.Name + "\" of device \"" + _selectedDevice.ID + "\" to: " + txtMetadataValue.Text);
                     break;
                 case RPCVariableType.rpcInteger:
-                    Int32 integerValue = 0;
+                    Int32 integerValue;
                     if (Int32.TryParse(txtMetadataValue.Text, out integerValue))
                     {
                         txtMetadataValue.BackColor = Color.PaleGreen;
@@ -1616,7 +1646,7 @@ namespace HomegearLibTest
 
                     break;
                 case RPCVariableType.rpcBoolean:
-                    Boolean booleanValue = false;
+                    Boolean booleanValue;
                     if (Boolean.TryParse(txtMetadataValue.Text, out booleanValue))
                     {
                         txtMetadataValue.BackColor = Color.PaleGreen;
@@ -1630,7 +1660,7 @@ namespace HomegearLibTest
 
                     break;
                 case RPCVariableType.rpcFloat:
-                    Double floatValue = 0;
+                    Double floatValue;
                     if (Double.TryParse(txtMetadataValue.Text, out floatValue))
                     {
                         txtMetadataValue.BackColor = Color.PaleGreen;
@@ -1653,8 +1683,10 @@ namespace HomegearLibTest
                 return;
             }
 
-            frmAddSystemVariable dialog = new frmAddSystemVariable();
-            dialog.Text = "Add Metadata (Device " + _rightClickedDevice.ID.ToString() + ")";
+            frmAddSystemVariable dialog = new frmAddSystemVariable
+            {
+                Text = "Add Metadata (Device " + _rightClickedDevice.ID.ToString() + ")"
+            };
             if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 if (dialog.VariableType.Length == 0 || dialog.VariableName.Length == 0)
@@ -1666,21 +1698,21 @@ namespace HomegearLibTest
                 switch (dialog.VariableType)
                 {
                     case "Boolean":
-                        Boolean booleanValue = false;
+                        Boolean booleanValue;
                         if (Boolean.TryParse(dialog.VariableValue, out booleanValue))
                         {
                             variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, booleanValue);
                         }
                         break;
                     case "Integer":
-                        Int32 integerValue = 0;
+                        Int32 integerValue;
                         if (Int32.TryParse(dialog.VariableValue, out integerValue))
                         {
                             variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, integerValue);
                         }
                         break;
                     case "Double":
-                        Double doubleValue = 0;
+                        Double doubleValue;
                         if (Double.TryParse(dialog.VariableValue, out doubleValue))
                         {
                             variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, doubleValue);
@@ -1690,8 +1722,10 @@ namespace HomegearLibTest
                         variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, dialog.VariableValue);
                         break;
                     case "Base64":
-                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, RPCVariableType.rpcBase64);
-                        variable.StringValue = dialog.VariableValue;
+                        variable = new MetadataVariable(_rightClickedDevice.ID, dialog.VariableName, RPCVariableType.rpcBase64)
+                        {
+                            StringValue = dialog.VariableValue
+                        };
                         break;
                 }
                 if (variable != null)
@@ -1825,8 +1859,10 @@ namespace HomegearLibTest
                 return;
             }
 
-            frmAddTriggeredEvent dialog = new frmAddTriggeredEvent();
-            dialog.Text = "Add Triggered Event (Device: " + _rightClickedDevice.ID.ToString() + ")";
+            frmAddTriggeredEvent dialog = new frmAddTriggeredEvent
+            {
+                Text = "Add Triggered Event (Device: " + _rightClickedDevice.ID.ToString() + ")"
+            };
             if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 if (dialog.ID.Length == 0 || dialog.Variable.Length == 0 || dialog.RPCMethod.Length == 0)
@@ -1834,10 +1870,8 @@ namespace HomegearLibTest
                     return;
                 }
 
-                Int32 peerChannel = -1;
-                Int32.TryParse(dialog.PeerChannel, out peerChannel);
-                Int32 integerValue = 0;
-                Int32.TryParse(dialog.Trigger, out integerValue);
+                Int32.TryParse(dialog.PeerChannel, out int peerChannel);
+                Int32.TryParse(dialog.Trigger, out int integerValue);
                 EventTrigger trigger = (EventTrigger)integerValue;
                 RPCVariable triggerValue = null;
                 if(dialog.TriggerValueType.Length > 0 && dialog.TriggerValueType != "(empty)")
@@ -1845,19 +1879,13 @@ namespace HomegearLibTest
                     triggerValue = GetRPCVariableFromString(dialog.TriggerValueType, dialog.TriggerValue);
                 }
 
-                Int32 resetAfterStatic = 0;
-                Int32.TryParse(dialog.ResetAfterStatic, out resetAfterStatic);
-                Int32 initialTime = 0;
-                Int32.TryParse(dialog.InitialTime, out initialTime);
-                integerValue = 0;
+                Int32.TryParse(dialog.ResetAfterStatic, out int resetAfterStatic);
+                Int32.TryParse(dialog.InitialTime, out int initialTime);
                 Int32.TryParse(dialog.Operation, out integerValue);
                 DynamicResetTimeOperation operation = (DynamicResetTimeOperation)integerValue;
-                Double factor = 0;
-                Double.TryParse(dialog.Factor, out factor);
-                Int32 limit = 0;
-                Int32.TryParse(dialog.Limit, out limit);
-                Int32 resetAfterDynamic = 0;
-                Int32.TryParse(dialog.ResetAfterDynamic, out resetAfterDynamic);
+                Double.TryParse(dialog.Factor, out double factor);
+                Int32.TryParse(dialog.Limit, out int limit);
+                Int32.TryParse(dialog.ResetAfterDynamic, out int resetAfterDynamic);
                 List<RPCVariable> eventMethodParams = new List<RPCVariable>();
                 if (dialog.Type1.Length > 0 && dialog.Type1 != "(empty)")
                 {
@@ -1920,7 +1948,7 @@ namespace HomegearLibTest
                     resetMethodParams.Add(GetRPCVariableFromString(dialog.ResetType6, dialog.ResetValue6));
                 }
 
-                TriggeredEvent newEvent = null;
+                TriggeredEvent newEvent;
                 if (dialog.ResetEvent && dialog.ResetMethod.Length > 0) //Not everything necessary is checked here, but hey, this is only a demo app
                 {
                     if (dialog.InitialTime.Length == 0 || dialog.Operation.Length == 0 || dialog.Factor.Length == 0 || dialog.Limit.Length == 0 || dialog.ResetAfterDynamic.Length == 0)
@@ -1959,8 +1987,10 @@ namespace HomegearLibTest
                 return;
             }
 
-            frmAddLink dialog = new frmAddLink(_rightClickedChannel, _homegear);
-            dialog.Text = "Add Link (Device: " + _rightClickedDevice.ID.ToString() + ", Channel: " + _rightClickedChannel.Index.ToString() + ")";
+            frmAddLink dialog = new frmAddLink(_rightClickedChannel, _homegear)
+            {
+                Text = "Add Link (Device: " + _rightClickedDevice.ID.ToString() + ", Channel: " + _rightClickedChannel.Index.ToString() + ")"
+            };
             if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 if (dialog.LinkTo == null)
@@ -1998,9 +2028,11 @@ namespace HomegearLibTest
                     e.Node.Nodes.Clear();
                     foreach (KeyValuePair<String, MetadataVariable> variable in device.Metadata)
                     {
-                        TreeNode variableNode = new TreeNode(variable.Key);
-                        variableNode.Tag = variable.Value;
-                        variableNode.ContextMenuStrip = cmMetadataVariable;
+                        TreeNode variableNode = new TreeNode(variable.Key)
+                        {
+                            Tag = variable.Value,
+                            ContextMenuStrip = cmMetadataVariable
+                        };
                         e.Node.Nodes.Add(variableNode);
                     }
                     if (e.Node.Nodes.Count == 0)
@@ -2014,9 +2046,11 @@ namespace HomegearLibTest
                     e.Node.Nodes.Clear();
                     foreach (KeyValuePair<String, Event> element in device.Events)
                     {
-                        TreeNode eventNode = new TreeNode(element.Key);
-                        eventNode.Tag = element.Value;
-                        eventNode.ContextMenuStrip = cmTriggeredEvent;
+                        TreeNode eventNode = new TreeNode(element.Key)
+                        {
+                            Tag = element.Value,
+                            ContextMenuStrip = cmTriggeredEvent
+                        };
                         e.Node.Nodes.Add(eventNode);
                     }
                     if (e.Node.Nodes.Count == 0)
@@ -2033,8 +2067,10 @@ namespace HomegearLibTest
                     _selectedChannel = (Channel)e.Node.Tag;
                     foreach (KeyValuePair<String, ConfigParameter> parameter in _selectedChannel.Config)
                     {
-                        TreeNode parameterNode = new TreeNode(parameter.Key);
-                        parameterNode.Tag = parameter.Value;
+                        TreeNode parameterNode = new TreeNode(parameter.Key)
+                        {
+                            Tag = parameter.Value
+                        };
                         e.Node.Nodes.Add(parameterNode);
                     }
                     if (e.Node.Nodes.Count == 0)
@@ -2048,17 +2084,23 @@ namespace HomegearLibTest
                     _selectedChannel = (Channel)e.Node.Tag;
                     foreach (KeyValuePair<Int64, ReadOnlyDictionary<Int64, Link>> remotePeer in _selectedChannel.Links)
                     {
-                        TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString());
-                        remotePeerNode.Tag = remotePeer.Value;
+                        TreeNode remotePeerNode = new TreeNode("Device " + remotePeer.Key.ToString())
+                        {
+                            Tag = remotePeer.Value
+                        };
 
                         foreach (KeyValuePair<Int64, Link> linkPair in remotePeer.Value)
                         {
-                            TreeNode remoteChannelNode = new TreeNode("Channel " + linkPair.Key.ToString());
-                            remoteChannelNode.Tag = linkPair.Value;
-                            remoteChannelNode.ContextMenuStrip = cmLink;
+                            TreeNode remoteChannelNode = new TreeNode("Channel " + linkPair.Key.ToString())
+                            {
+                                Tag = linkPair.Value,
+                                ContextMenuStrip = cmLink
+                            };
 
-                            TreeNode linkConfigNode = new TreeNode("Config");
-                            linkConfigNode.Tag = linkPair.Value;
+                            TreeNode linkConfigNode = new TreeNode("Config")
+                            {
+                                Tag = linkPair.Value
+                            };
                             linkConfigNode.Nodes.Add("<loading...>");
                             remoteChannelNode.Nodes.Add(linkConfigNode);
 
@@ -2081,8 +2123,10 @@ namespace HomegearLibTest
                     Link link = (Link)e.Node.Tag;
                     foreach (KeyValuePair<String, ConfigParameter> parameter in link.Config)
                     {
-                        TreeNode parameterNode = new TreeNode(parameter.Key);
-                        parameterNode.Tag = parameter.Value;
+                        TreeNode parameterNode = new TreeNode(parameter.Key)
+                        {
+                            Tag = parameter.Value
+                        };
                         e.Node.Nodes.Add(parameterNode);
                     }
                     if (e.Node.Nodes.Count == 0)
@@ -2315,7 +2359,7 @@ namespace HomegearLibTest
             {
                 _variableValueChangedTimer.Stop();
                 _variableTimerIndex = 0;
-                _variableValueChangedTimer_Tick(sender, new EventArgs());
+                VariableValueChangedTimer_Tick(sender, new EventArgs());
             }
         }
 
@@ -2681,8 +2725,10 @@ namespace HomegearLibTest
                         {
                             if (buildingPair.Key != building.ID) continue;
 
-                            TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"));
-                            buildingNode.Tag = buildingPair.Value;
+                            TreeNode buildingNode = new TreeNode(buildingPair.Value.Name("en-US"))
+                            {
+                                Tag = buildingPair.Value
+                            };
 
                             foreach (TreeNode node in tvDevices.Nodes)
                             {
@@ -2734,8 +2780,10 @@ namespace HomegearLibTest
                         {
                             if (storyPair.Key != story.ID) continue;
 
-                            TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"));
-                            storyNode.Tag = storyPair.Value;
+                            TreeNode storyNode = new TreeNode(storyPair.Value.Name("en-US"))
+                            {
+                                Tag = storyPair.Value
+                            };
 
                             foreach (TreeNode node in tvDevices.Nodes)
                             {
@@ -2787,8 +2835,10 @@ namespace HomegearLibTest
                         {
                             if (roomPair.Key != room.ID) continue;
 
-                            TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"));
-                            roomNode.Tag = roomPair.Value;
+                            TreeNode roomNode = new TreeNode(roomPair.Value.Name("en-US"))
+                            {
+                                Tag = roomPair.Value
+                            };
 
                             foreach (TreeNode node in tvDevices.Nodes)
                             {
