@@ -8,7 +8,7 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private long _peerId;
+        private readonly long _peerId;
         public long PeerID { get { return _peerId; } }
 
         public MetadataVariables(RPCController rpc, long peerId, Dictionary<string, MetadataVariable> metadataVariables) : base(metadataVariables)

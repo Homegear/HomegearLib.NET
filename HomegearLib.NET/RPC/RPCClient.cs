@@ -52,8 +52,8 @@ namespace HomegearLib.RPC
         private volatile TcpClient _client = null;
         private volatile SslStream _sslStream = null;
         private volatile BinaryRpc _binaryRpc = new BinaryRpc();
-        private object _sendLock = new object();
-        private object _callMethodLock = new object();
+        private readonly object _sendLock = new object();
+        private readonly object _callMethodLock = new object();
         private volatile RPCVariable _rpcResponse = null;
         private volatile ManualResetEvent _responseReceived = new ManualResetEvent(false);
 
@@ -64,7 +64,7 @@ namespace HomegearLib.RPC
 
         public bool Ssl { get; } = false;
 
-        private SecureString _authString = null;
+        private readonly SecureString _authString = null;
         private readonly Encoding.RPCEncoder _rpcEncoder = new Encoding.RPCEncoder();
         private readonly Encoding.RPCDecoder _rpcDecoder = new Encoding.RPCDecoder();
 
@@ -295,8 +295,8 @@ namespace HomegearLib.RPC
         private void ReadClient()
         {
             byte[] buffer = new byte[2048];
-            int bytesReceived = 0;
-            int processedBytes = 0;
+            int bytesReceived;
+            int processedBytes;
             while (!_stopThread)
             {
                 try

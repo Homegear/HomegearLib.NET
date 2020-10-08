@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace HomegearLib.RPC
@@ -38,7 +37,7 @@ namespace HomegearLib.RPC
         public virtual string StringValue
         {
             get { return _stringValue; }
-            set { _stringValue = (value == null) ? "" : value; }
+            set { _stringValue = value ?? ""; }
         }
 
         protected long _integerValue;
@@ -194,7 +193,7 @@ namespace HomegearLib.RPC
                     _type = RPCVariableType.rpcFloat;
                     break;
                 case VariableType.tString:
-                    _stringValue = (variable.StringValue == null) ? "" : variable.StringValue;
+                    _stringValue = variable.StringValue ?? "";
                     _type = RPCVariableType.rpcString;
                     break;
                 case VariableType.tEnum:
@@ -384,10 +383,10 @@ namespace HomegearLib.RPC
                     _integerValue = value.IntegerValue;
                     break;
                 case RPCVariableType.rpcString:
-                    _stringValue = (value.StringValue == null) ? "" : value.StringValue;
+                    _stringValue = value.StringValue ?? "";
                     break;
                 case RPCVariableType.rpcBase64:
-                    _stringValue = (value.StringValue == null) ? "" : value.StringValue;
+                    _stringValue = value.StringValue ?? "";
                     break;
                 case RPCVariableType.rpcFloat:
                     _floatValue = value.FloatValue;

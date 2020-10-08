@@ -7,8 +7,8 @@ namespace HomegearLib
     public class Variables : ReadOnlyDictionary<string, Variable>, IDisposable
     {
         RPCController _rpc = null;
-        long _peerId = 0;
-        long _channel = -1;
+        readonly long _peerId = 0;
+        readonly long _channel = -1;
 
         internal Variables(RPCController rpc, long peerId, long channel) : base()
         {

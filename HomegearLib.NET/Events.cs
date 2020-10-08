@@ -8,10 +8,10 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        EventType _type;
+        readonly EventType _type;
         public EventType Type { get { return _type; } }
 
-        long _peerId;
+        readonly long _peerId;
         public long PeerID { get { return _peerId; } }
 
         public Events(RPCController rpc, Dictionary<string, Event> events, EventType type) : base(events)

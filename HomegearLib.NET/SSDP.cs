@@ -44,7 +44,7 @@ namespace HomegearLib
                         responses.Add(Encoding.UTF8.GetString(buffer, 0, receivedBytes));
                     }
 
-                    timeout = timeout - (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                    timeout -= (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
                     if (timeout < 0)
                     {
                         break;

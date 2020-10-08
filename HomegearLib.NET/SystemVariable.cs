@@ -8,7 +8,7 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private string _name;
+        private readonly string _name;
         public string Name { get { return _name; } }
 
         public override RPCVariableType Type

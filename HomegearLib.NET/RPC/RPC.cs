@@ -511,9 +511,8 @@ namespace HomegearLib.RPC
             }
 
             RPCVariable eventDescription = new RPCVariable(RPCVariableType.rpcStruct);
-            if (newEvent is TimedEvent)
+            if (newEvent is TimedEvent timedEvent)
             {
-                TimedEvent timedEvent = (TimedEvent)newEvent;
                 eventDescription.StructValue.Add("TYPE", new RPCVariable(1));
                 eventDescription.StructValue.Add("ID", new RPCVariable(timedEvent.ID));
                 eventDescription.StructValue.Add("ENABLED", new RPCVariable(timedEvent.Enabled));
@@ -1039,7 +1038,7 @@ namespace HomegearLib.RPC
                         }
                         channel.Variables = new Variables(this, device.ID, channel.Index, variables);
                     }
-                    device.Channels = new Channels(this, channels);
+                    device.Channels = new Channels(channels);
                 }
                 devices.Add(device.ID, device);
             }
@@ -1474,7 +1473,7 @@ namespace HomegearLib.RPC
                     continue;
                 }
 
-                ConfigParameter configParameter = new ConfigParameter(this, peerId, channel, parameterDescription.Key, rpcParameter);
+                ConfigParameter configParameter = new ConfigParameter(this, peerId, channel, parameterDescription.Key);
                 if (parameterDescription.Value.StructValue.ContainsKey("MIN"))
                 {
                     configParameter.SetMin(parameterDescription.Value.StructValue["MIN"]);
@@ -1827,7 +1826,7 @@ namespace HomegearLib.RPC
             }
         }
 
-        public RPCVariable invokeFamilyMethod(Family family, string method, List<RPCVariable> parameters)
+        public RPCVariable InvokeFamilyMethod(Family family, string method, List<RPCVariable> parameters)
         {
             if (_disposing)
             {
@@ -1847,7 +1846,7 @@ namespace HomegearLib.RPC
             EventType type = (EventType)eventStruct.StructValue["TYPE"].IntegerValue;
             if (type == EventType.Timed)
             {
-                TimedEvent element = (eventToUpdate != null && eventToUpdate is TimedEvent) ? (TimedEvent)eventToUpdate : new TimedEvent(this, eventStruct.StructValue["ID"].StringValue);
+                TimedEvent element = (eventToUpdate != null && eventToUpdate is TimedEvent @event) ? @event : new TimedEvent(this, eventStruct.StructValue["ID"].StringValue);
                 if (eventStruct.StructValue.ContainsKey("ENABLED"))
                 {
                     element.SetEnabledNoRPC(eventStruct.StructValue["ENABLED"].BooleanValue);
@@ -1882,7 +1881,7 @@ namespace HomegearLib.RPC
             }
             else
             {
-                TriggeredEvent element = (eventToUpdate != null && eventToUpdate is TriggeredEvent) ? (TriggeredEvent)eventToUpdate : new TriggeredEvent(this, eventStruct.StructValue["ID"].StringValue);
+                TriggeredEvent element = (eventToUpdate != null && eventToUpdate is TriggeredEvent @event) ? @event : new TriggeredEvent(this, eventStruct.StructValue["ID"].StringValue);
                 if (eventStruct.StructValue.ContainsKey("ENABLED"))
                 {
                     element.SetEnabledNoRPC(eventStruct.StructValue["ENABLED"].BooleanValue);

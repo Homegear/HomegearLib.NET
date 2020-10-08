@@ -12,19 +12,19 @@ namespace HomegearLib
 
         internal event VariableReloadRequiredEventHandler VariableReloadRequiredEvent;
 
-        private long _peerId = 0;
+        private readonly long _peerId = 0;
         public long PeerID { get { return _peerId; } }
 
-        private long _channel;
+        private readonly long _channel;
         public long Channel { get { return _channel; } }
 
-        private long _remotePeerID = 0;
+        private readonly long _remotePeerID = 0;
         public long RemotePeerID { get { return _remotePeerID; } }
 
-        private long _remoteChannel = -1;
+        private readonly long _remoteChannel = -1;
         public long RemoteChannel { get { return _remoteChannel; } }
 
-        private RPCParameterSetType _type;
+        private readonly RPCParameterSetType _type;
         public RPCParameterSetType Type { get { return _type; } }
 
         public DeviceConfig(RPCController rpc, long peerId, long channel, RPCParameterSetType type, Dictionary<string, ConfigParameter> deviceConfig) : base(deviceConfig)

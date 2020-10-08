@@ -38,6 +38,7 @@ namespace HomegearLibTest
         Variable _selectedVariable = null;
         SystemVariable _selectedSystemVariable = null;
         MetadataVariable _selectedMetadata = null;
+        
         Building _selectedBuilding = null;
         Story _selectedStory = null;
         Room _selectedRoom = null;
@@ -131,7 +132,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void bnSelectCert_Click(object sender, EventArgs e)
+        private void BnSelectCert_Click(object sender, EventArgs e)
         {
             if (openCertificate.ShowDialog() == DialogResult.OK) txtClientCertificate.Text = openCertificate.FileName;
         }
@@ -175,7 +176,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnReloaded(Homegear sender)
+        void Homegear_OnReloaded(Homegear sender)
         {
             WriteLog("Reload complete. Received " + sender.Devices.Count + " devices.");
             UpdateTreeView();
@@ -335,7 +336,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnSystemVariableUpdated(Homegear sender, SystemVariable variable)
+        void Homegear_OnSystemVariableUpdated(Homegear sender, SystemVariable variable)
         {
             string value = variable.ToString();
             if (value.Length > 200)
@@ -350,12 +351,12 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_Pong(Homegear sender, string id)
+        void Homegear_Pong(Homegear sender, string id)
         {
             WriteLog("Pong received: ID: " + id);
         }
 
-        void _homegear_OnMetadataUpdated(Homegear sender, Device device, MetadataVariable variable)
+        void Homegear_OnMetadataUpdated(Homegear sender, Device device, MetadataVariable variable)
         {
             string value = variable.ToString();
             if (value.Length > 200)
@@ -370,7 +371,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable, string eventSource)
+        void Homegear_OnDeviceVariableUpdated(Homegear sender, Device device, Channel channel, Variable variable, string eventSource)
         {
             string value = variable.ToString();
             if (value.Length > 200)
@@ -385,7 +386,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnDeviceConfigParameterUpdated(Homegear sender, Device device, Channel channel, ConfigParameter parameter)
+        void Homegear_OnDeviceConfigParameterUpdated(Homegear sender, Device device, Channel channel, ConfigParameter parameter)
         {
             WriteLog("Config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
             if (_selectedVariable == parameter)
@@ -394,7 +395,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnDeviceLinkConfigParameterUpdated(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter)
+        void Homegear_OnDeviceLinkConfigParameterUpdated(Homegear sender, Device device, Channel channel, Link link, ConfigParameter parameter)
         {
             WriteLog("Link config parameter updated: Device type: \"" + device.TypeString + "\", ID: " + device.ID.ToString() + ", Channel: " + channel.Index.ToString() + ", Remote Peer: " + link.RemotePeerID.ToString() + ", Remote Channel: " + link.RemoteChannel.ToString() + ", Parameter Name: \"" + parameter.Name + "\", Value: " + parameter.ToString());
             if (_selectedVariable == parameter)
@@ -403,7 +404,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnEventUpdated(Homegear sender, Event homegearEvent)
+        void Homegear_OnEventUpdated(Homegear sender, Event homegearEvent)
         {
             if(homegearEvent is TimedEvent)
             {
@@ -495,17 +496,17 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_HomegearError(Homegear sender, Int64 level, string message)
+        void Homegear_HomegearError(Homegear sender, Int64 level, string message)
         {
             WriteLog("Error occured in Homegear (Level: " + level.ToString() + "): " + message);
         }
 
-        void _homegear_OnConnectError(Homegear sender, string message, string stackTrace)
+        void Homegear_OnConnectError(Homegear sender, string message, string stackTrace)
         {
             WriteLog("Error connecting to Homegear: " + message + "\r\nStacktrace: " + stackTrace);
         }
 
-        private void frmHaupt_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmHaupt_FormClosing(object sender, FormClosingEventArgs e)
         {
             _closing = true;
             _homegear?.Dispose();
@@ -517,7 +518,7 @@ namespace HomegearLibTest
             _homegear.Devices[151].Channels[2].Variables["SUBMIT"].StringValue = "1,1,108000,2,1";
         }*/
 
-        private void chkSSL_CheckedChanged(object sender, EventArgs e)
+        private void ChkSSL_CheckedChanged(object sender, EventArgs e)
         {
             if (chkSSL.Checked)
             {
@@ -529,7 +530,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void bnConnect_Click(object sender, EventArgs e)
+        private void BnConnect_Click(object sender, EventArgs e)
         {
             bnConnect.Enabled = false;
             gbSSL.Enabled = false;
@@ -559,27 +560,27 @@ namespace HomegearLibTest
             Properties.Settings.Default.Save();
 
             _rpc = new RPCController(cbHomegearHostname.Text, homegearPort, sslClientInfo);
-            _rpc.Connected += _rpc_Connected;
-            _rpc.Disconnected += _rpc_Disconnected;
+            _rpc.Connected += Rpc_Connected;
+            _rpc.Disconnected += Rpc_Disconnected;
             _rpc.AsciiDeviceTypeIdString = true;
             _rpc.IgnoreEventsFromMyself = true;
 
             _homegear = new Homegear(_rpc, true);
-            _homegear.ConnectError += _homegear_OnConnectError;
-            _homegear.HomegearError += _homegear_HomegearError;
-            _homegear.SystemVariableUpdated += _homegear_OnSystemVariableUpdated;
-            _homegear.Pong += _homegear_Pong;
-            _homegear.MetadataUpdated += _homegear_OnMetadataUpdated;
-            _homegear.DeviceVariableUpdated += _homegear_OnDeviceVariableUpdated;
-            _homegear.DeviceConfigParameterUpdated += _homegear_OnDeviceConfigParameterUpdated;
-            _homegear.DeviceLinkConfigParameterUpdated += _homegear_OnDeviceLinkConfigParameterUpdated;
-            _homegear.EventUpdated += _homegear_OnEventUpdated;
-            _homegear.ReloadRequired += _homegear_OnReloadRequired;
-            _homegear.DeviceReloadRequired += _homegear_OnDeviceReloadRequired;
-            _homegear.Reloaded += _homegear_OnReloaded;
+            _homegear.ConnectError += Homegear_OnConnectError;
+            _homegear.HomegearError += Homegear_HomegearError;
+            _homegear.SystemVariableUpdated += Homegear_OnSystemVariableUpdated;
+            _homegear.Pong += Homegear_Pong;
+            _homegear.MetadataUpdated += Homegear_OnMetadataUpdated;
+            _homegear.DeviceVariableUpdated += Homegear_OnDeviceVariableUpdated;
+            _homegear.DeviceConfigParameterUpdated += Homegear_OnDeviceConfigParameterUpdated;
+            _homegear.DeviceLinkConfigParameterUpdated += Homegear_OnDeviceLinkConfigParameterUpdated;
+            _homegear.EventUpdated += Homegear_OnEventUpdated;
+            _homegear.ReloadRequired += Homegear_OnReloadRequired;
+            _homegear.DeviceReloadRequired += Homegear_OnDeviceReloadRequired;
+            _homegear.Reloaded += Homegear_OnReloaded;
         }
 
-        void _homegear_OnDeviceReloadRequired(Homegear sender, Device device, Channel channel, DeviceReloadType reloadType)
+        void Homegear_OnDeviceReloadRequired(Homegear sender, Device device, Channel channel, DeviceReloadType reloadType)
         {
             if (reloadType == DeviceReloadType.Full)
             {
@@ -642,7 +643,7 @@ namespace HomegearLibTest
             }
         }
 
-        void _homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
+        void Homegear_OnReloadRequired(Homegear sender, ReloadType reloadType)
         {
             if (reloadType == ReloadType.Full)
             {
@@ -672,12 +673,12 @@ namespace HomegearLibTest
             }
         }
 
-        void _rpc_Disconnected(RPCClient sender)
+        void Rpc_Disconnected(RPCClient sender)
         {
             WriteLog("Disconnected from Homegear.");
         }
 
-        void _rpc_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
+        void Rpc_Connected(RPCClient sender, CipherAlgorithmType cipherAlgorithm, Int32 cipherStrength)
         {
             if (_rpc.Client.Ssl)
             {
@@ -689,7 +690,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tvDevices_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TvDevices_AfterSelect(object sender, TreeViewEventArgs e)
         {
             _variableValueChangedTimer.Stop();
             _selectedDevice = null;
@@ -752,6 +753,10 @@ namespace HomegearLibTest
             {
                 RoomSelected(e);
             }
+            else if (e.Node.FullPath.StartsWith("Roles"))
+            {
+                RoleSelected(e);
+            }
 
             _nodeLoading = false;
         }
@@ -779,7 +784,7 @@ namespace HomegearLibTest
             pnHomegear.Visible = true;
         }
 
-        private void tvDevices_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void TvDevices_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             _rightClickedDevice = null;
             _rightClickedMetadata = null;
@@ -807,65 +812,65 @@ namespace HomegearLibTest
                     else if (e.Node.Level == 3)
                     {
                         _rightClickedDevice = (Device)e.Node.Parent.Parent.Tag;
-                        if (e.Node.Tag is MetadataVariable)
+                        if (e.Node.Tag is MetadataVariable variable)
                         {
-                            _rightClickedMetadata = (MetadataVariable)e.Node.Tag;
+                            _rightClickedMetadata = variable;
                         }
 
-                        if (e.Node.Parent.Tag is Channel)
+                        if (e.Node.Parent.Tag is Channel channel)
                         {
-                            _rightClickedChannel = (Channel)e.Node.Parent.Tag;
+                            _rightClickedChannel = channel;
                         }
 
-                        if (e.Node.Tag is TriggeredEvent)
+                        if (e.Node.Tag is TriggeredEvent @event)
                         {
-                            _rightClickedTriggeredEvent = (TriggeredEvent)e.Node.Tag;
+                            _rightClickedTriggeredEvent = @event;
                         }
                     }
-                    else if (e.Node.Level == 5 && e.Node.Tag is Link)
+                    else if (e.Node.Level == 5 && e.Node.Tag is Link link)
                     {
-                        _rightClickedLink = (Link)e.Node.Tag;
+                        _rightClickedLink = link;
                     }
                 }
                 else if(e.Node.FullPath.StartsWith("System Variables"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is SystemVariable)
+                    if (e.Node.Level == 1 && e.Node.Tag is SystemVariable variable)
                     {
-                        _rightClickedSystemVariable = (SystemVariable)e.Node.Tag;
+                        _rightClickedSystemVariable = variable;
                     }
                 }
                 else if(e.Node.FullPath.StartsWith("Timed Events"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is TimedEvent)
+                    if (e.Node.Level == 1 && e.Node.Tag is TimedEvent @event)
                     {
-                        _rightClickedTimedEvent = (TimedEvent)e.Node.Tag;
+                        _rightClickedTimedEvent = @event;
                     }
                 }
                 else if (e.Node.FullPath.StartsWith("Buildings"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is Building)
+                    if (e.Node.Level == 1 && e.Node.Tag is Building building)
                     {
-                        _rightClickedBuilding = (Building)e.Node.Tag;
+                        _rightClickedBuilding = building;
                     }
                 }
                 else if (e.Node.FullPath.StartsWith("Stories"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is Story)
+                    if (e.Node.Level == 1 && e.Node.Tag is Story story)
                     {
-                        _rightClickedStory = (Story)e.Node.Tag;
+                        _rightClickedStory = story;
                     }
                 }
                 else if (e.Node.FullPath.StartsWith("Rooms"))
                 {
-                    if (e.Node.Level == 1 && e.Node.Tag is Room)
+                    if (e.Node.Level == 1 && e.Node.Tag is Room room)
                     {
-                        _rightClickedRoom = (Room)e.Node.Tag;
+                        _rightClickedRoom = room;
                     }
                 }
             }
         }
 
-        private void tvDevices_AfterExpand(object sender, TreeViewEventArgs e)
+        private void TvDevices_AfterExpand(object sender, TreeViewEventArgs e)
         {
             try
             {
@@ -913,7 +918,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtLogLevel_TextChanged(object sender, EventArgs e)
+        private void TxtLogLevel_TextChanged(object sender, EventArgs e)
         {
             if (_nodeLoading)
             {
@@ -996,7 +1001,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void chkEventEnabled_CheckedChanged(object sender, EventArgs e)
+        private void ChkEventEnabled_CheckedChanged(object sender, EventArgs e)
         {
             if (_selectedTimedEvent == null || _nodeLoading)
             {
@@ -1006,7 +1011,7 @@ namespace HomegearLibTest
             _selectedTimedEvent.Enabled = chkEventEnabled.Checked;
         }
 
-        private void tsAddTimedEvent_Click(object sender, EventArgs e)
+        private void TsAddTimedEvent_Click(object sender, EventArgs e)
         {
             frmAddTimedEvent dialog = new frmAddTimedEvent();
             if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -1053,7 +1058,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveTimedEvent_Click(object sender, EventArgs e)
+        private void TsRemoveTimedEvent_Click(object sender, EventArgs e)
         {
             if (_rightClickedTimedEvent == null)
             {
@@ -1367,7 +1372,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtSystemVariableValue_TextChanged(object sender, EventArgs e)
+        private void TxtSystemVariableValue_TextChanged(object sender, EventArgs e)
         {
             if (_selectedSystemVariable == null || _nodeLoading)
             {
@@ -1458,7 +1463,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsAddSystemVariable_Click(object sender, EventArgs e)
+        private void TsAddSystemVariable_Click(object sender, EventArgs e)
         {
             frmAddSystemVariable dialog = new frmAddSystemVariable();
             if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -1509,7 +1514,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsDeleteSystemVariable_Click(object sender, EventArgs e)
+        private void TsDeleteSystemVariable_Click(object sender, EventArgs e)
         {
             if (_rightClickedSystemVariable == null)
             {
@@ -1537,9 +1542,8 @@ namespace HomegearLibTest
                     {
                         foreach (TreeNode deviceNode in node.Nodes)
                         {
-                            if (deviceNode.Tag is Device)
+                            if (deviceNode.Tag is Device currentDevice)
                             {
-                                Device currentDevice = (Device)deviceNode.Tag;
                                 if (currentDevice.ID != device.ID)
                                 {
                                     continue;
@@ -1585,7 +1589,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtMetadataValue_TextChanged(object sender, EventArgs e)
+        private void TxtMetadataValue_TextChanged(object sender, EventArgs e)
         {
             if (_selectedMetadata == null || _nodeLoading)
             {
@@ -1676,7 +1680,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsAddMetadata_Click(object sender, EventArgs e)
+        private void TsAddMetadata_Click(object sender, EventArgs e)
         {
             if (_rightClickedDevice == null)
             {
@@ -1735,7 +1739,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveMetadata_Click(object sender, EventArgs e)
+        private void TsRemoveMetadata_Click(object sender, EventArgs e)
         {
             if (_rightClickedMetadata == null)
             {
@@ -1762,9 +1766,8 @@ namespace HomegearLibTest
                     {
                         foreach (TreeNode deviceNode in node.Nodes)
                         {
-                            if (deviceNode.Tag is Device)
+                            if (deviceNode.Tag is Device currentDevice)
                             {
-                                Device currentDevice = (Device)deviceNode.Tag;
                                 if (currentDevice.ID != device.ID)
                                 {
                                     continue;
@@ -1842,7 +1845,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void chkTriggeredEventEnabled_CheckedChanged(object sender, EventArgs e)
+        private void ChkTriggeredEventEnabled_CheckedChanged(object sender, EventArgs e)
         {
             if (_selectedTriggeredEvent == null || _nodeLoading)
             {
@@ -1852,7 +1855,7 @@ namespace HomegearLibTest
             _selectedTriggeredEvent.Enabled = chkTriggeredEventEnabled.Checked;
         }
 
-        private void tsAddTriggeredEvent_Click(object sender, EventArgs e)
+        private void TsAddTriggeredEvent_Click(object sender, EventArgs e)
         {
             if (_rightClickedDevice == null)
             {
@@ -1968,7 +1971,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveTriggeredEvent_Click(object sender, EventArgs e)
+        private void TsRemoveTriggeredEvent_Click(object sender, EventArgs e)
         {
             if (_rightClickedTriggeredEvent == null)
             {
@@ -1980,7 +1983,7 @@ namespace HomegearLibTest
         #endregion
 
         #region "Links"
-        private void tsAddLink_Click(object sender, EventArgs e)
+        private void TsAddLink_Click(object sender, EventArgs e)
         {
             if (_rightClickedChannel == null || _rightClickedDevice == null)
             {
@@ -2007,7 +2010,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveLink_Click(object sender, EventArgs e)
+        private void TsRemoveLink_Click(object sender, EventArgs e)
         {
             if (_rightClickedLink == null)
             {
@@ -2207,15 +2210,15 @@ namespace HomegearLibTest
                 }
                 else if (e.Node.Level > 1 && e.Node.Level <= 3)
                 {
-                    if (e.Node.Level == 2 && e.Node.Tag is Channel)
+                    if (e.Node.Level == 2 && e.Node.Tag is Channel channel)
                     {
                         _selectedDevice = (Device)e.Node.Parent.Tag;
-                        _selectedChannel = (Channel)e.Node.Tag;
+                        _selectedChannel = channel;
                     }
-                    if (e.Node.Level == 3 && e.Node.Parent.Tag is Channel)
+                    if (e.Node.Level == 3 && e.Node.Parent.Tag is Channel channel1)
                     {
                         _selectedDevice = (Device)e.Node.Parent.Parent.Tag;
-                        _selectedChannel = (Channel)e.Node.Parent.Tag;
+                        _selectedChannel = channel1;
                     }
                     if (_selectedChannel == null)
                     {
@@ -2353,7 +2356,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtVariableValue_KeyPress(object sender, KeyPressEventArgs e)
+        private void TxtVariableValue_KeyPress(object sender, KeyPressEventArgs e)
         {
             if(e.KeyChar == '\r')
             {
@@ -2363,7 +2366,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtVariableValue_TextChanged(object sender, EventArgs e)
+        private void TxtVariableValue_TextChanged(object sender, EventArgs e)
         {
             try
             {
@@ -2499,7 +2502,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void bnPutParamset_Click(object sender, EventArgs e)
+        private void BnPutParamset_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2523,7 +2526,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void txtDeviceName_TextChanged(object sender, EventArgs e)
+        private void TxtDeviceName_TextChanged(object sender, EventArgs e)
         {
             if (_selectedDevice == null || _nodeLoading)
             {
@@ -2533,7 +2536,7 @@ namespace HomegearLibTest
             _selectedDevice.Name = txtDeviceName.Text;
         }
 
-        private void txtChannelName_TextChanged(object sender, EventArgs e)
+        private void TxtChannelName_TextChanged(object sender, EventArgs e)
         {
             if (_selectedChannel == null || _nodeLoading)
             {
@@ -2543,7 +2546,7 @@ namespace HomegearLibTest
             _selectedChannel.Name = txtChannelName.Text;
         }
 
-        private void txtInterface_TextChanged(object sender, EventArgs e)
+        private void TxtInterface_TextChanged(object sender, EventArgs e)
         {
             if (_selectedDevice == null || _nodeLoading)
             {
@@ -2566,7 +2569,7 @@ namespace HomegearLibTest
             _selectedDevice.Interface = interfaces[txtInterface.Text];
         }
 
-        private void bnSetTeam_Click(object sender, EventArgs e)
+        private void BnSetTeam_Click(object sender, EventArgs e)
         {
             if (_selectedChannel == null)
             {
@@ -2587,7 +2590,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsAddDevice_Click(object sender, EventArgs e)
+        private void TsAddDevice_Click(object sender, EventArgs e)
         {
             frmAddDevice dialog = new frmAddDevice();
             if(dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -2608,7 +2611,7 @@ namespace HomegearLibTest
             }
         }
         
-        private void tsEnablePairingMode_Click(object sender, EventArgs e)
+        private void TsEnablePairingMode_Click(object sender, EventArgs e)
         {
             Int64 timeLeftInPairingMode = _homegear.TimeLeftInPairingMode();
             if (timeLeftInPairingMode == 0)
@@ -2621,17 +2624,17 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsDisablePairingMode_Click(object sender, EventArgs e)
+        private void TsDisablePairingMode_Click(object sender, EventArgs e)
         {
             _homegear.EnablePairingMode(false);
         }
 
-        private void tsSearchDevices_Click(object sender, EventArgs e)
+        private void TsSearchDevices_Click(object sender, EventArgs e)
         {
             MessageBox.Show(this, _homegear.Devices.Search().ToString() + " new devices found.", "Device Search Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void tsCreateDevice_Click(object sender, EventArgs e)
+        private void TsCreateDevice_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2653,7 +2656,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsSniffPackets_Click(object sender, EventArgs e)
+        private void TsSniffPackets_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2666,7 +2669,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsUnpair_Click(object sender, EventArgs e)
+        private void TsUnpair_Click(object sender, EventArgs e)
         {
             if (_rightClickedDevice == null)
             {
@@ -2677,7 +2680,7 @@ namespace HomegearLibTest
             MessageBox.Show(this, "Unpairing device with ID " + _rightClickedDevice.ID.ToString(), "Unpairing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void tsReset_Click(object sender, EventArgs e)
+        private void TsReset_Click(object sender, EventArgs e)
         {
             if (_rightClickedDevice == null)
             {
@@ -2688,7 +2691,7 @@ namespace HomegearLibTest
             MessageBox.Show(this, "Resetting device with ID " + _rightClickedDevice.ID.ToString(), "Resetting", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void tsRemove_Click(object sender, EventArgs e)
+        private void TsRemove_Click(object sender, EventArgs e)
         {
             if (_rightClickedDevice == null)
             {
@@ -2701,7 +2704,7 @@ namespace HomegearLibTest
 
         #endregion
 
-        private void tsAddBuildingVariable_Click(object sender, EventArgs e)
+        private void TsAddBuildingVariable_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2756,7 +2759,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsAddStoryVariable_Click(object sender, EventArgs e)
+        private void TsAddStoryVariable_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2811,7 +2814,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsAddRoomVariable_Click(object sender, EventArgs e)
+        private void TsAddRoomVariable_Click(object sender, EventArgs e)
         {
             try
             {
@@ -2866,7 +2869,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveBuilding_Click(object sender, EventArgs e)
+        private void TsRemoveBuilding_Click(object sender, EventArgs e)
         {
             if (_rightClickedBuilding == null)
             {
@@ -2898,7 +2901,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveStory_Click(object sender, EventArgs e)
+        private void TsRemoveStory_Click(object sender, EventArgs e)
         {
             if (_rightClickedStory == null)
             {
@@ -2930,7 +2933,7 @@ namespace HomegearLibTest
             }
         }
 
-        private void tsRemoveRoom_Click(object sender, EventArgs e)
+        private void TsRemoveRoom_Click(object sender, EventArgs e)
         {
             if (_rightClickedRoom == null)
             {

@@ -38,9 +38,9 @@ namespace HomegearLib
             return _name;
         }
 
-        public RPCVariable invokeMethod(string method, List<RPCVariable> parameters)
+        public RPCVariable InvokeMethod(string method, List<RPCVariable> parameters)
         {
-            return _rpc.invokeFamilyMethod(this, method, parameters);
+            return _rpc.InvokeFamilyMethod(this, method, parameters);
         }
     }
 }

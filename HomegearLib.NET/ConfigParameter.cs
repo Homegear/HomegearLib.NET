@@ -1,5 +1,4 @@
 ﻿using HomegearLib.RPC;
-using System;
 
 namespace HomegearLib
 {
@@ -156,16 +155,6 @@ namespace HomegearLib
         }
 
         public ConfigParameter(RPCController rpc, long peerId, long channel, string name) : base(rpc, peerId, channel, name)
-        {
-
-        }
-
-        internal ConfigParameter(long peerId, long channel, string name, RPCVariable rpcVariable) : this(null, peerId, channel, name, rpcVariable)
-        {
-
-        }
-
-        internal ConfigParameter(RPCController rpc, long peerId, long channel, string name, RPCVariable rpcVariable) : base(rpc, peerId, channel, name)
         {
 
         }

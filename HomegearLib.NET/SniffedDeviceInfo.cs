@@ -33,10 +33,10 @@ namespace HomegearLib
         private long _rssi;
         public long Rssi { get { return _rssi; } internal set { _rssi = value; } }
 
-        private Dictionary<string, string> _additionalData = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _additionalData = new Dictionary<string, string>();
         public Dictionary<string, string> AdditionalData { get { return _additionalData; } }
 
-        private List<SniffedDevicePacketInfo> _packets = new List<SniffedDevicePacketInfo>();
+        private readonly List<SniffedDevicePacketInfo> _packets = new List<SniffedDevicePacketInfo>();
         public List<SniffedDevicePacketInfo> Packets { get { return _packets; } }
 
         public SniffedDeviceInfo(Family family)

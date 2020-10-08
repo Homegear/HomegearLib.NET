@@ -8,10 +8,10 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        long _peerId = 0;
+        readonly long _peerId = 0;
         public long PeerID { get { return _peerId; } }
 
-        long _channel = -1;
+        readonly long _channel = -1;
         public long Channel { get { return _channel; } }
 
         public Links(RPCController rpc, long peerId, long channel) : base()

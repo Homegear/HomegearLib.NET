@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace HomegearLib
@@ -10,11 +8,8 @@ namespace HomegearLib
     {
         public Worker(BlockingCollection<T> collection, Action<T> consumeAction, CancellationToken cancelationToken)
         {
-            if (collection == null) { throw new ArgumentNullException(nameof(collection)); }
-            if (consumeAction == null) { throw new ArgumentNullException(nameof(consumeAction)); }
-
-            this.collection = collection;
-            this.consumeAction = consumeAction;
+            this.collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            this.consumeAction = consumeAction ?? throw new ArgumentNullException(nameof(consumeAction));
             this.cancelationToken = cancelationToken;
 
             this.workerThread = new Thread(this.DoWork) { IsBackground = true };

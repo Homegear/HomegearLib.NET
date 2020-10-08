@@ -367,9 +367,9 @@
             this.tvDevices.Name = "tvDevices";
             this.tvDevices.Size = new System.Drawing.Size(271, 473);
             this.tvDevices.TabIndex = 0;
-            this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterExpand);
-            this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDevices_AfterSelect);
-            this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvDevices_NodeMouseClick);
+            this.tvDevices.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.TvDevices_AfterExpand);
+            this.tvDevices.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TvDevices_AfterSelect);
+            this.tvDevices.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TvDevices_NodeMouseClick);
             // 
             // pnMetadata
             // 
@@ -420,7 +420,7 @@
             this.txtMetadataValue.Name = "txtMetadataValue";
             this.txtMetadataValue.Size = new System.Drawing.Size(258, 20);
             this.txtMetadataValue.TabIndex = 28;
-            this.txtMetadataValue.TextChanged += new System.EventHandler(this.txtMetadataValue_TextChanged);
+            this.txtMetadataValue.TextChanged += new System.EventHandler(this.TxtMetadataValue_TextChanged);
             // 
             // label57
             // 
@@ -497,7 +497,7 @@
             this.txtSystemVariableValue.Name = "txtSystemVariableValue";
             this.txtSystemVariableValue.Size = new System.Drawing.Size(258, 20);
             this.txtSystemVariableValue.TabIndex = 28;
-            this.txtSystemVariableValue.TextChanged += new System.EventHandler(this.txtSystemVariableValue_TextChanged);
+            this.txtSystemVariableValue.TextChanged += new System.EventHandler(this.TxtSystemVariableValue_TextChanged);
             // 
             // label52
             // 
@@ -570,7 +570,7 @@
             this.bnPutParamset.TabIndex = 31;
             this.bnPutParamset.Text = "Put";
             this.bnPutParamset.UseVisualStyleBackColor = true;
-            this.bnPutParamset.Click += new System.EventHandler(this.bnPutParamset_Click);
+            this.bnPutParamset.Click += new System.EventHandler(this.BnPutParamset_Click);
             // 
             // txtUnit
             // 
@@ -703,8 +703,8 @@
             this.txtVariableValue.ReadOnly = true;
             this.txtVariableValue.Size = new System.Drawing.Size(219, 20);
             this.txtVariableValue.TabIndex = 17;
-            this.txtVariableValue.TextChanged += new System.EventHandler(this.txtVariableValue_TextChanged);
-            this.txtVariableValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtVariableValue_KeyPress);
+            this.txtVariableValue.TextChanged += new System.EventHandler(this.TxtVariableValue_TextChanged);
+            this.txtVariableValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtVariableValue_KeyPress);
             // 
             // label20
             // 
@@ -890,7 +890,7 @@
             this.txtInterface.Name = "txtInterface";
             this.txtInterface.Size = new System.Drawing.Size(258, 20);
             this.txtInterface.TabIndex = 30;
-            this.txtInterface.TextChanged += new System.EventHandler(this.txtInterface_TextChanged);
+            this.txtInterface.TextChanged += new System.EventHandler(this.TxtInterface_TextChanged);
             // 
             // label44
             // 
@@ -908,7 +908,7 @@
             this.txtDeviceName.Name = "txtDeviceName";
             this.txtDeviceName.Size = new System.Drawing.Size(258, 20);
             this.txtDeviceName.TabIndex = 28;
-            this.txtDeviceName.TextChanged += new System.EventHandler(this.txtDeviceName_TextChanged);
+            this.txtDeviceName.TextChanged += new System.EventHandler(this.TxtDeviceName_TextChanged);
             // 
             // label41
             // 
@@ -1293,7 +1293,7 @@
             this.chkTriggeredEventEnabled.TabIndex = 29;
             this.chkTriggeredEventEnabled.Text = "Enabled";
             this.chkTriggeredEventEnabled.UseVisualStyleBackColor = true;
-            this.chkTriggeredEventEnabled.CheckedChanged += new System.EventHandler(this.chkTriggeredEventEnabled_CheckedChanged);
+            this.chkTriggeredEventEnabled.CheckedChanged += new System.EventHandler(this.ChkTriggeredEventEnabled_CheckedChanged);
             // 
             // txtTriggeredEventMethodParams
             // 
@@ -1439,7 +1439,7 @@
             this.chkEventEnabled.TabIndex = 29;
             this.chkEventEnabled.Text = "Enabled";
             this.chkEventEnabled.UseVisualStyleBackColor = true;
-            this.chkEventEnabled.CheckedChanged += new System.EventHandler(this.chkEventEnabled_CheckedChanged);
+            this.chkEventEnabled.CheckedChanged += new System.EventHandler(this.ChkEventEnabled_CheckedChanged);
             // 
             // txtEventMethodParams
             // 
@@ -1538,7 +1538,7 @@
             this.txtChannelName.Name = "txtChannelName";
             this.txtChannelName.Size = new System.Drawing.Size(219, 20);
             this.txtChannelName.TabIndex = 45;
-            this.txtChannelName.TextChanged += new System.EventHandler(this.txtChannelName_TextChanged);
+            this.txtChannelName.TextChanged += new System.EventHandler(this.TxtChannelName_TextChanged);
             // 
             // label89
             // 
@@ -1557,7 +1557,7 @@
             this.bnSetTeam.TabIndex = 43;
             this.bnSetTeam.Text = "Set Team";
             this.bnSetTeam.UseVisualStyleBackColor = true;
-            this.bnSetTeam.Click += new System.EventHandler(this.bnSetTeam_Click);
+            this.bnSetTeam.Click += new System.EventHandler(this.BnSetTeam_Click);
             // 
             // txtChannelTeamChannel
             // 
@@ -2040,7 +2040,7 @@
             this.txtLogLevel.Name = "txtLogLevel";
             this.txtLogLevel.Size = new System.Drawing.Size(137, 20);
             this.txtLogLevel.TabIndex = 3;
-            this.txtLogLevel.TextChanged += new System.EventHandler(this.txtLogLevel_TextChanged);
+            this.txtLogLevel.TextChanged += new System.EventHandler(this.TxtLogLevel_TextChanged);
             // 
             // label62
             // 
@@ -2088,7 +2088,7 @@
             this.chkSSL.TabIndex = 7;
             this.chkSSL.Text = "Enable SSL";
             this.chkSSL.UseVisualStyleBackColor = true;
-            this.chkSSL.CheckedChanged += new System.EventHandler(this.chkSSL_CheckedChanged);
+            this.chkSSL.CheckedChanged += new System.EventHandler(this.ChkSSL_CheckedChanged);
             // 
             // gbSSL
             // 
@@ -2136,7 +2136,7 @@
             this.bnSelectCert.TabIndex = 25;
             this.bnSelectCert.Text = "...";
             this.bnSelectCert.UseVisualStyleBackColor = true;
-            this.bnSelectCert.Click += new System.EventHandler(this.bnSelectCert_Click);
+            this.bnSelectCert.Click += new System.EventHandler(this.BnSelectCert_Click);
             // 
             // label3
             // 
@@ -2176,7 +2176,7 @@
             this.bnConnect.TabIndex = 15;
             this.bnConnect.Text = "Connect";
             this.bnConnect.UseVisualStyleBackColor = true;
-            this.bnConnect.Click += new System.EventHandler(this.bnConnect_Click);
+            this.bnConnect.Click += new System.EventHandler(this.BnConnect_Click);
             // 
             // cmDevices
             // 
@@ -2196,42 +2196,42 @@
             this.tsEnablePairingMode.Name = "tsEnablePairingMode";
             this.tsEnablePairingMode.Size = new System.Drawing.Size(228, 22);
             this.tsEnablePairingMode.Text = "Enable Pairing Mode";
-            this.tsEnablePairingMode.Click += new System.EventHandler(this.tsEnablePairingMode_Click);
+            this.tsEnablePairingMode.Click += new System.EventHandler(this.TsEnablePairingMode_Click);
             // 
             // tsDisablePairingMode
             // 
             this.tsDisablePairingMode.Name = "tsDisablePairingMode";
             this.tsDisablePairingMode.Size = new System.Drawing.Size(228, 22);
             this.tsDisablePairingMode.Text = "Disable Pairing Mode";
-            this.tsDisablePairingMode.Click += new System.EventHandler(this.tsDisablePairingMode_Click);
+            this.tsDisablePairingMode.Click += new System.EventHandler(this.TsDisablePairingMode_Click);
             // 
             // tsSearchDevices
             // 
             this.tsSearchDevices.Name = "tsSearchDevices";
             this.tsSearchDevices.Size = new System.Drawing.Size(228, 22);
             this.tsSearchDevices.Text = "Search Devices";
-            this.tsSearchDevices.Click += new System.EventHandler(this.tsSearchDevices_Click);
+            this.tsSearchDevices.Click += new System.EventHandler(this.TsSearchDevices_Click);
             // 
             // tsAddDevice
             // 
             this.tsAddDevice.Name = "tsAddDevice";
             this.tsAddDevice.Size = new System.Drawing.Size(228, 22);
             this.tsAddDevice.Text = "Add Device By Serial Number";
-            this.tsAddDevice.Click += new System.EventHandler(this.tsAddDevice_Click);
+            this.tsAddDevice.Click += new System.EventHandler(this.TsAddDevice_Click);
             // 
             // tsCreateDevice
             // 
             this.tsCreateDevice.Name = "tsCreateDevice";
             this.tsCreateDevice.Size = new System.Drawing.Size(228, 22);
             this.tsCreateDevice.Text = "Create Device";
-            this.tsCreateDevice.Click += new System.EventHandler(this.tsCreateDevice_Click);
+            this.tsCreateDevice.Click += new System.EventHandler(this.TsCreateDevice_Click);
             // 
             // tsSniffPackets
             // 
             this.tsSniffPackets.Name = "tsSniffPackets";
             this.tsSniffPackets.Size = new System.Drawing.Size(228, 22);
             this.tsSniffPackets.Text = "Sniff Packets";
-            this.tsSniffPackets.Click += new System.EventHandler(this.tsSniffPackets_Click);
+            this.tsSniffPackets.Click += new System.EventHandler(this.TsSniffPackets_Click);
             // 
             // cmDevice
             // 
@@ -2248,21 +2248,21 @@
             this.tsUnpair.Name = "tsUnpair";
             this.tsUnpair.Size = new System.Drawing.Size(117, 22);
             this.tsUnpair.Text = "Unpair";
-            this.tsUnpair.Click += new System.EventHandler(this.tsUnpair_Click);
+            this.tsUnpair.Click += new System.EventHandler(this.TsUnpair_Click);
             // 
             // tsReset
             // 
             this.tsReset.Name = "tsReset";
             this.tsReset.Size = new System.Drawing.Size(117, 22);
             this.tsReset.Text = "Reset";
-            this.tsReset.Click += new System.EventHandler(this.tsReset_Click);
+            this.tsReset.Click += new System.EventHandler(this.TsReset_Click);
             // 
             // tsRemove
             // 
             this.tsRemove.Name = "tsRemove";
             this.tsRemove.Size = new System.Drawing.Size(117, 22);
             this.tsRemove.Text = "Remove";
-            this.tsRemove.Click += new System.EventHandler(this.tsRemove_Click);
+            this.tsRemove.Click += new System.EventHandler(this.TsRemove_Click);
             // 
             // cmSystemVariable
             // 
@@ -2277,7 +2277,7 @@
             this.tsDeleteSystemVariable.Name = "tsDeleteSystemVariable";
             this.tsDeleteSystemVariable.Size = new System.Drawing.Size(117, 22);
             this.tsDeleteSystemVariable.Text = "Remove";
-            this.tsDeleteSystemVariable.Click += new System.EventHandler(this.tsDeleteSystemVariable_Click);
+            this.tsDeleteSystemVariable.Click += new System.EventHandler(this.TsDeleteSystemVariable_Click);
             // 
             // cmSystemVariables
             // 
@@ -2292,7 +2292,7 @@
             this.tsAddSystemVariable.Name = "tsAddSystemVariable";
             this.tsAddSystemVariable.Size = new System.Drawing.Size(96, 22);
             this.tsAddSystemVariable.Text = "Add";
-            this.tsAddSystemVariable.Click += new System.EventHandler(this.tsAddSystemVariable_Click);
+            this.tsAddSystemVariable.Click += new System.EventHandler(this.TsAddSystemVariable_Click);
             // 
             // cmMetadataVariables
             // 
@@ -2307,7 +2307,7 @@
             this.tsAddMetadata.Name = "tsAddMetadata";
             this.tsAddMetadata.Size = new System.Drawing.Size(96, 22);
             this.tsAddMetadata.Text = "Add";
-            this.tsAddMetadata.Click += new System.EventHandler(this.tsAddMetadata_Click);
+            this.tsAddMetadata.Click += new System.EventHandler(this.TsAddMetadata_Click);
             // 
             // cmMetadataVariable
             // 
@@ -2322,7 +2322,7 @@
             this.tsRemoveMetadata.Name = "tsRemoveMetadata";
             this.tsRemoveMetadata.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveMetadata.Text = "Remove";
-            this.tsRemoveMetadata.Click += new System.EventHandler(this.tsRemoveMetadata_Click);
+            this.tsRemoveMetadata.Click += new System.EventHandler(this.TsRemoveMetadata_Click);
             // 
             // cmLink
             // 
@@ -2337,7 +2337,7 @@
             this.tsRemoveLink.Name = "tsRemoveLink";
             this.tsRemoveLink.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveLink.Text = "Remove";
-            this.tsRemoveLink.Click += new System.EventHandler(this.tsRemoveLink_Click);
+            this.tsRemoveLink.Click += new System.EventHandler(this.TsRemoveLink_Click);
             // 
             // cmLinks
             // 
@@ -2352,7 +2352,7 @@
             this.tsAddLink.Name = "tsAddLink";
             this.tsAddLink.Size = new System.Drawing.Size(96, 22);
             this.tsAddLink.Text = "Add";
-            this.tsAddLink.Click += new System.EventHandler(this.tsAddLink_Click);
+            this.tsAddLink.Click += new System.EventHandler(this.TsAddLink_Click);
             // 
             // cmTimedEvent
             // 
@@ -2367,7 +2367,7 @@
             this.tsRemoveTimedEvent.Name = "tsRemoveTimedEvent";
             this.tsRemoveTimedEvent.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveTimedEvent.Text = "Remove";
-            this.tsRemoveTimedEvent.Click += new System.EventHandler(this.tsRemoveTimedEvent_Click);
+            this.tsRemoveTimedEvent.Click += new System.EventHandler(this.TsRemoveTimedEvent_Click);
             // 
             // cmTimedEvents
             // 
@@ -2382,7 +2382,7 @@
             this.tsAddTimedEvent.Name = "tsAddTimedEvent";
             this.tsAddTimedEvent.Size = new System.Drawing.Size(96, 22);
             this.tsAddTimedEvent.Text = "Add";
-            this.tsAddTimedEvent.Click += new System.EventHandler(this.tsAddTimedEvent_Click);
+            this.tsAddTimedEvent.Click += new System.EventHandler(this.TsAddTimedEvent_Click);
             // 
             // cmTriggeredEvents
             // 
@@ -2397,7 +2397,7 @@
             this.tsAddTriggeredEvent.Name = "tsAddTriggeredEvent";
             this.tsAddTriggeredEvent.Size = new System.Drawing.Size(96, 22);
             this.tsAddTriggeredEvent.Text = "Add";
-            this.tsAddTriggeredEvent.Click += new System.EventHandler(this.tsAddTriggeredEvent_Click);
+            this.tsAddTriggeredEvent.Click += new System.EventHandler(this.TsAddTriggeredEvent_Click);
             // 
             // cmTriggeredEvent
             // 
@@ -2412,7 +2412,7 @@
             this.tsRemoveTriggeredEvent.Name = "tsRemoveTriggeredEvent";
             this.tsRemoveTriggeredEvent.Size = new System.Drawing.Size(117, 22);
             this.tsRemoveTriggeredEvent.Text = "Remove";
-            this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.tsRemoveTriggeredEvent_Click);
+            this.tsRemoveTriggeredEvent.Click += new System.EventHandler(this.TsRemoveTriggeredEvent_Click);
             // 
             // cbHomegearHostname
             // 
@@ -2478,7 +2478,7 @@
             this.tsAddBuildingVariable.Name = "tsAddBuildingVariable";
             this.tsAddBuildingVariable.Size = new System.Drawing.Size(96, 22);
             this.tsAddBuildingVariable.Text = "Add";
-            this.tsAddBuildingVariable.Click += new System.EventHandler(this.tsAddBuildingVariable_Click);
+            this.tsAddBuildingVariable.Click += new System.EventHandler(this.TsAddBuildingVariable_Click);
             // 
             // cmStories
             // 
@@ -2493,7 +2493,7 @@
             this.tsAddStoryVariable.Name = "tsAddStoryVariable";
             this.tsAddStoryVariable.Size = new System.Drawing.Size(96, 22);
             this.tsAddStoryVariable.Text = "Add";
-            this.tsAddStoryVariable.Click += new System.EventHandler(this.tsAddStoryVariable_Click);
+            this.tsAddStoryVariable.Click += new System.EventHandler(this.TsAddStoryVariable_Click);
             // 
             // cmRooms
             // 
@@ -2508,7 +2508,7 @@
             this.tsAddRoomVariable.Name = "tsAddRoomVariable";
             this.tsAddRoomVariable.Size = new System.Drawing.Size(96, 22);
             this.tsAddRoomVariable.Text = "Add";
-            this.tsAddRoomVariable.Click += new System.EventHandler(this.tsAddRoomVariable_Click);
+            this.tsAddRoomVariable.Click += new System.EventHandler(this.TsAddRoomVariable_Click);
             // 
             // cmBuilding
             // 
@@ -2523,7 +2523,7 @@
             this.tsRemoveBuilding.Name = "tsRemoveBuilding";
             this.tsRemoveBuilding.Size = new System.Drawing.Size(180, 22);
             this.tsRemoveBuilding.Text = "Remove";
-            this.tsRemoveBuilding.Click += new System.EventHandler(this.tsRemoveBuilding_Click);
+            this.tsRemoveBuilding.Click += new System.EventHandler(this.TsRemoveBuilding_Click);
             // 
             // cmStory
             // 
@@ -2538,7 +2538,7 @@
             this.tsRemoveStory.Name = "tsRemoveStory";
             this.tsRemoveStory.Size = new System.Drawing.Size(180, 22);
             this.tsRemoveStory.Text = "Remove";
-            this.tsRemoveStory.Click += new System.EventHandler(this.tsRemoveStory_Click);
+            this.tsRemoveStory.Click += new System.EventHandler(this.TsRemoveStory_Click);
             // 
             // cmRoom
             // 
@@ -2553,7 +2553,7 @@
             this.tsRemoveRoom.Name = "tsRemoveRoom";
             this.tsRemoveRoom.Size = new System.Drawing.Size(180, 22);
             this.tsRemoveRoom.Text = "Remove";
-            this.tsRemoveRoom.Click += new System.EventHandler(this.tsRemoveRoom_Click);
+            this.tsRemoveRoom.Click += new System.EventHandler(this.TsRemoveRoom_Click);
             // 
             // frmMain
             // 
@@ -2575,7 +2575,7 @@
             this.MinimumSize = new System.Drawing.Size(796, 488);
             this.Name = "frmMain";
             this.Text = "HomegearLibTest";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHaupt_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmHaupt_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

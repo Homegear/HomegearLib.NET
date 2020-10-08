@@ -8,10 +8,10 @@ namespace HomegearLib
     {
         RPCController _rpc = null;
 
-        private long _peerId;
+        private readonly long _peerId;
         public long PeerID { get { return _peerId; } }
 
-        private string _name;
+        private readonly string _name;
         public string Name { get { return _name; } }
 
         public override RPCVariableType Type

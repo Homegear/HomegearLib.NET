@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading;
 
 namespace HomegearLib
@@ -370,7 +369,7 @@ namespace HomegearLib
                 _rpc.RestrictToFamilyId = restrictFamilyId;
 
             _events = events;
-            _families = new Families(_rpc, new Dictionary<long, Family>());
+            _families = new Families(new Dictionary<long, Family>());
             _devices = new Devices(_rpc, new Dictionary<long, Device>());
             _systemVariables = new SystemVariables(_rpc, new Dictionary<string, SystemVariable>());
             _rpc.Disconnected += Rpc_Disconnected;
@@ -817,7 +816,7 @@ namespace HomegearLib
                     _rpc.Clear();
 
                     _families?.Dispose();
-                    _families = new Families(_rpc, _rpc.Families);
+                    _families = new Families(_rpc.Families);
 
 
                     _buildings?.Dispose();
