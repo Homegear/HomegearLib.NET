@@ -152,7 +152,7 @@ namespace HomegearLib
         }
         public Dictionary<string, RPCVariable> GetVariablesInRoom()
         {
-            return _rpc?.GetDevicesInRoom(this);
+            return _rpc?.GetVariablesInRoom(this);
         }
 
         public List<RPCVariable> GetSystemVariablesInRoom()
